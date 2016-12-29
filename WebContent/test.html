@@ -1,0 +1,1275 @@
+<!DOCTYPE HTML >
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Tax System</title>
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#dialog").dialog({
+            
+            modal: true,
+            autoOpen: false,
+            title: "Add Customer",
+            width: 300,
+            height: 150
+        });
+        $("#btnShow").click(function () {
+            $('#dialog').dialog('open');
+        });
+    });
+</script>
+
+
+
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+<!-- Morris Charts CSS -->
+<link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+</head>
+
+
+
+
+<style>
+.panel {
+	width: 75%;
+}
+
+#inner_panel {
+	width: 100%;
+}
+
+.no-border {
+	border: 0;
+	box-shadow: none;
+	/* You may want to include this as bootstrap applies these styles too */
+}
+
+.form-group.required .control-label:after {
+	content: "*";
+	color: red;
+}
+
+#abc {
+	background-color: #F0F3F4;
+	margin-top: 15px;
+}
+
+input[readonly] {
+	background-color: red;
+}
+
+#xyz {
+	height: 65px;
+	text-align: center;
+	background-color: #152F37;
+}
+
+#pqr {
+	background-color: #152F37;
+}
+
+#date, #customer_detail, #grandtotal, #taxtotal, #subtotal {
+	background-color: white;
+}
+
+.ui-dialog-titlebar {
+	border: 0;
+	padding: .5em 1em;
+	background: black;
+	overflow: auto;
+	zoom: 1;
+}
+</style>
+
+<script>
+function loadName()
+{
+   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
+   //get purchase order number and append it to box, also with today's date
+   
+   var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+
+	var yyyy = today.getFullYear();
+	if(dd<10){
+    	dd='0'+dd
+		} 
+	if(mm<10){
+    	mm='0'+mm
+		} 
+	var today = dd+'/'+mm+'/'+yyyy;
+	document.getElementById("date").value = today;
+ 
+ var first_count=0;
+}
+
+</script>
+
+<body onload="loadName()">
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
+			id="pqr">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header" id="xyz">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+
+				<a class="navbar-brand" href="index.html" id="xyz">SIMPLIFY TAX</a>
+			</div>
+			<!-- Top Menu Items -->
+			<ul class="nav navbar-right top-nav" id="pqr">
+				<li class="dropdown">
+
+					<ul class="dropdown-menu message-dropdown">
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-footer"><a href="#">Read All New
+								Messages</a></li>
+					</ul>
+				</li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown"><i class="fa fa-bell"></i> <b
+						class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown">
+						<li><a href="#">Alert Name <span
+								class="label label-default">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-primary">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-success">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span class="label label-info">Alert
+									Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-warning">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-danger">Alert Badge</span></a></li>
+						<li class="divider"></li>
+						<li><a href="#">View All</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">&nbsp;<i class="fa fa-user" id="name"></i>
+						<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="company_profile.html"><i
+								class="fa fa-fw fa-user"></i> Profile</a></li>
+
+						<li><a href="settings.html"><i class="fa fa-fw fa-gear"></i>
+								Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="logout.html"><i
+								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
+					</ul></li>
+			</ul>
+
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav" id="abc">
+
+					<li class="active"><a href=".html"><i
+							class="fa fa-fw fa-dashboard"></i> Home</a></li>
+					<li><a href="dashboard.html"><i
+							class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+
+					<li><a href="accounting.html"><i
+							class="fa fa-fw fa-dashboard"></i> Accounting</a></li>
+
+					<li><a href="charts.html"><i
+							class="fa fa-fw fa-bar-chart-o"></i> Charts</a></li>
+
+					<li><a href="tables.html"><i class="fa fa-fw fa-table"></i>
+							Tables</a></li>
+					<li><a href="forms.html"><i class="fa fa-fw fa-edit"></i>
+							Forms</a></li>
+					<li><a href="bootstrap-elements.html"><i
+							class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a></li>
+					<li><a href="bootstrap-grid.html"><i
+							class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a></li>
+					<li><a href="javascript:;" data-toggle="collapse"
+						data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i>
+							Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo" class="collapse">
+							<li><a href="#">Dropdown Item</a></li>
+							<li><a href="#">Dropdown Item</a></li>
+						</ul></li>
+					<li><a href="blank-page.html"><i class="fa fa-fw fa-file"></i>
+							Blank Page</a></li>
+					<li><a href="index-rtl.html"><i
+							class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+
+		<div id="page-wrapper">
+
+			<div class="container-fluid">
+
+
+
+				<h1 class="page-header">Accounting</h1>
+				<!-- Row beginning -->
+				<div class="row" id="row">
+					<div class="col-lg-12">
+
+						<!------CONTROL TABS START------>
+						<ul class="nav nav-tabs bordered">
+							<li class="active"><a href="#po" data-toggle="tab"><i
+									class="entypo-menu"></i> Create Purchase Order </a></li>
+							<li><a href="#bill" data-toggle="tab"><i
+									class="entypo-menu"></i> Create Bill </a></li>
+							<li><a href="#payments" data-toggle="tab"><i
+									class="entypo-menu"></i> Payments </a></li>
+							<li><a href="#statement" data-toggle="tab"><i
+									class="entypo-menu"></i> Statement </a></li>
+
+						</ul>
+						<!------CONTROL TABS END------>
+
+						<!--  Control tab features -->
+
+						<div class="tab-content">
+							<!----TAB LISTING STARTS for purchase order-->
+							<div class="tab-pane box active" id="po">
+								<br>
+
+
+								<div class="panel panel-default">
+									<div class="row">
+										<div class="col-lg-8">
+											<button type="button" class="btn btn-info"
+												style="height: 40px; width: 1218px" data-toggle="collapse"
+												data-target="#portionOne">Business Details</button>
+											<div id="portionOne" class="panel-collapse collapse in">
+												gjhjggdgdhgfdfhjhdfdmfndmfnd bcvbcvhjdghdjdnke uyjhjcnxmx <br>
+												kjhcuiyufhjknm bmnmnxcxncxm<br>jbsdguyyuyduyumwmdemm<br>
+
+												<!-- ADD YOUR BUSINESS DETAILS -->
+
+											</div>
+											<!-- end of portion one -->
+
+										</div>
+										<!-- end of row1 -->
+									</div>
+								</div>
+
+								<br>
+
+
+
+
+
+
+								<div class="panel panel-default">
+									<button type="button" class="btn btn-info"
+										style="height: 40px; width: 1218px">Customer Details</button>
+									<div class="row">
+										<!-- ROW 2 -->
+										<div class="col-lg-12">
+											<!-- How wide table should be -->
+
+
+											<!-- make another row for customer details -->
+											<div class="panel panel-default" id="inner_panel">
+												<div class="row">
+													<div class="col-lg-12">
+
+
+
+
+
+														<div id="form-panel">
+															<form role="form" id="customer_profile">
+
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Customer</label>
+																	<div class="col-md-4">
+																		<input list="customer_names" class="form-control"
+																			id="customer" placeholder="Customer Name"
+																			onchange="getcustomer_details()">
+
+																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
+                                  store customer id save this -->
+
+																		<datalist id="customer_names">
+																			<option data-customvalue="5.5" value="Karnataka">Karnataka</option>
+																			<option data-customvalue="14.5" value="VAT 14.5">VAT
+																				14.5</option>
+																			<option data-customvalue="15" value="SERVICE 15">SERVICE
+																				15</option>
+																			
+																		</datalist>
+
+
+																	</div>
+																</div>
+
+
+
+
+																<br> <br>
+
+																<div class="form-group ">
+
+																	<div class="col-md-6">
+																		<textarea class="form-control" id="customer_detail"
+																			rows="5" cols="80" readonly>#31, 3rd cross Vijayanagar Bangalore</textarea>
+																	</div>
+																</div>
+
+																<br> <br>
+
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">PO Number</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="po_number"
+																			name="addr_line1" maxlength="100" required="required"
+																			title="" type="text" />
+																	</div>
+																</div>
+
+																<br> <br>
+
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Date</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="date" readonly />
+																	</div>
+																</div>
+																<br> <br>
+
+
+
+															</form>
+														</div>
+														<!-- form panel -->
+
+
+
+
+
+
+													</div>
+												</div>
+
+												<br> <br>
+											</div>
+											<!-- panel default -->
+
+
+											<table class="table borderless datatable" id="table_export">
+												<thead>
+													<tr>
+
+														<th><div>Product</div></th>
+
+														<th><div>Quantity</div></th>
+														<th><div>Price</div></th>
+
+														<th><div>Amount</div></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>
+															<div class="form-group required">
+
+																<div class="col-md-12">
+																	<input class="form-control" id="0product_name"
+																		name="product_name" name="username"
+																		placeholder="Product Name" required="required"
+																		title="" type="text" />
+																</div>
+															</div>
+
+														</td>
+
+														<td>
+															<div class="form-group required">
+
+																<div class="col-md-12">
+																	<input type="number" value="1" class="form-control"
+																		id="0quantity" maxlength="30" name="username"
+																		placeholder="Quantity" required="required" title=""
+																		onchange="update_amount(first_count)" />
+																</div>
+															</div>
+
+														</td>
+														<td>
+															<div class="form-group required">
+
+																<div class="col-md-12">
+																	<input type="number" value="0" class="form-control"
+																		id="0price" name="company_name" maxlength="30"
+																		name="username" placeholder="Price"
+																		required="required" title=""
+																		onchange="update_amount(first_count)" />
+																</div>
+															</div> <br> <br>
+
+															<div class="form-group required">
+																<label class="col-md-3 control-label">Tax Rate</label>
+																<div class="col-md-9">
+
+																	<input list="browser" class="form-control"
+																		id="0tax_rate" placeholder="Tax Rate"
+																		onchange="update_tax(this,first_count)">
+																	<datalist id="browser">
+																		<option data-customvalue="5.5" value="VAT 5.5">VAT
+																			5.5</option>
+																		<option data-customvalue="14.5" value="VAT 14.5">VAT
+																			14.5</option>
+																		<option data-customvalue="15" value="SERVICE 15">SERVICE
+																			15</option>
+																		
+																	</datalist>
+																</div>
+															</div>
+
+														</td>
+
+														<td>
+															<div id="0amt">0</div> 
+															<i class="entypo-trash"
+															onClick="delete1(this,first_count)"></i> <br> <br>
+															<div id="0tax_amt">0</div>
+
+														</td>
+
+													</tr>
+
+
+													<tr id="last_row" class="middle">
+														<td colspan="5" id="add_row"><i
+															class="entypo-plus-circled"></i>Add new item</td>
+													</tr>
+
+													<tr>
+														<td colspan="5" class="right">
+															<div class="form-group ">
+																<label class="col-md-2 control-label">SubTotal</label>
+																<div class="col-md-3">
+																	<input type="number" value="0"
+																		class="form-control no-border" readonly id="subtotal"
+																		name="company_name" maxlength="30" name="username"
+																		placeholder="Quantity" required="required" title=""
+																		onchange="update_amount(first_count)" />
+																</div>
+															</div>
+
+														</td>
+													</tr>
+
+													<tr id="taxfinalamt">
+														<td colspan="5" class="right">
+															<div class="form-group ">
+																<label class="col-md-2 control-label">Tax Amount</label>
+																<div class="col-md-3">
+																	<input type="number" value="0"
+																		class="form-control no-border" readonly id="taxtotal"
+																		name="company_name" maxlength="30" name="username"
+																		placeholder="Quantity" required="required" title=""
+																		onchange="update_amount(first_count)" />
+																</div>
+															</div>
+
+														</td>
+													</tr>
+
+
+													<tr>
+														<td colspan="5" class="right">
+															<div class="form-group ">
+																<label class="col-md-2 control-label">Grand
+																	Total</label>
+																<div class="col-md-3">
+																	<input type="number" value="0"
+																		class="form-control no-border" readonly
+																		id="grandtotal" name="company_name" maxlength="30"
+																		name="username" placeholder="Quantity"
+																		required="required" title=""
+																		onchange="update_amount(first_count)" />
+																</div>
+															</div>
+
+														</td>
+													</tr>
+
+
+
+													<tr>
+
+														<td><label class="col-md-1 control-label">Notes</label>
+															<textarea class="form-control" id="notes" rows="10"
+																cols="100"></textarea></td>
+
+													</tr>
+
+
+												</tbody>
+											</table>
+
+
+
+
+										</div>
+
+
+
+									</div>
+									<!-- /.row -->
+								</div>
+								<!-- closure for panel -->
+
+
+								<!-- Another row -->
+								<div class="row">
+									<div class="col-lg-6">
+										<input type="submit" class="btn btn-blue" name="submit"
+											id="submit" value="Save and Continue">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										
+										<!-- create another row -->
+									</div>
+								</div>
+
+
+							</div>
+							<!-- one tab listing feature ends-->
+							
+							<!-- New Nav bar feature listing(create bill) -->
+							
+							<div class="tab-pane box " id="bill">
+							
+							hello world
+							
+							</div>
+							
+							
+							
+							
+							
+						</div>
+						<!-- nav content -->
+
+
+
+
+
+
+					</div>
+					<!--  wrapper -->
+
+
+
+				</div>
+				<!-- /.container-fluid -->
+
+			</div>
+			<!-- /#page-wrapper -->
+
+		</div>
+		<!-- /#wrapper -->
+</body>
+
+<script>
+
+
+
+$('#submit').click(function(){
+
+  var purchaseOrder = {};
+  var products = [];	
+  purchaseOrder.products = products;
+	
+	for(var i=0;i<box_counter.length;i++)
+	{
+	  var index = box_counter[i];
+	  var product_identifier = index + "product_name";
+	  var tax_identifier = index + "tax_rate";
+	  if($('#' + product_identifier).val()=='')
+	     	 alert("Please select a product ");
+	     	 
+	  else 
+	  {
+	    if($('#' + tax_identifier).val()=='')
+	    			alert("Please select tax bracket for product");
+	 			
+	 	 else{
+	  		var productName= $('#' + index + 'product_name').val();
+			var quantity = $('#' + index + 'quantity').val();
+			var price = $('#' + index + 'price').val();
+			var amount = $('#' + index + 'amt').text();
+			var tax = $('#' + index + 'tax_rate').val();
+			var taxAmount = $('#' + index + 'tax_amt').text();
+		
+			var product = {
+  				"productName": productName,
+  				"quantity": quantity,
+  				"price": price,
+  				"amount": amount,
+  				"tax": tax,
+  				"taxAmount": taxAmount
+						  }
+					  
+			purchaseOrder.products.push(product);
+		}
+	}
+	
+	}
+	alert(products.length); //if at end object has 0 elements then stay in same page, else go ahead(yet to fill all details)
+	console.log(JSON.stringify(purchaseOrder));
+	
+	//product length>0 then make an ajax call to service, pass json, customer id , PO number and put it in draft table, on success redirect to next page to show all details
+	//of entered PO (pass PO number to next page), has to come from draft table on approval goes to PO table else on edit option 
+	//go to another pag pass PO number, put the same in edit mode  
+	
+	
+});
+
+
+
+
+</script>
+
+
+
+<script>
+                           var count=0;
+                           var first_count=0;
+                           
+                           var box_counter=[0];
+                           var tax_rate = [];
+                           var tax_counter = [];
+                           var tax_amount=[];
+                           var tax_div=[];
+                           
+                           
+                           $(function(){
+                           $("#add_row").click(function(){
+                           
+                          
+                           count=count+1;
+                           
+                            box_counter.push(count);
+                           $( '<tr >' + 
+                          
+                              '<td>' + 
+                                  '<div class="form-group required">' + 
+                                  '<div class="col-md-12">' + 
+                                  '<input class="form-control" id="' + count + 'product_name"  name="company_name"   placeholder="Product Name" required="required" title="" type="text" />' + 
+                                  '</div>'+
+                                  '</div>'+
+                              '</td>'  + 
+                              
+                              '<td>'+
+                              	'<div class="form-group required">'+
+                              	'<div class="col-md-12">'+
+                              	'<input type="number" value="1" class="form-control" id="' + count + 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount(' + count + ')"  />' + 
+                              	'</div>'+
+                              	'</div>'+
+                              '</td>' + 
+                              
+ 							'<td>' +
+ 								'<div class="form-group required">'+
+ 								'<div class="col-md-12">'+
+ 								'<input type="number" value="0" class="form-control" id="' + count + 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount(' +count +')" />'+
+ 								'</div>'+
+ 								'</div>'+
+ 								'<br><br>'+
+ 								'<div class="form-group required">'+ 
+ 								'<label class="col-md-3 control-label">Tax Rate</label>'+
+ 								'<div class="col-md-9">'+ 
+ 									'<input list="browser"  class="form-control" id="' + count + 'tax_rate" placeholder="Tax Rate" onchange="update_tax(this,' + count   + ')">'+
+ 							 		'<datalist id="browser">'+
+ 							 		'<option data-customvalue="5.5" value="VAT 5.5">VAT 5.5</option>'+
+ 							 		'<option data-customvalue="14.5" value="VAT 14.5">VAT 14.5</option>'+
+ 							 		'<option data-customvalue="15" value="SERVICE 15">SERVICE 15</option>'+
+ 							 		
+ 							 		'</datalist>'+
+ 							 '</div>'+
+ 							 '</div>'+
+ 							 '</td>' + 
+                        '<td><div id="' + count + 'amt">0</div><i class="entypo-trash" onClick="delete1(this,' + count + ')"></i><br><br><div id="' + count + 'tax_amt">0</div></td></tr>').insertBefore('#last_row');
+                            
+                            });
+                            
+                            
+                            
+                            });
+                            
+                            
+                            
+                         function update_amount(value_counter)
+					           {
+					             var old_taxamt = $('#' + value_counter + 'tax_amt').text();
+					               var current_amount = $('#' + value_counter + 'amt').text();
+					              // alert(value_counter);
+					               
+					                //when you change amount, update subtotal
+					              
+					              if(current_amount!=0) //subtract initial value 
+					              {
+					                 var subamt =  Number($('#subtotal').val()) - current_amount;
+					                 //alert(subamt);
+					                 $('#subtotal').val(subamt);
+					                 
+					                 
+					                 var finalamt =  Number($('#grandtotal').val()) - current_amount;
+					                 //alert(subamt);
+					                 $('#grandtotal').val(finalamt);
+					              
+					              
+					              }
+					              
+					               // update new amount
+					               
+					           		var y = value_counter + 'quantity';
+					          		var x = ($('#' + y).val()*$('#' + value_counter +'price').val());
+					                $('#' + value_counter + 'amt').text(x);
+					            
+					              // update subtotal
+					              
+					                var subamt =  Number($('#subtotal').val()) + x;
+					               // alert(subamt);
+					                $('#subtotal').val(subamt);
+					                
+					                
+					                var finalamt =  Number($('#grandtotal').val()) + x;
+					               // alert(subamt);
+					                $('#grandtotal').val(finalamt);
+					                
+					                
+					                
+					              //go to tax and change value only if currently there exists an input tax type selected
+					              
+					              var value_input = $('#' + value_counter + 'tax_rate').val(); //value of input box (vat 5.5)
+					              
+					              if(value_input!= '')   //then a tax type is chosen
+					              {
+					                 var z =  $('#browser [value="' + value_input + '"]').data('customvalue');  // get the rate
+					                
+                              	      var a = (z/100)*($('#' + value_counter +'amt').text());
+                            
+					          	      $('#' + value_counter +'tax_amt').text(a.toFixed(2));
+					          	      
+					          	      
+					          	    
+					          	      
+					          	      var taxtotal =  Number($('#taxtotal').val()) - Number(old_taxamt) + Number(a.toFixed(2));
+					                alert(taxtotal);
+					                $('#taxtotal').val(taxtotal);
+					                
+					                 var finalamt =  Number($('#grandtotal').val()) - Number(old_taxamt) + Number(a.toFixed(2));
+					               // alert(subamt);
+					                $('#grandtotal').val(finalamt);
+					          	      
+					          	      tax_addition(z,value_counter,a.toFixed(2));
+					                 
+					               }
+					          }
+					          
+					         				             
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+                           
+
+                     function update_tax(a,value1) // tax type - dropdown chosen
+					          {
+					          
+					            var old_taxamt = $('#' + value1 + 'tax_amt').text();
+					          	var value = $(a).val();
+                                //alert(value);
+                              	var c = value1 + 'amt';
+                              	var d = value1 + 'tax_amt';
+                              	var tax_val =  $('#browser [value="' + value + '"]').data('customvalue');
+                             
+                              	var y = (tax_val/100)*($('#' + c).text());
+                            
+					          	$('#' + d).text(y.toFixed(2)); //takes amount, tax rate and recalculates the tax amount
+					          	
+					          	//whenever a tax type is chosen , make an entry into arrays
+					          	
+					          	  
+					          	  alert(old_taxamt);
+					          	
+					          	 var taxtotal =  Number($('#taxtotal').val()) - old_taxamt + Number(y.toFixed(2));
+					                alert(taxtotal);
+					                $('#taxtotal').val(taxtotal);
+					                
+					                
+					                 var finalamt =  Number($('#grandtotal').val()) - old_taxamt + Number(y.toFixed(2));
+					               // alert(subamt);
+					                $('#grandtotal').val(finalamt);
+					          
+					        
+					          	
+					          	alert("new tax amount is " + y.toFixed(2 ) + "no count is" + value1);
+					          
+					          	tax_addition(tax_val,value1,y.toFixed(2));
+					          
+					          
+					          
+					          }
+					          
+					          
+					  					          
+                    function tax_addition(tax_val,number_count,tax_amt)
+                            {
+                            
+							var intval = Math.floor(tax_val);
+						    alert(" new tax val is" + tax_val);
+						    alert("new div id to target is"  + intval);
+						    alert("no count is" + number_count);
+					  
+                           //check if counterbox had added to any tax
+  
+                             var counter_index = tax_counter.indexOf(number_count); //there is an entry for this box
+                             if(counter_index!=-1)    
+                             {
+	                             alert("entry for this box exists at index" + counter_index);
+	                             var divid  = tax_div[counter_index];
+	                             
+	                             alert("div id is " + divid);
+	                             
+	                             var amt   = tax_amount[counter_index];  //old amt
+	                             alert("old amount is " + amt);
+	                             
+	                             alert("b4 subtraction amt is" + $('#' + divid).val());
+	                             
+                                 var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
+                                 
+                                 alert("after subtraction amt is"  + subtract_amt);
+     
+							     if(subtract_amt==0)
+							     {
+							       //remove table row
+							       
+							       
+							       
+							       $('#' + divid).closest('tr').remove();
+							       tax_rate[counter_index]=-1;
+							            
+							     } 
+							     
+							     else
+							         $('#' + divid).val(subtract_amt);  //update new value in div
+							         
+							         
+							         
+     
+                                  //update new values, b4 that check if new tax type exists, find it in tax_rate array
+                                  
+     
+											     var new_tax_index = tax_rate.indexOf(tax_val);
+											     
+											     alert("index of new tax entry" + tax_val + "is"  + new_tax_index);
+											     
+											     if(new_tax_index!=-1) //its present so add to its value , may be at same place/other box
+											     {  
+											       alert("loop3");
+											        var new_tax_value = $('#' + tax_div[new_tax_index]).val();
+											        
+											        alert("value at div" + tax_val + "is" + new_tax_value);
+											        
+											        var updated_val = Number(new_tax_value) + Number(tax_amt) ;
+											        
+											        $('#' + tax_div[new_tax_index]).val(updated_val);
+											        
+											        alert("new value at div" + tax_val + "is" + updated_val);
+											        
+													tax_rate[counter_index]  = tax_val;
+													tax_div[counter_index]  = intval + 'check';
+													tax_amount[counter_index]  = tax_amt;
+													
+													alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
+											     
+											     
+											     
+											     }
+											     
+											     
+											        else
+													     {   //already for new tax entry doesnt exists
+													     
+													alert("create div for"   + tax_val);
+													    tax_rate[counter_index] = (tax_val);
+													    tax_div[counter_index] = intval + 'check';  //div id of input box
+													    
+													    tax_amount[counter_index] =(tax_amt);
+													   
+													   alert("doesnt have" + tax_val + "entry");
+													   
+													    //add td to table body
+													    
+													    $( '<tr >' + 
+													    '<td colspan="5" >'+
+													    '<div class="form-group ">' + 
+													    '<label class="col-md-2 control-label">Tax@ ' + 
+													    tax_val +
+													    '</label>'+
+													    '<div class="col-md-3">'+ 
+													    '<input type="number" style="background-color:white" value="' + tax_amt + '" class="form-control no-border" readonly id="' +  intval +  'check" name="company_name" maxlength="30" name="username"  required="required" title=""  />'+
+													    '</div>'+
+													    '</div>'+ 
+													    '</td>'+
+													    '</tr>').insertBefore('#taxfinalamt');
+													    
+													    alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[counter_index] + "is " + $('#' + tax_div[counter_index]).val());
+													     
+													     
+													     
+													}    
+ 
+                         }// if loop ends(box entry found)
+                         
+                         
+   else{                               
+	   //no entry as of now corresponding to the box
+
+	   //but if tax value is present elsewhere
+	   
+	   alert("no entry of the box");
+	   
+
+	 var new_tax_index = tax_rate.indexOf(tax_val);
+	 
+	 alert("tax rate entry found at" + new_tax_index);
+	 
+     if(new_tax_index!=-1) //its present so add to its value
+     {  
+       
+       alert("tax rate found at " + new_tax_index);
+       
+       alert("div id is" + tax_div[new_tax_index]);
+       
+        var new_tax_value = $('#' + tax_div[new_tax_index]).val();
+        
+        alert($('#' + tax_div[new_tax_index]).val());
+        
+		alert("existing amount at" + tax_val + "is" + new_tax_value);
+		
+        var updated_val = Number(new_tax_value) + Number(tax_amt) ;
+        
+		alert("now value is" + updated_val);
+		alert("div to update is " + '#' + tax_div[new_tax_index]);
+		
+        $('#' + tax_div[new_tax_index]).val(updated_val);
+        
+        alert("after updating at " + tax_div[new_tax_index] + " " + $('#' + tax_div[new_tax_index]).val());
+
+		tax_rate.push(tax_val);
+    tax_div.push(intval + 'check');  //div id of input box
+    tax_counter.push(number_count);
+    tax_amount.push(tax_amt);
+    
+    alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
+     
+     
+     
+     }
+     else
+     {
+     
+     alert("tax entry for "   + tax_val + "not found");
+    tax_rate.push(tax_val);
+    tax_div.push(intval + 'check');  //div id of input box
+    tax_counter.push(number_count);
+    tax_amount.push(tax_amt);
+   
+  
+    $( '<tr >' + 
+    '<td colspan="5" >'+
+    '<div class="form-group ">' + 
+    '<label class="col-md-2 control-label">Tax@ ' + 
+    tax_val +
+    '</label>'+
+    '<div class="col-md-3">'+ 
+    '<input type="number" value="' + tax_amt + '" class="form-control no-border" readonly id="' +  intval +  'check" name="company_name" maxlength="30" name="username"  required="required" title="" style="background-color:white" />'+
+    '</div>'+
+    '</div>'+ 
+    '</td>'+
+    '</tr>').insertBefore('#taxfinalamt');
+    
+    alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt)  ;
+     
+     
+     }
+
+
+
+   }                  
+                         }//function ends
+   
+
+					          
+	
+	     function delete1(o, number)
+					          {
+					          
+					            var index = box_counter.indexOf(number);
+					            box_counter.splice(index, 1);
+					          
+					          	var deleted_amt = $('#' + number + 'amt').text();
+					          	
+					          	alert("deleted amt is " + deleted_amt);
+					          	
+					          	var deleted_tax_amt = $('#' + number + 'tax_amt').text();
+					          	
+					          	alert("deleted tax amt is " + deleted_tax_amt);
+					         
+					          	var sub_amount =  Number($('#subtotal').val())  - deleted_amt;
+					          
+					          	$('#subtotal').val(sub_amount);
+					          	
+					          	alert("sub total is after subtraction" + sub_amount);
+					          	
+					          	
+					          	var taxfinal_amount =  Number($('#taxtotal').val())  - Number(deleted_tax_amt);
+					          
+					          	$('#taxtotal').val(taxfinal_amount);
+					          	
+					          	alert("tax total is after subtraction" + taxfinal_amount);
+					          	
+					          	
+					          	
+					          	
+					          	var final_amount =  Number($('#grandtotal').val())  - deleted_amt - deleted_tax_amt;
+					          
+					          	$('#grandtotal').val(final_amount);
+					          	
+					          	alert("grand total is after subtraction" + final_amount);
+					          	
+					          	
+					          	
+					          	
+					          	
+					          	
+					          	//get the index of this box
+					          	
+					          	var counter_index = tax_counter.indexOf(number);
+					          	alert("found at index" + counter_index);
+					          	
+					          	if(counter_index!=-1)
+					          	{
+					          	
+					          	  var tax_val = tax_rate[counter_index];
+					          	  alert("tax rate in this box is " + tax_val);
+					          	  
+					          	  var divid = Math.floor(tax_val)  + 'check';
+					          	  alert("div corresp to tax rate is"  + divid);
+					          	  
+					          	  var div_value = $('#' + divid).val();
+					          	  alert("value in this tax rate div is" + div_value);
+					          	  
+					          	  var old_amt = tax_amount[counter_index];
+					          	  alert("amt to be subtracted is" + old_amt);
+					          	  
+					          	  var new_value = Number(div_value) - Number(old_amt);
+					          	  alert("new value in this tax rate div is " + new_value);
+					          	  
+					          	  if(new_value==0)
+					          	  {
+					          	     $('#' + divid).closest('tr').remove();
+					          	  }
+					          	  
+					          	  else
+					          	    
+					          	     $('#' + divid).val(new_value);
+					          	     
+					          	  tax_rate[counter_index] = -1;
+					          	  tax_counter[counter_index] = -1;
+					          	  tax_div[counter_index] = -1;
+					          	  tax_amount[counter_index] = -1;
+					          	  
+					          	     
+					          	  
+					          	     
+					          	   
+					          	
+					          	}
+					          	
+					          	
+					          	
+					          
+					          	$(o).closest('tr').remove();
+					          	
+					          	
+					          	
+                               
+					          }
+					          
+					          
+					          
+</script>
+
+<script>
+
+$("#preview").click(function(){
+
+//create 2d array of order products,send subtotal, taxtotal and grand total as separate data
+
+
+
+	
+	var data1 = $('#enquire').serialize();
+$.ajax({
+   type : 'POST',
+   url  : 'http://localhost/School_mngt/enquire_mail.php',
+   dataType : 'text',
+   data: data1,
+   success :  function(response)
+      {
+		
+		
+	  }
+	  });
+	  return false;
+});
+
+
+
+
+
+
+
+</script>
+
+<!-- jQuery 
+    <script src="js/jquery.js"></script>-->
+
+<!-- Bootstrap Core JavaScript -->
+<script src="jarvis/js/bootstrap.min.js"></script>
+
+<!-- Morris Charts JavaScript -->
+<script src="jarvis/js1/plugins/morris/raphael.min.js"></script>
+<script src="jarvis/js1/plugins/morris/morris.min.js"></script>
+<script src="jarvis/js1/plugins/morris/morris-data.js"></script>

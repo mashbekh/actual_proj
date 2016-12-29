@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Sign In</title>
+  
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js" type="text/javascript"></script>
+<meta name="google-signin-client_id" content="49796868187-9j499iatoahdjru9liiun3lqggp7a53e.apps.googleusercontent.com">
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+    rel="stylesheet" type="text/css" />
+    
+    
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+
+
+  
+<link rel="stylesheet" href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+</head>
+<script>
+$(document).ready(function () {
+    var $inputs = $("#login input");
+    
+    $inputs.on("input change", function () {
+        valid = true;
+        $inputs.each(function () {
+           
+            valid *= this.type == "radio" ? this.checked : this.value != "";
+            return valid;
+        });    
+        $("#submit").prop("disabled", !valid);
+    });
+});
+
+</script>
+<style>
+
+#abc{
+  background-color: #F0F3F4;
+   margin-top: 15px;
+}
+
+
+#xyz
+{
+    height: 65px;
+     text-align: center;
+    
+     background-color:#152F37;
+}
+
+#pqr{
+     background-color:#152F37;
+
+}
+
+#wrapper{
+     background-color:white;
+
+}
+.ui-dialog-titlebar {
+    border: 0;
+    padding: .5em 1em;
+    background: black;
+    overflow: auto;
+    zoom: 1;
+}
+</style>
+
+<body onload="renderButton()">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="pqr">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header" id="xyz">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                <a class="navbar-brand" href="index.html" id="xyz" >SIMPLIFY TAX</a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav" id="pqr">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
+                    <ul class="dropdown-menu message-dropdown">
+                        <li class="message-preview">
+                            <a href="#">
+                                <div class="media">
+                                    <span class="pull-left">
+                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                    </span>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><strong>John Smith</strong>
+                                        </h5>
+                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="message-preview">
+                            <a href="#">
+                                <div class="media">
+                                    <span class="pull-left">
+                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                    </span>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><strong>John Smith</strong>
+                                        </h5>
+                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="message-preview">
+                            <a href="#">
+                                <div class="media">
+                                    <span class="pull-left">
+                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                    </span>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><strong>John Smith</strong>
+                                        </h5>
+                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="message-footer">
+                            <a href="#">Read All New Messages</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                    <ul class="dropdown-menu alert-dropdown">
+                        <li>
+                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
+                        </li>
+                        <li>
+                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">View All</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+          
+            <!-- /.navbar-collapse -->
+        </nav>
+
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+
+  
+                        <h1 class="page-header">
+                            Login <small>&nbsp; &nbsp;&nbsp;&nbsp;Need an account? <a href="register.html">Sign up now!</a></small>
+                        </h1>
+                        
+                        <div class="row">
+                    <div class="col-lg-6">
+                     
+                        
+                        <div id="form-panel">
+                        <div class="row">
+                        <div class="col-lg-12">
+                        <form role="form" id="login">
+                        
+                            <div class="form-group">
+                                <label></label>
+                                <input class="form-control" type="text" id="email" placeholder="Email" onchange="return verify_mail()" required>
+                                <div id="email_msg"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label></label>
+                                <input class="form-control" type="password" id="password" placeholder="Password" required>
+                            </div>
+                            
+                             <button type="submit" class="btn btn-primary" id="submit" onclick="return verify(this,event)" disabled="disabled">Lets get started!</button>
+                                <script>
+                              
+                              function verify_mail()
+{
+ var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+var x= document.getElementById("email").value;
+if(reg.test(x)== false)
+ {
+ 
+ $('#email_msg').text("Please enter valid email address");
+ return false;
+ }
+else return true;
+
+}
+                              
+                              
+                              
+    function verify(sender,e){
+    
+    var email = $('#email').val();
+	var password  = $('#password').val();
+	e.preventDefault();
+	
+   $.ajax({
+   type : 'GET',
+   url  : '/rest/login/verify_user',
+    dataType :'text',
+    
+   
+   data: {'email': email, 'password': password},
+  
+    success: function(response) {
+      if(response!="Not valid guser" && response!= "Not valid user" && response!="Sorry wrong password. Try again!!")
+      {
+          // alert(response);
+           var user_data = response.split(":");
+           window.localStorage.setItem("user_name",user_data[0]);
+           alert(window.localStorage.getItem("user_name"));
+           window.localStorage.setItem("user_id",user_data[1]);
+           window.localStorage.setItem("auth_token",user_data[2]);
+           location.href = "index.html";
+      }
+      else
+           alert(response);
+    },
+    
+	  
+	error: function (a,b,c)
+	{ 
+	
+	  
+		alert(a.status+b+c);
+	
+	
+	}  
+	  });
+          
+       
+  
+}
+                              
+                              </script>
+                            
+                             <p>-------------or-------------</p>
+                            <div class="form-group">
+                             <div  id="google-signin-button"></div>
+                              <script>
+    function onSignIn(googleUser) {
+     
+      alert('Logged in as: ' + googleUser.getBasicProfile().getName());
+      $.ajax({
+   type : 'GET',
+   url  : '/rest/login/verify_user',
+   dataType : 'text',
+   data: {'name':googleUser.getBasicProfile().getName(),'email':googleUser.getBasicProfile().getEmail()},
+   success :  function(response)
+      {
+		if(response!="Not valid guser")
+      {
+           
+           var user_data = response.split(":");
+           window.localStorage.setItem("user_name",user_data[0]);
+           alert(window.localStorage.getItem("user_name"));
+           window.localStorage.setItem("user_id",user_data[1]);
+           window.localStorage.setItem("auth_token",user_data[2]);
+           location.href = "index.html";
+      }
+		
+	  },
+	  error: function (textStatus, errorThrown) {
+               alert("error" + errorThrown);
+            }
+	 
+	  });
+      
+    }
+    function onFailure(error) {
+      console.log(error);
+    }
+    function renderButton() {
+   
+      gapi.load('auth2,signin2', function() {
+        var auth2 = gapi.auth2.init();
+        auth2.then(function() {
+          // Current values
+          var isSignedIn = auth2.isSignedIn.get();
+          var currentUser = auth2.currentUser.get();
+
+          if (!isSignedIn) {
+            // Rendering g-signin2 button.
+            gapi.signin2.render('google-signin-button', {
+              'onsuccess': 'onSignIn'  
+            });
+          }
+          else
+          {
+         // alert("signed in");
+          }
+        });
+      });
+    }
+
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    }
+    
+ 
+    
+    
+    
+  </script>
+                        </div>
+                        
+                         </form>
+                        <div>
+                        </div>
+                        </div>
+                        
+                      
+                    </div>
+                </div>
+                <!-- /.row -->
+</div> <!--  wrapper -->
+               
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+
+    <!-- jQuery 
+    <script src="js/jquery.js"></script>-->
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="jarvis/js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="jarvis/js1/plugins/morris/raphael.min.js"></script>
+    <script src="jarvis/js1/plugins/morris/morris.min.js"></script>
+    <script src="jarvis/js1/plugins/morris/morris-data.js"></script>
+
+</body>
+
+
+</html>
