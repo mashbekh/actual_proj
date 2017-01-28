@@ -1,0 +1,315 @@
+<html>
+
+<head>
+
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
+
+
+
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+<!-- Morris Charts CSS -->
+<link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+
+</head>
+
+<script>
+
+function abc()
+{
+	/*
+var str =  {
+		     "porder" : {
+		    	 "vendor_id": "VEN555",
+		         "company_id": "CMP123",
+		         "date": null,
+		         "amount": 1000,
+		         "tax_amount": 250,
+		         "grand_total": 1250,
+		         "note" : "hello"
+		        // "po_id" : null,
+		         //"PO_number" :null
+		     },
+		     
+		     "porderDetails" :[
+		    	 {
+		    		"product_id": "PID200",
+		    		"quantity": 10,
+		    		"cost": 2,
+		    		"tax_id":null,
+		    		"amount": 20,
+		    		"tax_amount":0
+		    		 
+		    	 },
+		    	 
+		    	 {
+		    		 "product_id": "PID201",
+			    		"quantity": 100,
+			    		"cost": 6,
+			    		"tax_id":null,
+			    		"amount": 600,
+			    		"tax_amount":0
+		    		 
+		    		 
+		    	 }
+		    	 
+		    	 
+		     ]
+		     };
+*/
+/*
+var str = 
+	{
+	"tax_name":"Sales Tax",
+	"tax_abbreviation":"VAT",
+	"tax_desc":"random",
+	"tax_recoverable":true,
+	"tax_rate" : 5.5,
+	"tax_id":123,
+	"company_id":"CMP455"
+	};
+	
+alert(typeof str);
+alert(typeof JSON.stringify(str));
+var p = JSON.stringify(str);
+//console.log(p);
+
+
+*/
+var tax ={}; //json
+tax.tax_name = "service tax";
+tax.tax_abbreviation = "VAT";
+tax.tax_desc = "uy";
+tax.tax_rate = 15.8;
+alert(typeof 15.8);
+tax.tax_recoverable = true;
+tax.tax_id= null;
+tax.company_id = "CMP455";
+alert(tax);
+var p = JSON.stringify(tax);
+console.log(p);
+
+
+$.ajax({
+	   type : 'GET',
+	   url  : '/Accounting/settings/tax/create_tax',
+	    dataType :'json',
+	    data:{'json' : p},
+	    success: function(response) {
+	     alert(response);
+	     console.log( response);
+	    },
+		error: function (a,b,c)
+		{ 
+			alert(a.status+b+c);
+		}  
+		  });
+
+
+}
+
+
+function xyz()
+{	
+	/*var str =  {
+			    
+			    	 "vendor_id": "VEN124",
+			         "company_id": "CMP123",
+			         "date": null,
+			         "amount": 1000,
+			         "tax_amount": 250,
+			         "grand_total": 1250,
+			         "note" : "hello",
+			         "po_id" : null,
+			         "PO_number" :null,
+			     	 "pod" :[]
+			     };
+
+
+
+  var str = {"vendor_id":"VEN555",
+		  "company_id":"CMP123",
+		  "amount":1000.0,
+		  "tax_amount":250.0,
+		  "grand_total":1250.0,
+		  "note":"hello",
+		  "po_id":4,
+		  "pod":
+		        [
+		        {
+		        
+		        "product_id":"PID200",
+		        "quantity":10.0,
+		        "cost":2.0,
+		        "tax_id":null,
+		        "amount":20.0,
+		        "tax_amount":0.0,
+		        "id":23}
+		        ,
+		        
+		        {
+		        "product_id":"PID201",
+		        "quantity":100.0,
+		        "cost":6.0,
+		        "tax_id":null,
+		        "amount":600.0,
+		        "tax_amount":0.0,
+		        "id":24}
+		        ],
+		        
+		        
+		      "date":null,
+		      "po_number":"CMP123PO4"
+		      };
+  
+  
+  
+  var str = {
+		  
+		  
+			  "id": 123,
+			  "name": "Pankaj",
+			  "permanent": true,
+			  "date" : null,
+			  "address": 
+			  [{
+			    "street": "Albany Dr",
+			    "city": "San Jose",
+			    "zipcode": 95129
+			  }
+			  ,
+			  
+			  {
+				    "street": "AlbanihhjhDr",
+				    "city": "bangalore",
+				    "zipcode": 560040
+				  }
+			  
+			  ],
+			  "phoneNumbers": [
+			    123456,
+			    987654
+			  ],
+			  "role": "Manager",
+			  "cities": [
+			    "Los Angeles",
+			    "New York"
+			  ],
+			  "properties": {
+			    "age": "29 years",
+			    "salary": "1000 USD"
+			  }
+			
+		  
+  };
+  
+  */
+  var str = {
+		  "vendor_id":"VEN555",
+  
+		  "company_id":"CMP123",
+		  "amount":1000.0,
+		  "tax_amount":250.0,
+		  "grand_total":1250.0,
+		  "note":"hello",
+		  "po_id":null,
+		  "pod":
+		        [
+		        {
+		        
+		        "product_id":"PID200",
+		        "quantity":10.0,
+		        "cost":2.0,
+		        "tax_id":null,
+		        "amount":20.0,
+		        "tax_amount":0.0,
+		        "id":null,
+		        "po": null
+		        },
+		        
+		        {
+		        "product_id":"PID201",
+		        "quantity":100.0,
+		        "cost":6.0,
+		        "tax_id":null,
+		        "amount":600.0,
+		        "tax_amount":0.0,
+		        "id":null,
+		        "po":null
+		        }
+		        ],
+		        
+		        
+		      "order_date":null,
+		      "po_number":null
+		      };
+	alert(typeof str);
+	alert(typeof JSON.stringify(str));
+	var p = JSON.stringify(str);
+	console.log(p);
+
+
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/rest/jack/actualPO',
+		    dataType :'text',
+		    data:{'jsondata' : p},
+		    success: function(response) {
+		     alert(response);
+		     console.log(response);
+		    },
+			error: function (a,b,c)
+			{ 
+				alert(a.status+b+c);
+				 console.log(a.status+b+c);
+			}  
+			  });
+
+
+	}	
+	
+
+
+</script>
+
+<body >
+<form>
+<input type="submit" class="btn btn-primary" id="submit_add_tax" onclick="abc()">
+</form>
+<img src="images/server.png" style="display:none" id="image">
+
+
+</body>
+
+
+
+
+
+
+</html>

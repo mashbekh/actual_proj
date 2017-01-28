@@ -21,12 +21,12 @@
    
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js" type="text/javascript"></script>
+  <script src="jarvis/js/bootstrap.min.js"></script>
 
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js" type="text/javascript"></script>
 <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
     rel="stylesheet" type="text/css" />
-    
-    <link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
    
  
   
@@ -36,7 +36,6 @@
 
 <!-- Bootstrap Core CSS -->
 <link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
-
 <!-- Custom CSS -->
 <link href="jarvis/css1/sb-admin.css" rel="stylesheet">
 
@@ -58,7 +57,9 @@
 	<script src="jarvis/js/datatables/lodash.min.js"></script>
 	<script src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
 	 <link rel="stylesheet" href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
-	  <script src="jarvis/js/bootstrap.min.js"></script>
+	 
+	
+	  
 	   <script src="jarvis/js/bootstrap.js"></script>
 	   
 	   <script src="jarvis/js/select2/select2.min.js"></script>
@@ -70,7 +71,60 @@
 
 </head>
 
+<script>
 
+ function edit_tax()
+ {
+	 
+	 $("#edittax_dialog").dialog({
+         
+         modal: true,
+         autoOpen: false,
+         title: "Edit Tax",
+         width: 700,
+         height: 500
+     });
+       
+         $('#edittax_dialog').dialog('open');
+         
+         //populate with values from that type of tax
+         return false;
+	 
+	 
+ }
+ 
+ 
+ function submit_edit_tax() //receive TAX ID, to know which tax to delete
+ {
+	 var tax_name = $('#new_tax_name').val();
+	 var tax_abbr = $('#new_abbreviation').val();
+	 var tax_rate = $('#new_tax_rate').val();
+	 var tax_desc = $('#new_desc').val();
+	 var tax_regno = $('#new_tax_reg_no').val();
+	 //var tax_recovery  = $('#tax_recovery').prop("checked");
+
+	 if(tax_name==''||tax_abbr==''||tax_rate==''||tax_desc==''||tax_regno=='')
+	 {
+	 return true;
+	 }
+
+	 //alert("all fine");
+	 //
+	 $('#edittax_dialog').dialog('close');
+	 return false;
+	 // make an ajax call to edit type of tax
+ }
+
+ function cancel()
+ {
+	 $('#edittax_dialog').dialog('close');
+	 //return false;
+ }
+
+
+
+
+</script>
 
 
 <style>
@@ -110,9 +164,13 @@
 .ui-dialog-titlebar {
     border: 0;
     padding: .5em 1em;
-    background: black;
+    background: #009999;
     overflow: auto;
     zoom: 1;
+}
+
+.ui-dialog-titlebar-close {
+	display: none;
 }
 </style>
 
@@ -123,9 +181,18 @@ function loadName()
 
 }
 
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
 </script>
 
 <body onload="loadName()">
+
  
     <div id="wrapper">
 
@@ -307,6 +374,88 @@ function loadName()
             <!-- /.navbar-collapse -->
         </nav>
 
+	<!-- EDIT TAX DETAILS DIALOG , associate every action in each row, with internal tax _id, so hat can be passed for ACTIONS-->
+
+
+	<div id="edittax_dialog" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+			<form action="" method="post">
+
+				<div class="form-group required">
+                                <label class="col-md-3 control-label">Tax Name</label>
+                                <div class="col-md-6"><input class="form-control" id="new_tax_name"  name="new_tax_name" maxlength="30"  placeholder="Tax Name" required="required" title="" type="text" />
+                                </div>
+                             </div>
+                             
+                             <br><br><br>
+                             
+                             <div class="form-group required">
+                                <label class="col-md-3 control-label">Tax Abbreviation</label>
+                                <div class="col-md-6"><input class="form-control" id="new_abbreviation" name="new_abbreviation" maxlength="100" required="required" title="" type="text" />
+                                </div>
+                             </div>
+                             
+                             <br><br>
+                             
+                             <div class="form-group required">
+                                <label class="col-md-3 control-label">Tax Registration No</label>
+                                <div class="col-md-6"><input class="form-control" id="new_tax_reg_no"  required="required" name="new_tax_reg_no" maxlength="100"  title="" type="number" />
+                                </div>
+                             </div>
+                             
+                             <br><br>
+                             
+                             <div class="form-group required">
+                                <label class="col-md-3 control-label">Description</label>
+                                <div class="col-md-6"><input class="form-control" id="new_desc"  name="new_desc" title=""  type="text" required="required" />
+                                </div>
+                             </div>
+                           
+                           <br><br>
+                             
+                             <div class="form-group required">
+                                <label class="col-md-3 control-label">Tax Rate</label>
+                                <div class="col-md-6"><input class="form-control" id="new_tax_rate" step="any"  name="new_tax_rate" required="required" title="" type="number" />
+                                </div>
+                             </div>
+                             
+                            
+                             
+                             <br><br>
+                             
+                             
+                             <div class="form-group">
+                                 <label class="col-md-3 control-label">Is this Tax recoverable? </label>
+                                
+                                <div class="col-md-1">
+                               
+                                        <input type="checkbox" value="" class="form-control" id="new_tax_recovery" name="new_tax_recovery">
+                                       
+                                   
+                                </div>
+                             </div>
+                             
+
+				<br> <br> <input id="submit" type="submit"
+					value="Save" class="btn btn-default" onclick="return submit_edit_tax()">
+				
+
+					<input id="cancel" type="submit"
+					value="Cancel" class="btn btn-default" onclick="return cancel()" formnovalidate>
+					
+			</form>
+			
+					
+				
+			
+		</div>
+	</div>
+
+
+	<!-- END OF EDIT TAX DETAILS DIALOG -->
+
+
+
 
         <div id="page-wrapper">
 
@@ -323,11 +472,14 @@ function loadName()
                     
                     <!------CONTROL TABS START------>
 						<ul class="nav nav-tabs bordered">
-							<li class="active"><a href="#add_tax" data-toggle="tab"><i
+						
+						<li class="active"><a href="#view_taxes" data-toggle="tab"><i
+									class="entypo-menu"></i> View Tax</a></li>
+									
+							<li ><a href="#add_tax" data-toggle="tab"><i
 									class="entypo-menu"></i> Add new tax</a></li>
 									
-							<li><a href="#view_taxes" data-toggle="tab"><i
-									class="entypo-menu"></i> View Tax</a></li>
+							
 							
 
 						</ul>
@@ -342,12 +494,28 @@ function loadName()
                         <form role="form" id="profile">
                         
                     
+                            <!-- fill drop down based on documents/numbers provided to support tax type 
+                            1. tin  - sales/cst
+                            2. service tax reg no - service tax
+                            3. gstn - cgst/igst/sgst
                             
+                            
+                            -->
                             <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Name</label>
-                                <div class="col-md-6"><input class="form-control" id="tax_name"  name="tax_name" maxlength="30"  placeholder="Tax Name" required="required" title="" type="text" />
+                               <div class="col-md-6">
+								<select class="form-control" id="tax_name" required>
+									<option value=''>Select</option>
+									<option value="Sales Tax">Sales Tax</option>
+									<option value="Service Tax">Service Tax</option>
+									<option value="CST">CST</option>
+									<option value="CGST">CGST</option>
+									<option value="SGST">SGST</option>
+									<option value="IGST">IGST</option>
+								</select>
+					           </div>
                                 </div>
-                             </div>
+                            
                              
                              <br><br><br>
                              
@@ -358,14 +526,14 @@ function loadName()
                              </div>
                              
                              <br><br>
-                             
+                             <!--  
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Registration No</label>
                                 <div class="col-md-6"><input class="form-control" id="tax_reg_no"  required="required" name="tax_reg_no" maxlength="100"  title="" type="number" />
                                 </div>
                              </div>
+                             -->
                              
-                             <br><br>
                              
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Description</label>
@@ -377,7 +545,7 @@ function loadName()
                              
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Rate</label>
-                                <div class="col-md-6"><input class="form-control" id="tax_rate" step="any"  name="tax_rate" required="required" title="" type="number" />
+                                <div class="col-md-6"><input class="form-control" id="taxrate" step="any"  name="tax_rate" required="required" title="" type="number" />
                                 </div>
                              </div>
                              
@@ -386,7 +554,7 @@ function loadName()
                              <br><br>
                              
                              
-                             <div class="form-group required">
+                             <div class="form-group">
                                  <label class="col-md-3 control-label">Is this Tax recoverable? </label>
                                 
                                 <div class="col-md-1">
@@ -398,11 +566,10 @@ function loadName()
                              </div>
                              
                              <br><br>
-                               <input type="submit" class="btn btn-primary" id="submit_add_tax" onclick="return add_tax()"></button>
-                            
+                              
                          </form>
                           
-                            
+                           <input type="submit" class="btn btn-primary" id="submit_add_tax" onclick="return update()">  
                            
                         
                          </div>
@@ -413,6 +580,8 @@ function loadName()
                       
                         
                         <!-- NEW NAV BAR CONTENT -->
+                        <!--  ASSOCIATION ACTION BUTTON WITH ID SUCH THAT FOR EVERY ROW IT HOLDS TAX_ID, PASS THIS
+                        TO DELETE AND EDIT FUNCTION, SO INTERNAL TAX_ID IS KNOWN -->
                         
                         <div class="tab-pane box active " id="view_taxes">
 							<div class="row">
@@ -426,8 +595,6 @@ function loadName()
 
 														<th><div>Tax Abbreviation</div></th>
 														<th><div>Tax Description</div></th>
-														<th><div>Tax Registration No</div></th>
-
 														<th><div>Tax Rate</div></th>
 														<th><div>Tax Recoverable?</div></th>
 														<th><div>Options</div></th>
@@ -437,87 +604,33 @@ function loadName()
 												<tbody>
 													<tr>
 														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input class="form-control" id="0product_name"
-																		name="product_name" name="username"
-																		placeholder="Product Name" required="required"
-																		title="" type="text" />
-																</div>
-															</div>
+														<!--  ADD CODE TO POPULATE VALUES FROM JSON FOR EACH TD -->
+															
 
 														</td>
 
 														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="1" class="form-control"
-																		id="0quantity" maxlength="30" name="username"
-																		placeholder="Quantity" required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div>
+															
 
 														</td>
 														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="0" class="form-control"
-																		id="0price" name="company_name" maxlength="30"
-																		name="username" placeholder="Price"
-																		required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div> <br> <br>
+															
 
 														</td>
 														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="0" class="form-control"
-																		id="0price" name="company_name" maxlength="30"
-																		name="username" placeholder="Price"
-																		required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div> <br> <br>
+															
 
 														</td>
 														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="0" class="form-control"
-																		id="0price" name="company_name" maxlength="30"
-																		name="username" placeholder="Price"
-																		required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div> <br> <br>
+															
 
 														</td>
-														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="0" class="form-control"
-																		id="0price" name="company_name" maxlength="30"
-																		name="username" placeholder="Price"
-																		required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div> <br> <br>
-
-														</td>
-
+													
 														
 														
 														<td> <!-- ACTIONS -->
                                  <div class="btn-group">
+                                 
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                                     Action <span class="caret"></span>
                                 </button>
@@ -525,7 +638,7 @@ function loadName()
                                     
                                     <!-- EDITING LINK -->
                                     <li>
-                                        <a href="">    <!-- OPEN POP UP WITH FILLED VALUES -->
+                                        <a href="" onClick="return edit_tax()">    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
                                             <i class="entypo-pencil"></i>
                                                 Edit Tax
                                             </a>
@@ -581,6 +694,8 @@ function loadName()
 <script>
  function confirm_delete() {
   return confirm('Are you sure to delete?');
+  //add ajax code to delete the same
+  //receive internal tax_id as parameter
 }
   
 function add_tax()
@@ -598,13 +713,63 @@ if(tax_name==''||tax_abbr==''||tax_rate==''||tax_desc==''||tax_regno=='')
 return true;
 }
 
-alert("all fine");
-return false;
+//alert("all fine");
+//add code to add tax into table
+//upon success return false else return message
+
+
+update();
+
+
 }
 </script>
 
 
-<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
+<script>
+
+
+function update()
+{
+	var tax ={}; 
+	tax.tax_name = $("#tax_name").val();
+	tax.tax_abbreviation = $("#abbreviation").val();
+	tax.tax_desc = $("#desc").val();
+	tax.tax_rate = Number($("#taxrate").val());
+	tax.tax_recoverable = $('#tax_recovery').prop("checked");
+	tax.tax_id= null;
+	tax.company_id = "CMP100";
+	var p = JSON.stringify(tax);
+	//alert(p);
+	console.log(p);
+
+
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/settings/tax/create_tax',
+		    dataType :'json',
+		    data:{'json' : p},
+		    success: function(response) {
+		     alert(response);
+		     console.log( response);
+		     return true;  //stay in same page
+		    },
+			error: function (a,b,c)
+			{ 
+				alert(a.status+b+c);
+				return true;
+			}  
+			  });
+	
+	}
+
+
+
+</script>
+
+
+<!-----  DATA TABLE EXPORT CONFIGURATIONS
+if two tables needed in same page for export this code is needed ---->   
+                   
 <script type="text/javascript">
 
 	jQuery(document).ready(function($)

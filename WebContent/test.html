@@ -157,6 +157,16 @@ function loadName()
 	document.getElementById("date").value = today;
  
  var first_count=0;
+ /*
+ {
+ $("#0price").val(20);
+ update_amount(0);
+ 
+ $("#0tax_rate").val("VAT 14.5");
+ update_tax(0);
+ }
+ 
+ */
 }
 
 </script>
@@ -348,7 +358,9 @@ function loadName()
 										<div class="col-lg-8">
 											<button type="button" class="btn btn-info"
 												style="height: 40px; width: 1218px" data-toggle="collapse"
+												
 												data-target="#portionOne">Business Details</button>
+												
 											<div id="portionOne" class="panel-collapse collapse in">
 												gjhjggdgdhgfdfhjhdfdmfndmfnd bcvbcvhjdghdjdnke uyjhjcnxmx <br>
 												kjhcuiyufhjknm bmnmnxcxncxm<br>jbsdguyyuyduyumwmdemm<br>
@@ -407,7 +419,7 @@ function loadName()
 																				14.5</option>
 																			<option data-customvalue="15" value="SERVICE 15">SERVICE
 																				15</option>
-																			
+
 																		</datalist>
 
 
@@ -486,7 +498,7 @@ function loadName()
 
 																<div class="col-md-12">
 																	<input class="form-control" id="0product_name"
-																		name="product_name" name="username"
+																		name="product_name" 
 																		placeholder="Product Name" required="required"
 																		title="" type="text" />
 																</div>
@@ -499,7 +511,7 @@ function loadName()
 
 																<div class="col-md-12">
 																	<input type="number" value="1" class="form-control"
-																		id="0quantity" maxlength="30" name="username"
+																		id="0quantity" maxlength="30" name="quantity"
 																		placeholder="Quantity" required="required" title=""
 																		onchange="update_amount(first_count)" />
 																</div>
@@ -511,8 +523,8 @@ function loadName()
 
 																<div class="col-md-12">
 																	<input type="number" value="0" class="form-control"
-																		id="0price" name="company_name" maxlength="30"
-																		name="username" placeholder="Price"
+																		id="0price" name="price" maxlength="30"
+																		 placeholder="Price"
 																		required="required" title=""
 																		onchange="update_amount(first_count)" />
 																</div>
@@ -524,7 +536,7 @@ function loadName()
 
 																	<input list="browser" class="form-control"
 																		id="0tax_rate" placeholder="Tax Rate"
-																		onchange="update_tax(this,first_count)">
+																		onchange="update_tax(first_count)">
 																	<datalist id="browser">
 																		<option data-customvalue="5.5" value="VAT 5.5">VAT
 																			5.5</option>
@@ -532,7 +544,7 @@ function loadName()
 																			14.5</option>
 																		<option data-customvalue="15" value="SERVICE 15">SERVICE
 																			15</option>
-																		
+
 																	</datalist>
 																</div>
 															</div>
@@ -540,8 +552,7 @@ function loadName()
 														</td>
 
 														<td>
-															<div id="0amt">0</div> 
-															<i class="entypo-trash"
+															<div id="0amt">0</div> <i class="entypo-trash"
 															onClick="delete1(this,first_count)"></i> <br> <br>
 															<div id="0tax_amt">0</div>
 
@@ -562,9 +573,9 @@ function loadName()
 																<div class="col-md-3">
 																	<input type="number" value="0"
 																		class="form-control no-border" readonly id="subtotal"
-																		name="company_name" maxlength="30" name="username"
-																		placeholder="Quantity" required="required" title=""
-																		onchange="update_amount(first_count)" />
+																		 maxlength="30" name="subtotal"
+																		placeholder="SubTotal" required="required" title=""
+																		 />
 																</div>
 															</div>
 
@@ -578,9 +589,9 @@ function loadName()
 																<div class="col-md-3">
 																	<input type="number" value="0"
 																		class="form-control no-border" readonly id="taxtotal"
-																		name="company_name" maxlength="30" name="username"
-																		placeholder="Quantity" required="required" title=""
-																		onchange="update_amount(first_count)" />
+																		name="taxtotal" maxlength="30" 
+																		placeholder="TaxTotal" required="required" title=""
+																		 />
 																</div>
 															</div>
 
@@ -596,10 +607,10 @@ function loadName()
 																<div class="col-md-3">
 																	<input type="number" value="0"
 																		class="form-control no-border" readonly
-																		id="grandtotal" name="company_name" maxlength="30"
-																		name="username" placeholder="Quantity"
+																		id="grandtotal"  maxlength="30"
+																		name="grandtotal" placeholder="GrandTotal"
 																		required="required" title=""
-																		onchange="update_amount(first_count)" />
+																		 />
 																</div>
 															</div>
 
@@ -639,7 +650,7 @@ function loadName()
 										<input type="submit" class="btn btn-blue" name="submit"
 											id="submit" value="Save and Continue">
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										
+
 										<!-- create another row -->
 									</div>
 								</div>
@@ -647,19 +658,15 @@ function loadName()
 
 							</div>
 							<!-- one tab listing feature ends-->
-							
+
 							<!-- New Nav bar feature listing(create bill) -->
-							
-							<div class="tab-pane box " id="bill">
-							
-							hello world
-							
-							</div>
-							
-							
-							
-							
-							
+
+							<div class="tab-pane box " id="bill">hello world</div>
+
+
+
+
+
 						</div>
 						<!-- nav content -->
 
@@ -690,8 +697,10 @@ function loadName()
 $('#submit').click(function(){
 
   var purchaseOrder = {};
-  var products = [];	
-  purchaseOrder.products = products;
+  var pod= [];
+  //var customer;
+  purchaseOrder.pod = pod;
+  //purchaseOrder.customer = customer;
 	
 	for(var i=0;i<box_counter.length;i++)
 	{
@@ -701,12 +710,11 @@ $('#submit').click(function(){
 	  if($('#' + product_identifier).val()=='')
 	     	 alert("Please select a product ");
 	     	 
+	  //add checks for customer being selected, date and PO number(read only)
+	  
 	  else 
 	  {
-	    if($('#' + tax_identifier).val()=='')
-	    			alert("Please select tax bracket for product");
-	 			
-	 	 else{
+	    
 	  		var productName= $('#' + index + 'product_name').val();
 			var quantity = $('#' + index + 'quantity').val();
 			var price = $('#' + index + 'price').val();
@@ -715,25 +723,77 @@ $('#submit').click(function(){
 			var taxAmount = $('#' + index + 'tax_amt').text();
 		
 			var product = {
-  				"productName": productName,
+  				"product_id": productName,
   				"quantity": quantity,
-  				"price": price,
+  				"cost": price,
   				"amount": amount,
-  				"tax": tax,
-  				"taxAmount": taxAmount
-						  }
+  				"tax_id": tax,
+  				"tax_amount": taxAmount,
+  				"po":null,
+  				"id":null
+						  };
 					  
-			purchaseOrder.products.push(product);
-		}
+			purchaseOrder.pod.push(product);
+			
+			
+	 	 
+	    //write rest of code here
 	}
 	
 	}
-	alert(products.length); //if at end object has 0 elements then stay in same page, else go ahead(yet to fill all details)
+	var vendor = "VEN222"; //$("#vendpor").val(); - value has vendorID
+	purchaseOrder.vendor_id = vendor;
+	
+	// add customerid, add companyid - get it from local storage, other details of PO
+	
+    var date = $("#date").val();
+	alert(date);
+	purchaseOrder.order_date = date;
+	//var po_number = $("#po_number").val();
+	purchaseOrder.po_number = null;
+	purchaseOrder.po_id = null;
+	purchaseOrder.company_id = "CMP445";
+	purchaseOrder.amount = $("#subtotal").val();
+	purchaseOrder.tax_amount = $("#taxtotal").val();
+	purchaseOrder.grand_total = $("#grandtotal").val();
+	
+	purchaseOrder.note = $("textarea#notes").val();
+	
+	//list of adv payment is null here
+	
+	//alert(products.length); //if at end object has 0 elements then stay in same page, else go ahead(yet to fill all details)
 	console.log(JSON.stringify(purchaseOrder));
+	var p = JSON.stringify(purchaseOrder);
 	
 	//product length>0 then make an ajax call to service, pass json, customer id , PO number and put it in draft table, on success redirect to next page to show all details
 	//of entered PO (pass PO number to next page), has to come from draft table on approval goes to PO table else on edit option 
 	//go to another pag pass PO number, put the same in edit mode  
+	
+	
+	//ajax call
+	
+	
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/po/purchase/createpo',
+		    dataType :'text',
+		    data:{'jsondata' : p},
+		    success: function(response) {
+		     alert(response);
+		     console.log(response);
+		     //pass PO number of the created PO
+		     //redirect to URL to view purchase order and pass response to next page
+		     //store db json in local storage
+		     var po_json = response;
+		     window.localStorage.setItem("identifier",po_json);
+		     window.location.replace("view_po.html");
+		    },
+			error: function (a,b,c)
+			{ 
+				alert(a.status+b+c);
+				 console.log(a.status+b+c);
+			}  
+			  });
 	
 	
 });
@@ -791,7 +851,7 @@ $('#submit').click(function(){
  								'<div class="form-group required">'+ 
  								'<label class="col-md-3 control-label">Tax Rate</label>'+
  								'<div class="col-md-9">'+ 
- 									'<input list="browser"  class="form-control" id="' + count + 'tax_rate" placeholder="Tax Rate" onchange="update_tax(this,' + count   + ')">'+
+ 									'<input list="browser"  class="form-control" id="' + count + 'tax_rate" placeholder="Tax Rate" onchange="update_tax(' + count   + ')">'+
  							 		'<datalist id="browser">'+
  							 		'<option data-customvalue="5.5" value="VAT 5.5">VAT 5.5</option>'+
  							 		'<option data-customvalue="14.5" value="VAT 14.5">VAT 14.5</option>'+
@@ -813,7 +873,7 @@ $('#submit').click(function(){
                             
                          function update_amount(value_counter)
 					           {
-					             var old_taxamt = $('#' + value_counter + 'tax_amt').text();
+					               var old_taxamt = $('#' + value_counter + 'tax_amt').text();
 					               var current_amount = $('#' + value_counter + 'amt').text();
 					              // alert(value_counter);
 					               
@@ -823,12 +883,12 @@ $('#submit').click(function(){
 					              {
 					                 var subamt =  Number($('#subtotal').val()) - current_amount;
 					                 //alert(subamt);
-					                 $('#subtotal').val(subamt);
+					                 $('#subtotal').val(subamt.toFixed(2));
 					                 
 					                 
 					                 var finalamt =  Number($('#grandtotal').val()) - current_amount;
 					                 //alert(subamt);
-					                 $('#grandtotal').val(finalamt);
+					                 $('#grandtotal').val(finalamt.toFixed(2));
 					              
 					              
 					              }
@@ -837,18 +897,18 @@ $('#submit').click(function(){
 					               
 					           		var y = value_counter + 'quantity';
 					          		var x = ($('#' + y).val()*$('#' + value_counter +'price').val());
-					                $('#' + value_counter + 'amt').text(x);
+					                $('#' + value_counter + 'amt').text(x.toFixed(2));
 					            
 					              // update subtotal
 					              
 					                var subamt =  Number($('#subtotal').val()) + x;
 					               // alert(subamt);
-					                $('#subtotal').val(subamt);
+					                $('#subtotal').val(subamt.toFixed(2));
 					                
 					                
 					                var finalamt =  Number($('#grandtotal').val()) + x;
 					               // alert(subamt);
-					                $('#grandtotal').val(finalamt);
+					                $('#grandtotal').val(finalamt.toFixed(2));
 					                
 					                
 					                
@@ -869,44 +929,26 @@ $('#submit').click(function(){
 					          	      
 					          	      var taxtotal =  Number($('#taxtotal').val()) - Number(old_taxamt) + Number(a.toFixed(2));
 					                alert(taxtotal);
-					                $('#taxtotal').val(taxtotal);
+					                $('#taxtotal').val(taxtotal.toFixed(2));
 					                
 					                 var finalamt =  Number($('#grandtotal').val()) - Number(old_taxamt) + Number(a.toFixed(2));
 					               // alert(subamt);
-					                $('#grandtotal').val(finalamt);
+					                $('#grandtotal').val(finalamt.toFixed(2));
 					          	      
 					          	      tax_addition(z,value_counter,a.toFixed(2));
 					                 
 					               }
 					          }
 					          
-					         				             
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
-                           
+					         		
                            
                            
 
-                     function update_tax(a,value1) // tax type - dropdown chosen
+                     function update_tax(value1) // tax type - dropdown chosen
 					          {
 					          
 					            var old_taxamt = $('#' + value1 + 'tax_amt').text();
-					          	var value = $(a).val();
+					          	var value = $("#" + value1 + "tax_rate").val();
                                 //alert(value);
                               	var c = value1 + 'amt';
                               	var d = value1 + 'tax_amt';
@@ -923,12 +965,12 @@ $('#submit').click(function(){
 					          	
 					          	 var taxtotal =  Number($('#taxtotal').val()) - old_taxamt + Number(y.toFixed(2));
 					                alert(taxtotal);
-					                $('#taxtotal').val(taxtotal);
+					                $('#taxtotal').val(taxtotal.toFixed(2));
 					                
 					                
 					                 var finalamt =  Number($('#grandtotal').val()) - old_taxamt + Number(y.toFixed(2));
 					               // alert(subamt);
-					                $('#grandtotal').val(finalamt);
+					                $('#grandtotal').val(finalamt.toFixed(2));
 					          
 					        
 					          	
@@ -981,7 +1023,7 @@ $('#submit').click(function(){
 							     } 
 							     
 							     else
-							         $('#' + divid).val(subtract_amt);  //update new value in div
+							         $('#' + divid).val(subtract_amt.toFixed(2));  //update new value in div
 							         
 							         
 							         
@@ -1002,7 +1044,7 @@ $('#submit').click(function(){
 											        
 											        var updated_val = Number(new_tax_value) + Number(tax_amt) ;
 											        
-											        $('#' + tax_div[new_tax_index]).val(updated_val);
+											        $('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
 											        
 											        alert("new value at div" + tax_val + "is" + updated_val);
 											        
@@ -1082,7 +1124,7 @@ $('#submit').click(function(){
 		alert("now value is" + updated_val);
 		alert("div to update is " + '#' + tax_div[new_tax_index]);
 		
-        $('#' + tax_div[new_tax_index]).val(updated_val);
+        $('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
         
         alert("after updating at " + tax_div[new_tax_index] + " " + $('#' + tax_div[new_tax_index]).val());
 
@@ -1136,6 +1178,7 @@ $('#submit').click(function(){
 					          {
 					          
 					            var index = box_counter.indexOf(number);
+					            
 					            box_counter.splice(index, 1);
 					          
 					          	var deleted_amt = $('#' + number + 'amt').text();
@@ -1148,14 +1191,14 @@ $('#submit').click(function(){
 					         
 					          	var sub_amount =  Number($('#subtotal').val())  - deleted_amt;
 					          
-					          	$('#subtotal').val(sub_amount);
+					          	$('#subtotal').val(sub_amount.toFixed(2));
 					          	
 					          	alert("sub total is after subtraction" + sub_amount);
 					          	
 					          	
 					          	var taxfinal_amount =  Number($('#taxtotal').val())  - Number(deleted_tax_amt);
 					          
-					          	$('#taxtotal').val(taxfinal_amount);
+					          	$('#taxtotal').val(taxfinal_amount.toFixed(2));
 					          	
 					          	alert("tax total is after subtraction" + taxfinal_amount);
 					          	
@@ -1164,7 +1207,7 @@ $('#submit').click(function(){
 					          	
 					          	var final_amount =  Number($('#grandtotal').val())  - deleted_amt - deleted_tax_amt;
 					          
-					          	$('#grandtotal').val(final_amount);
+					          	$('#grandtotal').val(final_amount.toFixed(2));
 					          	
 					          	alert("grand total is after subtraction" + final_amount);
 					          	
@@ -1203,7 +1246,7 @@ $('#submit').click(function(){
 					          	  
 					          	  else
 					          	    
-					          	     $('#' + divid).val(new_value);
+					          	     $('#' + divid).val(new_value.toFixed(2));
 					          	     
 					          	  tax_rate[counter_index] = -1;
 					          	  tax_counter[counter_index] = -1;

@@ -6,7 +6,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -16,6 +22,8 @@ import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
+
+import com.Models.Student;
 
 
 
@@ -27,7 +35,7 @@ public class test {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String test()
 	{
-		String abc="Hello World Vaishnavi! ";
+		String abc="Hello World  ";
 		return abc;
 		
 	}
@@ -85,7 +93,7 @@ public class test {
 		try {
 			status +="Loading driver..." + " ";
 		    Class.forName("com.mysql.jdbc.Driver");
-		    status+= "Driver loaded!" + " ";
+		    status+= "Driver loaded!" + " " + jdbcUrl;
 		  } catch (ClassNotFoundException e) {
 		    throw new RuntimeException("Cannot find the driver in the classpath!", e);
 		  }
@@ -124,11 +132,35 @@ public class test {
 			  
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			status += "could not connect";
+			status += "could not connect" + e.getMessage();
 		}
 		
 
 		return status;
 	  }
-
+		
+	
+	@GET
+	@Path("/jpa")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String test_jpa()
+	{
+		String ans= "";
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+	    List<Student> result = em
+	        .createQuery("SELECT g FROM Student g")
+	        .getResultList();
+	    for (Student g : result) {
+	     	      ans+=    g.getAge() + " " + g.getName() + " ";
+	         
+	    }
+	    em.getTransaction().commit();
+	    em.close();
+		return ans;
+	}
+	
+	
+	
 }

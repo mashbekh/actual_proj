@@ -1,0 +1,62 @@
+<!-- http://jsfiddle.net/j6j5a6Lw/
+http://jsfiddle.net/bgrins/ctkY3/
+https://bgrins.github.io/spectrum/ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="jarvis/css/spectrum.css">
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="jarvis/js/spectrum.js"></script>
+
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+<!-- Morris Charts CSS -->
+<link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+</head>
+
+
+
+<body>
+
+
+<input type='text' class="basic"/>
+
+</body>
+
+<script>
+$(document).ready(function() {
+	   $(".basic").spectrum({
+	      color: "#f00",
+	      change: function(color) {
+	    	       alert(color.toHexString());  //gives HEX code of chosen color
+	    	    },
+	      
+	   });
+	});
+
+</script>
+</html>

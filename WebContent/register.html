@@ -247,10 +247,16 @@ else return true;
                             <p>-------------or-------------</p>
                             <div class="form-group">
                              <div  id="google-signin-button"></div>
+                             
                               <script>
+                              
+                              
     function onSignIn(googleUser) {
-     alert('logged in');
+    	
+    	
+     //alert('logged in');
       alert('Logged in as: ' + googleUser.getBasicProfile().getName());
+      
       $.ajax({
    type : 'GET',
    url  : '/rest/elink/add_google_user',
@@ -293,7 +299,10 @@ else return true;
           }
           else
           {
-         // alert("signed in");
+        	  signOut();
+        	  gapi.signin2.render('google-signin-button', {
+                  'onsuccess': 'onSignIn'  
+                });
           }
         });
       });
@@ -302,6 +311,7 @@ else return true;
     function signOut() {
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function () {
+    	  alert("user logged out");
         console.log('User signed out.');
       });
     }
