@@ -1,0 +1,570 @@
+<!DOCTYPE HTML >
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Tax System</title>
+
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script src="jarvis/js/bootstrap.min.js"></script>
+
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+
+
+
+
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+<!-- Custom CSS -->
+<link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+
+
+<!-- Custom Fonts -->
+<link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+
+
+<script src="jarvis/js/jquery.dataTables.min.js"></script>
+<script src="jarvis/js/datatables/TableTools.min.js"></script>
+<script src="jarvis/js/dataTables.bootstrap.js"></script>
+<script src="jarvis/js/datatables/jquery.dataTables.columnFilter.js"></script>
+<script src="jarvis/js/datatables/lodash.min.js"></script>
+<script
+	src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+
+
+<script src="jarvis/js/bootstrap.js"></script>
+
+<script src="jarvis/js/select2/select2.min.js"></script>
+<script src="jarvis/js/selectboxit/jquery.selectBoxIt.min.js"></script>
+<link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
+<link rel="stylesheet" href="jarvis/js/select2/select2.css">
+<link rel="stylesheet"
+	href="jarvis/js/selectboxit/jquery.selectBoxIt.css">
+
+
+</head>
+
+<script>
+
+ 
+
+</script>
+
+
+<style>
+.dataTables_filter {
+	width: 50%;
+	float: right;
+	top-margin: 100px;
+	text-align: right;
+}
+
+.form-group.required .control-label:after {
+	content: "*";
+	color: red;
+}
+
+#abc {
+	background-color: #F0F3F4;
+	margin-top: 15px;
+}
+
+#xyz {
+	height: 65px;
+	text-align: center;
+	background-color: #152F37;
+}
+
+#pqr {
+	background-color: #152F37;
+}
+
+.ui-dialog-titlebar {
+	border: 0;
+	padding: .5em 1em;
+	background: #009999;
+	overflow: auto;
+	zoom: 1;
+}
+
+.ui-dialog-titlebar-close {
+	display: none;
+}
+</style>
+
+<script>
+var porder=null;
+function loadName()
+{
+   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
+   //fetch all PO for this company , just pass company_id
+   var x = "CMP445";
+   $.ajax({
+	   type : 'GET',
+	   url  : '/Accounting/po/purchase/viewall',
+	    dataType :'json',
+	    data:{'company_id' : x},
+	    
+	    success: function(response) {
+	    // alert(response);
+	     console.log( response);
+	     porder = response;
+	     update();
+	     //return true;  //stay in same page
+	    },
+		error: function (xhr) {
+			alert(xhr.responseText);
+		    var jsonResponse = JSON.parse(xhr.responseText);
+		    alert(jsonResponse.message);
+		   
+		  }
+   });
+}
+
+
+function update()
+{
+   var p= JSON.stringify(porder);
+   var porders = JSON.parse(p);
+   console.log(porders);
+   for(var i=0;i<porders.length;i++)
+	   {
+	   //alert(porders[i].vendor_id);
+	     var vendor = porders[i].vendor_id;
+	     var d = new Date(porders[i].order_date);
+	 	 var order_date = d.getDate() + "/"  + (d.getMonth()+1) + "/" + d.getFullYear();
+	 	 var po_number = porders[i].po_number;
+	 	 var bill_amt = porders[i].grand_total;
+	 	 var advance = 0;  //update later
+	 	 var balance = porders[i].grand_total;
+	 	 
+	 	
+	 	 
+	 	 
+	   $("#table_export").append('<tr>' + 
+			   '<td>' + po_number + '</td>' +
+			   '<td>' + vendor + '</td>' +
+			   '<td>' + order_date+ '</td>' +
+			   '<td>' + bill_amt + '</td>' +
+			   '<td>' + advance + '</td>' +
+			   '<td>' + balance + '</td>' +
+			   '<td>' +  
+                     '<div class="btn-group">' + 
+                      '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
+                                    'Action <span class="caret"></span>' + 
+                                '</button>' + 
+                               '<ul class="dropdown-menu dropdown-default pull-right" role="menu">' +
+                                
+                                    '<li>' + 
+                                       '<a href="edit_purchaseOrder.html?PONo=' + po_number + '" >' +    
+                                             '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
+                                                'Edit PO' + 
+                                            '</a>' + 
+                                    '</li>' + 
+                                    '<li class="divider"></li>'  +
+                                    '<li>' + 
+                                        '<a href="view_purchaseOrder.html?PONo='  + po_number  + '" >' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
+                                           '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
+                                                'View PO'+
+                                            '</a>' + 
+                                    '</li>'  +
+                                    '<li class="divider"></li>' + 
+                                    
+                                    '<li>'  + 
+                                        "<a href='' onClick='return confirm('Are you sure to delete?')'>"   + //FUNCTION
+                                            '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
+                                                 'Delete PO' + 
+                                            '</a>' +
+                                    '</li>' + 
+                                    
+                                    '<li class="divider"></li>' + 
+                                    
+                                   ' <li>' + 
+                                        '<a href="re-send.html?PONo=' +  po_number  + '">' + //FUNCTION
+                                           ' <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;' + 
+                                               'Re send PO' + 
+                                            '</a>' + 
+                                    '</li>' + 
+                                    '<li class="divider"></li>'  + 
+                                   
+                                    '<li>'  + 
+                                        '<a href="view_advance?PONo=' +   po_number + '" >'  + 
+                                           '<i class="fa fa-inr"></i>&nbsp;&nbsp;&nbsp;&nbsp;' +       //POP UP
+                                                'View Advance Payments' + 
+                                            '</a>' + 
+                                    '</li>' + 
+                                    
+                                    '<li class="divider"></li>' + 
+                                  
+                                    '<li>' + 
+                                        '<a href="" onClick="return add_adv(' + po_number  + ')">' +   //POP UP
+                                           '<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'  + 
+                                               'Add Advance Payment' + 
+                                            '</a>' + 
+                                    ' </li>' + 
+                                    
+                                    '<li class="divider"></li>' + 
+                                   
+                                    '<li>' + 
+                                        '<a href="PO_to_Bill.html?PONo='  +   po_number + '">' + 
+                                           '<span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;'  + 
+                                               'Convert to Bill' + 
+                                            '</a>' + 
+                                    '</li>' + 
+                                    
+                                '</ul>'   + 
+                            '</div>' + 
+
+                            '</td></tr>');
+	 	 
+	   
+	   }
+   
+   var table = $("#table_export").dataTable();
+   $('.dropdown-toggle').dropdown();
+}
+
+
+
+</script>
+
+
+
+<body onload="loadName()">
+
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
+			id="pqr">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header" id="xyz">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+
+				<a class="navbar-brand" href="index.html" id="xyz"
+					style="color: white; font-size: 30px">SIMPLIFY TAX</a> <a
+					class="navbar-brand" id="xyz" class="company_name"
+					style="font-size: 30px"></a>
+
+
+			</div>
+			<!-- Top Menu Items -->
+			<ul class="nav navbar-right top-nav" id="pqr">
+
+				<li><a href="#" style="color: white"><i class="entypo-plus"></i></a></li>
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-bell"></i> <b class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown">
+						<li><a href="#">Alert Name <span
+								class="label label-default">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-primary">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-success">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span class="label label-info">Alert
+									Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-warning">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-danger">Alert Badge</span></a></li>
+						<li class="divider"></li>
+						<li><a href="#">View All</a></li>
+					</ul></li>
+
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-fw fa-gear"></i>Settings</a>
+					<ul class="dropdown-menu">
+						<li><a href="tax_settings.html"> Tax Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="financial_settings.html">Financial Settings
+						</a></li>
+						<li class="divider"></li>
+						<li><a href="products.html">Products </a></li>
+					</ul></li>
+
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" style="color: white">&nbsp;<i
+						class="fa fa-user" id="name"></i> <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="company_profile.html"><i
+								class="fa fa-fw fa-user"></i> Profile</a></li>
+
+
+						<li class="divider"></li>
+						<li><a href="logout.html"><i
+								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
+					</ul></li>
+			</ul>
+
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav" id="abc">
+
+					<li><a href="index.html"><i class="fa fa-fw fa-dashboard"></i>
+							Home</a></li>
+
+					<li class="active"><a href="PurchaseOrders.html"><i
+							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
+
+					<li><a href="Bills.html"><i class="fa fa-fw fa-dashboard"></i>
+							Bills</a></li>
+
+					<li><a href="Invoice.html"><i
+							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
+
+					<li><a href="Estimate.html"><i
+							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
+
+					<li><a href="Receipts.html"><i
+							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
+
+					<li><a href="Reports.html"><i
+							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
+
+					<li><a href="Customers.html"><i
+							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
+
+					<li><a href="Vendors.html"><i
+							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
+
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+
+
+
+
+		<div id="page-wrapper">
+
+			<div class="container-fluid">
+
+
+
+				<h1 class="page-header">Purchase Orders</h1>
+
+				<button type="button" class="btn btn-info" style="float: right"
+					onclick="createpo()">Create Purchase Order</button>
+
+
+				<!--     <div class="row">
+                    <div class="col-lg-12">-->
+
+				<!------CONTROL TABS START------>
+				<ul class="nav nav-tabs bordered">
+
+					<li class="active"><a href="#view_taxes" data-toggle="tab"><i
+							class="entypo-menu"></i> Purchase Orders</a></li>
+
+
+
+				</ul>
+				<!------CONTROL TABS END------>
+
+
+				<div class="row">
+					<div class="col-lg-12">
+						<br> <br>
+						<table class="table table-bordered datatable" id="table_export">
+							<thead>
+								<tr>
+
+									<th><div>PurchaseOrder No</div></th>
+									<th><div>Vendor</div></th>
+									<th><div>Order Date</div></th>
+									<th><div>Order Amount</div></th>
+									<th><div>Advance</div></th>
+									<th><div>Balance</div></th>
+									<th><div>Options</div></th>
+
+								</tr>
+							<tbody id="tbody1">
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+
+									<td>
+
+										<div class="btn-group">
+											<button type="button"
+												class="btn btn-default btn-sm dropdown-toggle"
+												data-toggle="dropdown">
+												Action <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu dropdown-default pull-right"
+												role="menu">
+												<li><a
+													href="edit_purchaseOrder.html?PONo=' + po_number + '">
+														<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;
+														Edit PO
+												</a></li>
+												<li class="divider"></li>
+												<li><a
+													href="view_purchaseOrder.html?PONo='  + po_number  + '">
+														<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;
+														View PO
+												</a></li>
+												<li class="divider"></li>
+
+												<li><a href=''
+													onClick="return confirm('Are you sure to delete?)"> <span
+														class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;
+														Delete PO
+												</a></li>
+
+												<li class="divider"></li>
+
+												<li><a href="re-send.html?PONo=' +  po_number  + '">
+														<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;
+														Re send PO
+												</a></li>
+												<li class="divider"></li>
+
+												<li><a href="view_advance?PONo=' +   po_number + '">
+														<i class="fa fa-inr"></i>&nbsp;&nbsp;&nbsp;&nbsp; View
+														Advance Payments
+												</a></li>
+
+												<li class="divider"></li>
+
+												<li><a href=""
+													onClick="return add_adv(' + po_number  + ')"> <span
+														class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; Add
+														Advance Payment
+												</a></li>
+
+												<li class="divider"></li>
+
+												<li><a href="PO_to_Bill.html?PONo='  +   po_number + '">
+														<span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;
+														Convert to Bill
+												</a></li>
+
+											</ul>
+										</div>
+									</td>
+								</tr>
+
+
+							</tbody>
+							</thead>
+
+						</table>
+					</div>
+				</div>
+
+
+			</div>
+
+
+
+
+		</div>
+		<!-- end of nav bar content -->
+
+	</div>
+	<!-- /.container-fluid -->
+
+
+
+</body>
+
+<script>
+ function confirm_delete() {
+  return confirm('Are you sure to delete?');
+  //add ajax code to delete the same
+  //receive internal tax_id as parameter
+}
+  
+function createpo(){
+	
+	
+	window.location.replace("createPO.html");
+}
+
+</script>
+
+
+
+<!-----  DATA TABLE EXPORT CONFIGURATIONS
+if two tables needed in same page for export this code is needed   
+                   
+<script type="text/javascript">
+
+	jQuery(document).ready(function($)
+	{
+		
+
+		$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+	
+	var jqTable = $('table.datatable', $(e.target).attr("href"));
+	    if ( jqTable.length > 0 ) {
+	    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
+	    if ( oTableTools != null && oTableTools.fnResizeRequired() ){
+	        jqTable.dataTable().fnAdjustColumnSizing();
+	        oTableTools.fnResizeButtons();
+	    }
+	}	
+	
+	return false;
+});
+
+
+		var table = $("#table_export").dataTable();
+		
+	});
+		
+</script>
+
+  ---->
+
+</html>

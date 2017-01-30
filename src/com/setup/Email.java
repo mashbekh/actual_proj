@@ -19,8 +19,8 @@ public class Email {
 	@Path("/send")
 	public String send_mail()
 	{
-		final String username = "";
-		final String password = "";
+		final String username = "vaishnavirao17@gmail.com";
+		final String password = "amandambaht*17";
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -38,9 +38,9 @@ String status;
 		try {
 
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(""));
+			message.setFrom(new InternetAddress("vaishnavirao17@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(""));
+				InternetAddress.parse("vaishnavirao17@gmail.com"));
 			message.setSubject("Testing Subject");
 			message.setText("Hello! :)");
 

@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.setup.JsonCollectionDeserializer;
 
 @Entity
 @Table(name = "purchase_order")
@@ -26,9 +28,11 @@ public class PurchaseOrder {
 	private long po_id; //auto increment within company- do it in code, desc limit 1 , if null - insert 1
 	@Id
 	private String PO_number;  //combination of company id and po_id
+	
 	@OneToMany(targetEntity=PurchaseOrderDetails.class, mappedBy="po")
-	 @JsonManagedReference
-	private List<PurchaseOrderDetails> pod  = new ArrayList<>(); //bi directional
+	@JsonManagedReference
+	//@JsonDeserialize(using=JsonCollectionDeserializer.class)
+	private List<PurchaseOrderDetails> pod ; //bi directional
 	
 	
 	

@@ -17,6 +17,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.hibernate.Hibernate;
+
 import com.Models.PurchaseOrder;
 import com.Models.PurchaseOrderDetails;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -27,6 +29,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @javax.ws.rs.Path("/purchase")
 public class PO {
 	
+	
+	
+	/*1. To create PO - JSON - po object will have company object too, always fetch company object - populate PO, add this PO to
+	   * list of PO associated with company(edit/update company types) and assign this company object to the newly created PO.
+	   * no need to maintain vendor stats
+	   * To update PO - nothing to do with company
+	   * To delete PO - remove it from list of PO associated with company
+	   *                delete all POD associated with PO, remove from company list 
+	   *                then remove finally from PO table
+	*/   
 
 	@GET
 	@javax.ws.rs.Path("/createpo")
@@ -93,7 +105,9 @@ public class PO {
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
 		EntityManager em = emf.createEntityManager();
-		
+		//BEGIN TXN
+		em.getTransaction().begin();
+	   
 	    PurchaseOrder porder = em.find( PurchaseOrder.class, p.getPO_number() );
 	    
 	 
@@ -138,7 +152,7 @@ public class PO {
 	    for(PurchaseOrderDetails x : update_products)
 	    {
 	    	//put in transaction and they will automatically get updated
-	    	em.getTransaction().begin();
+	    //	em.getTransaction().begin();
 	    		PurchaseOrderDetails y = em.find(PurchaseOrderDetails.class, x.getId());
 	    		y.setAmount(x.getAmount());
 	    		y.setCost(x.getCost());
@@ -146,7 +160,7 @@ public class PO {
 	    		y.setQuantity(x.getQuantity());
 	    		y.setTax_amount(x.getTax_amount());
 	    		y.setTax_id(x.getTax_id());
-	    	em.getTransaction().commit();
+	    //	em.getTransaction().commit();
 	    	//the product id, PO object will remain the same.
 	    	new_products.add(y);
 	    }
@@ -155,10 +169,10 @@ public class PO {
 	     //delete products
 	     for(PurchaseOrderDetails x : delete_products)
 	     { 
-	    	 em.getTransaction().begin();
+	    	 //em.getTransaction().begin();
 	    	 PurchaseOrderDetails y = em.find(PurchaseOrderDetails.class, x.getId());
 	    	 em.remove(y);
-	    	 em.getTransaction().commit();
+	    	// em.getTransaction().commit();
 	     }
 	     
 	     
@@ -167,32 +181,118 @@ public class PO {
 	     for(PurchaseOrderDetails pod : create_products)
 		    {
 	    	 //we need to persist
-	    	 	em.getTransaction().begin();
+	    	 	//em.getTransaction().begin();
 		    	pod.setPo(porder);  //for all new ones, add this PO ref
 		    	em.persist(pod);
-		    	em.getTransaction().commit();
+		    	//em.getTransaction().commit();
 		    	new_products.add(pod);//add this to newly formed list
 		    }
 	     
 	     //now new products has all new set of products, associate with PO object 
-	     em.getTransaction().begin();
-	     PurchaseOrder pord = em.find( PurchaseOrder.class, p.getPO_number() );
-		    pord.setAmount(p.getAmount());
-		    pord.setGrand_total(p.getGrand_total());
-		    pord.setNote(p.getNote());
-		    pord.setOrder_date(p.getOrder_date());
+	     
+	     //PurchaseOrder pord = em.find( PurchaseOrder.class, p.getPO_number() );
+		    porder.setAmount(p.getAmount());
+		    porder.setGrand_total(p.getGrand_total());
+		    porder.setNote(p.getNote());
+		    porder.setOrder_date(p.getOrder_date());
 		   //po_id will be same
-		    pord.setTax_amount(p.getTax_amount());
-		    pord.setVendor_id(p.getVendor_id());
-		   pord.setPod(new_products);
+		    porder.setTax_amount(p.getTax_amount());
+		    porder.setVendor_id(p.getVendor_id());
+		   porder.setPod(new_products);
 		   em.getTransaction().commit();
-	    
+	    //em.close();
 		
-	    return porder;	
+	    //return newly updated PO
+	    em.getTransaction().begin();
+	     PurchaseOrder pord = em.find( PurchaseOrder.class, p.getPO_number() );
+	     Hibernate.initialize(pord.getPod());
+	     em.getTransaction().commit();
+	     em.close();
+	    return pord;	
 	}
 	
-	
+	@GET
+	@Path("/deletepo")
+	public String delete_po(@QueryParam("company_id") String company_id)
+	{
+		 EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
+			EntityManager em = emf.createEntityManager();
+			
+			
+			em.getTransaction().begin();
+			  //delete POD , then PO
+			
+			PurchaseOrder p = em.find(PurchaseOrder.class, company_id);
+			for(PurchaseOrderDetails pod : p.getPod())
+			{
+				
+				em.remove(pod);  //delete all POD
+			}
+			
+			//now delete PO
+			
+			em.remove(p);
+			em.getTransaction().commit();
+		    em.close();
+		
+		//return success/failure state
+		return "success";
 	}
+	
+
+   @GET
+   @Path("/viewall")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<PurchaseOrder> view_all_po(@QueryParam("company_id") String company_id ) //or use json and get company table object
+   {
+	   
+	  // System.out.println(company_id);
+	   //this is subject to change
+	   //search in company table for this ID, and get list of all PO there (bi-directional)
+	   EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
+		EntityManager em = emf.createEntityManager();
+		
+		em.getTransaction().begin();
+		Query query = em.createQuery("select g from PurchaseOrder g where company_id=:cid");
+		query.setParameter("cid", company_id);
+		List<PurchaseOrder> po_list  = query.getResultList();
+		//System.out.println(po_list.size());
+		em.getTransaction().commit();
+		em.close();
+	   
+	    
+	    for(PurchaseOrder a : po_list)
+	    {
+	    	a.setPod(null);	 
+	    	}
+	   
+	   return po_list;
+   }
+   
+   @GET
+   @Path("/viewpo")
+   @Produces(MediaType.APPLICATION_JSON)
+   public PurchaseOrder view_po(@QueryParam("po_num") String po_num ) //or use json and get company table object
+   {
+	   EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
+		EntityManager em = emf.createEntityManager();
+		
+		em.getTransaction().begin();
+		  PurchaseOrder a = em.find(PurchaseOrder.class, po_num);
+		 Hibernate.initialize(a.getPod());
+		em.getTransaction().commit();
+		em.close();
+	   return a;
+   }
+   }
+   
+	
+	
+	
+	
+	
+	
+	
 	
 
 

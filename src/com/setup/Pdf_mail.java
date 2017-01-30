@@ -151,7 +151,7 @@ public class Pdf_mail {
 
 
     
-		 OutputStream file = new FileOutputStream(new File(""));
+		 OutputStream file = new FileOutputStream(new File("C:\\Users\\vaish\\neon_workspace\\Accounting\\WebContent\\test1.pdf"));
 		 Document document = new Document();
 		 PdfWriter writer = PdfWriter.getInstance(document, file);
 		 document.open();
@@ -161,7 +161,7 @@ public class Pdf_mail {
 		    file.close();
 		
 		    
-		    File file1 = new File("");//full file path URL
+		    File file1 = new File("C:\\Users\\vaish\\neon_workspace\\Accounting\\WebContent\\test1.pdf");//full file path URL
 		    String absolutePath = file1.getAbsolutePath();
 		return absolutePath;
 	}
