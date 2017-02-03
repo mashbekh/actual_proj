@@ -29,7 +29,7 @@ public class PurchaseOrderDetails {
 	private PurchaseOrder po;  //foreign key
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)     //per company-better
 	private long id;
 
 	public PurchaseOrderDetails(String product_id, double quantity, double cost, String tax_id, double amount,
@@ -120,14 +120,6 @@ public class PurchaseOrderDetails {
 		this.id = id;
 	}
 
-
-
-	@Override
-	public String toString() {
-		return "PurchaseOrderDetails [product_id=" + product_id + ", quantity=" + quantity + ", cost=" + cost
-				+ ", tax_id=" + tax_id + ", amount=" + amount + ", tax_amount=" + tax_amount + ", po=" + po.toString() + ", id="
-				+ id + "]";
-	}
 
 
 

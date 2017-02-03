@@ -29,6 +29,12 @@
 
 <link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
+<link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
+<link rel="stylesheet" href="jarvis/js/select2/select2.css">
+<script type="text/javascript"
+	src="jarvis/js/select2/select2.min.js"></script>
+	<script type="text/javascript"
+	src="jarvis/js/select2/select2.js"></script>
 
 
 
@@ -127,6 +133,8 @@ input[readonly] {
 	background-color: white;
 }
 
+.select2-results li{padding-right:80px;}
+
 .ui-dialog-titlebar {
 	border: 0;
 	padding: .5em 1em;
@@ -137,6 +145,43 @@ input[readonly] {
 </style>
 
 <script>
+var product_list = [
+	
+	{
+		"product_id" : 213,
+		"product_name" : "Paper",
+		"product_desc" : "200 gsm",
+		"category":"P",
+		"cp":40,
+		"tax":{
+			"tax_id" : "CMP123",
+			"tax_abbreviation" : "VAT",
+			"tax_rate": 5.5
+			
+		}
+ 		
+		
+	}];                                 //list of products from backend
+	
+
+var tax_list = [
+	{
+		"tax_id" : "CMP123TAX1",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 5.5
+		
+	},
+	{
+		"tax_id" : "CMP123TAX2",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 14.5
+		
+		
+	}
+];
+	
+	
+	
 function loadName()
 {
    document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
@@ -157,21 +202,74 @@ function loadName()
 	document.getElementById("date").value = today;
  
  var first_count=0;
- /*
- {
- $("#0price").val(20);
- update_amount(0);
+
+ //ajax call to fetch taxes
  
- $("#0tax_rate").val("VAT 14.5");
- update_tax(0);
- }
  
- */
+ 
+ 
+ 
+ 
+ //ajax call to fetch products
+  
+   //PRODUCTS
+// product_list = response;        //json with all products
+ for(var i=0;i<product_list.length;i++)
+	 {
+	
+	 //show only inventory, noninv and service input type products
+	
+      $('#0productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
+	 
+	 }
+ 
+     //append another option dd to create product
+     
+     //TAXES
+     
+     for(var i=0;i<tax_list.length;i++)
+    	 {
+    	 $('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+    	 }
+   
 }
+
+//bill needs only CP 
+
+function update_prod_details(counter)
+{
+	
+	var prod = $("#" + counter + "product_name").val();
+	
+	if(prod!='')
+		{
+    		var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
+    		alert(prod_id);
+    		for(var i=0;i<product_list.length;i++)
+    		 {
+    		   if(product_list[i].product_id==prod_id)
+    			   {
+    			   //get cost price
+    			   var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
+    			   $("#" + counter + "tax_rate").val(taxval);
+    			   $("#" + counter + "price").val(product_list[i].cp);
+    			   $("#" + counter + "desc").val(product_list[i].product_desc);
+    			   update_amount(counter);
+    			   }
+    		 }
+    		
+		}
+	
+}
+	
+
 
 </script>
 
 <body onload="loadName()">
+
+
+
 
 	<div id="wrapper">
 
@@ -289,21 +387,19 @@ function loadName()
 
 
 
-				<h1 class="page-header">Create Purchase Order</h1>
+				<h1 class="page-header">Create Bill</h1>
 				<!-- Row beginning -->
 				<div class="row" id="row">
 					<div class="col-lg-12">
+					
+
+					
 
 						<!------CONTROL TABS START------>
 						<ul class="nav nav-tabs bordered">
-							<li class="active"><a href="#po" data-toggle="tab"><i
+							<li class="active"><a href="#bill" data-toggle="tab"><i
 									class="entypo-menu"></i> Create Purchase Order </a></li>
-							<li><a href="#bill" data-toggle="tab"><i
-									class="entypo-menu"></i> Create Bill </a></li>
-							<li><a href="#payments" data-toggle="tab"><i
-									class="entypo-menu"></i> Payments </a></li>
-							<li><a href="#statement" data-toggle="tab"><i
-									class="entypo-menu"></i> Statement </a></li>
+						
 
 						</ul>
 						<!------CONTROL TABS END------>
@@ -312,7 +408,7 @@ function loadName()
 
 						<div class="tab-content">
 							<!----TAB LISTING STARTS for purchase order-->
-							<div class="tab-pane box active" id="po">
+							<div class="tab-pane box active" id="bill">
 								<br>
 
 
@@ -358,7 +454,7 @@ function loadName()
 											<!-- How wide table should be -->
 
 
-											<!-- make another row for customer details -->
+											<!-- make another row for vendor details -->
 											<div class="panel panel-default" id="inner_panel">
 												<div class="row">
 													<div class="col-lg-12">
@@ -380,13 +476,10 @@ function loadName()
 																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
                                   store customer id save this -->
 
-																		<datalist id="customer_names">
-																			<option data-customvalue="5.5" value="Karnataka">Karnataka</option>
-																			<option data-customvalue="14.5" value="VAT 14.5">VAT
-																				14.5</option>
-																			<option data-customvalue="15" value="SERVICE 15">SERVICE
-																				15</option>
-
+																		<datalist id="vendor_names">
+																			<option data-customvalue="145" value="Vaishnavi">Vaishnavi</option>
+																			<option data-customvalue="167" value="Vidhya">Vidhya</option>
+																			
 																		</datalist>
 
 
@@ -417,17 +510,46 @@ function loadName()
 																	</div>
 																</div>
 																<br> <br>
+																
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Reference(PurchaseOrder # or others)</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="ref"  />
+																	</div>
+																</div>
+																
+																<br><br>
+																
+																<!-- dropdpown of fixed days , datalist-->
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Payment Due Interval</label>
+																	<div class="col-md-4">
+																	<input list="days" class="form-control"
+																			id="days" placeholder="days"
+																			onchange="get_duedate()">
 
-
-
+																		<datalist id="days">
+																			<option  value="7">7</option>
+																			<option  value="14">14</option>
+																			
+																		</datalist>
+																		
+																	</div>
+																</div>
+																
+																<br><br>
+																
+																<!-- dropdpown of fixed days -->
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Payment Due Date</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="pay_duedate" readonly/>
+																	</div>
+																</div>
+																
 															</form>
 														</div>
 														<!-- form panel -->
-
-
-
-
-
 
 													</div>
 												</div>
@@ -447,6 +569,7 @@ function loadName()
 													<tr>
 
 														<th><div>Product</div></th>
+														<th><div>Description</div></th>
 
 														<th><div>Quantity</div></th>
 														<th><div>Price</div></th>
@@ -461,13 +584,35 @@ function loadName()
 															<div class="form-group required">
 
 																<div class="col-md-12">
-																	<input class="form-control" id="0product_name"
-																		name="product_name" placeholder="Product Name"
-																		required="required" title="" type="text" />
+																	<input list="0productlist" class="form-control"
+																			id="0product_name" placeholder="Chose Product" onchange="update_prod_details(0)"></input>
+																			
+
+																		<datalist id="0productlist">
+																		
+																			
+																			
+																		</datalist>
 																</div>
 															</div>
 
 														</td>
+														
+														<td>
+														
+														<div class="form-group required">
+
+																<div class="col-md-12">
+																	<input type="text" value="1" class="form-control"
+																		id="0desc" maxlength="30" name="desc"
+																		placeholder="Description" required="required" title=""
+																		 />
+																</div>
+															</div>
+														
+														</td>
+														
+														
 
 														<td>
 															<div class="form-group required">
@@ -496,22 +641,12 @@ function loadName()
 																<label class="col-md-3 control-label">Tax Rate</label>
 																<div class="col-md-9">
 
-																	<input list="browser" class="form-control"
+																	<input list="0taxlist" class="form-control"
 																		id="0tax_rate" placeholder="Tax Rate"
 																		onchange="update_tax(first_count)">
-																	<datalist id="browser">
+																		
+																	<datalist id="0taxlist">
 
-																		<!-- custom value will have TAX_ID 
-																	     value is combination of abbreviation and tax rate
-																	-->
-
-
-																		<option data-customvalue="VAT 5.5" value="VAT 5.5">VAT
-																			5.5</option>
-																		<option data-customvalue="VAT 14.5" value="VAT 14.5">VAT
-																			14.5</option>
-																		<option data-customvalue="VAT 15" value="SERVICE 15">SERVICE
-																			15</option>
 
 																	</datalist>
 																</div>
@@ -940,8 +1075,15 @@ $('#submit').click(function(){
 	function update_tax(value_counter)                                        // tax type - dropdown chosen
 	{
 
-		var existing_taxamt = $('#' + value_counter + 'tax_amt').text();
-		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
+		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+		
+		var tax_value = $("#" + value_counter + "tax_rate").val();
+		alert(tax_value);//VAT 5.5
+		
+		var tid = $('#broswer [value="' + tax_value + '"]').data('customvalue');
+		alert(tid);
+		
+		
 		var amt = value_counter + 'amt';  
 		var taxamt = value_counter + 'tax_amt';
      	var tax_bracket = tax_value.toString().split(" ");                   //5.5
@@ -1182,37 +1324,7 @@ $('#submit').click(function(){
 	}
 </script>
 
-<script>
 
-$("#preview").click(function(){
-
-//create 2d array of order products,send subtotal, taxtotal and grand total as separate data
-
-
-
-	
-	var data1 = $('#enquire').serialize();
-$.ajax({
-   type : 'POST',
-   url  : 'http://localhost/School_mngt/enquire_mail.php',
-   dataType : 'text',
-   data: data1,
-   success :  function(response)
-      {
-		
-		
-	  }
-	  });
-	  return false;
-});
-
-
-
-
-
-
-
-</script>
 
 <!-- jQuery 
     <script src="js/jquery.js"></script>-->

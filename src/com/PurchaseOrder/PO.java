@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Hibernate;
 
+import com.Models.AdvancePayment;
 import com.Models.PurchaseOrder;
 import com.Models.PurchaseOrderDetails;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -42,8 +43,8 @@ public class PO {
 
 	@GET
 	@javax.ws.rs.Path("/createpo")
-	@Produces(MediaType.APPLICATION_JSON)
-	public PurchaseOrder create_po(@QueryParam("jsondata") String jsonData) throws JsonParseException, JsonMappingException, IOException
+	//@Produces(MediaType.APPLICATION_JSON)
+	public String create_po(@QueryParam("jsondata") String jsonData) throws JsonParseException, JsonMappingException, IOException
 	{
 	
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -61,15 +62,19 @@ public class PO {
 			java.math.BigInteger po_id =  (BigInteger) query.getSingleResult();
 		em.getTransaction().commit();
 		
+		String po_no=null;
+		
 		if(po_id !=null)
 		{
 			p.setPo_id(po_id.longValue() + 1);
 			p.setPO_number(p.getCompany_id() + "PO"  + (po_id.longValue() + 1));
+			po_no = p.getCompany_id() + "PO"  + (po_id.longValue() + 1);
 		}
 		else
 		{
 			p.setPo_id(1);
 			p.setPO_number(p.getCompany_id() + "PO"  + (1));
+			po_no = p.getCompany_id() + "PO"  + (1);
 		}
 		
 		
@@ -78,6 +83,8 @@ public class PO {
 			pod.setPo(p);
 			
 		}
+		
+		//persist both objects together
 		
 		em.getTransaction().begin();
 		em.persist(p);
@@ -90,7 +97,7 @@ public class PO {
 		em.getTransaction().commit();
 		em.close();
 		
-	return p;
+	return po_no;
 	}
 	
 	@GET
@@ -102,13 +109,35 @@ public class PO {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		objectMapper.setDateFormat(df);
 		PurchaseOrder p = objectMapper.readValue(jsonData,PurchaseOrder.class);
+		System.out.println(p.toString());
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
 		EntityManager em = emf.createEntityManager();
+		
+		
 		//BEGIN TXN
 		em.getTransaction().begin();
 	   
 	    PurchaseOrder porder = em.find( PurchaseOrder.class, p.getPO_number() );
+	    
+	    
+	    //handle advance payment
+	    
+	    if(p.getAdv_payment().size()!=0)
+	    {
+	    	List<AdvancePayment> ap = p.getAdv_payment();
+	    	AdvancePayment advpay =  ap.get(0); 
+	    	 advpay.setPo(porder);
+	    	 System.out.println(advpay.toString());
+	    	 em.persist(advpay);
+	    	 porder.getAdv_payment().add(advpay);
+	         //double newadvance = porder.getAdvance_amount() + advpay.getPayment_amount();
+	         //double newbalance = porder.getBalance() - advpay.getPayment_amount();
+	         
+	         //porder.setAdvance_amount(newadvance);
+	         //porder.setBalance(newbalance);
+	    }
+	    
 	    
 	 
 	    
@@ -199,6 +228,8 @@ public class PO {
 		    porder.setTax_amount(p.getTax_amount());
 		    porder.setVendor_id(p.getVendor_id());
 		   porder.setPod(new_products);
+		   porder.setAdvance_amount(p.getAdvance_amount());
+		   porder.setBalance(p.getBalance());
 		   em.getTransaction().commit();
 	    //em.close();
 		
@@ -206,6 +237,7 @@ public class PO {
 	    em.getTransaction().begin();
 	     PurchaseOrder pord = em.find( PurchaseOrder.class, p.getPO_number() );
 	     Hibernate.initialize(pord.getPod());
+	     Hibernate.initialize(pord.getAdv_payment());
 	     em.getTransaction().commit();
 	     em.close();
 	    return pord;	
@@ -227,6 +259,11 @@ public class PO {
 			{
 				
 				em.remove(pod);  //delete all POD
+			}
+			
+			for(AdvancePayment ap : p.getAdv_payment())
+			{
+				em.remove(ap);
 			}
 			
 			//now delete PO
@@ -260,10 +297,10 @@ public class PO {
 		em.getTransaction().commit();
 		em.close();
 	   
-	    
 	    for(PurchaseOrder a : po_list)
 	    {
 	    	a.setPod(null);	 
+	    	a.setAdv_payment(null);
 	    	}
 	   
 	   return po_list;
@@ -274,12 +311,14 @@ public class PO {
    @Produces(MediaType.APPLICATION_JSON)
    public PurchaseOrder view_po(@QueryParam("po_num") String po_num ) //or use json and get company table object
    {
+	   System.out.println(po_num);
 	   EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
 		EntityManager em = emf.createEntityManager();
 		
 		em.getTransaction().begin();
 		  PurchaseOrder a = em.find(PurchaseOrder.class, po_num);
 		 Hibernate.initialize(a.getPod());
+		 Hibernate.initialize(a.getAdv_payment());
 		em.getTransaction().commit();
 		em.close();
 	   return a;

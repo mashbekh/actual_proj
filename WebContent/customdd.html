@@ -1,0 +1,46 @@
+<!DOCTYPE HTML >
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Tax System</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.2/select2.css" rel="stylesheet"/>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/select2/3.2/select2.min.js"></script>
+</head>
+
+
+<style>
+.select2-results li{padding-right:80px};
+</style>
+
+<script>
+$("#e1").select2();
+
+
+</script>
+
+<body>
+<select multiple id="e1" style="width:300px">
+        <option value="1">select 1 installment of $200</option>
+    <option value="2">select 2 installments of $100. (special offer.)</option>
+    <option value="3">select 3 installments of $89</option>
+    <option value="4">select 4 installments of $50. (no interest in this option)</option>
+    <option value="5">select 5 installments of $45</option>
+    </select>
+</body>
+</html>

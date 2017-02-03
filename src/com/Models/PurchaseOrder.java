@@ -1,6 +1,6 @@
 package com.Models;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -8,8 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.setup.JsonCollectionDeserializer;
+
 
 @Entity
 @Table(name = "purchase_order")
@@ -25,6 +24,9 @@ public class PurchaseOrder {
 	private double tax_amount;
 	private double grand_total;
 	private String note;
+	private double advance_amount;
+	private double balance;
+	private int bill_status;
 	private long po_id; //auto increment within company- do it in code, desc limit 1 , if null - insert 1
 	@Id
 	private String PO_number;  //combination of company id and po_id
@@ -33,7 +35,12 @@ public class PurchaseOrder {
 	@JsonManagedReference
 	//@JsonDeserialize(using=JsonCollectionDeserializer.class)
 	private List<PurchaseOrderDetails> pod ; //bi directional
+
 	
+	
+	@OneToMany(targetEntity=AdvancePayment.class, mappedBy="po")
+	@JsonManagedReference
+	private List<AdvancePayment> adv_payment ; //bi directional
 	
 	
 	public List<PurchaseOrderDetails> getPod() {
@@ -105,8 +112,41 @@ public class PurchaseOrder {
 	
 	
 	
+	public double getAdvance_amount() {
+		return advance_amount;
+	}
+
+	public void setAdvance_amount(double advance_amount) {
+		this.advance_amount = advance_amount;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public int getBill_status() {
+		return bill_status;
+	}
+
+	public void setBill_status(int bill_status) {
+		this.bill_status = bill_status;
+	}
+
+	public List<AdvancePayment> getAdv_payment() {
+		return adv_payment;
+	}
+
+	public void setAdv_payment(List<AdvancePayment> adv_payment) {
+		this.adv_payment = adv_payment;
+	}
+
 	public PurchaseOrder(String vendor_id, String company_id, Date date, double amount, double tax_amount,
-			double grand_total, String note, long po_id, String pO_number, List<PurchaseOrderDetails> pod) {
+			double grand_total, String note, long po_id, String pO_number, List<PurchaseOrderDetails> pod,List<AdvancePayment> adv_payment,
+			double advance_amount, double balance, int bill_status) {
 		super();
 		this.vendor_id = vendor_id;
 		this.company_id = company_id;
@@ -118,28 +158,17 @@ public class PurchaseOrder {
 		this.po_id = po_id;
 		PO_number = pO_number;
 		this.pod = pod;
+		this.adv_payment = adv_payment;
+		this.advance_amount = advance_amount;
+		this.balance = balance;
+		this.bill_status = bill_status;
+		
 	}
 
 	public PurchaseOrder() {
 		//super();
 	}
 
-	@Override
-	public String toString() {
-		
-		String a = company_id + "***" + vendor_id + "**" + order_date + "**" + grand_total + "**" + po_id + "**" + PO_number +"***";
-		String b = "items are " + "----";
-		for( PurchaseOrderDetails x : pod)
-		{
-			 b += "--NEW" + "--";
-			 b += "auto inc ID is"  + x.getId() +"*" +   x.getProduct_id() + "__"  + x.getPo().getPo_id() + "__" + x.getPo().getPO_number() + "__" + x.getAmount();
-			 
-			 
-		}
-		
-		
-		return a + b;
-	}
 
 	
 

@@ -164,14 +164,18 @@ function send()
 	console.log("array is");
 	console.log(productid_counter);
 	
+	$("#due_amt").val($("#grandtotal").val() - $("#adv_amount").val());
+	
 	
 	//same way collect all info, create json and send to back end to edit, include adv payment now
 	// towards the PO 
 	
 	var purchaseOrder = {};
 	  var pod= [];
+	  var advpay=[];
 	  //var customer;
 	  purchaseOrder.pod = pod;
+	  purchaseOrder.adv_payment = advpay;
 	  //purchaseOrder.customer = customer;
 		
 		for(var i=0;i<box_counter.length;i++)
@@ -183,6 +187,8 @@ function send()
 		     	 alert("Please select a product ");
 		     	 
 		  //add checks for customer being selected, date and PO number(read only)
+		  //each product must have name, amt, tax _amt etc
+		  //do validations
 		  
 		  else 
 		  {
@@ -191,9 +197,9 @@ function send()
 		  		var productName= $('#' + index + 'product_name').val();
 				var quantity = $('#' + index + 'quantity').val();
 				var price = $('#' + index + 'price').val();
-				var amount = $('#' + index + 'amt').text();
+				var amount = $('#' + index + 'amt').val();
 				var tax = $('#' + index + 'tax_rate').val();
-				var taxAmount = $('#' + index + 'tax_amt').text();
+				var taxAmount = $('#' + index + 'tax_amt').val();
 				var product_id = productid_counter[index];
 				var po_number = $("#po_number").val();
 			
@@ -216,6 +222,47 @@ function send()
 		}
 		
 		}
+		
+		//check for advance payment MANDATORY FIELDS
+		
+		
+		/* collect all adv payment(look at counter and their corresp ID)
+		   update total advance payment amount as and when adv pay added/deleted
+		   grand total is up-to-date cos of products  [total so far]
+		   total advance payment amount is up-to-date cos of all payments [total so far]
+		   
+		   calculate balance here itself = gtotal -adv 
+		   
+		*/
+		//do the following for all adv payments
+		
+		var tdsrate = $("#tds_rate").val();
+		if(tdsrate=='')
+			{
+			tdsrate= 0;
+			tdsamt=0;
+			}
+		else
+			tdsamt = $("#tds_amount").val();
+		
+		var advance={
+				"payment_date":		$("#payment_date").val(),
+				"payment_amount" :	$("#adv_amount").val(),
+		        "purpose_title" :	$("#purpose_title").val(),
+		 		"purpose_desc" :    $("#purpose_desc").val(),
+				"payment_mode" :	$("#mode_payment").val(),
+				"payment_account" : $("#payment_acc").val(),
+				"tdsrate" : 		tdsrate,
+				"tdsamount":		tdsamt
+		
+		};
+		
+		//HANDLE TDS AT BACKEND
+		
+		//console.log(adv);
+		//console.log(advpay);
+		purchaseOrder.adv_payment.push(advance);
+		
 		var vendor = $("#vendor").val(); //$("#vendpor").val(); - value has vendorID
 		purchaseOrder.vendor_id = vendor;
 		
@@ -233,6 +280,17 @@ function send()
 		purchaseOrder.tax_amount = $("#taxtotal").val();
 		purchaseOrder.grand_total = $("#grandtotal").val();
 		
+		
+		//analyse existing adv payment
+		
+		
+		purchaseOrder.advance_amount = $("#adv_amount").val(); // - $("#advancetotal").val();           
+		purchaseOrder.balance = ($("#grandtotal").val() -  $("#adv_amount").val()).toFixed(2);
+		purchaseOrder.bill_status = 0;
+		
+		
+		
+		
 		purchaseOrder.note = $("textarea#notes").val();
 		
 		//list of ADVANCE PAYMENT is to added here
@@ -249,14 +307,16 @@ function send()
 		//ajax call TO BE MADE TO UPDATE A PO
 		
 		
+		
 		$.ajax({
 			   type : 'GET',
 			   url  : '/Accounting/po/purchase/editpo',
-			    dataType :'json',
+			    dataType :'text',
 			    data:{'jsondata' : p},
 			    success: function(response) {
 			     alert(response);
 			     console.log(response);
+			     
 			     //pass PO number of the created PO
 			     //redirect to URL to view purchase order and pass response to next page
 			     //store db json in local storage
@@ -264,11 +324,12 @@ function send()
 			     //window.localStorage.setItem("identifier",po_json);
 			     //window.location.replace("view_po.html");
 			    },
-				error: function (a,b,c)
-				{ 
-					alert(a.status+b+c);
-					 console.log(a.status+b+c);
-				}  
+			    error: function (xhr) {
+					alert(xhr.responseText);
+				    var jsonResponse = JSON.parse(xhr.responseText);
+				    alert(jsonResponse.message);
+				   
+				  } 
 				  });
 		
 		
@@ -324,7 +385,7 @@ function tds_change()
 			}
 
 		$('#apay').remove();    //if existing adv pay exists	
-		$('#due_amt').closest('tr').remove();
+		//$('#due_amt').closest('tr').remove();
 		
 		var tds = $("#tds_rate").val();
 		var due = (Number($("#grandtotal").val())
@@ -367,16 +428,17 @@ function tds_change()
 		
 		//final amount due
 
+		//show total adv amount
 		$('#table_export').append(
 					'<tr>' + 
 					'<td colspan="5" class="right">' + 
 					'<div class="form-group ">' + 
-						'<label class="col-md-2 control-label">Amount Due' + 
+						'<label class="col-md-2 control-label">Advance Payment Total' + 
 							'</label>' + 
 						'<div class="col-md-3">'  + 
 							'<input type="number" ' + 
 								' class="form-control no-border" readonly ' + 
-								' id="due_amt"  maxlength="30" ' + 
+								' id="advtotal"  maxlength="30" ' + 
 								' name="due_amt" ' +
 								' required="required" ' + 
 								 '/>' + 
@@ -386,6 +448,10 @@ function tds_change()
 				'</td>'
 							 + '</tr>');
 		
+		
+		
+		
+		$("#advtotal").val(amt);
 		$("#due_amt").val(due);
 		$('#due_amt').css('background-color' , 'white');
 		$('#advance_payment').dialog('close');
@@ -409,18 +475,46 @@ var tax_div=[];
 var porder = null;
 var productid_counter= {};
 var x=null;
+
+//individual po edit, on load
+
 function loadName()
 {
 	
+	//just after creating, when this PO gets loaded, adv pay = null  [check for this and show this too]
 	
-	//keep track of product id associated with box counter in an array
-	 porder = window.localStorage.getItem("identifier");
+	 var myParam = location.search.split('PONo=')[1];
+	 alert(myParam);
 	
-	console.log(porder);
-	window.localStorage.removeItem("identifier");
-
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/po/purchase/viewpo',
+		    dataType :'text',
+		    data:{'po_num' : myParam},
+		    success: function(response) {
+		     
+		    	alert(response);
+		     //JSON.parse(response);
+		     porder = response;
+		     fetchpo();
+		     
+		    },
+			error: function (a,b,c)
+			{ 
+				alert(a.status+b+c);
+				 console.log(a.status+b+c);
+			}  
+			  });
+	
+}	
+	
+	
+	function fetchpo()
+{
 	 x =JSON.parse(porder);
 	//if length not 0 else count =0
+	//alert(porder);
+	//alert(x);
 	
 	count = x.pod.length-1;
 	
@@ -428,7 +522,7 @@ function loadName()
 		{
 		//add table row before "last row"
 		box_counter.push(i);
-		productid_counter[box_counter[i]] = x.pod[i].id;
+		productid_counter[i] = x.pod[i].id;
 		
 		$( '<tr >' + 
                 
@@ -505,7 +599,7 @@ function loadName()
 		//update_tax(i);
 		}
 	
-	
+	$("#due_amt").val($("#grandtotal").val());
 	$("#vendor").val(x.vendor_id);
 	$("#po_number").val(x.po_number);
 	$("#po_number").prop("readonly", true);
@@ -515,6 +609,17 @@ function loadName()
 	$("#date").val(v);
 	
 	//alert(box_counter);
+	
+	
+	for(var j=0;j<x.adv_payment.length;j++)
+		{
+		   
+		//show all adv payment
+		
+		
+		
+		
+		}
 	
 	
    /*
@@ -823,15 +928,18 @@ function loadName()
 
 								<div class="panel panel-default">
 									<div class="row">
-										<div class="col-lg-8">
+										<div class="col-lg-12">
 											<button type="button" class="btn btn-info"
-												style="height: 40px; width: 1218px" data-toggle="collapse"
+												style=" width: 100%" data-toggle="collapse"
 												
 												data-target="#portionOne">Business Details</button>
 												
 											<div id="portionOne" class="panel-collapse collapse in">
-												gjhjggdgdhgfdfhjhdfdmfndmfnd bcvbcvhjdghdjdnke uyjhjcnxmx <br>
-												kjhcuiyufhjknm bmnmnxcxncxm<br>jbsdguyyuyduyumwmdemm<br>
+											<br>
+												VISTAR PRINTSOL PRIVATE LIMITED<br>
+											B.D.A Layout, Nagarbhavi, <br>
+											Bangalore.
+											<br><br>
 
 												<!-- ADD YOUR BUSINESS DETAILS -->
 
@@ -852,7 +960,7 @@ function loadName()
 
 								<div class="panel panel-default">
 									<button type="button" class="btn btn-info"
-										style="height: 40px; width: 1218px">Vendor Details</button>
+										style=" width: 100%">Vendor Details</button>
 									<div class="row">
 										<!-- ROW 2 -->
 										<div class="col-lg-12">
@@ -1084,6 +1192,25 @@ function loadName()
 
 														</td>
 													</tr>
+													
+													
+													<tr id="dueamt">
+														<td colspan="5" class="right">
+															<div class="form-group ">
+																<label class="col-md-2 control-label">Due Amount</label>
+																<div class="col-md-3">
+																	<input type="number" value="0"
+																		class="form-control no-border" readonly
+																		id="due_amt"  maxlength="30"
+																		name="grandtotal" placeholder="GrandTotal"
+																		required="required" title=""
+																		 />
+																</div>
+															</div>
+
+														</td>
+													</tr>
+													
 													
 												</tbody>
 											</table>
