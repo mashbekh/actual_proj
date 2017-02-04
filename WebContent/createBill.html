@@ -1,10 +1,4 @@
 <!DOCTYPE HTML >
-<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-<!-- above set at the top of the file will set     -->
-<!-- the browser's rendering engine into           -->
-<!-- "Quirks Mode". Replacing this declaration     -->
-<!-- with a "Standards Mode" doctype is supported, -->
-<!-- but may lead to some differences in layout.   -->
 
 <html lang="en">
 
@@ -18,75 +12,51 @@
 
 <title>Tax System</title>
 
+
+ <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
+    <link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script
 	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
 	type="text/javascript"></script>
+
+
+
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+
 <link
 	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
 	rel="stylesheet" type="text/css" />
 
-<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
-<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
-<link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
-<link rel="stylesheet" href="jarvis/js/select2/select2.css">
-<script type="text/javascript"
-	src="jarvis/js/select2/select2.min.js"></script>
-	<script type="text/javascript"
-	src="jarvis/js/select2/select2.js"></script>
+<script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
+			<script src="jarvis/js/moment_locale.js"></script>
+			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
 
-
-
-
-<script type="text/javascript">
-    $(function () {
-        $("#dialog").dialog({
-            
-            modal: true,
-            autoOpen: false,
-            title: "Add Customer",
-            width: 300,
-            height: 150
-        });
-        $("#btnShow").click(function () {
-            $('#dialog').dialog('open');
-        });
-    });
-</script>
 
 
 
 <link rel="stylesheet"
 	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
 
-<!-- Bootstrap Core CSS -->
-<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+
 
 <!-- Custom CSS -->
 <link href="jarvis/css1/sb-admin.css" rel="stylesheet">
 
-<!-- Morris Charts CSS -->
-<link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
+
 
 <!-- Custom Fonts -->
 <link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
 
+
+
 <link rel="stylesheet"
 	href="jarvis/css/font-icons/entypo/css/entypo.css">
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-
-
 </head>
-
 
 
 
@@ -129,7 +99,7 @@ input[readonly] {
 	background-color: #152F37;
 }
 
-#date, #customer_detail, #grandtotal, #taxtotal, #subtotal {
+#date, #vendor_detail, #grandtotal, #taxtotal, #subtotal, #advance, #balance, #pay_duedate {
 	background-color: white;
 }
 
@@ -145,6 +115,10 @@ input[readonly] {
 </style>
 
 <script>
+
+
+  
+  
 var product_list = [
 	
 	{
@@ -154,14 +128,57 @@ var product_list = [
 		"category":"P",
 		"cp":40,
 		"tax":{
-			"tax_id" : "CMP123",
+			"tax_id" : "CMP123TAX1",
 			"tax_abbreviation" : "VAT",
 			"tax_rate": 5.5
 			
-		}
+		},
+		"type" : 0  //inventory product
  		
 		
-	}];                                 //list of products from backend
+	},
+	
+	
+	{
+		"product_id" : 125,
+		"product_name" : "Toner",
+		"product_desc" : "ink",
+		"category":"P",
+		"cp":5000,
+		"tax":{
+			"tax_id" : "CMP123TAX2",
+			"tax_abbreviation" : "VAT",
+			"tax_rate": 14.5
+			
+		},
+		"type" : 0  //inventory product
+ 		
+		
+	},
+	{
+		"product_id" : 565,
+		"product_name" : "Fevicol",
+		"product_desc" : "adhesive",
+		"category":"P",
+		"cp": 65,
+		"tax":{
+			"tax_id" : "CMP123TAX2",
+			"tax_abbreviation" : "VAT",
+			"tax_rate": 5.5
+			
+		},
+		"type" : 1  //inventory product
+ 		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	];                                 //list of products from backend
 	
 
 var tax_list = [
@@ -179,9 +196,62 @@ var tax_list = [
 		
 	}
 ];
+
+$(function () {
+    $('#dtpicker').datetimepicker({
+    	
+    	format:'DD/MM/YYYY'
+    	
+    	
+    }).on('dp.change',function(e){
+       
+        get_duedate();
+    });
+    
+
+    
+});
+
+
+
+function get_duedate()
+{
+	
+	var date   = $("#date").val();
+	var x = date.split("/");
+	
+	var nd = new Date();
+	nd.setDate(x[0]);
+	nd.setMonth(x[1]-1);
+	nd.setFullYear(x[2]);
+	
+	var days = $("#days").val();
+	
+	if(days!='')
+		{
+	var newdate = new Date(nd.setTime( nd.getTime() + days * 86400000 ));
+	
+		var dd = newdate.getDate();
+	var mm = newdate.getMonth()+1; //January is 0!
+
+	var yyyy = newdate.getFullYear();
+	if(dd<10){
+    	dd='0'+dd;
+		} 
+	if(mm<10){
+    	mm='0'+mm;
+		} 
+	var payment_date = dd+'/'+mm+'/'+yyyy;
+	//alert(payment_date);
+	$("#pay_duedate").val(payment_date);
+		}
+    
+	}
 	
 	
-	
+
+	   
+
 function loadName()
 {
    document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
@@ -205,7 +275,7 @@ function loadName()
 
  //ajax call to fetch taxes
  
- 
+ 										
  
  
  
@@ -231,6 +301,8 @@ function loadName()
     	 {
     	 $('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
     	 }
+     
+     
    
 }
 
@@ -238,11 +310,19 @@ function loadName()
 
 function update_prod_details(counter)
 {
-	
+	alert(counter);
 	var prod = $("#" + counter + "product_name").val();
+	
+	$("#" + counter + "stock").remove();
+	
+	var sindex = stock_counter.indexOf(counter);
+	if(sindex!=-1)
+    	stock_counter.splice(sindex, 1);
+	
 	
 	if(prod!='')
 		{
+		
     		var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
     		alert(prod_id);
     		for(var i=0;i<product_list.length;i++)
@@ -253,11 +333,38 @@ function update_prod_details(counter)
     			   var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
     			   $("#" + counter + "tax_rate").val(taxval);
     			   $("#" + counter + "price").val(product_list[i].cp);
-    			   $("#" + counter + "desc").val(product_list[i].product_desc);
+    			   $("#" + counter + "prod_desc").val(product_list[i].product_desc);
     			   update_amount(counter);
+    			   
+    		   
+    		   if(product_list[i].type==0)  //inventory product
+    		   		{
+    			   //if existing remove it and add again
+    			   alert("inv");
+    			   //
+    			   
+    			   $("#" + counter + "stockoption").append('<div class="form-group required">' + 
+
+    						'<div class="col-md-12">' + 
+    				'<input type="submit" value="Enter Stock" id="' +  counter + 'stock" class="btn btn-blue" onclick= stock_entry('+  counter  + ')>'  + 
+    					'</div>' + 
+    					'</div>');
+    			   
+    		   		}
     			   }
     		 }
     		
+    		//var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
+    		
+		}
+	else
+		{
+		
+		$("#" + counter + "price").val(counter);
+		
+		update_amount(counter);
+		$("#" + counter + "tax_rate").val('');
+		$("#" + counter + "prod_desc").val('');
 		}
 	
 }
@@ -267,7 +374,98 @@ function update_prod_details(counter)
 </script>
 
 <body onload="loadName()">
+<!-- stock entry dialog -->
 
+<div id="stock_dialog" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+			<form action="" method="post">
+			
+			
+			
+			<div class="form-group required">
+                                <label class="col-md-3 control-label">Batch No</label>
+                                <div class="col-md-6"><input class="form-control" id="batch_no"  maxlength="30"   required="required" title="" type="text" />
+                                </div>
+                             </div>
+                             
+                             <br><br><br>
+                             
+                             <div class="form-group ">
+																	<label class="col-md-3 control-label">Packing/Manufacturing Date</label>
+																	<div class="col-md-6">
+																		<div class="input-group date" id="packing_date">
+
+																			<input type="text" class="form-control" id="packingdate" >
+																			<span class="input-group-addon"> <span
+																				class="glyphicon glyphicon-calendar"> </span>
+																			</span>
+																		</div>
+																	</div>
+																</div>
+                             
+                             <br><br>
+                             <div class="form-group ">
+																	<label class="col-md-3 control-label">Expiry Date</label>
+																	<div class="col-md-6">
+																		<div class="input-group date" id="expiry_date">
+
+																			<input type="text" class="form-control" id="expirydate" >
+																			<span class="input-group-addon"> <span
+																				class="glyphicon glyphicon-calendar"> </span>
+																			</span>
+																		</div>
+																	</div>
+																</div>
+                             
+                             <br><br>
+                             
+                            
+                             
+                             
+                             <div class="form-group required">
+                                <label class="col-md-3 control-label">Cost Price</label>
+                                <div class="col-md-6"><input class="form-control" id="cp"  maxlength=""  title="" type="text" />
+                                </div>
+                             </div>
+                             
+                             <br><br>
+                          
+                           
+                             
+                             <div class="form-group required">
+                                <label class="col-md-3 control-label">Selling Price</label>
+                                <div class="col-md-6"><input class="form-control" id="sp"  maxlength="" title="" type="text" />
+                                </div>
+                             </div>
+                             
+                             <br><br>
+                          
+                             
+                             
+                             <div class="form-group required">
+                                <label class="col-md-3 control-label">Quantity</label>
+                                <div class="col-md-6"><input class="form-control" id="qty"  maxlength=""  title="" type="number" step="any" />
+                                </div>
+                             </div>
+                             
+                             <br><br>
+                             
+                                <div class="form-group">
+                                <label class="col-md-3 control-label">Discount</label>
+                                <div class="col-md-6"><input class="form-control" id="discount"  maxlength=""  title="" type="number" step="any" />
+                                </div>
+                             </div>
+                             
+                        <br><br>
+
+</form>
+
+<input class="btn btn-blue" type='submit' onclick="add_stock()" >
+
+</div>
+</div>
+
+<!-- end of view inventory -->
 
 
 
@@ -398,7 +596,7 @@ function update_prod_details(counter)
 						<!------CONTROL TABS START------>
 						<ul class="nav nav-tabs bordered">
 							<li class="active"><a href="#bill" data-toggle="tab"><i
-									class="entypo-menu"></i> Create Purchase Order </a></li>
+									class="entypo-menu"></i> Create Bill</a></li>
 						
 
 						</ul>
@@ -477,8 +675,8 @@ function update_prod_details(counter)
                                   store customer id save this -->
 
 																		<datalist id="vendor_names">
-																			<option data-customvalue="145" value="Vaishnavi">Vaishnavi</option>
-																			<option data-customvalue="167" value="Vidhya">Vidhya</option>
+																			<option vendorid="145" value="Vaishnavi">Vaishnavi</option>
+																			<option vendorid="167" value="Vidhya">Vidhya</option>
 																			
 																		</datalist>
 
@@ -499,18 +697,41 @@ function update_prod_details(counter)
 																	</div>
 																</div>
 
-																
+
 
 																<br> <br>
 
-																<div class="form-group required">
+																
+																	<div class="form-group required">
 																	<label class="col-md-2 control-label">Date</label>
 																	<div class="col-md-4">
-																		<input class="form-control" id="date" readonly />
+																		<div class="input-group date" id="dtpicker">
+
+																			<input type="text" class="form-control" id="date" onchange="get_duedate()">
+																			<span class="input-group-addon"> <span
+																				class="glyphicon glyphicon-calendar"> </span>
+																			</span>
+																		</div>
 																	</div>
 																</div>
-																<br> <br>
 																
+																
+																						<br> <br>
+
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Bill Number</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="bill_no"  />
+																	</div>
+																</div>
+																
+																
+																
+																
+																
+																
+																<br> <br>
+
 																<div class="form-group required">
 																	<label class="col-md-2 control-label">Reference(PurchaseOrder # or others)</label>
 																	<div class="col-md-4">
@@ -524,11 +745,11 @@ function update_prod_details(counter)
 																<div class="form-group required">
 																	<label class="col-md-2 control-label">Payment Due Interval</label>
 																	<div class="col-md-4">
-																	<input list="days" class="form-control"
+																	<input list="duedays" class="form-control"
 																			id="days" placeholder="days"
 																			onchange="get_duedate()">
 
-																		<datalist id="days">
+																		<datalist id="duedays">
 																			<option  value="7">7</option>
 																			<option  value="14">14</option>
 																			
@@ -580,12 +801,12 @@ function update_prod_details(counter)
 												</thead>
 												<tbody>
 													<tr>
-														<td>
+														<td id="0stockoption">
 															<div class="form-group required">
 
 																<div class="col-md-12">
 																	<input list="0productlist" class="form-control"
-																			id="0product_name" placeholder="Chose Product" onchange="update_prod_details(0)"></input>
+																			id="0product_name" placeholder="Chose Product" onchange="update_prod_details(0)" ></input>
 																			
 
 																		<datalist id="0productlist">
@@ -595,6 +816,11 @@ function update_prod_details(counter)
 																		</datalist>
 																</div>
 															</div>
+															<br><br>
+															
+															
+															
+															
 
 														</td>
 														
@@ -603,8 +829,8 @@ function update_prod_details(counter)
 														<div class="form-group required">
 
 																<div class="col-md-12">
-																	<input type="text" value="1" class="form-control"
-																		id="0desc" maxlength="30" name="desc"
+																	<input type="text"  class="form-control"
+																		id="0prod_desc" maxlength="30" 
 																		placeholder="Description" required="required" title=""
 																		 />
 																</div>
@@ -684,12 +910,12 @@ function update_prod_details(counter)
 
 
 													<tr id="last_row" class="middle">
-														<td colspan="5" id="add_row"><i
+														<td colspan="6" id="add_row"><i
 															class="entypo-plus-circled"></i>Add new item</td>
 													</tr>
 
 													<tr>
-														<td colspan="5" class="right">
+														<td colspan="6" class="right">
 															<div class="form-group ">
 																<label class="col-md-2 control-label">SubTotal</label>
 																<div class="col-md-3">
@@ -704,7 +930,7 @@ function update_prod_details(counter)
 													</tr>
 
 													<tr id="taxfinalamt">
-														<td colspan="5" class="right">
+														<td colspan="6" class="right">
 															<div class="form-group ">
 																<label class="col-md-2 control-label">Tax Amount</label>
 																<div class="col-md-3">
@@ -720,7 +946,7 @@ function update_prod_details(counter)
 
 
 													<tr>
-														<td colspan="5" class="right">
+														<td colspan="6" class="right">
 															<div class="form-group ">
 																<label class="col-md-2 control-label">Grand
 																	Total</label>
@@ -734,6 +960,40 @@ function update_prod_details(counter)
 
 														</td>
 													</tr>
+													
+													<!-- advance payment from PO  - readonly / editable -->
+													<tr>
+														<td colspan="6" class="right">
+															<div class="form-group ">
+																<label class="col-md-2 control-label">Advance Paid</label>
+																<div class="col-md-3">
+																	<input type="number" value="0"
+																		class="form-control no-border" readonly
+																		id="advance" maxlength="30" name="advance"
+																		 required="required" title="" />
+																</div>
+															</div>
+
+														</td>
+													</tr>
+
+
+													<!-- balance amount to be paid for the bill -->
+													<tr>
+														<td colspan="6" class="right">
+															<div class="form-group ">
+																<label class="col-md-2 control-label">Balance</label>
+																<div class="col-md-3">
+																	<input type="number" value="0"
+																		class="form-control no-border" readonly
+																		id="balance" maxlength="30" name="balance"
+																		 required="required" title="" />
+																</div>
+															</div>
+
+														</td>
+													</tr>
+													
 
 
 
@@ -807,17 +1067,20 @@ function update_prod_details(counter)
 
 $('#submit').click(function(){
 
-  var purchaseOrder = {};
-  var pod= [];
+  var bill = {};
+  var bill_details= [];
+  var stock =[];
+  //stock is independent of bill
+  
   //var customer;
-  purchaseOrder.pod = pod;
+  bill.bill_details = bill_details;
   //purchaseOrder.customer = customer;
 	
 	for(var i=0;i<box_counter.length;i++)
 	{
 	  var index = box_counter[i];
 	  var product_identifier = index + "product_name";
-	  var tax_identifier = index + "tax_rate";
+	 
 	  if($('#' + product_identifier).val()=='')
 	     	 alert("Please select a product ");
 	     	 
@@ -827,24 +1090,49 @@ $('#submit').click(function(){
 	  {
 	    
 	  		var productName= $('#' + index + 'product_name').val();
+	  		var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
+	  		
 			var quantity = $('#' + index + 'quantity').val();
 			var price = $('#' + index + 'price').val();
 			var amount = $('#' + index + 'amt').val();
+			
 			var tax = $('#' + index + 'tax_rate').val();
+			alert(tax);
+			
+			var tax_id = $('datalist option[value="'+ tax +'"]').attr('taxid');
+			alert(tax_id);
+			
 			var taxAmount = $('#' + index + 'tax_amt').val();
+			var desc = $('#' + index   + 'prod_desc').val() ;
+		//alert(d);
+			
+			
+			
 		
-			var product = {
-  				"product_id": productName,
+			var bdetails = {              //we just need prod id , as other details can change
+  				"product": {
+  					"product_id" : prod_id,  //fetch prod from this ID
+  					"product_name" : null,
+  					"product_desc" : null,
+  					"category":null,
+  					"cp":0,
+  					"tax": null
+  					},
+  				"desc":desc,
   				"quantity": quantity,
   				"cost": price,
   				"amount": amount,
-  				"tax_id": tax,
+  				"tax": {
+  					"tax_id": tax_id,   //tax need  not be same as mentioned with product
+  					"tax_abbreviation":null,
+  					"tax_name":null
+  					},
   				"tax_amount": taxAmount,
-  				"po":null,
-  				"id":null
+  				"bill":null,                      //bill object
+  				"id":null                       //billdetail id - this table PK
 						  };
 					  
-			purchaseOrder.pod.push(product);
+			bill.bill_details.push(bdetails);
 			
 			
 	 	 
@@ -852,41 +1140,93 @@ $('#submit').click(function(){
 	}
 	
 	}
-	var vendor = "VEN222"; //$("#vendpor").val(); - value has vendorID
-	purchaseOrder.vendor_id = vendor;
-	
-	// add customerid, add companyid - get it from local storage, other details of PO
+	var vendor = $("#vendor").val();
+	var vendor_id = $('datalist option[value='+ vendor +']').attr('vendorid');
+	bill.vendor = {
+			"vendor_id" : vendor_id  //json of vendor object
+			
+	};
 	
     var date = $("#date").val();
-	alert(date);
-	purchaseOrder.order_date = date;
-	//var po_number = $("#po_number").val();
-	purchaseOrder.po_number = null;
-	purchaseOrder.po_id = null;
-	purchaseOrder.company_id = "CMP445";
-	purchaseOrder.amount = $("#subtotal").val();
-	purchaseOrder.tax_amount = $("#taxtotal").val();
-	purchaseOrder.grand_total = $("#grandtotal").val();
-	purchaseOrder.adv_payment = null;
+    var days = $("#days").val();
+    
+    var payment_duedate = $("#pay_duedate").val();
 	
-	purchaseOrder.note = $("textarea#notes").val();
-	purchaseOrder.advance_amount =0;
-	purchaseOrder.balance = $("#grandtotal").val();
-	purchaseOrder.bill_status=0;
+    bill.days = days;
+    bill.due_date = payment_duedate;
+    bill.bill_date = date;
+    bill.bill_number = $("#bill_no").val();
 	
-	//list of adv payment is null here
+    bill.ref = $("#ref").val();
+	bill.bill_id = null;   //internal id of each bill (company + auto inc within)
+	bill.id= 0;  //auto inc
+	bill.company = {
+			
+			"company_id" : "CMP445"
+			};
 	
+	bill.amount = $("#subtotal").val();
+	bill.tax_amount = $("#taxtotal").val();
+	bill.grand_total = $("#grandtotal").val();
+	bill.advance_amount = $("#advance").val(); //if any advance received say from PO, copy it
+	bill.balance = $("#balance").val();
+	bill.payment = null;  //holds all payments made towards the bill (list)
+    bill.payment_amount=0;
+	bill.note = $("textarea#notes").val();
 	
-	console.log(JSON.stringify(purchaseOrder));
-	var p = JSON.stringify(purchaseOrder);
+	//assign all adv paymets of PO to this bill
+	bill.advance_payment =null;         //check if it exists for bill created from Po
+	bill.status=0;
+
+	
+	for(var i=0;i<stock_counter.length;i++) //only existing stocks counters 0,1,2
+		{
+		for(var j=0;j<stock_json.length;j++)
+			{
+			 if(stock_json[j].counter==stock_counter[i])
+				 {
+				  var st={
+						  
+						  	"packing_date":stock_json[j].packing_date,
+							"expiry_date":stock_json[j].expiry_date,
+							"cp":stock_json[j].cp,
+							"sp":stock_json[j].sp,
+							"batch_no":stock_json[j].batch_no,
+							"discount":stock_json[j].discount,
+							"qty":stock_json[j].qty,
+							"product":{
+								"product_id":stock_json[j].product.product_id ,
+								"product_name" : null,
+								"product_desc" : null,
+								"category":null,
+								"cp":0,
+								"tax": null
+								
+							},
+							"stock_id":null,
+							"id":0 //increment per company
+						  
+				  };
+				  
+				  stock.push(st);
+				  
+				 }
+			}
+		   
+		}
+	
+	console.log(JSON.stringify(bill));
+	var p = JSON.stringify(bill);
+	
+	console.log(stock);
 
 	
 	//ajax call
 	
-	
+	//send stock and bill separate
 	$.ajax({
 		   type : 'GET',
-		   url  : '/Accounting/po/purchase/createpo',
+		   url  : '/Accounting/bill/create',
 		    dataType :'text',
 		    data:{'jsondata' : p},
 		    success: function(response) {
@@ -914,6 +1254,163 @@ $('#submit').click(function(){
 
 </script>
 
+<script>
+
+
+
+
+function stock_entry(counter)
+{
+	//open dialog only when qty, price not 0
+	//clear all while opening
+	
+	 $("#stockentrydate").val('');
+	 $("#qty").val('');
+	 $("#cp").val('');
+	 $("#discount").val('');
+	 $("#batch_no").val('');
+	 $("#sp").val('');
+	 $("#packingdate").val('');
+	 $("#expirydate").val('');
+	
+	alert(counter);
+	var price = $("#" + counter + "price").val();
+	var qty = $("#" + counter + "quantity").val();
+	
+$("#stock_dialog").dialog({
+        
+        modal: false,
+        autoOpen: false,
+        title: "Enter Stock",
+        width: 700,
+        height: 500
+    });
+    if(price!='' && qty!='')
+    	{
+    	
+        
+    	$('#expiry_date').datetimepicker({
+    	    	
+    	    	format:'DD/MM/YYYY'
+    	    	
+    	    	
+    	    });
+    	    
+    	$('#packing_date').datetimepicker({
+    		
+    		format:'DD/MM/YYYY'
+    		
+    		
+    	});
+    	
+        	$('#stock_dialog').dialog('open');
+        	current_stock=counter;
+        	
+        	$("#qty").val($("#" + counter + "quantity").val());
+        	$("#cp").val($("#" + counter + "price").val());
+        	
+    	}
+    else
+    	alert("Enter all details");
+	
+	}
+
+
+function add_stock()
+{
+	//check for reqd fields
+	
+	alert("add");
+	
+	var pdate = $("#packingdate").val();
+	var qty = $("#qty").val();
+	var cp = $("#cp").val();
+	var discount = $("#discount").val();
+	var batch_no = $("#batch_no").val();
+	var sp = $("#sp").val();
+	var edate = $("#expirydate").val();
+
+	
+	
+	stock_counter.push(current_stock);
+	alert(stock_counter);
+	
+	//store stock with product object
+	
+	var productName= $('#' + current_stock + 'product_name').val();
+	var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
+	alert(prod_id);
+	
+	var stock ={
+			
+			"packing_date": pdate,
+			"qty":qty,
+			"cp":cp,
+			"discount": discount,
+			"batch_no" :batch_no,
+			"sp":sp,
+			"expiry_date" : edate,
+			"counter":current_stock,
+			"product":{
+				"product_id": prod_id,
+				"product_name" : null,
+				"product_desc" : null,
+				"category":null,
+				"cp":0,
+				"tax": null
+				
+			},
+			"stock_id":null,
+			"id":0 //increment per company
+			
+			
+	};
+	
+	console.log(stock);
+	
+	
+	
+	
+	for(var i=0;i<stock_json.length;i++)
+		{
+		if(stock_json[i].counter==current_stock)
+			{
+			alert("already exists for this box");
+				stock_json[i].packing_date=pdate;
+				stock_json[i].expiry_date=edate;
+				stock_json[i].cp=cp;
+				stock_json[i].sp=sp;
+				stock_json[i].batch_no=batch_no;
+				stock_json[i].discount=discount;
+				stock_json[i].qty=qty;
+				stock_json[i].product.product_id = prod_id;
+			
+			}
+		
+		else
+			{
+			
+			alert("new");
+			stock_json.push(stock);
+			}
+		
+		}
+	
+	if(stock_json.length==0)
+	{
+	alert("new");
+	stock_json.push(stock);
+	}
+	
+	  //can have multiple entries for one counter - check if it exists , change all
+	  
+	console.log(stock_json);
+	$('#stock_dialog').dialog('close');
+
+}
+	
+
+</script>
 
 
 <script>
@@ -925,9 +1422,11 @@ $('#submit').click(function(){
 	var tax_counter = [];
 	var tax_amount = [];
 	var tax_div = [];
-
+	var stock_counter=[];
+    var current_stock;
+    var stock_json=[];
 	
-	$(function() { 
+	
 		$("#add_row").click(function() {            //dynamically add a row for item entry
 
 							count = count + 1;
@@ -937,14 +1436,29 @@ $('#submit').click(function(){
 									'<tr >'
 											+
 
-											'<td>'
+											'<td id="' +  count + 'stockoption">'
 											+ '<div class="form-group required">'
 											+ '<div class="col-md-12">'
-											+ '<input class="form-control" id="' + count + 'product_name"  name="company_name"   placeholder="Product Name" required="required" title="" type="text" />'
-											+ '</div>'
+											+ '<input class="form-control" list="' +  count  + 'productlist" id="' + count + 'product_name"  name="company_name"   placeholder="Chose Product"  onchange="update_prod_details(' +   count + ')"  required="required" title="" type="text" />'
+											+ '<datalist id="' +  count + 'productlist">' 
+											+ '</datalist>' 
+											+'</div>'
 											+ '</div>'
 											+ '</td>'
 											+
+											
+											'<td>' 
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+										    + '<input type="text"  class="form-control"' 
+										    + 'id="' +  count + 'prod_desc" maxlength="30" name="proddesc"'
+											+ 'placeholder="Description" required="required" title=""'
+											+ '/>' 
+											+'</div>' 
+											+'</div>' 
+											+'</td>' 
+											+ 
+											
 
 											'<td>'
 											+ '<div class="form-group required">'
@@ -973,15 +1487,13 @@ $('#submit').click(function(){
 											+ '<div class="form-group required">'
 											+ '<label class="col-md-3 control-label">Tax Rate</label>'
 											+ '<div class="col-md-9">'
-											+ '<input list="browser"  class="form-control" id="'
+											+ '<input list="' + count + 'taxlist"  class="form-control" id="'
 											+ count
 											+ 'tax_rate" placeholder="Tax Rate" onchange="update_tax('
 											+ count
 											+ ')">'
-											+ '<datalist id="browser">'
-											+ '<option data-customvalue="5.5" value="VAT 5.5">VAT 5.5</option>'
-											+ '<option data-customvalue="14.5" value="VAT 14.5">VAT 14.5</option>'
-											+ '<option data-customvalue="15" value="SERVICE 15">SERVICE 15</option>'
+											+ '<datalist id="'  +    count + 'taxlist">'
+											
 											+'</datalist>'
 											+ '</div>'
 											+ '</div>'
@@ -1015,10 +1527,27 @@ $('#submit').click(function(){
 											+ ')"></i>' 
 											+ '</td>'
 											+'</tr>').insertBefore('#last_row');
+							
+							 for(var i=0;i<product_list.length;i++)
+							 {
+							
+							 //show only inventory, noninv and service input type products
+							
+						      $('#' + count +'productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
+							 
+							 }
+						 
+						  
+						     for(var i=0;i<tax_list.length;i++)
+						    	 {
+						    	 
+						    	 	$('#' + count + 'taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+						    	 }
+							
 
 						});
 
-	});
+	
 
 	function update_amount(value_counter) {
 		
@@ -1260,6 +1789,12 @@ $('#submit').click(function(){
 
 		var index = box_counter.indexOf(number);
         box_counter.splice(index, 1);
+        
+        var sindex = stock_counter.indexOf(number);
+        stock_counter.splice(sindex, 1);
+        
+        
+        
       	var deleted_amt = $('#' + number + 'amt').val();
       	alert("deleted amt is " + deleted_amt);
       	var deleted_tax_amt = $('#' + number + 'tax_amt').val();
