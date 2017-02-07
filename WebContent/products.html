@@ -335,9 +335,9 @@ function view_inv(i)
       $("#vinvproduct_desc").val(prodnew_json[i].product_desc);
       $("#vinvsku").val(prodnew_json[i].sku);
       $("#vinvcategory").val(prodnew_json[i].category);
-      $("#vinvcp").val(prodnew_json[i].cp);
+     // $("#vinvcp").val(prodnew_json[i].cp);
       $("#vinvexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-      $("#vinvsp").val(prodnew_json[i].sp);
+     // $("#vinvsp").val(prodnew_json[i].sp);
       $("#vinvincome").val(prodnew_json[i].head_income.income_id);
       $("#vinvstock").val(prodnew_json[i].stock);
       $("#vinvtax_rate").val(prodnew_json[i].tax.tax_id);
@@ -347,9 +347,9 @@ function view_inv(i)
       $('#vinvproduct_desc').prop('readonly', true);
       $('#vinvsku').prop('readonly', true);
       $('#vinvcategory').prop('readonly', true);
-      $('#vinvcp').prop('readonly', true);
+     // $('#vinvcp').prop('readonly', true);
       $('#vinvexpenditure').prop('readonly', true);
-      $('#vinvsp').prop('readonly', true);
+      //$('#vinvsp').prop('readonly', true);
       $('#vinvincome').prop('readonly', true);
       $('#vinvstock').prop('readonly', true);
       $('#vinvtax_rate').prop('readonly', true);
@@ -548,9 +548,9 @@ $("#viewinv_dialog").dialog({
       $("#vinvproduct_desc").val(prodnew_json[i].product_desc);
       $("#vinvsku").val(prodnew_json[i].sku);
       $("#vinvcategory").val(prodnew_json[i].category);
-      $("#vinvcp").val(prodnew_json[i].cp);
+     // $("#vinvcp").val(prodnew_json[i].cp);
       $("#vinvexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-      $("#vinvsp").val(prodnew_json[i].sp);
+      //$("#vinvsp").val(prodnew_json[i].sp);
       $("#vinvincome").val(prodnew_json[i].head_income.income_id);
       $("#vinvstock").val(prodnew_json[i].stock);
       $("#vinvtax_rate").val(prodnew_json[i].tax.tax_id);
@@ -560,9 +560,9 @@ $("#viewinv_dialog").dialog({
       $('#vinvproduct_desc').prop('readonly', false);
       $('#vinvsku').prop('readonly', false);
       $('#vinvcategory').prop('readonly', false);
-      $('#vinvcp').prop('readonly', false);
+     // $('#vinvcp').prop('readonly', false);
       $('#vinvexpenditure').prop('readonly', false);
-      $('#vinvsp').prop('readonly', false);
+      //$('#vinvsp').prop('readonly', false);
       $('#vinvincome').prop('readonly', false);
       $('#vinvstock').prop('readonly', false);
       $('#vinvtax_rate').prop('readonly', false);
@@ -1235,7 +1235,7 @@ else
                              
                              <br><br>
                              
-                             
+                             <!--  
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Cost Price</label>
                                 <div class="col-md-6"><input class="form-control" id="vinvcp" name="vinvcp" maxlength=""  title="" type="text" />
@@ -1243,6 +1243,7 @@ else
                              </div>
                              
                              <br><br>
+                             -->
                              
                             <div class="form-group required">
                                 <label class="col-md-3 control-label">Head of Expenditure</label>
@@ -1258,6 +1259,7 @@ else
                              
                              <br><br>
                              
+                             <!--  
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Selling Price</label>
                                 <div class="col-md-6"><input class="form-control" id="vinvsp" name="vinvsp" maxlength="" title="" type="text" />
@@ -1266,7 +1268,7 @@ else
                              
                              <br><br>
                              
-                             
+                             -->
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Head of Income</label>
                                 <div class="col-md-6">
@@ -1851,6 +1853,9 @@ else
                           PRODUCTS
                         </h1>
                         
+                        <button type="button" class="btn btn-info" style="float: right"
+					onclick="addstock()">Add Stock</button>
+                        
                      <!--     <div class="row">
                     <div class="col-lg-12">-->
                     
@@ -1942,7 +1947,7 @@ else
                              
                              <br><br>
                              
-                             
+                             <!--  
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Cost Price</label>
                                 <div class="col-md-6"><input class="form-control" id="invcp" name="invcp" maxlength=""  title="" type="text" />
@@ -1950,6 +1955,8 @@ else
                              </div>
                              
                              <br><br>
+                             
+                             -->
                              
                             <div class="form-group required">
                                 <label class="col-md-3 control-label">Head of Expenditure</label>
@@ -1965,6 +1972,7 @@ else
                              
                              <br><br>
                              
+                             <!-- 
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Selling Price</label>
                                 <div class="col-md-6"><input class="form-control" id="invsp" name="invsp" maxlength="" title="" type="text" />
@@ -1973,7 +1981,7 @@ else
                              
                              <br><br>
                              
-                             
+                              -->
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Head of Income</label>
                                 <div class="col-md-6">
@@ -2929,9 +2937,9 @@ else
 		var desc  = $("#invproduct_desc").val();
 		var sku  = $("#invsku").val();
 		var category  = $("#invcategory").val();
-		var cp  = $("#invcp").val();
+		//var cp  = $("#invcp").val();
 		var expen  = $("#invexpenditure").val(); //let value be ID
-		var sp  = $("#invsp").val();                  
+		//var sp  = $("#invsp").val();                  
 		var income  = $("#invincome").val();
 		var stock  = $("#invstock").val();
 		
@@ -2965,14 +2973,14 @@ else
 					 
 					},
 				"category":category,
-				"cp":cp,
+				"cp":0,
 				"head_expenditure": 
 					{
 						"expenditure_id":expen,
 						"expenditure_name":null
 					},
 					
-				"sp": sp,
+				"sp": 0,
 				"head_income":
 					{
 						"income_id":income,
@@ -3386,7 +3394,12 @@ else
 	
 	
 	
-	
+	function addstock(){
+		
+		
+		window.location.replace("stockEntry.html");
+	}
+
 	
 	
 	

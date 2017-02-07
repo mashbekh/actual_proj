@@ -281,6 +281,17 @@ function loadName()
  
  
  //ajax call to fetch products
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ //CHECK REF PARAMETER, IF PO# EXISTS LOAD IT
   
    //PRODUCTS
 // product_list = response;        //json with all products
@@ -1185,6 +1196,7 @@ $('#submit').click(function(){
 			{
 			 if(stock_json[j].counter==stock_counter[i])
 				 {
+				 //add company, vendor ref and bill no
 				  var st={
 						  
 						  	"packing_date":stock_json[j].packing_date,
@@ -1318,7 +1330,7 @@ $("#stock_dialog").dialog({
 
 function add_stock()
 {
-	//check for reqd fields
+	//check for reqd fields and company json
 	
 	alert("add");
 	
