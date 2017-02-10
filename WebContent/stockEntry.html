@@ -20,8 +20,8 @@
 
 
 
- <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
-    <link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
+<link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -38,8 +38,8 @@
 	rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
-			<script src="jarvis/js/moment_locale.js"></script>
-			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
+<script src="jarvis/js/moment_locale.js"></script>
+<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
 
 
 
@@ -129,45 +129,109 @@ input[readonly] {
 
 <script>
 
+var product_list;
+
 function load()
 {
 	
 $('.dropdown-toggle').dropdown();
 
 
-var product_list = [
+//load only inventory products from db
+
+ product_list = [
 	
 	{
-		"product_id" : 213,
-		"product_name" : "Paper",
-		"product_desc" : "200 gsm",
-		"category":"P",
-		"cp":40,
-		"tax":{
-			"tax_id" : "CMP123TAX1",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
+		"product_type": 0,       //inventory product
+		"product_subtype": 01,
+		"product_name": " 200 gsm",
+		"product_desc": "paper",
+		"sku": 65557,
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation":null,
+			 "tax_desc":null,
+			 "tax_rate":null,
+			 "company": null,//company object
+			 "tax_id": "CMP445TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category": "paper",
+		"cp": 10,
+		"head_expenditure": 
+			{
+				"expenditure_id": 123,
+				"expenditure_name":null
+			},
 			
-		},
-		"type" : 0  //inventory product
+		"sp": 15,
+		"head_income":
+			{
+				"income_id": 456,
+				"income_name":null
+			},
+		"opening_stock": 10,
+		"total_stock": 50,
+		"lowstock_alert": 5,
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+			
+		"product_id": "CMP445PROD999",
+		"stocklist": null,  // no stock recorded yet
+		"id": 999
  		
 		
 	},
 	
 	
 	{
-		"product_id" : 125,
-		"product_name" : "Toner",
-		"product_desc" : "ink",
-		"category":"P",
-		"cp":5000,
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 14.5
+		"product_type": 0,       //inventory product
+		"product_subtype": 02,
+		"product_name": "toner",
+		"product_desc": "ink",
+		"sku": 65557,
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation":null,
+			 "tax_desc":null,
+			 "tax_rate":null,
+			 "company": null,//company object
+			 "tax_id": "CMP445TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category": "ink",
+		"cp": 5000,
+		"head_expenditure": 
+			{
+				"expenditure_id": 123,
+				"expenditure_name":null
+			},
 			
-		},
-		"type" : 0  //inventory product
+		"sp": 5060,
+		"head_income":
+			{
+				"income_id": 456,
+				"income_name":null
+			},
+		"opening_stock": 10,
+		"total_stock": 50,
+		"lowstock_alert": 5,
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+			
+		"product_id": "CMP445PROD998",
+		"stocklist": null,  // no stock recorded yet
+		"id": 998
  		
 		
 	}
@@ -207,7 +271,19 @@ var product_list = [
 function add_stock()
 {
 	
-	var pdate = $("#packingdate").val();
+	var productName= $('#product_name').val();
+	var prod_id = $('datalist option[value="'+ productName +'"]').attr('prodid');
+	
+	for(var i=0;i<product_list.length;i++)
+	{
+	  if(prod_id == product_list[i].product_id)
+		  break;
+	
+	}
+	
+	var stock;
+	var stockentry;
+	
 	var qty = $("#qty").val();
 	var cp = $("#cp").val();
 	var discount = $("#discount").val();
@@ -215,44 +291,69 @@ function add_stock()
 	var sp = $("#sp").val();
 	var edate = $("#expirydate").val();
 	
-	var productName= $('#product_name').val();
-	var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
 	
+	var ref= $("#ref").val();
 	var vendor= $('#vendor').val();
 	var vendor_id = $('datalist option[value='+ vendor +']').attr('vendorid');
 	
-	var stock ={
-			
-			"packing_date": pdate,
-			"qty":qty,
-			"cp":cp,
-			"discount": discount,
-			"batch_no" :batch_no,
-			"sp":sp,
-			"expiry_date" : edate,
-			"product":{
-				"product_id": prod_id,
-				"product_name" : null,
-				"product_desc" : null,
-				"category":null,
-				"cp":0,
-				"tax": null
-				
-			},
-			"stock_id":null,
-			"id":0 ,//increment per company,
-			"company":{
-				"company_id":"CMP445"
-				
-			},
-			"vendor":
-				{
-				"vendor_id":vendor_id
-				}
-	};
 	
+	if(product_list[i].product_subtype==01)    
+	{
+	  stock = product_list[i].total_stock + $("#qty").val();
+	  
+	  stockentry =
+	  {
+				"qty":qty,
+				"cp":cp,
+				"discount": discount,
+				"batch_no" : null,
+				"sp":sp,
+				"expiry_date" : edate,
+				"product": null,  //send product id separately
+				"stock_id":null,
+				"id": null , 
+				"company":{
+					"company_id":"CMP445"
+					
+				},
+				"vendor":
+					{
+					"vendor_id":vendor_id
+					},
+				"bill_ref" :ref
+	}
+	}  
+	  else if(product_list[i].product_subtype ==02)
+		  {
+		  
+		  stockentry = {
+					
+					
+					"qty": qty,
+					"cp":cp,
+					"discount": discount,
+					"batch_no" :batch_no,
+					"sp":sp,
+					"expiry_date" : edate,
+					"product":null,
+					"stock_id":null,
+					"id": null ,
+					"company":{
+						"company_id":"CMP445"
+						
+					},
+					"vendor":
+						{
+						"vendor_id":vendor_id
+						},
+					"bill_ref":ref
+			};
+		  
+		  }
+		  
+		  
 	
-	console.log(stock);
+	console.log(stockentry);
 	
 	//make ajax call, add stock
 	//refresh page
@@ -265,7 +366,7 @@ function add_stock()
 <body onload="load()">
 
 
-<div id="wrapper">
+	<div id="wrapper">
 
 		<!-- Navigation -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
@@ -279,20 +380,21 @@ function add_stock()
 						class="icon-bar"></span>
 				</button>
 
-				<a class="navbar-brand" href="index.html" id="xyz" style="color:white;font-size:30px">SIMPLIFY TAX</a>
-				<a class="navbar-brand" id="xyz" class="company_name"
+				<a class="navbar-brand" href="index.html" id="xyz"
+					style="color: white; font-size: 30px">SIMPLIFY TAX</a> <a
+					class="navbar-brand" id="xyz" class="company_name"
 					style="font-size: 30px"></a>
 
 
 			</div>
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav" id="pqr">
-				
-				<li><a href="#" style="color:white"><i class="entypo-plus"></i></a></li>
-				
+
+				<li><a href="#" style="color: white"><i class="entypo-plus"></i></a></li>
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-bell"></i> <b
-						class="caret"></b></a>
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-bell"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu alert-dropdown">
 						<li><a href="#">Alert Name <span
 								class="label label-default">Alert Badge</span></a></li>
@@ -309,22 +411,23 @@ function add_stock()
 						<li class="divider"></li>
 						<li><a href="#">View All</a></li>
 					</ul></li>
-					
+
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
-						<li><a href="tax_settings.html" > Tax Settings</a></li>
+						<li><a href="tax_settings.html"> Tax Settings</a></li>
 						<li class="divider"></li>
-						<li><a href="financial_settings.html">Financial Settings </a></li>
+						<li><a href="financial_settings.html">Financial Settings
+						</a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
-					</ul>
-				</li>
+					</ul></li>
 
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
-						<b class="caret"></b></a>
+					data-toggle="dropdown" style="color: white">&nbsp;<i
+						class="fa fa-user" id="name"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="company_profile.html"><i
 								class="fa fa-fw fa-user"></i> Profile</a></li>
@@ -340,35 +443,35 @@ function add_stock()
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="abc">
 
-					<li ><a href="index.html"><i
-							class="fa fa-fw fa-dashboard"></i> Home</a></li>
-							
-					<li class="active"><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
-							Purchase Orders</a></li>
-							
+					<li><a href="index.html"><i class="fa fa-fw fa-dashboard"></i>
+							Home</a></li>
+
+					<li class="active"><a href="PurchaseOrders.html"><i
+							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
+
 					<li><a href="Bills.html"><i class="fa fa-fw fa-dashboard"></i>
 							Bills</a></li>
-							
+
 					<li><a href="Invoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
-					
+
 					<li><a href="Estimate.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
-					
+
 					<li><a href="Receipts.html"><i
 							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
-							
+
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
-							
+
 					<li><a href="Customers.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
-							
+
 					<li><a href="Vendors.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
-				
-					
-					
+
+
+
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -385,160 +488,221 @@ function add_stock()
 				<!-- Row beginning -->
 				<div class="row" id="row">
 					<div class="col-lg-8">
-					
-					
-					<div id="form-panel">
-			<form action="" method="post">
-			
-			
-			
-			<div class="form-group required">
 
-																
-																<label class="col-md-3 control-label">Product</label>
-																<div class="col-md-6">
-																	<input list="productlist" class="form-control"
-																			id="product_name" placeholder="Chose Product"  ></input>
-																			
 
-																		<datalist id="productlist">
-																		
-																			
-																			
-																		</datalist>
-																</div>
-															</div>
-			<br><br><br>
-			
-			<!-- add vendor too -->
-			
-			<div class="form-group">
-																	<label class="col-md-3 control-label">Vendor</label>
-																	<div class="col-md-6">
-																		<input list="vendor_names" class="form-control"
-																			id="vendor" placeholder="Vendor Name"
-																			onchange="getvendor_details()">
+						<div id="form-panel">
+							<form action="" method="post">
 
-																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
+
+
+								<div class="form-group required">
+
+
+									<label class="col-md-3 control-label">Product</label>
+									<div class="col-md-6">
+										<input list="productlist" class="form-control"
+											id="product_name" placeholder="Chose Product" onchange="return product_change()"></input>
+
+
+										<datalist id="productlist">
+
+
+
+										</datalist>
+									</div>
+								</div>
+								<br>
+								<br>
+								<br>
+
+								<!-- add vendor too -->
+
+								<div class="form-group">
+									<label class="col-md-3 control-label">Vendor</label>
+									<div class="col-md-6">
+										<input list="vendor_names" class="form-control" id="vendor"
+											placeholder="Vendor Name" onchange="getvendor_details()">
+
+										<!-- upon selection, show all customer details in text area, right panel needs purchase order number, date
                                   store customer id save this -->
 
-																		<datalist id="vendor_names">
-																			<option vendorid="145" value="Vaishnavi">Vaishnavi</option>
-																			<option vendorid="167" value="Vidhya">Vidhya</option>
-																			
-																		</datalist>
+										<datalist id="vendor_names">
+											<option vendorid="145" value="Vaishnavi">Vaishnavi</option>
+											<option vendorid="167" value="Vidhya">Vidhya</option>
+
+										</datalist>
 
 
-																	</div>
-																</div>
-																
-																<br><br>
+									</div>
+								</div>
+
+								<br>
+								
+								
+								<div id="ref"></div>
+								
+								<br>
+
+								<div class="form-group">
+									<label class="col-md-3 control-label">Bill reference No</label>
+									<div class="col-md-6">
+										<input class="form-control" id="ref" maxlength="30"
+											required="required" title="" type="text" />
+									</div>
+								</div>
+
+								<br><br>
+								<div class="form-group ">
+									<label class="col-md-3 control-label">Expiry Date</label>
+									<div class="col-md-6">
+										<div class="input-group date" id="expiry_date">
+
+											<input type="text" class="form-control" id="expirydate">
+											<span class="input-group-addon"> <span
+												class="glyphicon glyphicon-calendar"> </span>
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<br>
+								<br>
+
+
+
+
+								<div class="form-group required">
+									<label class="col-md-3 control-label">Cost Price</label>
+									<div class="col-md-6">
+										<input class="form-control" id="cp" maxlength="" title=""
+											type="text" />
+									</div>
+								</div>
+
+								<br>
+								<br>
+
+
+
+								<div class="form-group required">
+									<label class="col-md-3 control-label">Selling Price</label>
+									<div class="col-md-6">
+										<input class="form-control" id="sp" maxlength="" title=""
+											type="text" />
+									</div>
+								</div>
+
+								<br>
+								
+								<div id="existing_stock"></div>
+								
+								<br>
+
+
+
+								<div class="form-group required">
+									<label class="col-md-3 control-label">Quantity</label>
+									<div class="col-md-6">
+										<input class="form-control" id="qty" maxlength="" title=""
+											type="number" step="any" />
+									</div>
+								</div>
+
+								<br>
+								<br>
+
+								<div class="form-group">
+									<label class="col-md-3 control-label">Discount</label>
+									<div class="col-md-6">
+										<input class="form-control" id="discount" maxlength=""
+											title="" type="number" step="any" />
+									</div>
+								</div>
+
+								<br>
+								<br>
+
+							</form>
+
+							<input class="btn btn-blue" type='submit' onclick="add_stock()">
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	</body>
+	
+	<script>
+	
+	function product_change()
+	{
+		
+		var productName= $('#product_name').val();
+		var prod_id = $('datalist option[value="'+ productName +'"]').attr('prodid');
+		
+		for(var i=0;i<product_list.length;i++)
+			{
+			  if(prod_id == product_list[i].product_id)
+				  break;
 			
-			<div class="form-group">
-                                <label class="col-md-3 control-label">Bill reference No</label>
-                                <div class="col-md-6"><input class="form-control" id="ref"  maxlength="30"   required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
+			}
+		
+		var subtype = product_list[i].product_subtype;
+		
+		
+		if(subtype==02)  //has a reference
+			{
 			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Batch No</label>
-                                <div class="col-md-6"><input class="form-control" id="batch_no"  maxlength="30"   required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group ">
-																	<label class="col-md-3 control-label">Packing/Manufacturing Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="packing_date">
-
-																			<input type="text" class="form-control" id="packingdate" >
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-                             
-                             <br><br>
-                             <div class="form-group ">
-																	<label class="col-md-3 control-label">Expiry Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="expiry_date">
-
-																			<input type="text" class="form-control" id="expirydate" >
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-                             
-                             <br><br>
-                             
-                            
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="cp"  maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                          
-                           
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="sp"  maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                          
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Quantity</label>
-                                <div class="col-md-6"><input class="form-control" id="qty"  maxlength=""  title="" type="number" step="any" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                                <div class="form-group">
-                                <label class="col-md-3 control-label">Discount</label>
-                                <div class="col-md-6"><input class="form-control" id="discount"  maxlength=""  title="" type="number" step="any" />
-                                </div>
-                             </div>
-                             
-                        <br><br>
-
-</form>
-
-<input class="btn btn-blue" type='submit' onclick="add_stock()" >
-
-</div>
-</div>
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					</div>
-					</div>
-					</div>
-					</div>
-					</div>
+			$("#existing_stock").text('');
+			
+			$("#stock").remove();
+			 
+			$("#ref").text('');
+			
+			
+			$("#ref").append('<div class="form-group required" id="batch">' + 
+						 '<label class="col-md-3 control-label">Batch No</label>' + 
+						 '<div class="col-md-6">' + 
+						 '<input class="form-control" id="batch_no" maxlength="30"' + 
+						 ' required="required" title="" type="text" />' + 
+						 '</div>' + 
+						 '</div><br><br>');
+			
+			}
+		
+		else         //no ref , should hide cp and sp
+			{
+			
+			$("#ref").text('');
+			$("#batch").remove();
+			
+			$("#existing_stock").text('');
+			$("#stock").remove();
+			
+			var stock = product_list[i].total_stock;   //for 01 type
+			
+			$("#existing_stock").append('<div class="form-group required" id="stock">' + 
+					 '<label class="col-md-3 control-label">Available Stock</label>' + 
+					 '<div class="col-md-6">' + 
+					 '<input class="form-control" id="available" maxlength="30"' + 
+					 ' required="required" title="" type="text"  readonly value="'+   stock + '" />' + 
+					 '</div>' + 
+					 '</div><br><br>');
+			
+			
+			}
+		
+		
+		
+		return true;
+	}
+	
+	</script>
+	
+	
+	</html>
+	

@@ -1616,20 +1616,16 @@ function add_stock()
 	function update_tax(value_counter)                                        // tax type - dropdown chosen
 	{
 
+		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
+		if(tax_value!='')
+		{
 		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
-		
-		var tax_value = $("#" + value_counter + "tax_rate").val();
-		alert(tax_value);//VAT 5.5
-		
-		var tid = $('#broswer [value="' + tax_value + '"]').data('customvalue');
-		alert(tid);
-		
-		
 		var amt = value_counter + 'amt';  
 		var taxamt = value_counter + 'tax_amt';
      	var tax_bracket = tax_value.toString().split(" ");                   //5.5
      	var taxrate = tax_bracket[1];
      	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+     	
      	
      	
      	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
@@ -1642,6 +1638,47 @@ function add_stock()
         
         
      	tax_addition(tax_value,value_counter,newtaxamt.toFixed(2));             //call func to handle tax slab div
+	}
+		else
+			{
+			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+			var amt = value_counter + 'amt';  
+			var taxamt = value_counter + 'tax_amt';
+	     	
+	     	var taxrate = 0;
+	     	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+	     	
+	     	
+	     	
+	     	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
+	     	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
+	        $('#taxtotal').val(taxtotal.toFixed(2));
+	           
+	           
+	        var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
+	        $('#grandtotal').val(finalamt.toFixed(2));
+	        
+	        //now handle tax div , get all tax counter,div etc for that box
+	        
+	        var counter_index = tax_counter.indexOf(value_counter);
+	        var divid = tax_div[counter_index];
+	        var div_value = $("#" + divid).val();
+	        var new_value = (Number(div_value) - existing_taxamt).toFixed(2);
+	        
+	        
+	        if(new_value==0)
+      	  	{
+      	    	 $('#' + divid).closest('tr').remove();
+      	  	}
+	        
+	        tax_div[counter_index] =-1;
+	        tax_amount[counter_index] = 0;
+	        tax_rate[counter_index] =-1;
+	        
+			
+			
+			}
+    
     
 	}
 	

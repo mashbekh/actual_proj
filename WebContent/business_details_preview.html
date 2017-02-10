@@ -181,7 +181,7 @@ localStorage.removeItem("ifsc_code");
 */
 location.replace("index.html");
 
-//make ajax call
+//collect all values, make ajax call
 
 }
 
@@ -203,6 +203,12 @@ location.replace("index.html");
             $('#landline1').val(localStorage.getItem("landline"));
             $('#pan_no1').val(localStorage.getItem("pan_no"));
             $('#tin_no1').val(localStorage.getItem("tin_no"));
+            
+            $('#strn_no1').val(localStorage.getItem("tin_no"));
+            
+            $('#tan_no1').val(localStorage.getItem("tin_no"));
+            $('#gst_no1').val(localStorage.getItem("tin_no"));
+            
             $('#cin_no1').val(localStorage.getItem("cin_no"));
             $('#acc_num1').val(localStorage.getItem("acc_num"));
             $('#type_acc1').val(localStorage.getItem("type_acc"));
@@ -415,12 +421,12 @@ function loadName()
 				<h1 class="page-header">Company Profile</h1>
 
 				<div class="row">
-					<div class="col-lg-6">
+					<div class="col-lg-9">
 
 						<div id="form-panel">
 							<div class="row">
 								<div class="col-lg-12">
-									<form role="form" id="business_details">
+									<form role="form" id="business_details" >
 
 
 										<div class="form-group">
@@ -437,7 +443,7 @@ function loadName()
 										
 										<div class="form-group">
 						<label  class="col-sm-3 control-label">Upload Logo</label>
-                         <div class="col-md-6"><input type="file" class="form-control" id="pic" accept="image/*"></div>
+                         <div class="col-md-6"><input type="file" class="form-control" id="logo" accept="image/*"></div>
 					</div>
 					
 					<br><br>
@@ -453,14 +459,22 @@ function loadName()
 
 										<br> <br>
 
-										<div class="form-group ">
-											<label class="col-md-3 control-label">Type of
-												Business</label>
-											<div class="col-md-6">
-												<input class="form-control" id="type_business1" type="text"
-													value="" />
-											</div>
-										</div>
+										<div class="form-group required">
+					<label class="col-md-3 control-label">Type of Business</label>
+					<div class="col-md-6">
+						<select class="form-control" id="type_business1" required>
+							<option value=''>Select</option>
+							<option value="Propreitorship">Propreitorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
+					</div>
+				</div>
 
 										<br> <br>
 
@@ -569,35 +583,121 @@ function loadName()
 
 										<br> <br>
 
-										<div class="form-group ">
-											<label class="col-md-3 control-label">Company PAN No</label>
-											<div class="col-md-6">
-												<input class="form-control" id="pan_no1" name="pan_no"
-													value="" />
-											</div>
-										</div>
+										<div class="row">
+            <div class="form-group col-xs-4">
+                <label class="col-md-3 control-label" >PAN No</label>
+                <input id="pan_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
+                      
+                       />
+            </div>
+
+            <div class="form-group  col-xs-4">
+                <label >Upload PAN</label>
+                <input id="upload_pan" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
+                       
+                       placeholder="Upload PAN"/>
+            </div>
+        </div>
+
 
 										<br>
 										<br>
 
-										<div class="form-group ">
-											<label class="col-md-3 control-label">Company TIN No</label>
-											<div class="col-md-6">
-												<input class="form-control" id="tin_no1" name="tin_no"
-													value="" />
-											</div>
-										</div>
+										<div class="row">
+            <div class="form-group col-xs-4">
+                <label class="col-md-3 control-label" >TIN No</label>
+                <input id="tin_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
+                      
+                       />
+            </div>
+
+            <div class="form-group  col-xs-4">
+                <label >Upload TIN</label>
+                <input id="upload_tin" class="form-control input-group-lg reg_name " type="file" accept="image/*" 
+                       
+                       placeholder="Upload TIN"/>
+            </div>
+        </div>
+
 
 										<br>
 										<br>
+										
+										<div class="row">
+            <div class="form-group col-xs-4">
+                <label class="col-md-3 control-label" >STRN No</label>
+                <input id="strn_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
+                      
+                       />
+            </div>
 
-										<div class="form-group">
-											<label class="col-md-3 control-label">Company CIN No</label>
-											<div class="col-md-6">
-												<input class="form-control" id="cin_no1" name="cin_no"
-													value="" />
-											</div>
-										</div>
+            <div class="form-group  col-xs-4">
+                <label >Upload STRN</label>
+                <input id="upload_strn" class="form-control input-group-lg reg_name " type="file" accept="image/*"   
+                       
+                       placeholder="Upload STRN"/>
+            </div>
+        </div>
+
+
+										<br>
+										<br>
+										 <div class="row">
+            <div class="form-group col-xs-4">
+                <label class="col-md-3 control-label" >TAN No</label>
+                <input id="tan_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
+                      
+                       />
+            </div>
+
+            <div class="form-group  col-xs-4">
+                <label >Upload TAN</label>
+                <input id="upload_tan" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
+                       
+                       placeholder="Upload TAN"/>
+            </div>
+        </div>
+
+										<br>
+										<br>
+										
+										
+										
+										 <div class="row">
+            <div class="form-group col-xs-4">
+                <label class="col-md-3 control-label" >GST No</label>
+                <input id="gst_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
+                      
+                       />
+            </div>
+
+            <div class="form-group col-xs-4">
+                <label >Upload GSTN</label>
+                <input id="upload_gstn" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
+                       
+                       placeholder="Upload GSTN"/>
+            </div>
+        </div>
+
+				
+										<br>
+										<br>
+										
+										   <div class="row">
+            <div class="form-group col-xs-4">
+                <label class="col-md-3 control-label" >CIN No</label>
+                <input id="cin_no1" class="form-control input-group-lg reg_name col-md-4" type="text"  />
+            </div>
+
+            <div class="form-group col-xs-4">
+                <label >Upload CIN</label>
+                <input id="upload_cin" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
+                       
+                       placeholder="Upload CIN"/>
+            </div>
+        </div>
+
+				
 
 
 										<br> <br>
@@ -612,11 +712,15 @@ function loadName()
 										<br> <br>
 
 										<div class="form-group required">
-											<label class="col-md-3 control-label">Type of Account</label>
-											<div class="col-md-6">
-												<input class="form-control" id="type_account1" value="" />
-											</div>
-										</div>
+					<label class="col-md-3 control-label">Type of Account</label>
+					<div class="col-md-6">
+						<select class="form-control" id="type_account1">
+							<option value="Savings">Savings</option>
+							<option value="Overdraft">Overdraft</option>
+							<option value="Current Account">Current Account</option>
+						</select>
+					</div>
+				</div>
 
 										<br> <br>
 
@@ -624,11 +728,20 @@ function loadName()
 
 
 										<div class="form-group required">
-											<label class="col-md-3 control-label">Bank</label>
-											<div class="col-md-6">
-												<input class="form-control" id="bank1" value="" />
-											</div>
-										</div>
+					<label class="col-md-3 control-label">Bank</label>
+					<div class="col-md-6">
+						<select class="form-control" id="bank1">
+							<option value="Propreitorship">Propreitorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
+					</div>
+				</div>
 
 										<br> <br>
 

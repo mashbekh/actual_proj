@@ -135,7 +135,6 @@ $(document).ready(function () {
          </nav>
 
 
-        <div id="pwrap">
 
             <div class="container-fluid">
 
@@ -175,8 +174,59 @@ and small business owners use Simplify Tax around the world.</p>
                                 <div id="password_verify"></div>
                             </div>
                             
-                              <button type="submit" class="btn btn-primary" id="submit" onclick="return verify(this,event)" disabled="disabled">Lets get started!</button>
-                              <script>
+                              
+                             
+                           
+                             
+                        </form>
+                        
+                        <input type="submit" class="btn btn-primary" id="submit" onclick="return verify(this)" disabled="disabled" value="Lets get started!">
+                        
+                        <br> <br> <br>
+                       <p>-------------or-------------</p>
+                            <div class="form-group">
+                             <div  id="google-signin-button"></div>
+                            
+                                  </div>  
+                        
+                      
+                        </div>
+                      
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                        
+               
+
+              
+
+              
+
+                
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery 
+    <script src="js/jquery.js"></script>-->
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="jarvis/js/bootstrap.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="jarvis/js1/plugins/morris/raphael.min.js"></script>
+    <script src="jarvis/js1/plugins/morris/morris.min.js"></script>
+    <script src="jarvis/js1/plugins/morris/morris-data.js"></script>
+
+</body>
+ <script>
                               
 function verify_mail()
 {
@@ -194,42 +244,53 @@ else return true;
                               
                               
                               
-   function verify(sender,e){
+   function verify(sender){
 	
 	var name = $('#name').val();
 	var email = $('#email').val();
 	var password  = $('#password').val();
 	var confirm_password  = $('#confirm_password').val();
 	
-        if (password === confirm_password){
-        e.preventDefault();
-   $.ajax({
-   type : 'GET',
-   url  : '/rest/elink/add_google_user',
-    dataType :'text',
-    
-   
-   data: {'name': name, 'email': email, 'password': password},
+	
+	
+	var details={
+			
+		"name":name,
+		"email":email,
+		"password":password,
+		"email_hexcode": null,
+		"email_status": 2,
+		"mobile":null,
+		"mobile_status": 2,
+		"otp":null,
+		"id":null
+	};
+	
+	var p = JSON.stringify(details);
+	console.log(p);
+	
+  if (password === confirm_password){
+	  
+   		$.ajax({
+   		type : 'GET',
+   		url  : '/Accounting/rest/user/email',
+    	dataType :'text',
+    	data: {'details': p},
   
-    success: function(response) {
+ 		success: function(response) {
            
            alert(response);
-           var user_data = response.split(":");
-           window.localStorage.setItem("user_id",user_data[1]);
-           window.localStorage.setItem("user_name",user_data[2]);
-           window.localStorage.setItem("auth_token",user_data[3]);
-           location.href = "business_details.html";
+           console.log(response);
+           return false;
     },
     
-	  
-	error: function (a,b,c)
-	{ 
-	
-	  
-		alert(a.status+b+c);
-	
-	
-	}  
+    error: function (xhr) {
+		alert(xhr.responseText);
+	    var jsonResponse = JSON.parse(xhr.responseText);
+	    console.log(jsonResponse.message);
+	   return false;
+	  }
+    
 	  });
           
             }
@@ -243,18 +304,14 @@ else return true;
 }
                               
                               </script>
-
-                            <p>-------------or-------------</p>
-                            <div class="form-group">
-                             <div  id="google-signin-button"></div>
-                             
+                              
+                               
                               <script>
                               
                               
-    function onSignIn(googleUser) {
+    function onSignIn(googleUser) 
+    {
     	
-    	
-     //alert('logged in');
       alert('Logged in as: ' + googleUser.getBasicProfile().getName());
       
       $.ajax({
@@ -321,60 +378,6 @@ else return true;
     
     
   </script>
-                                  </div>
-                             
-                            
-
-                           
-
-                        </form>
-                        <div>
-                        </div>
-                        </div>
-                      
-                    </div>
-                </div>
-                <!-- /.row -->
-
-                   <div class="row">
-                    <div class="col-lg-6">
-
-                        <div></div>
-
-                        <div class="row">
-                    <div class="col-lg-6">
-
-                        <div></div>
-
-               
-
-              
-
-              
-
-                
-
-            </div>
-            <!-- /.container-fluid -->
-
-        </div>
-        <!-- /#page-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
-
-    <!-- jQuery 
-    <script src="js/jquery.js"></script>-->
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="jarvis/js/bootstrap.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="jarvis/js1/plugins/morris/raphael.min.js"></script>
-    <script src="jarvis/js1/plugins/morris/morris.min.js"></script>
-    <script src="jarvis/js1/plugins/morris/morris-data.js"></script>
-
-</body>
 
 
 </html>

@@ -1,0 +1,1363 @@
+<!DOCTYPE HTML >
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Tax System</title>
+
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script src="jarvis/js/bootstrap.min.js"></script>
+
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+
+
+
+
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+<!-- Custom CSS -->
+<link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+
+
+<!-- Custom Fonts -->
+<link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+
+
+<script src="jarvis/js/jquery.dataTables.min.js"></script>
+<script src="jarvis/js/datatables/TableTools.min.js"></script>
+<script src="jarvis/js/dataTables.bootstrap.js"></script>
+<script src="jarvis/js/datatables/jquery.dataTables.columnFilter.js"></script>
+<script src="jarvis/js/datatables/lodash.min.js"></script>
+<script
+	src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+
+
+<script src="jarvis/js/bootstrap.js"></script>
+
+<script src="jarvis/js/select2/select2.min.js"></script>
+<script src="jarvis/js/selectboxit/jquery.selectBoxIt.min.js"></script>
+<link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
+<link rel="stylesheet" href="jarvis/js/select2/select2.css">
+<link rel="stylesheet"
+	href="jarvis/js/selectboxit/jquery.selectBoxIt.css">
+
+
+</head>
+
+<script>
+
+ function edit_product()
+ {
+	 
+	 $("#edit_product_dialog").dialog({
+         
+         modal: true,
+         autoOpen: false,
+         title: "Edit Product",
+         width: 700,
+         height: 500
+     });
+       
+         $('#edit_product_dialog').dialog('open');
+         
+         //populate with values from that type of tax
+         return false;
+	 
+	 
+ }
+ 
+ 
+ function submit_edit_product() //receive TAX ID, to know which tax to delete
+ {
+	 var product_name = $('#new_product_name').val();
+	   var product_desc = $('#new_product_desc').val();
+	   var cost_price = $('#new_cost_price').val();
+	   var selling_price = $('#new_selling_price').val();
+	   var tax_rate = $('#new_tax_rate').val();
+	 //var tax_recovery  = $('#tax_recovery').prop("checked");
+
+	 if(product_name==''||product_desc==''||cost_price==''||selling_price==''||tax_rate=='')
+	 {
+	 return true;
+	 }
+
+	 //alert("all fine");
+	 //
+	 $('#edit_product_dialog').dialog('close');
+	 return false;
+	 // make an ajax call to edit type of tax
+ }
+
+ function cancel()
+ {
+	 $('#edit_product_dialog').dialog('close');
+	 //return false;
+ }
+
+
+
+
+</script>
+
+
+<style>
+.dataTables_filter {
+	width: 50%;
+	float: right;
+	top-margin: 100px;
+	text-align: right;
+}
+
+.form-group.required .control-label:after {
+	content: "*";
+	color: red;
+}
+
+#abc {
+	background-color: #F0F3F4;
+	margin-top: 15px;
+}
+
+#xyz {
+	height: 65px;
+	text-align: center;
+	background-color: #152F37;
+}
+
+#pqr {
+	background-color: #152F37;
+}
+
+.ui-dialog-titlebar {
+	border: 0;
+	padding: .5em 1em;
+	background: #009999;
+	overflow: auto;
+	zoom: 1;
+}
+
+.ui-dialog-titlebar-close {
+	display: none;
+}
+</style>
+
+<script>
+
+var prod_json=null; //original
+var prodnew_json = null; //edited
+var edit_counter=null; //when edit gets submitted, has product_id of to be editted product (when edit box opened set this)
+
+function loadName()
+{
+   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
+    var company_id="CMP445";
+    inv_noref1();
+   
+	$.ajax({
+		   		type : 'GET',
+		   		url  : '/Accounting/products/create',
+		    	dataType :'text',
+		    	data:{'company_id' : company_id},
+		    	success: function(response)
+		    	{
+		     		alert(response);
+		     		prod_json = response;
+		      		prodnew_json=response;
+		      		update();
+		   
+		        },
+				error: function (a,b,c)
+				{ 
+					alert(a.status+b+c);
+				 	console.log(a.status+b+c);
+				}  
+		  });
+   
+   //rest call to fetch all prod - store it in json
+   //onload get all products, each row fields, option functions each get product id as parameter,once editted->go fetch type of product from json and 
+   //open similar type of pop-up with values from json
+   
+   //maintain another json of above which has editted info
+   
+   //if one product edited, once save is clicked - rest call to update product at back end
+   
+   //once rest call succeeds, change json 2 array which holds editted values and now change table row
+   //always when options chosen, get values from json 2 which has new values
+
+   
+}
+
+
+
+function update()
+{
+	
+for(var i=0;i<prod_json.length;i++)
+	{
+	   var type = prod_json[i].product_type;
+	   var name = prod_json[i].product_name;
+	   var desc = prod_json[i].product_desc;
+	   var tax = prod_json[i].tax.abbreviation  +  " " + prod_json[i].tax.tax_rate ;
+	   var id = prod_json[i].product_id;
+	   
+	   if(type==0)
+		   type="Inventory";
+	   else if(type==1)
+		   type="Non Inventory";
+	   else
+		   type="Service";
+		   
+	   
+	   //td needs product id so that once editted, even fields are changed in table row
+	   $("#table_export").append('<tr>' + 
+			   '<td id="' +  id   + 'type">' + type + '</td>' +
+			   '<td id="' +  id  + 'name">' + name + '</td>' +
+			   '<td id="' +  id  +  'desc">' + desc+ '</td>' +
+			   '<td id="' +  id   + 'tax">' + tax + '</td>' +
+			   '<td>' +  
+                     '<div class="btn-group">' + 
+                      '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
+                                    'Action <span class="caret"></span>' + 
+                                '</button>' + 
+                               '<ul class="dropdown-menu dropdown-default pull-right" role="menu">' +
+                                
+                                    '<li>' + 
+                                       '<a onclick="edit_product('+  id + ')" >' +    
+                                             '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
+                                                'Edit Product' + 
+                                            '</a>' + 
+                                    '</li>' + 
+                                    '<li class="divider"></li>'  +
+                                    '<li>' + 
+                                        '<a onclick="view_product('+  id  +')">' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
+                                           '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
+                                                'View Product'+
+                                            '</a>' + 
+                                    '</li>'  +
+                                    '<li class="divider"></li>' + 
+                                    
+                                    '<li>'  + 
+                                        '<a  onclick="return delete_product(' + id  + '")>'   + 
+                                            '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
+                                                 'Delete Product' + 
+                                            '</a>' +
+                                    '</li>' + 
+                                    
+                                '</ul>'   + 
+                            '</div>' + 
+
+                            '</td></tr>');
+	 	 
+	   
+	   
+	
+	}
+	
+	
+}
+
+
+
+	
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
+
+<body onload="loadName()">
+
+	
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
+			id="pqr">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header" id="xyz">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+
+				<a class="navbar-brand" href="index.html" id="xyz">SIMPLIFY TAX</a>
+			</div>
+			<!-- Top Menu Items -->
+			<ul class="nav navbar-right top-nav" id="pqr">
+				<li class="dropdown">
+
+					<ul class="dropdown-menu message-dropdown">
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-footer"><a href="#">Read All New
+								Messages</a></li>
+					</ul>
+				</li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown"><i class="fa fa-bell"></i> <b
+						class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown">
+						<li><a href="#">Alert Name <span
+								class="label label-default">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-primary">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-success">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span class="label label-info">Alert
+									Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-warning">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-danger">Alert Badge</span></a></li>
+						<li class="divider"></li>
+						<li><a href="#">View All</a></li>
+					</ul></li>
+
+
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown"><i class="fa fa-fw fa-gear"></i>Settings</a>
+					<ul class="dropdown-menu">
+						<li><a href="tax_settings.html"> Tax Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="financial_settings.html">Financial Settings
+						</a></li>
+						<li class="divider"></li>
+						<li><a href="products.html">Products </a></li>
+					</ul></li>
+
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">&nbsp;<i class="fa fa-user" id="name"></i>
+						<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="company_profile.html"><i
+								class="fa fa-fw fa-user"></i> Profile</a></li>
+
+						<li class="divider"></li>
+						<li><a href="logout.html"><i
+								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
+					</ul></li>
+			</ul>
+
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav" id="abc">
+
+					<li ><a href="index.html"><i
+							class="fa fa-fw fa-dashboard"></i> Home</a></li>
+							
+					<li class="active"><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
+							Purchase Orders</a></li>
+							
+					<li><a href="Bills.html"><i class="fa fa-fw fa-dashboard"></i>
+							Bills</a></li>
+							
+					<li><a href="Invoice.html"><i
+							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
+					
+					<li><a href="Estimate.html"><i
+							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
+					
+					<li><a href="Receipts.html"><i
+							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
+							
+					<li><a href="Reports.html"><i
+							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
+							
+					<li><a href="Customers.html"><i
+							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
+							
+					<li><a href="Vendors.html"><i
+							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
+				
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+
+
+
+
+		<div id="page-wrapper">
+
+			<div class="container-fluid">
+
+
+
+				<h1 class="page-header">PRODUCTS</h1>
+
+				<button type="button" class="btn btn-info" style="float: right"
+					onclick="addstock()">Add Stock</button>
+
+				<!--     <div class="row">
+                    <div class="col-lg-12">-->
+
+				<!------CONTROL TABS START------>
+				<ul class="nav nav-tabs bordered">
+
+					<li class="active"><a href="#view_products" data-toggle="tab"><i
+							class="entypo-menu"></i> View Products</a></li>
+
+					<li><a href="#add_product" data-toggle="tab"><i
+							class="entypo-menu"></i> Add Product</a></li>
+
+
+
+
+				</ul>
+				<!------CONTROL TABS END------>
+
+
+				<div class="tab-content">
+
+
+
+					<div class="tab-pane box" id="add_product">
+
+						<!-- another nav tab content -->
+
+						<br>
+						<br>
+
+						<!------ INNER CONTROL TABS START------>
+						<ul class="nav nav-tabs bordered">
+
+							<li class="active"><a href="#inv_prod" data-toggle="tab"><i
+									class="entypo-menu"></i> Inventory product</a></li>
+
+							<li><a href="#noninv_prod" data-toggle="tab"><i
+									class="entypo-menu"></i> Non Inventory Product</a></li>
+
+
+						</ul>
+						<!------ INNER CONTROL TABS END------>
+
+						<!-- definition of INVENTORY PRODUCTS -->
+
+						<div class="tab-content">
+							<div class="tab-pane box active" id="inv_prod">
+
+
+								<div id="form-panel">
+									<div class="row">
+										<div class="col-lg-8">
+
+											<br>
+											<div style="color: red">Chose Inventory product type.</div>
+											<br> <br>
+
+											<!-- RADIO BUTTON OPTION -->
+
+											<form>
+												<label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="invtype" id="inv_noref" checked
+													value="noref" onchange="return inv_noref1()">
+													Inventory without Batch No
+												</label> <label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="invtype" id="inv_batch"
+													value="batchref" onchange="return inv_ref1()">
+													Inventory with Batch No
+												</label>
+
+											</form>
+
+
+											<br>
+											<br> <br>
+											<form role="form" id="inventory">
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invproduct_name"
+															name="invproduct_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product
+														Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invproduct_desc"
+															name="invproduct_desc" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">SKU</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invsku" name="invsku"
+															maxlength="" required="required" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Category</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invcategory"
+															name="invcategory" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+												<div id="costprice"></div>
+
+												<br>
+
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="invexpenditure"
+															class="form-control selectboxit" id="invexpenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div id="sellingprice"></div>
+
+												<br>
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="invincome" class="form-control selectboxit"
+															id="invincome">
+															<option value="None">Select</option>
+
+															<option value="Sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div id="op_stock"></div>
+
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Low Stock
+														Alert</label>
+													<div class="col-md-6">
+														<input class="form-control" id="low_stock"
+															name="invcategory" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Tax Rate</label>
+													<div class="col-md-6">
+
+														<input list="tax" class="form-control" id="invtax_rate"
+															placeholder="Tax Rate" required>
+														<datalist id="tax">
+
+															<option data-customvalue="14" value="VAT 5.5">VAT
+																5.5</option>
+															<option data-customvalue="15" value="VAT 14.5">VAT
+																14.5</option>
+															<option data-customvalue="16" value="SERVICE 15">SERVICE
+																15</option>
+
+														</datalist>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+											</form>
+											<input type="submit" class="btn btn-primary"
+												id="inventory_submit" onclick="return add_invproduct()">
+
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- close desc of inv prod -->
+
+
+
+
+
+
+
+
+							<!-- NON INVENTORY PRODUCT -->
+							<div class="tab-pane box" id="noninv_prod">
+
+
+								<div id="form-panel">
+									<div class="row">
+										<div class="col-lg-8">
+
+											<br>
+											<div style="color: red">Chose Item type.</div>
+											<br> <br>
+
+											<form>
+
+												<label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="noninvtype" id="non_product"
+													checked value="non_product"> Product
+												</label> <label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="noninvtype" id="non_service"
+													value="non_service"> Service
+												</label>
+
+											</form>
+											<br> <br>
+											<form role="form" id="noninventory">
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvproduct_name"
+															name="noninvproduct_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvproduct_desc"
+															name="noninvproduct_desc" maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+
+												<br>
+
+												<div id="cat">
+													<div class="form-group required">
+														<label class="col-md-3 control-label">Category</label>
+														<div class="col-md-6">
+															<input class="form-control" id="noninvcategory"
+																name="noninvcategory" maxlength="" required="required"
+																title="" type="text" />
+														</div>
+													</div>
+												</div>
+
+												<br>
+												<br> <br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Cost Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvcp"
+															 maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="invexpenditure"
+															class="form-control selectboxit" id="noninvexpenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Selling
+														Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvsp" maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="noninvsales"
+															class="form-control selectboxit" id="noninvincome">
+															<option value="None">Select</option>
+
+															<option value="sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Tax Rate</label>
+													<div class="col-md-6">
+
+														<input list="tax" class="form-control" id="noninvtax_rate"
+															placeholder="Tax Rate">
+														<datalist id="tax">
+
+															<option data-customvalue="14" value="VAT 5.5">VAT
+																5.5</option>
+															<option data-customvalue="15" value="VAT 14.5">VAT
+																14.5</option>
+															<option data-customvalue="16" value="SERVICE 15">SERVICE
+																15</option>
+
+														</datalist>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+											</form>
+
+											<input type="submit" class="btn btn-primary"
+												id="inventory_submit" onclick="return add_noninvproduct()">
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- close desc of inv prod -->
+
+
+
+						</div>
+						<!-- inner tab content -->
+
+					</div>
+					<!-- close of add product -->
+
+					<!-- NEW NAV BAR CONTENT -->
+					<!--  ASSOCIATION ACTION BUTTON WITH ID SUCH THAT FOR EVERY ROW IT HOLDS TAX_ID, PASS THIS
+                        TO DELETE AND EDIT FUNCTION, SO INTERNAL TAX_ID IS KNOWN -->
+
+					<div class="tab-pane box active " id="view_products">
+						<div class="row">
+							<div class="col-lg-12">
+								<br>
+								<br>
+								<table class="table table-bordered datatable" id="table_export">
+									<thead>
+										<tr>
+
+											<th><div>Product Type</div></th>
+
+
+											<th><div>Product Name</div></th>
+
+											<th><div>Product Description</div></th>
+
+											<th><div>Tax Rate</div></th>
+
+											<th><div>Options</div></th>
+
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<!--  ADD CODE TO POPULATE VALUES FROM JSON FOR EACH TD -->
+
+											</td>
+
+											<td></td>
+
+											<td></td>
+											<td></td>
+
+
+
+
+											<td>
+												<!-- ACTIONS -->
+												<div class="btn-group">
+
+													<button type="button"
+														class="btn btn-default btn-sm dropdown-toggle"
+														data-toggle="dropdown">
+														Action <span class="caret"></span>
+													</button>
+													<ul class="dropdown-menu dropdown-default pull-right"
+														role="menu">
+
+														<!-- view -->
+														<li><a href="" onClick="return view_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
+																<i class="entypo-pencil"></i> View Product
+														</a></li>
+														<li class="divider"></li>
+
+
+														<!-- EDITING LINK -->
+														<li><a href="" onClick="return edit_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
+																<i class="entypo-pencil"></i> Edit Product
+														</a></li>
+														<li class="divider"></li>
+
+														<!-- DELETION LINK -->
+														<!-- DELETE FROM DATABASE -->
+														<li><a href=""
+															onClick="return confirm('Are you sure to delete?')">
+																<!--  pass product id along --> <i class="entypo-trash"></i>
+																Delete Product
+														</a></li>
+													</ul>
+												</div>
+
+											</td>
+
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+
+					</div>
+
+
+
+
+				</div>
+				<!-- end of nav bar content -->
+
+
+				<!--   </div>
+                </div> -->
+				<!-- /.row -->
+			</div>
+			<!--  wrapper -->
+
+
+
+		</div>
+		<!-- /.container-fluid -->
+
+	</div>
+	<!-- /#page-wrapper -->
+
+	</div>
+	<!-- /#wrapper -->
+
+
+
+
+
+
+
+</body>
+
+<script>
+
+	function inv_noref1()
+	{
+		//clear all fields
+		
+		$("#invproduct_name").val('');
+		$("#invtax_rate").val('');
+		$("#invproduct_desc").val('');
+		$("#invsku").val('');
+		$("#invcategory").val('');
+		$("#invexpenditure").val(''); //let value be ID
+		$("#invincome").val('');
+		$("#low_stock").val('');
+		$("#invcp").val('');
+		$("#invsp").val('');
+		$("#invstock").val('');
+		
+		
+		$("#inv_batch").text("");
+		$('#costprice').text("");
+		$("#sellingprice").text("");
+		$("#cp").remove();
+		$("#sp").remove();
+		
+		$('#costprice').append('<div class="form-group required" id="cp">' +
+        '<label class="col-md-3 control-label">Cost Price</label>' + 
+        '<div class="col-md-6"><input class="form-control" id="invcp" name="invcp" maxlength=""  title="" type="text" />'+
+        '</div>'+
+     '</div><br><br>');
+		
+		$('#sellingprice').append('<div class="form-group required" id="sp" >' +
+		        '<label class="col-md-3 control-label">Selling Price</label>' + 
+		        '<div class="col-md-6"><input class="form-control" id="invsp" name="invsp" maxlength=""  title="" type="text" />'+
+		        '</div>'+
+		     '</div><br><br>');
+		
+		
+		
+		
+		$("#op_stock").append('<div class="form-group required" id="stock">'+
+                               ' <label class="col-md-3 control-label">Opening Stock</label>'+
+                               ' <div class="col-md-6"><input class="form-control" id="invstock" name="invstock" maxlength=""  title="" type="number" step="any" />' + 
+                               ' </div>' + 
+                             '</div>' + '<br><br>');
+		
+		return true;
+		
+	}
+	
+	function inv_ref1()
+	{
+		
+		$("#op_stock").text("");
+		$("#costprice").text("");
+		$("#sellingprice").text("");
+		$("#cp").remove();
+		$("#sp").remove();
+		$("#stock").remove();
+		
+		//clear all fields
+		
+		
+		$("#invproduct_name").val('');
+		$("#invtax_rate").val('');
+		$("#invproduct_desc").val('');
+		$("#invsku").val('');
+		$("#invcategory").val('');
+		$("#invexpenditure").val(''); //let value be ID
+		$("#invincome").val('');
+		$("#low_stock").val('');
+		$("#invcp").val('');
+		$("#invsp").val('');
+		$("#invstock").val('');
+		
+		
+		return true;
+	}
+	
+ 
+ 
+ 
+
+</script>
+
+
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
+<script type="text/javascript">
+
+	jQuery(document).ready(function($)
+	{
+		
+
+		$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+	
+	var jqTable = $('table.datatable', $(e.target).attr("href"));
+	    if ( jqTable.length > 0 ) {
+	    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
+	    if ( oTableTools != null && oTableTools.fnResizeRequired() ){
+	        jqTable.dataTable().fnAdjustColumnSizing();
+	        oTableTools.fnResizeButtons();
+	    }
+	}	
+	
+	return false;
+});
+
+
+		var datatable = $("#table_export").dataTable({
+			"sPaginationType": "bootstrap",
+			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
+			
+			"oTableTools": {
+			    
+			   
+			
+				"aButtons": [
+					
+					{
+						"sExtends": "xls",
+						
+						
+					},
+					{
+						"sExtends": "pdf",
+						
+					},
+					{
+						"sExtends": "print",
+						"fnSetText"	   : "Press 'esc' to return",
+						"fnClick": function (nButton, oConfig) {
+							datatable.fnSetColumnVis(0, false);
+							datatable.fnSetColumnVis(3, false);
+							
+							this.fnPrint( true, oConfig );
+							
+							window.print();
+							
+							$(window).keyup(function(e) {
+								  if (e.which == 27) {
+									  datatable.fnSetColumnVis(0, true);
+									  datatable.fnSetColumnVis(3, true);
+								  }
+							});
+						},
+						
+					},
+				]
+			},
+			
+		});
+		
+		$(".dataTables_wrapper select").select2({
+			minimumResultsForSearch: -1
+		});
+	});
+	
+	
+	function add_invproduct()
+	{
+		
+		var name = $("#invproduct_name").val();
+		var tax = $("#invtax_rate").val();
+		var tid = $('datalist option[value="'+ tax +'"]').attr('data-customvalue');
+		var desc  = $("#invproduct_desc").val();
+		var sku  = $("#invsku").val();
+		var category  = $("#invcategory").val();
+		var expen  = $("#invexpenditure").val(); //let value be ID
+		var income  = $("#invincome").val();
+		var invtype = $("input[name='invtype']:checked").val();
+		var low_stock = $("#low_stock").val();
+		var subtype,cp,sp,opening_stock,total_stock ;
+		
+		if(invtype=="noref")
+			{
+			 subtype = 01;   //inventory product with no reference
+			 cp = $("#invcp").val();
+			 sp = $("#invsp").val();
+			 opening_stock = $("#invstock").val();//opening stock
+			 total_stock = opening_stock;
+			
+			}
+		else        //inventory product with batch#, has no cp,sp,openingstock
+			{
+			subtype=02;
+			cp=0;
+			sp=0;
+			opening_stock=0;
+			total_stock=0;        //as no stock has been entered yet
+			}
+		
+		
+		if(name==''|| tax==''|| tid=='' || sku=='' )   
+			{
+			alert("Fill in all required fields");
+			return true;
+			
+			}
+		
+		var product = {      
+				
+				"product_type": 0,       //inventory product
+				"product_subtype": subtype,
+				"product_name":name,
+				"product_desc": desc,
+				"sku":sku,
+				"tax":                     //backend - search for tax obect from table with this id
+					{
+					 "tax_name":null,
+					 "tax_abbreviation":null,
+					 "tax_desc":null,
+					 "tax_rate":null,
+					 "company": null,//company object
+					 "tax_id": tid,
+					 "tax_recoverable":true
+					 
+					},
+				"category":category,
+				"cp": cp,
+				"head_expenditure": 
+					{
+						"expenditure_id":expen,
+						"expenditure_name":null
+					},
+					
+				"sp": sp,
+				"head_income":
+					{
+						"income_id":income,
+						"income_name":null
+					},
+				"opening_stock": opening_stock,
+				"total_stock": total_stock,
+				"lowstock_alert": low_stock,
+				
+				"company":
+					{
+					"company_id" :"CMP445"
+					},
+					
+				"product_id":null,
+				"stocklist":null,  // no stock recorded yet
+				"id":null
+				
+				
+		};
+		alert(product);
+		console.log(product);
+		return true;
+	}
+	
+	
+	
+	function add_noninvproduct()
+	{
+		
+		var name = $("#noninvproduct_name").val();
+		var tax = $("#noninvtax_rate").val();
+		var tid = $('#tax [value="' + tax + '"]').attr('data-customvalue');
+		var desc  = $("#noninvproduct_desc").val();var category  = $("#noninvcategory").val();
+		var cp  = $("#noninvcp").val();
+		
+		if(cp=='')
+			cp=0;
+		
+		var expen  = $("#noninvexpenditure").val(); //let value be ID
+		var sp  = $("#noninvsp").val();  
+		if(sp=='')
+			cp=0;
+		
+		var income  = $("#noninvincome").val();
+		var category  = $("#noninvcategory").val();
+		
+		var noninvtype = $("input[name='noninvtype']:checked").val();
+		var subtype;
+		
+		if(name==''|| tax==''|| tid=='' )   
+			{
+			alert("Fill in all required fields");
+			return true;
+			
+			}
+		
+		
+		if(noninvtype=="non_product")
+			{
+			   subtype = 11;
+			}
+		else
+			{
+			   subtype = 12;
+			}
+	
+			var product = {      
+					
+					"product_type": 1,         //non-inventory
+					"product_subtype" : subtype,
+					"product_name":name,
+					"product_desc": desc,
+					"sku": null,
+					"tax":                     
+						{
+						 "tax_name":null,
+						 "tax_abbreviation":null,
+						 "tax_desc":null,
+						 "tax_rate":null,
+						 "company": null,
+						 "tax_id": tid,
+						 "tax_recoverable":true
+						 
+						},
+					"category":category,
+					"cp":cp,
+					"head_expenditure": 
+						{
+							"expenditure_id":expen,
+							"expenditure_name":null
+						},
+						
+					"sp": sp,        
+					"head_income":
+						{
+							"income_id": income,
+							"income_name":null
+						
+						},
+						"opening_stock": 0,          //stock does not apply to non inventory products
+						"total_stock": 0,
+						"lowstock_alert": 0,
+						
+						"company":
+							{
+							"company_id" :"CMP445"
+							},
+							
+						"product_id":null,
+						"stocklist":null,  
+						"id":null
+					
+			};
+			console.log(product);
+			return true;
+
+			
+			}
+		
+	
+	function addstock(){
+		
+		
+		window.location.replace("stockEntry.html");
+	}
+
+	
+	
+	
+	
+		
+</script>
+
+
+
+</html>

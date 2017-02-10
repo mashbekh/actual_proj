@@ -76,62 +76,57 @@
 
 <script>
 
+
+
 var product_list = [
 	
-	{
-		"product_id" : 213,
-		"product_name" : "Paper",
-		"product_desc" : "200 gsm",
-		"category":"P",
-		"cp":40,
-		"tax":{
-			"tax_id" : "CMP123TAX1",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
-			
-		},
-		"type" : 0  //inventory product
- 		
+	{      
 		
-	},
-	
-	
-	{
-		"product_id" : 125,
-		"product_name" : "Toner",
-		"product_desc" : "ink",
-		"category":"P",
-		"cp":5000,
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 14.5
+		"product_type": 0,       //inventory product
+		"product_subtype": 01,
+		"product_name": "eraser",
+		"product_desc": "stationary",
+		"sku": "567",
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 5.5,
+			 "company": null,//company object
+			 "tax_id": "CMP123TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"XYZ",
+		"cp": 40,
+		"head_expenditure": 
+			{
+				"expenditure_id": null,
+				"expenditure_name":null
+			},
 			
-		},
-		"type" : 0  //inventory product
- 		
+		"sp": 45,
+		"head_income":
+			{
+				"income_id": null,
+				"income_name":null
+			},
+		"opening_stock": 56,
+		"total_stock": 67,
+		"lowstock_alert": 10,
 		
-	},
-	{
-		"product_id" : 565,
-		"product_name" : "Fevicol",
-		"product_desc" : "adhesive",
-		"category":"P",
-		"cp": 65,
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
 			
-		},
-		"type" : 1  //inventory product
- 		
+		"product_id": "PROD66",
+		"stocklist":null,  // no stock recorded yet
+		"id":null
 		
-	}
-	
-	
-	
-	
+		
+}
 	
 	
 	
@@ -165,9 +160,82 @@ $(function () {
     
 });
 
+function inv_noref1()
+{
+	//clear all fields
+	
+	$("#invproduct_name").val('');
+	$("#invtax_rate").val('');
+	$("#invproduct_desc").val('');
+	$("#invsku").val('');
+	$("#invcategory").val('');
+	$("#invexpenditure").val(''); //let value be ID
+	$("#invincome").val('');
+	$("#low_stock").val('');
+	$("#invcp").val('');
+	$("#invsp").val('');
+	$("#invstock").val('');
+	
+	
+	$("#inv_batch").text("");
+	$('#costprice').text("");
+	$("#sellingprice").text("");
+	$("#cp").remove();
+	$("#sp").remove();
+	
+	$('#costprice').append('<div class="form-group required" id="cp">' +
+    '<label class="col-md-3 control-label">Cost Price</label>' + 
+    '<div class="col-md-6"><input class="form-control" id="invcp" name="invcp" maxlength=""  title="" type="text" />'+
+    '</div>'+
+ '</div><br><br>');
+	
+	$('#sellingprice').append('<div class="form-group required" id="sp" >' +
+	        '<label class="col-md-3 control-label">Selling Price</label>' + 
+	        '<div class="col-md-6"><input class="form-control" id="invsp" name="invsp" maxlength=""  title="" type="text" />'+
+	        '</div>'+
+	     '</div><br><br>');
+	
+	
+	
+	
+	$("#op_stock").append('<div class="form-group required" id="stock">'+
+                           ' <label class="col-md-3 control-label">Opening Stock</label>'+
+                           ' <div class="col-md-6"><input class="form-control" id="invstock" name="invstock" maxlength=""  title="" type="number" step="any" />' + 
+                           ' </div>' + 
+                         '</div>' + '<br><br>');
+	
+	return true;
+	
+}
 
-
-
+function inv_ref1()
+{
+	
+	$("#op_stock").text("");
+	$("#costprice").text("");
+	$("#sellingprice").text("");
+	$("#cp").remove();
+	$("#sp").remove();
+	$("#stock").remove();
+	
+	//clear all fields
+	
+	
+	$("#invproduct_name").val('');
+	$("#invtax_rate").val('');
+	$("#invproduct_desc").val('');
+	$("#invsku").val('');
+	$("#invcategory").val('');
+	$("#invexpenditure").val(''); //let value be ID
+	$("#invincome").val('');
+	$("#low_stock").val('');
+	$("#invcp").val('');
+	$("#invsp").val('');
+	$("#invstock").val('');
+	
+	
+	return true;
+}
 
 
 </script>
@@ -175,6 +243,13 @@ $(function () {
 
 
 <style>
+
+#add
+{
+  background-color:gray
+}
+
+
 .panel {
 	width: 75%;
 }
@@ -220,7 +295,7 @@ input[readonly] {
 .ui-dialog-titlebar {
 	border: 0;
 	padding: .5em 1em;
-	background: black;
+	background: gray;
 	overflow: auto;
 	zoom: 1;
 }
@@ -231,6 +306,8 @@ function loadName()
 {
    document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
    //get purchase order number and append it to box, also with today's date
+   
+   inv_noref1();
    
    var today = new Date();
 	var dd = today.getDate();
@@ -256,6 +333,8 @@ function loadName()
   $('#0productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
  
  }
+ 
+ $('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
 
  //append another option dd to create product
  
@@ -264,21 +343,52 @@ function loadName()
  for(var i=0;i<tax_list.length;i++)
 	 {
 	 $('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 $('#invtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 
+	 $('#noninvtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
 	 }
  
  //check if TAN No activated, fetch settings and then only show TDS
+ 
+ 
 
 }
 
+function create()
+{
+	
+	alert("hi");
+	}
 
+var add_product_counter;
 
 function update_prod_details(counter)
 {
-	alert(counter);
+	//alert(counter);
 	var prod = $("#" + counter + "product_name").val();
 	
+	if(prod=='+ Add Product')
+		{
+		add_product_counter = counter;  //to select this newly created product in ths box
+		
+		$("#" + counter + "product_name").val('');
+		$("#product_dialog").dialog({
+	        
+	        modal: true,
+	        autoOpen: false,
+	        title: "Add Product",
+	        resizable :false,
+	        width: 1000,
+	        height: 700
+	    });
+		
+		$("#product_dialog").dialog('open');
+		
+		
+		}
+	
 
-	if(prod!='')
+	if(prod!='' && prod!='+ Add Product')
 		{
 		
     		var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
@@ -297,7 +407,7 @@ function update_prod_details(counter)
     			   }
     		 }
     		
-    		//var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
+    		
     		
 		}
 	else
@@ -320,6 +430,401 @@ function update_prod_details(counter)
 </script>
 
 <body onload="loadName()">
+							<!-- create product dialog-->
+							
+							
+	<div id="product_dialog" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+			<form action="" method="post">
+			
+					
+						<br>
+
+						<!------ INNER CONTROL TABS START------>
+						<ul class="nav nav-tabs bordered">
+
+							<li class="active"><a href="#inv_prod" data-toggle="tab"><i
+									class="entypo-menu"></i> Inventory product</a></li>
+
+							<li><a href="#noninv_prod" data-toggle="tab"><i
+									class="entypo-menu"></i> Non Inventory Product</a></li>
+
+
+						</ul>
+						<!------ INNER CONTROL TABS END------>
+
+						<!-- definition of INVENTORY PRODUCTS -->
+
+						<div class="tab-content">
+							<div class="tab-pane box active" id="inv_prod">
+
+
+								<div id="form-panel">
+									<div class="row">
+										<div class="col-lg-12">
+
+											<br>
+											<div style="color: red">Chose Inventory product type.</div>
+											<br> <br>
+
+											<!-- RADIO BUTTON OPTION -->
+
+											<form>
+												<label class="radio-inline col-md-3 control-label">
+													<input type="radio" name="invtype" id="inv_noref" checked
+													value="noref" onchange="return inv_noref1()">
+													Inventory without Batch No
+												</label> <label class="radio-inline col-md-3 control-label">
+													<input type="radio" name="invtype" id="inv_batch"
+													value="batchref" onchange="return inv_ref1()">
+													Inventory with Batch No
+												</label>
+
+											</form>
+
+
+											<br>
+											<br> <br>
+											<form role="form" id="inventory">
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invproduct_name"
+															name="invproduct_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product
+														Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invproduct_desc"
+															name="invproduct_desc" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">SKU</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invsku" name="invsku"
+															maxlength="" required="required" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Category</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invcategory"
+															name="invcategory" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+												<div id="costprice"></div>
+
+												<br>
+
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="invexpenditure"
+															class="form-control selectboxit" id="invexpenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div id="sellingprice"></div>
+
+												<br>
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="invincome" class="form-control selectboxit"
+															id="invincome">
+															<option value="None">Select</option>
+
+															<option value="Sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div id="op_stock"></div>
+
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Low Stock
+														Alert</label>
+													<div class="col-md-6">
+														<input class="form-control" id="low_stock"
+															name="invcategory" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+
+
+												<div class="form-group required">
+																<label class="col-md-3 control-label">Tax Rate</label>
+																<div class="col-md-6">
+
+																	<input list="invtaxlist" class="form-control"
+																		id="invtax_rate" placeholder="Tax Rate">
+																		
+																	<datalist id="invtaxlist">
+
+
+																	</datalist>
+																</div>
+															</div>
+
+												<br>
+												<br>
+
+
+											</form>
+											<input type="submit" class="btn btn-primary"
+												id="inventory_submit" onclick="return add_invproduct()">
+
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- close desc of inv prod -->
+
+
+
+
+
+
+
+
+							<!-- NON INVENTORY PRODUCT -->
+							<div class="tab-pane box" id="noninv_prod">
+
+
+								<div id="form-panel">
+									<div class="row">
+										<div class="col-lg-12">
+
+											<br>
+											<div style="color: red">Chose Item type.</div>
+											<br> <br>
+
+											<form>
+
+												<label class="radio-inline col-md-3 control-label">
+													<input type="radio" name="noninvtype" id="non_product"
+													checked value="non_product"> Product
+												</label> <label class="radio-inline col-md-3 control-label">
+													<input type="radio" name="noninvtype" id="non_service"
+													value="non_service"> Service
+												</label>
+
+											</form>
+											<br> <br>
+											<form role="form" id="noninventory">
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvproduct_name"
+															name="noninvproduct_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvproduct_desc"
+															name="noninvproduct_desc" maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+
+												<br>
+
+												<div id="cat">
+													<div class="form-group required">
+														<label class="col-md-3 control-label">Category</label>
+														<div class="col-md-6">
+															<input class="form-control" id="noninvcategory"
+																name="noninvcategory" maxlength="" required="required"
+																title="" type="text" />
+														</div>
+													</div>
+												</div>
+
+												<br>
+												<br> <br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Cost Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvcp"
+															 maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="invexpenditure"
+															class="form-control selectboxit" id="noninvexpenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Selling
+														Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvsp" maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="noninvsales"
+															class="form-control selectboxit" id="noninvincome">
+															<option value="None">Select</option>
+
+															<option value="sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+																<label class="col-md-3 control-label">Tax Rate</label>
+																<div class="col-md-6">
+
+																	<input list="noninvtaxlist" class="form-control"
+																		id="noninvtax_rate" placeholder="Tax Rate"
+																		>
+																		
+																	<datalist id="noninvtaxlist">
+
+
+																	</datalist>
+																</div>
+															</div>
+
+												<br>
+												<br>
+
+
+											</form>
+
+											<input type="submit" class="btn btn-primary"
+												id="inventory_submit" onclick="return add_noninvproduct()">
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- close desc of inv prod -->
+
+
+
+						</div>
+						<!-- inner tab content -->
+
+					
+
+
+
+
+			</form>
+			
+		
+			
+		</div>
+	</div>
+
+
+
+							<!-- end of product dialog -->
+
+
+
+
+
+
+
+
+
 
 	<div id="wrapper">
 
@@ -826,6 +1331,7 @@ function update_prod_details(counter)
 
 		</div>
 		<!-- /#wrapper -->
+		</div>
 </body>
 
 <script>
@@ -1097,6 +1603,7 @@ $('#submit').click(function(){
 							 
 							 }
 						 
+							$('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
 						  
 						     for(var i=0;i<tax_list.length;i++)
 						    	 {
@@ -1163,13 +1670,16 @@ $('#submit').click(function(){
 	function update_tax(value_counter)                                        // tax type - dropdown chosen
 	{
 
-		var existing_taxamt = $('#' + value_counter + 'tax_amt').text();
 		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
+		if(tax_value!='')
+		{
+		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
 		var amt = value_counter + 'amt';  
 		var taxamt = value_counter + 'tax_amt';
      	var tax_bracket = tax_value.toString().split(" ");                   //5.5
      	var taxrate = tax_bracket[1];
      	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+     	
      	
      	
      	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
@@ -1182,6 +1692,46 @@ $('#submit').click(function(){
         
         
      	tax_addition(tax_value,value_counter,newtaxamt.toFixed(2));             //call func to handle tax slab div
+	}
+		else
+			{
+			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+			var amt = value_counter + 'amt';  
+			var taxamt = value_counter + 'tax_amt';
+	     	
+	     	var taxrate = 0;
+	     	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+	     	
+	     	
+	     	
+	     	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
+	     	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
+	        $('#taxtotal').val(taxtotal.toFixed(2));
+	           
+	           
+	        var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
+	        $('#grandtotal').val(finalamt.toFixed(2));
+	        
+	        //now handle tax div , get all tax counter,div etc for that box
+	        
+	        var counter_index = tax_counter.indexOf(value_counter);
+	        var divid = tax_div[counter_index];
+	        var div_value = $("#" + divid).val();
+	        var new_value = (Number(div_value) - existing_taxamt).toFixed(2);
+	        
+	        
+	        if(new_value==0)
+      	  	{
+      	    	 $('#' + divid).closest('tr').remove();
+      	  	}
+	        
+	        tax_div[counter_index] =-1;
+	        tax_amount[counter_index] = 0;
+	        tax_rate[counter_index] =-1;
+	        
+			
+			
+			}
     
 	}
 	
@@ -1407,33 +1957,328 @@ $('#submit').click(function(){
 
 <script>
 
-$("#preview").click(function(){
-
-//create 2d array of order products,send subtotal, taxtotal and grand total as separate data
 
 
-
+function add_invproduct()
+{
 	
-	var data1 = $('#enquire').serialize();
-$.ajax({
-   type : 'POST',
-   url  : 'http://localhost/School_mngt/enquire_mail.php',
-   dataType : 'text',
-   data: data1,
-   success :  function(response)
-      {
+	var name = $("#invproduct_name").val();
+	var tax = $("#invtax_rate").val();
+	var tid = $('datalist option[value="'+ tax +'"]').attr('taxid');
+	var desc  = $("#invproduct_desc").val();
+	var sku  = $("#invsku").val();
+	var category  = $("#invcategory").val();
+	var expen  = $("#invexpenditure").val(); //let value be ID
+	var income  = $("#invincome").val();
+	var invtype = $("input[name='invtype']:checked").val();
+	var low_stock = $("#low_stock").val();
+	var subtype,cp,sp,opening_stock,total_stock ;
+	
+	if(invtype=="noref")
+		{
+		 subtype = 01;   //inventory product with no reference
+		 cp = $("#invcp").val();
+		 sp = $("#invsp").val();
+		 opening_stock = $("#invstock").val();//opening stock
+		 total_stock = opening_stock;
+		
+		}
+	else        //inventory product with batch#, has no cp,sp,openingstock
+		{
+		subtype=02;
+		cp=0;
+		sp=0;
+		opening_stock=0;
+		total_stock=0;        //as no stock has been entered yet
+		}
+	
+	
+	if(name==''|| tax==''|| tid=='' || sku=='' )   
+		{
+		alert("Fill in all required fields");
+		return true;
+		
+		}
+	
+	var product = {      
+			
+			"product_type": 0,       //inventory product
+			"product_subtype": subtype,
+			"product_name":name,
+			"product_desc": desc,
+			"sku":sku,
+			"tax":                     //backend - search for tax obect from table with this id
+				{
+				 "tax_name":null,
+				 "tax_abbreviation":null,
+				 "tax_desc":null,
+				 "tax_rate":null,
+				 "company": null,//company object
+				 "tax_id": tid,
+				 "tax_recoverable":true
+				 
+				},
+			"category":category,
+			"cp": cp,
+			"head_expenditure": 
+				{
+					"expenditure_id":expen,
+					"expenditure_name":null
+				},
+				
+			"sp": sp,
+			"head_income":
+				{
+					"income_id":income,
+					"income_name":null
+				},
+			"opening_stock": opening_stock,
+			"total_stock": total_stock,
+			"lowstock_alert": low_stock,
+			
+			"company":
+				{
+				"company_id" :"CMP445"
+				},
+				
+			"product_id": "PROD67",
+			"stocklist":null,  // no stock recorded yet
+			"id":null
+			
+			
+	};
+	alert(product);
+	console.log(product);
+	
+	//ajax call to add product, then on success -pass object back, add to the dropdown
+	
+	
+	//product from back end
+	var product1 = {      
+			
+			"product_type": 0,       //inventory product
+			"product_subtype": subtype,
+			"product_name": name,
+			"product_desc": desc,
+			"sku":sku,
+			"tax":                     //backend - search for tax obect from table with this id
+				{
+				 "tax_name": null,
+				 "tax_abbreviation": "VAT",
+				 "tax_desc":null,
+				 "tax_rate": 5.5,
+				 "company": null,//company object
+				 "tax_id": "CMP123TAX2",
+				 "tax_recoverable":true
+				 
+				},
+			"category":category,
+			"cp": cp,
+			"head_expenditure": 
+				{
+					"expenditure_id":expen,
+					"expenditure_name":null
+				},
+				
+			"sp": sp,
+			"head_income":
+				{
+					"income_id":income,
+					"income_name":null
+				},
+			"opening_stock": opening_stock,
+			"total_stock": total_stock,
+			"lowstock_alert": low_stock,
+			
+			"company":
+				{
+				"company_id" :"CMP445"
+				},
+				
+			"product_id": "PROD67",
+			"stocklist":null,  // no stock recorded yet
+			"id":null
+			
+			
+	};
+	 
+	 
+	 //add this product to all existing box counters and to main product list
+	 
+	 product_list.push(product1);
+	 
+	 for(var i=0;i<box_counter.length;i++)
+		 {
+		 $('#' + box_counter[i] + 'productlist').append("<option prodid='" +  product1.product_id   + "' value='" +product1.product_name +  "'>" + "" +  product1.product_desc + "" + "</option>");
+		 }
+	 
+	 $('#' + add_product_counter + 'productlist').val(product1.product_name);   //select this product in box where it got created
+	 
+	 $("#product_dialog").dialog('close');
+	
+	
+	return false;
+}
+
+
+
+function add_noninvproduct()
+{
+	
+	alert("hi");
+	var name = $("#noninvproduct_name").val();
+	var tax = $("#noninvtax_rate").val();
+	var tid = $('#tax [value="' + tax + '"]').attr('taxid');
+	var desc  = $("#noninvproduct_desc").val();var category  = $("#noninvcategory").val();
+	var cp  = $("#noninvcp").val();
+	
+	if(cp=='')
+		cp=0;
+	
+	var expen  = $("#noninvexpenditure").val(); //let value be ID
+	var sp  = $("#noninvsp").val();  
+	if(sp=='')
+		cp=0;
+	
+	var income  = $("#noninvincome").val();
+	var category  = $("#noninvcategory").val();
+	
+	var noninvtype = $("input[name='noninvtype']:checked").val();
+	var subtype;
+	
+	if(name==''|| tax==''|| tid=='' )   
+		{
+		alert("Fill in all required fields");
+		return true;
+		
+		}
+	
+	
+	if(noninvtype=="non_product")
+		{
+		   subtype = 11;
+		}
+	else
+		{
+		   subtype = 12;
+		}
+
+		var product = {      
+				
+				"product_type": 1,         //non-inventory
+				"product_subtype" : subtype,
+				"product_name":name,
+				"product_desc": desc,
+				"sku": null,
+				"tax":                     
+					{
+					 "tax_name":null,
+					 "tax_abbreviation":null,
+					 "tax_desc":null,
+					 "tax_rate":null,
+					 "company": null,
+					 "tax_id": tid,
+					 "tax_recoverable":true
+					 
+					},
+				"category":category,
+				"cp":cp,
+				"head_expenditure": 
+					{
+						"expenditure_id":expen,
+						"expenditure_name":null
+					},
+					
+				"sp": sp,        
+				"head_income":
+					{
+						"income_id": income,
+						"income_name":null
+					
+					},
+					"opening_stock": 0,          //stock does not apply to non inventory products
+					"total_stock": 0,
+					"lowstock_alert": 0,
+					
+					"company":
+						{
+						"company_id" :"CMP445"
+						},
+						
+					"product_id":null,
+					"stocklist":null,  
+					"id":null
+				
+		};
+		console.log(product);
+		
+		var product1 = {      
+				
+				"product_type": 1,       //inventory product
+				"product_subtype": subtype,
+				"product_name": name,
+				"product_desc": desc,
+				"sku":888,
+				"tax":                     //backend - search for tax obect from table with this id
+					{
+					 "tax_name": null,
+					 "tax_abbreviation": "VAT",
+					 "tax_desc":null,
+					 "tax_rate": 5.5,
+					 "company": null,//company object
+					 "tax_id": "CMP123TAX1",
+					 "tax_recoverable":true
+					 
+					},
+				"category":category,
+				"cp": cp,
+				"head_expenditure": 
+					{
+						"expenditure_id":expen,
+						"expenditure_name":null
+					},
+					
+				"sp": sp,
+				"head_income":
+					{
+						"income_id":income,
+						"income_name":null
+					},
+				"opening_stock": 0,
+				"total_stock": 0,
+				"lowstock_alert": 0,
+				
+				"company":
+					{
+					"company_id" :"CMP445"
+					},
+					
+				"product_id": "PROD90",
+				"stocklist":null,  // no stock recorded yet
+				"id":null
+				
+				
+		};
+		 
+		 
+		 //add this product to all existing box counters and to main product list
+		 
+		 product_list.push(product1);
+		 
+		 for(var i=0;i<box_counter.length;i++)
+			 {
+			 $('#' + box_counter[i] + 'productlist').append("<option prodid='" +  product1.product_id   + "' value='" +product1.product_name +  "'>" + "" +  product1.product_desc + "" + "</option>");
+			 }
+		 
+		 $('#' + add_product_counter + 'productlist').val(product1.product_name);   //select this product in box where it got created
+		 
+		 $("#product_dialog").dialog('close');
 		
 		
-	  }
-	  });
-	  return false;
-});
+		return false;
 
-
-
-
-
-
+		
+		}
 
 </script>
 

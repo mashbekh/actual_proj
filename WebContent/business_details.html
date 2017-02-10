@@ -196,6 +196,9 @@
         
     localStorage.setItem("pan_no", pan_no);
     localStorage.setItem("tin_no", $('#tin_no').val());
+    localStorage.setItem("strn_no", $('#strn_no').val());
+    localStorage.setItem("tan_no", $('#tan_no').val());
+    localStorage.setItem("gst_no", $('#gst_no').val());
     localStorage.setItem("cin_no", $('#cin_no').val());
     
         
@@ -219,6 +222,9 @@
 
     $('#pan_no').val(localStorage.getItem("pan_no"));
     $('#tin_no').val(localStorage.getItem("tin_no"));
+    $('#strn_no').val(localStorage.getItem("strn_no"));
+    $('#tan_no').val(localStorage.getItem("tan_no"));
+    $('#gst_no').val(localStorage.getItem("gst_no"));
     $('#cin_no').val(localStorage.getItem("cin_no"));
     return false;
 
@@ -602,6 +608,45 @@ function loadName()
 					<label class="col-md-3 control-label">Company TIN No</label>
 					<div class="col-md-6">
 						<input class="form-control" id="tin_no" name="tin_no" title=""
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="11" />
+					</div>
+				</div>
+
+				<br>
+				<br>
+				
+				
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Company STRN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="strn_no" name="strn_no" title=""
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="11" />
+					</div>
+				</div>
+
+				<br>
+				<br>
+				
+				
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Company TAN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="tan_no" name="tan_no" title=""
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="11" />
+					</div>
+				</div>
+
+				<br>
+				<br>
+				
+				
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Company GSTN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="gst_no" name="gst_no" title=""
 							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 							type="number" maxlength="11" />
 					</div>
