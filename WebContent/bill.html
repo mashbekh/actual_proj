@@ -242,7 +242,13 @@ $(function () {
     	format:'DD/MM/YYYY'
     	
     	
-    })
+    });
+    
+    $('#expiry_date').datetimepicker({
+	    	
+	    	format:'DD/MM/YYYY'
+	    	});
+	    
 
     
 });
@@ -1205,7 +1211,7 @@ function update_prod_details(counter)
 					<div class="col-md-6">
 						<div class="input-group date" id="eexpiry_date">
 
-							<input type="text" class="form-control" id="expirydate">
+							<input type="text" class="form-control" id="eexpirydate">
 							<span class="input-group-addon"> <span
 								class="glyphicon glyphicon-calendar"> </span>
 							</span>
@@ -2059,7 +2065,7 @@ function stock_entry(counter , subtype)
 	 $("#batch_no").val('');
 	 $("#stocksp").val('');
 	 $("#norefstocksp").val('');
-	 $("#expiry_date").val('');
+	 $("#expirydate").val('');
 	
 	
 	var price = $("#" + counter + "price").val();
@@ -2078,11 +2084,7 @@ function stock_entry(counter , subtype)
 	
 	// check all validations
 	 
-  			$('#expiry_date').datetimepicker({
-  	    	
-  	    	format:'DD/MM/YYYY'
-  	    	});
-  	    
+  			
       	current_stock=counter;
 
 	
@@ -2090,6 +2092,8 @@ function stock_entry(counter , subtype)
 	
 		if(subtype==02)  //has a reference batch#
 			{
+			
+			alert("exp date is" + $("#expirydate").val());
 			
 			alert("type 2");
 			$("#stockcp").val($("#" + counter + "price").val());
@@ -2141,7 +2145,7 @@ function add_stock()
 {
 	//check for reqd fields and company json
 	
-	
+	alert("exp date is" + $("#expirydate").val());
 	alert("stock counter is");
 	stock_counter.push(current_stock); //box counter index
 	alert(stock_counter); 
@@ -2166,7 +2170,8 @@ function add_stock()
 	var batch_no = $("#batch_no").val();
 	var sp = $("#stocksp").val();
 	var norefsp = $("#norefstocksp").val();
-	var edate = $("#expiry_date").val();
+	var edate = $("#expirydate").val();
+	alert(edate);
 	var stock;
 	
 	if(subtype==01)
@@ -2319,7 +2324,7 @@ function editstock_entry(counter, subtype)
 	 $("#ebatch_no").val('');
 	 $("#estocksp").val('');
 	 $("#enorefstocksp").val('');
-	 $("#eexpiry_date").val('');
+	 $("#eexpirydate").val('');
 	
 	
 	if(subtype==01)
@@ -2366,7 +2371,7 @@ function editstock_entry(counter, subtype)
 				 $("#estockcp").val(stock_json[i].cp);
 				 $("#estocksp").val(stock_json[i].sp);
 				 $("#ebatch_no").val(stock_json[i].batch_no);
-				 $("#eexpiry_date").val(stock_json[i].expiry_date);
+				 $("#eexpirydate").val(stock_json[i].expiry_date);
 				 $("#ediscount").val(stock_json[i].discount);
 				 
 				 $("#estock_dialog").dialog({
@@ -2425,7 +2430,7 @@ function edit_stock()
 		 	stock_json[i].cp = $("#estockcp").val();
 		 	stock_json[i].sp = $("#estocksp").val();
 		 	stock_json[i].discount = $("#ediscount").val();
-		 	stock_json[i].expiry_date = $("#eexpiry_date").val();
+		 	stock_json[i].expiry_date = $("#eexpirydate").val();
 		 }
 	 
 	}
