@@ -322,6 +322,7 @@ function add_stock()
 					},
 				"bill_ref" :ref
 	}
+	  
 	}  
 	  else if(product_list[i].product_subtype ==02)
 		  {
@@ -676,6 +677,8 @@ function add_stock()
 		
 		else         //no ref , should hide cp and sp
 			{
+			
+			// if 01 type show cp , sp entered in beginning
 			
 			$("#ref").text('');
 			$("#batch").remove();

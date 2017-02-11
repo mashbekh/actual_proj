@@ -1,0 +1,266 @@
+<html>
+
+<script>
+
+
+var prod01  = {      
+		
+		"product_type": 0,       
+		"product_subtype": 01,
+		"product_name": "eraser",
+		"product_desc": "stationary",
+		"sku": "567",
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 5.5,
+			 "company": null,//company object
+			 "tax_id": "CMP123TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"XYZ",
+		"cp": 40,
+		"head_expenditure": 
+			{
+				"expenditure_id": null,
+				"expenditure_name":null
+			},
+			
+		"sp": 45,
+		"head_income":
+			{
+				"income_id": null,
+				"income_name":null
+			},
+		"opening_stock": 56,
+		"total_stock": 67,
+		"lowstock_alert": 10,
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+			
+		"product_id": "PROD66",
+		"stocklist":                  //just one stock obj
+			[{
+			  "stock_id": 1000,
+			  "product_id" : "PROD66",
+			  "batch_no" :null,
+			  "cp" : 40,
+			  "sp" : 45,
+			  "qty" : 67,          //so far total
+			  "discount":null,
+			  "expiry_date":null,
+			  "vendor" : null,
+			  "bill_ref" :null,
+			  "company":
+				{
+				"company_id" :"CMP445"
+				}
+			  
+			}],  // no stock recorded yet
+			
+		"id": 66
+		};
+		
+		
+		
+var prod02 =  {      
+		
+		"product_type": 0,       
+		"product_subtype": 02,
+		"product_name": "parleg",
+		"product_desc": "biscuit",
+		"sku": "222",
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 14.5,
+			 "company": null,//company object
+			 "tax_id": "CMP123TAX2",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"pqr",
+		"cp": 0,
+		"head_expenditure": 
+			{
+				"expenditure_id": null,
+				"expenditure_name":null
+			},
+			
+		"sp": 0,
+		"head_income":
+			{
+				"income_id": null,
+				"income_name":null
+			},
+		"opening_stock": 0,    //no opening stock, has stock only thru batch
+		"total_stock": 300,
+		"lowstock_alert": 10,
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+			
+		"product_id": "PROD67",
+		"stocklist":                  //just one stock obj
+			[
+			{
+			  "stock_id": 1001,
+			  "product_id" : "PROD67",
+			  "batch_no" : "B11",
+			  "cp" : 12,
+			  "sp" : 13,
+			  "qty" : 100,          //so far total
+			  "discount": 5,
+			  "expiry_date": "12/03/2017",
+			  "vendor" : {
+				  "vendor_id" : "VEN222"
+			  },
+			  "bill_ref" : 100,
+			  "company":
+				{
+				"company_id" :"CMP445"
+				}
+			},
+			
+			{
+				  "stock_id": 1002,
+				  "product_id" : "PROD67",              //product is again an obj
+				  "batch_no" : "B12",
+				  "cp" : 14,
+				  "sp" : 15,
+				  "qty" : 200,          //so far total
+				  "discount": 9,
+				  "expiry_date": "17/01/2018",
+				  "vendor" : {
+					  "vendor_id" : "VEN223"
+				  },
+				  "bill_ref" : 577,
+				  "company":
+					{
+					"company_id" :"CMP445"
+					}
+				}
+			
+			
+			],  // no stock recorded yet
+			
+		"id": 67
+		};
+		
+		
+var prod11 = 
+	{
+		
+		
+		"product_type": 1,       
+		"product_subtype": 11,
+		"product_name": "100gsm",
+		"product_desc": "paper",
+		"sku": null,
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 14.5,
+			 "company": null,//company object
+			 "tax_id": "CMP123TAX2",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"pqr",
+		"cp": 23,
+		"head_expenditure": 
+			{
+				"expenditure_id": null,
+				"expenditure_name":null
+			},
+			
+		"sp": 25,
+		"head_income":
+			{
+				"income_id": null,
+				"income_name":null
+			},
+		"opening_stock": null,    //no opening stock, has stock only thru batch
+		"total_stock": null,
+		"lowstock_alert": null,
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+			
+		"product_id": "PROD99",
+		"stocklist":  null;
+			
+		"id": 99
+		
+	};
+	
+	
+var prod12 = 
+{
+	
+	
+	"product_type": 1,       
+	"product_subtype": 12,
+	"product_name": "invitation design",
+	"product_desc": "design",
+	"sku": null,
+	"tax":                     //backend - search for tax obect from table with this id
+		{
+		 "tax_name":null,
+		 "tax_abbreviation": "VAT",
+		 "tax_desc":null,
+		 "tax_rate": 5.5,
+		 "company": null,//company object
+		 "tax_id": "CMP123TAX1",
+		 "tax_recoverable":true
+		 
+		},
+	"category":"pqr",
+	"cp": 23,
+	"head_expenditure": 
+		{
+			"expenditure_id": null,
+			"expenditure_name":null
+		},
+		
+	"sp": 25,
+	"head_income":
+		{
+			"income_id": null,
+			"income_name":null
+		},
+	"opening_stock": null,    //no opening stock, has stock only thru batch
+	"total_stock": null,
+	"lowstock_alert": null,
+	
+	"company":
+		{
+		"company_id" :"CMP445"
+		},
+		
+	"product_id": "PROD101",
+	"stocklist":  null;
+		
+	"id": 101
+	
+};
+	
+	
+	
+	
+</script>
+</html>
