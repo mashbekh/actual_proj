@@ -10,28 +10,32 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
 
-    <title>Tax System</title>
-  
-   
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<title>Tax System</title>
 
-  <script src="jarvis/js/bootstrap.min.js"></script>
 
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js" type="text/javascript"></script>
-<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
-    rel="stylesheet" type="text/css" />
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script src="jarvis/js/bootstrap.min.js"></script>
+
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
-   
- 
-  
-    
- <link rel="stylesheet"
+
+
+
+
+<link rel="stylesheet"
 	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
 
 <!-- Bootstrap Core CSS -->
@@ -50,23 +54,26 @@
 
 
 
-    <script src="jarvis/js/jquery.dataTables.min.js"></script>
-	<script src="jarvis/js/datatables/TableTools.min.js"></script>
-	<script src="jarvis/js/dataTables.bootstrap.js"></script>
-	<script src="jarvis/js/datatables/jquery.dataTables.columnFilter.js"></script>
-	<script src="jarvis/js/datatables/lodash.min.js"></script>
-	<script src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
-	 <link rel="stylesheet" href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
-	 
-	
-	  
-	   <script src="jarvis/js/bootstrap.js"></script>
-	   
-	   <script src="jarvis/js/select2/select2.min.js"></script>
-    <script src="jarvis/js/selectboxit/jquery.selectBoxIt.min.js"></script>
-    <link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
-	<link rel="stylesheet" href="jarvis/js/select2/select2.css">
-	<link rel="stylesheet" href="jarvis/js/selectboxit/jquery.selectBoxIt.css">
+<script src="jarvis/js/jquery.dataTables.min.js"></script>
+<script src="jarvis/js/datatables/TableTools.min.js"></script>
+<script src="jarvis/js/dataTables.bootstrap.js"></script>
+<script src="jarvis/js/datatables/jquery.dataTables.columnFilter.js"></script>
+<script src="jarvis/js/datatables/lodash.min.js"></script>
+<script
+	src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+
+
+<script src="jarvis/js/bootstrap.js"></script>
+
+<script src="jarvis/js/select2/select2.min.js"></script>
+<script src="jarvis/js/selectboxit/jquery.selectBoxIt.min.js"></script>
+<link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
+<link rel="stylesheet" href="jarvis/js/select2/select2.css">
+<link rel="stylesheet"
+	href="jarvis/js/selectboxit/jquery.selectBoxIt.css">
 
 
 </head>
@@ -128,45 +135,39 @@
 
 
 <style>
-
 .dataTables_filter {
-   width: 50%;
-   float: right;
-   top-margin:100px;
-   text-align: right;
+	width: 50%;
+	float: right;
+	top-margin: 100px;
+	text-align: right;
 }
 
 .form-group.required .control-label:after {
-  content:"*";
-  color:red;
+	content: "*";
+	color: red;
 }
 
-#abc{
-  background-color: #F0F3F4;
-   margin-top: 15px;
-   
+#abc {
+	background-color: #F0F3F4;
+	margin-top: 15px;
 }
 
-
-#xyz
-{
-    height: 65px;
-     text-align: center;
-    
-     background-color:#152F37;
+#xyz {
+	height: 65px;
+	text-align: center;
+	background-color: #152F37;
 }
 
-#pqr{
-     background-color:#152F37;
-
+#pqr {
+	background-color: #152F37;
 }
 
 .ui-dialog-titlebar {
-    border: 0;
-    padding: .5em 1em;
-    background: #009999;
-    overflow: auto;
-    zoom: 1;
+	border: 0;
+	padding: .5em 1em;
+	background: #009999;
+	overflow: auto;
+	zoom: 1;
 }
 
 .ui-dialog-titlebar-close {
@@ -182,8 +183,11 @@ var edit_counter=null; //when edit gets submitted, has product_id of to be editt
 
 function loadName()
 {
+	 $('.dropdown-toggle').dropdown();
+	
    document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
     var company_id="CMP445";
+    inv_noref1();
    
 	$.ajax({
 		   		type : 'GET',
@@ -289,902 +293,7 @@ for(var i=0;i<prod_json.length;i++)
 }
 
 
-function view_product(id)
-{
-   for(var i=0;i<prodnew_json.length;i++)  //this json has editted values
-	   {
-	   		if(prodnew_json[i].product_id==id)
-	   	      break;
-	   }
-   
-   var type= prodnew_json[i].product_type;
-   var j;
-   
-   //open pop-up based on type
-	if(type==0)
-		view_inv(i);
-   
-	else if(type==1)
-		{
-		j = prodnew_json[i].inout;
-		view_noninv(i,j);
-		}
-	else 
-		{
-		j = prodnew_json[i].inout;
-		view_service(i,j);
-		}
-}
 
-
-function view_inv(i)
-{
-	$("#viewinv_dialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "View Product",
-        width: 700,
-        height: 500
-    });
-      //populate all fields and open
-      //dropdown  - asign id from jsjon as val
-      
-      
-      $("#vinvproduct_name").val(prodnew_json[i].product_name);
-      $("#vinvproduct_desc").val(prodnew_json[i].product_desc);
-      $("#vinvsku").val(prodnew_json[i].sku);
-      $("#vinvcategory").val(prodnew_json[i].category);
-     // $("#vinvcp").val(prodnew_json[i].cp);
-      $("#vinvexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-     // $("#vinvsp").val(prodnew_json[i].sp);
-      $("#vinvincome").val(prodnew_json[i].head_income.income_id);
-      $("#vinvstock").val(prodnew_json[i].stock);
-      $("#vinvtax_rate").val(prodnew_json[i].tax.tax_id);
-      
-      
-      $('#vinvproduct_name').prop('readonly', true);
-      $('#vinvproduct_desc').prop('readonly', true);
-      $('#vinvsku').prop('readonly', true);
-      $('#vinvcategory').prop('readonly', true);
-     // $('#vinvcp').prop('readonly', true);
-      $('#vinvexpenditure').prop('readonly', true);
-      //$('#vinvsp').prop('readonly', true);
-      $('#vinvincome').prop('readonly', true);
-      $('#vinvstock').prop('readonly', true);
-      $('#vinvtax_rate').prop('readonly', true);
-      
-      
-        $('#viewinv_dialog').dialog('open');
-        
-        //populate with values from that type of tax
-        return false;
-	
-	
-	
-	
-	}
-
-function view_noninv(i,j)
-{
-	if(j==0)
-		{
-		
-		$("#viewnoninv_indialog").dialog({
-	        
-	        modal: true,
-	        autoOpen: false,
-	        title: "View Product",
-	        width: 700,
-	        height: 500
-	    });
-		
-	      $("#vnoninvproduct_name").val(prodnew_json[i].product_name);
-	      $("#vnoninvproduct_desc").val(prodnew_json[i].product_desc);
-	      $("#vnoninvcategory").val(prodnew_json[i].category);
-	      $("#vnoninvcp").val(prodnew_json[i].cp);
-	      $("#vnoninvexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-	      $("#vnoninvtax_rate").val(prodnew_json[i].tax.tax_id);
-	      
-	      
-	      $('#vnoninvproduct_name').prop('readonly', true);
-	      $('#vnoninvproduct_desc').prop('readonly', true);
-	      $('#vnoninvcategory').prop('readonly', true);
-	      $('#vnoninvcp').prop('readonly', true);
-	      $('#vnoninvexpenditure').prop('readonly', true);
-	      $('#vnoninvtax_rate').prop('readonly', true);
-		
-	      $("#viewnoninv_indialog").dialog('open');
-	      
-		
-		}
-	else
-		{
-			$("#viewnoninv_outdialog").dialog({
-	        
-	        modal: true,
-	        autoOpen: false,
-	        title: "View Product",
-	        width: 700,
-	        height: 500
-	    });
-	    
-		 $("#vononinvproduct_name").val(prodnew_json[i].product_name);
-	      $("#vononinvproduct_desc").val(prodnew_json[i].product_desc);
-	      $("#vononinvcategory").val(prodnew_json[i].category);
-	      $("#vononinvcp").val(prodnew_json[i].sp);
-	      $("#vononinvexpdenditure").val(prodnew_json[i].head_income.income_id);
-	      $("#vononinvtax_rate").val(prodnew_json[i].tax.tax_id);
-	      
-	      
-	      $('#vononinvproduct_name').prop('readonly', true);
-	      $('#vononinvproduct_desc').prop('readonly', true);
-	      $('#vononinvcategory').prop('readonly', true);
-	      $('#vononinvsp').prop('readonly', true);
-	      $('#vononinvincome').prop('readonly', true);
-	      $('#vononinvtax_rate').prop('readonly', true);
-		
-	      $("#viewnoninv_outdialog").dialog('open');
-		
-		}
-	return false;
-	}
-	
-function view_service(i,j)
-{
-	
-	if(j==0)
-	{
-	
-	$("#viewservice_indialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "View Service",
-        width: 700,
-        height: 500
-    });
-	
-      $("#vsproduct_name").val(prodnew_json[i].product_name);
-      $("#vsproduct_desc").val(prodnew_json[i].product_desc);
-      $("#vscategory").val(prodnew_json[i].category);
-      $("#vscp").val(prodnew_json[i].cp);
-      $("#vsexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-      $("#vsrate").val(prodnew_json[i].tax.tax_id);
-      
-      $('#vsproduct_name').prop('readonly', true);
-      $('#vsproduct_desc').prop('readonly', true);
-      $('#vscategory').prop('readonly', true);
-      $('#vscp').prop('readonly', true);
-      $('#vsexpenditure').prop('readonly', true);
-      $('#vsrate').prop('readonly', true);
-      
-	
-      $("#viewservice_indialog").dialog('open');
-      
-	
-	}
-else
-	{
-		$("#viewservice_outdialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "View Service",
-        width: 700,
-        height: 500
-    });
-    
-		 $("#vosproduct_name").val(prodnew_json[i].product_name);
-	      $("#vosproduct_desc").val(prodnew_json[i].product_desc);
-	      $("#voscategory").val(prodnew_json[i].category);
-	      $("#vossp").val(prodnew_json[i].sp);
-	      $("#vosincome").val(prodnew_json[i].head_income.income_id);
-	      $("#vosrate").val(prodnew_json[i].tax.tax_id);
-	      
-	      $('#vosproduct_name').prop('readonly', true);
-	      $('#vosproduct_desc').prop('readonly', true);
-	      $('#voscategory').prop('readonly', true);
-	      $('#vossp').prop('readonly', true);
-	      $('#vosincome').prop('readonly', true);
-	      $('#vosrate').prop('readonly', true);
-	
-      $("#viewservice_outdialog").dialog('open');
-	
-	}
-	return false;
-	
-	}
-	
-	
-	
-	
-function edit_product(id)
-{
-	edit_counter=id; //currently being editted
-	
-   for(var i=0;i<prodnew_json.length;i++)  //this json has editted values
-	   {
-	   		if(prodnew_json[i].product_id==id)
-	   	      break;
-	   }
-   
-   var type= prodnew_json[i].product_type;
-   var j;
-   
-   //open pop-up based on type
-	if(type==0)
-		edit_inv(i);
-	else if(type==1)
-		{
-		j = prodnew_json[i].inout;
-		edit_noninv(i,j);
-		}
-	else 
-		{
-		j = prodnew_json[i].inout;
-		edit_service(i,j);
-		}
-}
-
-
-function edit_inv(i)
-{
-	
-	//show values in editable mode
-$("#viewinv_dialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "Edit Product",
-        width: 700,
-        height: 500
-    });
-      //populate all fields and open
-      //dropdown  - asign id from jsjon as val
-      
-      
-      $("#vinvproduct_name").val(prodnew_json[i].product_name);
-      $("#vinvproduct_desc").val(prodnew_json[i].product_desc);
-      $("#vinvsku").val(prodnew_json[i].sku);
-      $("#vinvcategory").val(prodnew_json[i].category);
-     // $("#vinvcp").val(prodnew_json[i].cp);
-      $("#vinvexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-      //$("#vinvsp").val(prodnew_json[i].sp);
-      $("#vinvincome").val(prodnew_json[i].head_income.income_id);
-      $("#vinvstock").val(prodnew_json[i].stock);
-      $("#vinvtax_rate").val(prodnew_json[i].tax.tax_id);
-      
-      
-      $('#vinvproduct_name').prop('readonly', false);
-      $('#vinvproduct_desc').prop('readonly', false);
-      $('#vinvsku').prop('readonly', false);
-      $('#vinvcategory').prop('readonly', false);
-     // $('#vinvcp').prop('readonly', false);
-      $('#vinvexpenditure').prop('readonly', false);
-      //$('#vinvsp').prop('readonly', false);
-      $('#vinvincome').prop('readonly', false);
-      $('#vinvstock').prop('readonly', false);
-      $('#vinvtax_rate').prop('readonly', false);
-      
-      
-        $('#viewinv_dialog').dialog('open');
-        
-        //populate with values from that type of tax
-        return false;
-	
-	
-	}
-
-function edit_noninv(i,j)
-{
-	if(j==0)
-	{
-	
-	$("#viewnoninv_indialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "View Product",
-        width: 700,
-        height: 500
-    });
-	
-      $("#vnoninvproduct_name").val(prodnew_json[i].product_name);
-      $("#vnoninvproduct_desc").val(prodnew_json[i].product_desc);
-      $("#vnoninvcategory").val(prodnew_json[i].category);
-      $("#vnoninvcp").val(prodnew_json[i].cp);
-      $("#vnoninvexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-      $("#vnoninvtax_rate").val(prodnew_json[i].tax.tax_id);
-      
-      
-      $('#vnoninvproduct_name').prop('readonly', false);
-      $('#vnoninvproduct_desc').prop('readonly',  false);
-      $('#vnoninvcategory').prop('readonly',  false);
-      $('#vnoninvcp').prop('readonly', false);
-      $('#vnoninvexpenditure').prop('readonly',  false);
-      $('#vnoninvtax_rate').prop('readonly',  false);
-	
-      $("#viewnoninv_indialog").dialog('open');
-      
-	
-	}
-else
-	{
-		$("#viewnoninv_outdialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "View Product",
-        width: 700,
-        height: 500
-    });
-    
-	 $("#vononinvproduct_name").val(prodnew_json[i].product_name);
-      $("#vononinvproduct_desc").val(prodnew_json[i].product_desc);
-      $("#vononinvcategory").val(prodnew_json[i].category);
-      $("#vononinvcp").val(prodnew_json[i].sp);
-      $("#vononinvexpdenditure").val(prodnew_json[i].head_income.income_id);
-      $("#vononinvtax_rate").val(prodnew_json[i].tax.tax_id);
-      
-      
-      $('#vononinvproduct_name').prop('readonly',  false);
-      $('#vononinvproduct_desc').prop('readonly',  false);
-      $('#vononinvcategory').prop('readonly',  false);
-      $('#vononinvsp').prop('readonly', false);
-      $('#vononinvincome').prop('readonly',  false);
-      $('#vononinvtax_rate').prop('readonly',  false);
-	
-      $("#viewnoninv_outdialog").dialog('open');
-	
-	}
-return false;
-	}
-	
-	
-	
-	
-	
-function edit_service(i,j)
-{
-	
-	if(j==0)
-	{
-	
-	$("#viewservice_indialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "View Service",
-        width: 700,
-        height: 500
-    });
-	
-      $("#vsproduct_name").val(prodnew_json[i].product_name);
-      $("#vsproduct_desc").val(prodnew_json[i].product_desc);
-      $("#vscategory").val(prodnew_json[i].category);
-      $("#vscp").val(prodnew_json[i].cp);
-      $("#vsexpdenditure").val(prodnew_json[i].head_expenditure.expenditure_id);
-      $("#vsrate").val(prodnew_json[i].tax.tax_id);
-      
-      $('#vsproduct_name').prop('readonly', false);
-      $('#vsproduct_desc').prop('readonly', false);
-      $('#vscategory').prop('readonly', false);
-      $('#vscp').prop('readonly', false);
-      $('#vsexpenditure').prop('readonly', false);
-      $('#vsrate').prop('readonly', false);
-      
-	
-      $("#viewservice_indialog").dialog('open');
-      
-	
-	}
-else
-	{
-		$("#viewservice_outdialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "View Service",
-        width: 700,
-        height: 500
-    });
-    
-		 $("#vosproduct_name").val(prodnew_json[i].product_name);
-	      $("#vosproduct_desc").val(prodnew_json[i].product_desc);
-	      $("#voscategory").val(prodnew_json[i].category);
-	      $("#vossp").val(prodnew_json[i].sp);
-	      $("#vosincome").val(prodnew_json[i].head_income.income_id);
-	      $("#vosrate").val(prodnew_json[i].tax.tax_id);
-	      
-	      $('#vosproduct_name').prop('readonly', false);
-	      $('#vosproduct_desc').prop('readonly', false);
-	      $('#voscategory').prop('readonly', false);
-	      $('#vossp').prop('readonly', false);
-	      $('#vosincome').prop('readonly', false);
-	      $('#vosrate').prop('readonly', false);
-	
-      $("#viewservice_outdialog").dialog('open');
-	
-	}
-	return false;
-	}
-	
-	
-	//after editing, submit
-	
-	function add_inv()   //id of product that has to be changed
-	{
-		
-		//collect values
-		  var name = $("#vinvproduct_name").val();
-	      var desc = $("#vinvproduct_desc").val();
-	      var sku = $("#vinvsku").val();
-	      var cat = $("#vinvcategory").val();
-	      var cp = $("#vinvcp").val();
-	      var exp = $("#vinvexpdenditure").val();
-	      var sp = $("#vinvsp").val();
-	      var income = $("#vinvincome").val();
-	      var stock = $("#vinvstock").val();
-	      var tax_id = $("#vinvtax_rate").val();
-	      
-	   
-		//collect new values along with id , ajax call, send it, get back new editted product, change its values in json2 
-		//and also set table row values
-		
-		for(var i=0;i<prodnew_json.length;i++)  
-	   {
-	   		if(prodnew_json[i].product_id==edit_counter)
-	   	      break;
-	   }
-	    
-	    prodnew_json[i].product_name=name;
-	    prodnew_json[i].product_desc=desc;
-	    prodnew_json[i].sku=sku;
-	    prodnew_json[i].category= cat;
-	    prodnew_json[i].cp=cp;
-	    prodnew_json[i].head_expenditure.expenditure_id = exp;
-	    prodnew_json[i].sp=sp;
-	    prodnew_json[i].head_income.income_id= income;
-	    prodnew_json[i].stock=stock;
-	    prodnew_json[i].tax.tax_id= tax_id;
-	    
-	    
-		
-	   var product ={        //json of product
-			    
-			   "product_type": 0,
-				"product_name":name,
-				"product_desc":desc,
-				"sku":sku,
-				"tax":                     //backend - search for tax obect from table with this id, reset tax object
-					{
-					 "tax_name":null,
-					 "tax_abbreviation":null,
-					 "tax_desc":null,
-					 "tax_rate":null,
-					 "company": null,//company object
-					 "tax_id": tax_id,
-					 "tax_recoverable":true
-					 
-					},
-				"category":cat,
-				"cp":cp,
-				"head_expenditure": 
-					{
-						"expenditure_id":exp,
-						"expenditure_name":null
-					},
-					
-				"sp": sp,
-				"head_income":
-					{
-						"income_id":income,
-						"income_name":null
-					},
-				"opening_stock": stock,
-				"in_out":null,
-				"company":null,
-				"product_id": edit_counter,
-				"id":null
-			   
-			   
-			   
-			   
-	   };
-	   
-	   //make ajax call , send this product json
-	   
-	   
-	   
-	   
-	   var response;
-	   var type;
-	   if(response.product_type==0)
-		   type="Inventory";
-	   else if(response.product_type==1)
-		   type="Non Inventory";
-		   else
-			   type="Service";
-		   
-	   $("#" + response.product_id + "type").text(type);
-	   $("#" + response.product_id + "name").text(response.name);
-	   $("#" + response.product_id + "desc").text(response.desc);
-	   $("#" + response.product_id + "tax").text(response.tax.abbreviation + " " + response.tax.tax_rate);
-	   
-		
-	}
-	
-	function addin_noninv()
-	{
-		
-		 var name = $("#vnoninvproduct_name").val();
-	      var desc = $("#vnoninvproduct_desc").val();
-	      
-	      var cat = $("#vnoninvcategory").val();
-	      var cp = $("#vnoninvcp").val();
-	      var exp = $("#voninvexpdenditure").val();
-	      
-	      var tax_id = $("#vnoninvtax_rate").val();
-	      
-	   
-		//collect new values along with id , ajax call, send it, get back new editted product, change its values in json2 
-		//and also set table row values
-		
-		for(var i=0;i<prodnew_json.length;i++)  
-	   {
-	   		if(prodnew_json[i].product_id==edit_counter)
-	   	      break;
-	   }
-	    
-	    prodnew_json[i].product_name=name;
-	    prodnew_json[i].product_desc=desc;
-	   
-	    prodnew_json[i].category= cat;
-	    prodnew_json[i].cp=cp;
-	    prodnew_json[i].head_expenditure.expenditure_id = exp;
-	   
-	    prodnew_json[i].tax.tax_id= tax_id;
-	    
-	    
-		
-	    var product = {       //populate json
-				
-				"product_type": 1,
-				"product_name":name,
-				"product_desc": desc,
-				"sku": null,
-				"tax":                     //backend - search for tax obect from table with this id
-					{
-					 "tax_name":null,
-					 "tax_abbreviation":null,
-					 "tax_desc":null,
-					 "tax_rate":null,
-					 "company": null,//company object
-					 "tax_id": tax_id,
-					 "tax_recoverable":true
-					 
-					},
-				"category":cat,
-				"cp":cp,
-				"head_expenditure": 
-					{
-						"expenditure_id":exp,
-						"expenditure_name":null
-					},
-					
-				"sp": 0,        
-				"head_income":null,
-				"opening_stock": null,
-				"in_out":0,  //input product
-				"company":null,
-				"product_id": edit_counter,
-				"id": null
-				
-		};
-			   
-		
-	   //make ajax call , send this product json
-	   
-	   
-	   
-	   
-	   var response;
-	   var type;
-	   if(response.product_type==0)
-		   type="Inventory";
-	   else if(response.product_type==1)
-		   type="Non Inventory";
-		   else
-			   type="Service";
-		   
-	   $("#" + response.product_id + "type").text(type);
-	   $("#" + response.product_id + "name").text(response.name);
-	   $("#" + response.product_id + "desc").text(response.desc);
-	   $("#" + response.product_id + "tax").text(response.tax.abbreviation + " " + response.tax.tax_rate);
-		
-	}
-	
-	function addout_noninv()
-	{
-		
-		//collect values
-		  var name = $("#vnoninvproduct_name").val();
-	      var desc = $("#vnoninvproduct_desc").val();
-	     
-	      var cat = $("#vnoninvcategory").val();
-	      
-	      var sp = $("#vnoninvsp").val();
-	      var income = $("#vnoninvincome").val();
-	     
-	      var tax_id = $("#vnoninvtax_rate").val();
-	      
-	   
-		//collect new values along with id , ajax call, send it, get back new editted product, change its values in json2 
-		//and also set table row values
-		
-		for(var i=0;i<prodnew_json.length;i++)  
-	   {
-	   		if(prodnew_json[i].product_id==edit_counter)
-	   	      break;
-	   }
-	    
-	    prodnew_json[i].product_name=name;
-	    prodnew_json[i].product_desc=desc;
-	   
-	    prodnew_json[i].category= cat;
-	    
-	    prodnew_json[i].sp=sp;
-	    prodnew_json[i].head_income.income_id= income;
-	   
-	    prodnew_json[i].tax.tax_id= tax_id;
-	    
-	    
-		
-	   var  product = {       //populate json
-				
-				"product_type": 1,
-				"product_name":name,
-				"product_desc": desc,
-				"sku": null,
-				"tax":                     //backend - search for tax obect from table with this id
-					{
-					 "tax_name":null,
-					 "tax_abbreviation":null,
-					 "tax_desc":null,
-					 "tax_rate":null,
-					 "company": null,//company object
-					 "tax_id": tax_id,
-					 "tax_recoverable":true
-					 
-					},
-				"category":cat,
-				"cp":0,
-				"head_expenditure": null,
-					
-				"sp": sp,        
-				"head_income":{
-					"income_id":income,
-					"income_name":null
-				},
-				"opening_stock": null,
-				"in_out":1,  //input product
-				"company":null,
-				"product_id": edit_counter,
-				"id":null
-				
-		};
-	   
-	   //make ajax call , send this product json
-	   
-	   
-	   
-	   
-	   var response;
-	   var type;
-	   if(response.product_type==0)
-		   type="Inventory";
-	   else if(response.product_type==1)
-		   type="Non Inventory";
-		   else
-			   type="Service";
-		   
-	   $("#" + response.product_id + "type").text(type);
-	   $("#" + response.product_id + "name").text(response.name);
-	   $("#" + response.product_id + "desc").text(response.desc);
-	   $("#" + response.product_id + "tax").text(response.tax.abbreviation + " " + response.tax.tax_rate);
-	   
-		
-	}
-	
-	function addin_service()
-	{
-		
-		 var name = $("#vsproduct_name").val();
-	      var desc = $("#vsproduct_desc").val();
-	      
-	      var cat = $("#vscategory").val();
-	      var cp = $("#vscp").val();
-	      var exp = $("#vsexpdenditure").val();
-	      
-	      var tax_id = $("#vsrate").val();
-	      
-	   
-		//collect new values along with id , ajax call, send it, get back new editted product, change its values in json2 
-		//and also set table row values
-		
-		for(var i=0;i<prodnew_json.length;i++)  
-	   {
-	   		if(prodnew_json[i].product_id==edit_counter)
-	   	      break;
-	   }
-	    
-	    prodnew_json[i].product_name=name;
-	    prodnew_json[i].product_desc=desc;
-	   
-	    prodnew_json[i].category= cat;
-	    prodnew_json[i].cp=cp;
-	    prodnew_json[i].head_expenditure.expenditure_id = exp;
-	   
-	    prodnew_json[i].tax.tax_id= tax_id;
-	    
-	    
-		
-	    var product = {       //populate json
-				
-				"product_type": 2,
-				"product_name":name,
-				"product_desc": desc,
-				"sku": null,
-				"tax":                     //backend - search for tax obect from table with this id
-					{
-					 "tax_name":null,
-					 "tax_abbreviation":null,
-					 "tax_desc":null,
-					 "tax_rate":null,
-					 "company": null,//company object
-					 "tax_id": tax_id,
-					 "tax_recoverable":true
-					 
-					},
-				"category":cat,
-				"cp":cp,
-				"head_expenditure": 
-					{
-						"expenditure_id":exp,
-						"expenditure_name":null
-					},
-					
-				"sp": 0,        
-				"head_income":null,
-				"opening_stock": null,
-				"in_out":0,  //input product
-				"company":null,
-				"product_id": edit_counter,
-				"id": null
-				
-		};
-			   
-		
-	   //make ajax call , send this product json
-	   
-	   
-	   
-	   
-	   var response;
-	   var type;
-	   if(response.product_type==0)
-		   type="Inventory";
-	   else if(response.product_type==1)
-		   type="Non Inventory";
-		   else
-			   type="Service";
-		   
-	   $("#" + response.product_id + "type").text(type);
-	   $("#" + response.product_id + "name").text(response.name);
-	   $("#" + response.product_id + "desc").text(response.desc);
-	   $("#" + response.product_id + "tax").text(response.tax.abbreviation + " " + response.tax.tax_rate);
-		
-	}
-	
-	function addout_service()
-	{
-		
-		//collect values
-		   var name = $("#vosproduct_name").val();
-	      var desc = $("#vosproduct_desc").val();
-	      
-	      var cat = $("#voscategory").val();
-	      var cp = $("#voscp").val();
-	      var exp = $("#vosexpdenditure").val();
-	      
-	      var tax_id = $("#vosrate").val();
-	   
-		//collect new values along with id , ajax call, send it, get back new editted product, change its values in json2 
-		//and also set table row values
-		
-		for(var i=0;i<prodnew_json.length;i++)  
-	   {
-	   		if(prodnew_json[i].product_id==edit_counter)
-	   	      break;
-	   }
-	    
-	    prodnew_json[i].product_name=name;
-	    prodnew_json[i].product_desc=desc;
-	   
-	    prodnew_json[i].category= cat;
-	    
-	    prodnew_json[i].sp=sp;
-	    prodnew_json[i].head_income.income_id= income;
-	   
-	    prodnew_json[i].tax.tax_id= tax_id;
-	    
-	    
-		
-	   var  product = {       //populate json
-				
-				"product_type": 2,
-				"product_name":name,
-				"product_desc": desc,
-				"sku": null,
-				"tax":                     //backend - search for tax obect from table with this id
-					{
-					 "tax_name":null,
-					 "tax_abbreviation":null,
-					 "tax_desc":null,
-					 "tax_rate":null,
-					 "company": null,//company object
-					 "tax_id": tax_id,
-					 "tax_recoverable":true
-					 
-					},
-				"category":cat,
-				"cp":0,
-				"head_expenditure": null,
-					
-				"sp": sp,        
-				"head_income":{
-					"income_id":income,
-					"income_name":null
-				},
-				"opening_stock": null,
-				"in_out":1,  //input product
-				"company":null,
-				"product_id": edit_counter,
-				"id":null
-				
-		};
-	   
-	   //make ajax call , send this product json
-	   
-	   
-	   
-	   
-	   var response;
-	   var type;
-	   if(response.product_type==0)
-		   type="Inventory";
-	   else if(response.product_type==1)
-		   type="Non Inventory";
-		   else
-			   type="Service";
-		   
-	   $("#" + response.product_id + "type").text(type);
-	   $("#" + response.product_id + "name").text(response.name);
-	   $("#" + response.product_id + "desc").text(response.desc);
-	   $("#" + response.product_id + "tax").text(response.tax.abbreviation + " " + response.tax.tax_rate);
-		
-		
-	}
-	
-	
-	
-	
-	function delete_product(id)
-	{
-		//ajax call, pass id
-	}
-	
 	
 </script>
 
@@ -1196,814 +305,370 @@ else
 
 <body onload="loadName()">
 
-<!-- view inventory products -->
-<div id="viewinv_dialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			
-			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="vinvproduct_name"  name="vinvproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="vinvproduct_desc" name="vinvproduct_desc" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">SKU</label>
-                                <div class="col-md-6"><input class="form-control" id="vinvsku" name="vinvsku" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="vinvcategory" name="vinvcategory" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <!--  
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="vinvcp" name="vinvcp" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             -->
-                             
-                            <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Expenditure</label>
-                                <div class="col-md-6">
-                                <select name="vinvexpenditure" class="form-control selectboxit" id="vinvexpenditure">
-                              <option value="None">Select</option>
-                            
-                              <option value="purchase">Purchases</option>
-                             
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <!--  
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="vinvsp" name="vinvsp" maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             -->
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Income</label>
-                                <div class="col-md-6">
-                                <select name="vinvincome" class="form-control selectboxit" id="vinvincome">
-                              <option value="None">Select</option>
-                             
-                              <option value="Sales">Sales</option>
-                            
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Opening Stock</label>
-                                <div class="col-md-6"><input class="form-control" id="vinvstock" name="vinvstock" maxlength=""  title="" type="number" step="any" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                              <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="vinvtax_rate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-
-</form>
-</div>
-</div>
-
-<!-- end of view inventory -->
-
-
-
-
-<!-- view non inventory INPUT -->
-<div id="viewnoninv_indialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			   <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="vnoninvproduct_name"  name="vnoninvproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="vnoninvproduct_desc" name="vnoninvproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="vnoninvcategory" name="vnoninvcategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                             
-                             <br><br>
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="vnoninvcp" name="vnoninvcp" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                            
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Expenditure</label>
-                                <div class="col-md-6">
-                                <select name="vnoninvexpenditure" class="form-control selectboxit" id="vnoninvexpenditure">
-                              <option value="None">Select</option>
-                            
-                              <option value="purchase">Purchases</option>
-                             
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                              <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="vnoninvtax_rate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-                             
-                             
-			</form>
-			</div>
-			</div>
-<!-- end of non inventory input type -->
-
-
-
-
-<!-- view non inventory OUTPUT -->
-<div id="viewnoninv_outdialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			   <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="vononinvproduct_name"  name="vononinvproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="vononinvproduct_desc" name="vononinvproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div id="cat">
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="vononinvcategory" name="vononinvcategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                             
-                             <br><br>
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="vononinvsp" name="vononinvsp" maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Income</label>
-                                <div class="col-md-6">
-                                <select name="vononinvincome" class="form-control selectboxit" id="vononinvincome">
-                              <option value="None">Select</option>
-                             
-                              <option value="Sales">Sales</option>
-                            
-                              </select>
-                                </div>
-                             </div>
-                             
-			<br><br>
-                             
-                              <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="vononinvtax_rate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-			
-			
-			</form>
-			</div>
-			</div>
-<!-- end of non inventory output type -->
-
-
-<!-- service  input dialog -->
-
-<div id="viewservice_indialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Service Name</label>
-                                <div class="col-md-6"><input class="form-control" id="vsproduct_name"  name="vsproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Service Description</label>
-                                <div class="col-md-6"><input class="form-control" id="vsproduct_desc" name="vsproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div >
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="vscategory" name="vscategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                          
-			
-			          <br><br>
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="vscp" name="vscp" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                            
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Expenditure</label>
-                                <div class="col-md-6">
-                                <select name="vsexpenditure" class="form-control selectboxit" id="vsexpenditure">
-                              <option value="None">Select</option>
-                            
-                              <option value="purchase">Purchases</option>
-                             
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                              <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="vsrate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-			
-			
-			
-			
-			</form>
-			</div>
-			</div>
-			<!-- end of servcie dialog -->
-			
-			
-			
-	<!--  service output -->
 	
 
-<div id="viewservice_outdialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Service Name</label>
-                                <div class="col-md-6"><input class="form-control" id="vosproduct_name"  name="vosproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Service Description</label>
-                                <div class="col-md-6"><input class="form-control" id="vosproduct_desc" name="vosproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div >
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="voscategory" name="voscategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                          
-			
-			         <br><br>
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="vossp" name="vossp" maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Income</label>
-                                <div class="col-md-6">
-                                <select name="vosincome" class="form-control selectboxit" id="vosincome">
-                              <option value="None">Select</option>
-                             
-                              <option value="Sales">Sales</option>
-                            
-                              </select>
-                                </div>
-                             </div>
-                             
-			<br><br>
-                             
-                              <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
+	<div id="wrapper">
 
-														<input list="tax" class="form-control" id="vosrate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
+			id="pqr">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header" id="xyz">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
 
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-			
-			
-			
-			
-			</form>
+				<a class="navbar-brand" href="index.html" id="xyz">SIMPLIFY TAX</a>
 			</div>
-			</div>
-			<!-- end of servcie dialog -->
+			<!-- Top Menu Items -->
+			<ul class="nav navbar-right top-nav" id="pqr">
+				<li class="dropdown">
+
+					<ul class="dropdown-menu message-dropdown">
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a href="#">
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-footer"><a href="#">Read All New
+								Messages</a></li>
+					</ul>
+				</li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown"><i class="fa fa-bell"></i> <b
+						class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown">
+						<li><a href="#">Alert Name <span
+								class="label label-default">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-primary">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-success">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span class="label label-info">Alert
+									Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-warning">Alert Badge</span></a></li>
+						<li><a href="#">Alert Name <span
+								class="label label-danger">Alert Badge</span></a></li>
+						<li class="divider"></li>
+						<li><a href="#">View All</a></li>
+					</ul></li>
 
 
- 
-    <div id="wrapper">
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="pqr">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header" id="xyz">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                
-                <a class="navbar-brand" href="index.html" id="xyz" >SIMPLIFY TAX</a>
-            </div>
-            <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav" id="pqr">
-                <li class="dropdown">
-                   
-                    <ul class="dropdown-menu message-dropdown">
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-footer">
-                            <a href="#">Read All New Messages</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu alert-dropdown">
-                        <li>
-                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">View All</a>
-                        </li>
-                    </ul>
-                </li>
-                
-                	
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown"><i class="fa fa-fw fa-gear"></i>Settings</a>
+					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
-						<li><a href="tax_settings.html"> Tax Settings</a></li>
+					   
+						<li><a href="business_details.html">Company Profile</a></li>
+						 <li class="divider"></li>
+						<li><a href="tax_settings.html" > Tax Settings</a></li>
 						<li class="divider"></li>
 						<li><a href="financial_settings.html">Financial Settings </a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
+						<li class="divider"></li>
+						<li><a href="FormatSettings.html">Format Settings </a></li>
 					</ul>
 				</li>
+
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
+						<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						
+						<li class="divider"></li>
+						<li><a href="logout.html"><i
+								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
+					</ul></li>
+			</ul>
+
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav" id="abc">
+
+					<li ><a href="index.html"><i
+							class="fa fa-fw fa-dashboard"></i> Home</a></li>
+							
+					<li class="active"><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
+							Purchase Orders</a></li>
+							
+					<li><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
+							Bills</a></li>
+							
+					<li><a href="Estimates.html"><i
+							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
+					
+					<li><a href="invoice.html"><i
+							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
+					
+					<li><a href="Receipts.html"><i
+							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
+							
+					<li><a href="Reports.html"><i
+							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
+							
+					<li><a href="createCustomer.html"><i
+							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
+							
+					<li><a href="createVendor.html"><i
+							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
 				
-				
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" >&nbsp;<i class="fa fa-user" id="name"></i>   <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="company_profile.html"><i class="fa fa-fw fa-user"></i> Profile</a>
-                        </li>
-                       
-                        <li class="divider"></li>
-                        <li>
-                            <a href="logout.html"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse" >
-                <ul class="nav navbar-nav side-nav" id="abc">
-                   
-                    <li class="active">
-                        <a href=".html"><i class="fa fa-fw fa-dashboard"></i> Home</a>
-                        
-                    </li>
-                    <li>
-                        <a href="dashboard.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    
-                    <li>
-                        <a href="accounting.html"><i class="fa fa-fw fa-dashboard"></i> Accounting</a>
-                    </li>
-                    
-                    <li>
-                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
-                    </li>
-                    
-                    <li>
-                        <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
-                    </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-fw fa-edit"></i> Forms</a>
-                    </li>
-                    <li>
-                        <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
-                    </li>
-                    <li>
-                        <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Blank Page</a>
-                    </li>
-                    <li>
-                        <a href="index-rtl.html"><i class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
 
 
 
 
 
-        <div id="page-wrapper">
+		<div id="page-wrapper">
 
-            <div class="container-fluid">
+			<div class="container-fluid">
 
 
 
- <h1 class="page-header">
-                          PRODUCTS
-                        </h1>
-                        
-                        <button type="button" class="btn btn-info" style="float: right"
+				<h1 class="page-header">PRODUCTS</h1>
+
+				<button type="button" class="btn btn-info" style="float: right"
 					onclick="addstock()">Add Stock</button>
-                        
-                     <!--     <div class="row">
-                    <div class="col-lg-12">-->
-                    
-                    <!------CONTROL TABS START------>
-						<ul class="nav nav-tabs bordered">
-						
-						<li class="active"><a href="#view_products" data-toggle="tab"><i
-									class="entypo-menu"></i> View Products</a></li>
-									
-							<li ><a href="#add_product" data-toggle="tab"><i
-									class="entypo-menu"></i> Add Product</a></li>
-									
-							
-							
 
-						</ul>
-						<!------CONTROL TABS END------>
-                     
-                      
-                      <div class="tab-content">
-                      
-                      
-                      
-                       <div class="tab-pane box" id="add_product"> 
-                       
-                       <!-- another nav tab content -->
-                       
-                       <br><br>
-                       
-                          <!------ INNER CONTROL TABS START------>
+				<!--     <div class="row">
+                    <div class="col-lg-12">-->
+
+				<!------CONTROL TABS START------>
+				<ul class="nav nav-tabs bordered">
+
+					<li class="active"><a href="#view_products" data-toggle="tab"><i
+							class="entypo-menu"></i> View Products</a></li>
+
+					<li><a href="#add_product" data-toggle="tab"><i
+							class="entypo-menu"></i> Add Product</a></li>
+
+
+
+
+				</ul>
+				<!------CONTROL TABS END------>
+
+
+				<div class="tab-content">
+
+
+
+					<div class="tab-pane box" id="add_product">
+
+						<!-- another nav tab content -->
+
+						<br>
+						<br>
+
+						<!------ INNER CONTROL TABS START------>
 						<ul class="nav nav-tabs bordered">
-						
-						<li class="active"><a href="#inv_prod" data-toggle="tab"><i
+
+							<li class="active"><a href="#inv_prod" data-toggle="tab"><i
 									class="entypo-menu"></i> Inventory product</a></li>
-									
-							<li ><a href="#noninv_prod" data-toggle="tab"><i
+
+							<li><a href="#noninv_prod" data-toggle="tab"><i
 									class="entypo-menu"></i> Non Inventory Product</a></li>
-									
-									<li ><a href="#service" data-toggle="tab"><i
-									class="entypo-menu"></i> Service</a></li>
-									
-							
-							
+
 
 						</ul>
 						<!------ INNER CONTROL TABS END------>
-						
-						<!-- definition of INVENTORY PRODUCTS -->
-						  
-						   <div class="tab-content">
-                       <div class="tab-pane box active" id="inv_prod"> 
-                       
-                        
-                        <div id="form-panel">
-                        <div class="row">
-                        <div class="col-lg-8">
-                        <form role="form" id="inventory">
-                            
-                          
-                            <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="invproduct_name"  name="invproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="invproduct_desc" name="invproduct_desc" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">SKU</label>
-                                <div class="col-md-6"><input class="form-control" id="invsku" name="invsku" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="invcategory" name="invcategory" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <!--  
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="invcp" name="invcp" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             -->
-                             
-                            <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Expenditure</label>
-                                <div class="col-md-6">
-                                <select name="invexpenditure" class="form-control selectboxit" id="invexpenditure">
-                              <option value="None">Select</option>
-                            
-                              <option value="purchase">Purchases</option>
-                             
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <!-- 
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="invsp" name="invsp" maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                              -->
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Income</label>
-                                <div class="col-md-6">
-                                <select name="invincome" class="form-control selectboxit" id="invincome">
-                              <option value="None">Select</option>
-                             
-                              <option value="Sales">Sales</option>
-                            
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Opening Stock</label>
-                                <div class="col-md-6"><input class="form-control" id="invstock" name="invstock" maxlength=""  title="" type="number" step="any" />
-                                </div>
-                             </div>
 
-												<br> <br>
+						<!-- definition of INVENTORY PRODUCTS -->
+
+						<div class="tab-content">
+							<div class="tab-pane box active" id="inv_prod">
+
+
+								<div id="form-panel">
+									<div class="row">
+										<div class="col-lg-8">
+
+											<br>
+											<div style="color: red">Chose Inventory product type.</div>
+											<br> <br>
+
+											<!-- RADIO BUTTON OPTION -->
+
+											<form>
+												<label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="invtype" id="inv_noref" checked
+													value="noref" onchange="return inv_noref1()">
+													Inventory without Batch No
+												</label> <label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="invtype" id="inv_batch"
+													value="batchref" onchange="return inv_ref1()">
+													Inventory with Batch No
+												</label>
+
+											</form>
+
+
+											<br>
+											<br> <br>
+											<form role="form" id="inventory">
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invproduct_name"
+															name="invproduct_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product
+														Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invproduct_desc"
+															name="invproduct_desc" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">SKU</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invsku" name="invsku"
+															maxlength="" required="required" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Category</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invcategory"
+															name="invcategory" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+												<div id="costprice"></div>
+
+												<br>
+
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="invexpenditure"
+															class="form-control selectboxit" id="invexpenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div id="sellingprice"></div>
+
+												<br>
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="invincome" class="form-control selectboxit"
+															id="invincome">
+															<option value="None">Select</option>
+
+															<option value="Sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div id="op_stock"></div>
+
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Low Stock
+														Alert</label>
+													<div class="col-md-6">
+														<input class="form-control" id="low_stock"
+															name="invcategory" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
 
 
 												<div class="form-group required">
@@ -2025,95 +690,162 @@ else
 													</div>
 												</div>
 
-												<br><br>
-                               
-                            
-                         </form>
-                          <input type="submit" class="btn btn-primary" id="inventory_submit" onclick="return add_invproduct()">
-                            
-                           
-                        
-                         </div>
-                         </div>
-                         </div>
-                         </div>  <!-- close desc of inv prod -->
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         <!-- NON INVENTORY PRODUCT -->
-                         <div class="tab-pane box" id="noninv_prod"> 
-                       
-                        
-                        <div id="form-panel">
-                        <div class="row">
-                        <div class="col-lg-8">
-                        <form role="form" id="noninventory">
-                            
-                            <div class="form-group required" >
-                                <label class="col-md-3 control-label">Product Type</label>
-                                <div class="col-md-6">
-                                <select name="inout" class="form-control selectboxit" id="inout" onchange="nontypechange()">
-                              <option value="None">Select</option>
-                             
-                              <option value="0">Input Product</option>
-                              <option value="1">Output Product</option>
-                              
-                              </select>
-                                </div>
-                      </div>
-                      
-                      <br><br><br>
-                            
-                            
-                            <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="noninvproduct_name"  name="noninvproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="noninvproduct_desc" name="noninvproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div id="cat">
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="noninvcategory" name="noninvcategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                            <div id="p"></div>
-                             
-                             <br>
+												<br>
+												<br>
+
+
+											</form>
+											<input type="submit" class="btn btn-primary"
+												id="inventory_submit" onclick="return add_invproduct()">
+
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- close desc of inv prod -->
+
+
+
+
+
+
+
+
+							<!-- NON INVENTORY PRODUCT -->
+							<div class="tab-pane box" id="noninv_prod">
+
+
+								<div id="form-panel">
+									<div class="row">
+										<div class="col-lg-8">
+
+											<br>
+											<div style="color: red">Chose Item type.</div>
+											<br> <br>
+
+											<form>
+
+												<label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="noninvtype" id="non_product"
+													checked value="non_product"> Product
+												</label> <label class="radio-inline col-md-2 control-label">
+													<input type="radio" name="noninvtype" id="non_service"
+													value="non_service"> Service
+												</label>
+
+											</form>
+											<br> <br>
+											<form role="form" id="noninventory">
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvproduct_name"
+															name="noninvproduct_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvproduct_desc"
+															name="noninvproduct_desc" maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+
+												<br>
+
+												<div id="cat">
+													<div class="form-group required">
+														<label class="col-md-3 control-label">Category</label>
+														<div class="col-md-6">
+															<input class="form-control" id="noninvcategory"
+																name="noninvcategory" maxlength="" required="required"
+																title="" type="text" />
+														</div>
+													</div>
+												</div>
+
+												<br>
+												<br> <br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Cost Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvcp"
+															 maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="invexpenditure"
+															class="form-control selectboxit" id="noninvexpenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label"> Selling
+														Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="noninvsp" maxlength=""
+															required="required" title="" type="text" />
+													</div>
+												</div>
+
+
+												<br>
+												<br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="noninvsales"
+															class="form-control selectboxit" id="noninvincome">
+															<option value="None">Select</option>
+
+															<option value="sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br>
+												<br>
+
 												<div class="form-group required">
 													<label class="col-md-3 control-label">Tax Rate</label>
 													<div class="col-md-6">
 
 														<input list="tax" class="form-control" id="noninvtax_rate"
-															placeholder="Tax Rate" >
+															placeholder="Tax Rate">
 														<datalist id="tax">
 
 															<option data-customvalue="14" value="VAT 5.5">VAT
@@ -2127,737 +859,237 @@ else
 													</div>
 												</div>
 
-												<br><br>
-                               
-                            
-                         </form>
-                          
-                            <input type="submit" class="btn btn-primary" id="inventory_submit" onclick="return add_noninvproduct()">
-                           
-                        
-                         </div>
-                         </div>
-                         </div>
-                         </div>  <!-- close desc of inv prod -->
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                          <!-- service -->
-                          
-                         
-                         <div class="tab-pane box" id="service"> 
-                       
-                        
-                        <div id="form-panel">
-                        <div class="row">
-                        <div class="col-lg-8">
-                        <form role="form" id="service">
-                            
-                            <div class="form-group required" >
-                                <label class="col-md-3 control-label">Service Type</label>
-                                <div class="col-md-6">
-                                <select name="sinout" class="form-control selectboxit" id="sinout" onchange="servicechange()">
-                              <option value="None">Select</option>
-                             
-                              <option value="0">Input Service</option>
-                              <option value="1">Output Service</option>
-                              
-                              </select>
-                                </div>
-                      </div>
-                      
-                      <br><br><br>
-                            
-                            
-                            <div class="form-group required">
-                                <label class="col-md-3 control-label">Service Name</label>
-                                <div class="col-md-6"><input class="form-control" id="sproduct_name"  name="sproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Service Description</label>
-                                <div class="col-md-6"><input class="form-control" id="sproduct_desc" name="sproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div >
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="scategory" name="scategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                            <div id="h"></div>
-                             
-                             <br>
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="stax_rate"
-															placeholder="Tax Rate" >
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-
-												<br><br>
-                               
-                            
-                         </form>
-                          
-                            <input type="submit" class="btn btn-primary" onclick="return add_service()">
-                           
-                        
-                         </div>
-                         </div>
-                         </div>
-                         </div>  <!-- close desc of SERVICE prod -->
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         
-                         </div><!-- inner tab content -->
-                         
-                      </div> <!-- close of add product -->
-                        
-                        <!-- NEW NAV BAR CONTENT -->
-                        <!--  ASSOCIATION ACTION BUTTON WITH ID SUCH THAT FOR EVERY ROW IT HOLDS TAX_ID, PASS THIS
-                        TO DELETE AND EDIT FUNCTION, SO INTERNAL TAX_ID IS KNOWN -->
-                        
-                        <div class="tab-pane box active " id="view_products">
-							<div class="row">
-                        <div class="col-lg-12">
-                        <br><br>
-							<table class="table table-bordered datatable" id="table_export">
-												<thead>
-													<tr>
-		
-														<th><div>Product Type</div></th>
+												<br>
+												<br>
 
 
-														<th><div>Product Name</div></th>
+											</form>
 
-														<th><div>Product Description</div></th>
-														
-														<th><div>Tax Rate</div></th>
-														
-														<th><div>Options</div></th>
-														
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>
-														<!--  ADD CODE TO POPULATE VALUES FROM JSON FOR EACH TD -->
-															
-														</td>
+											<input type="submit" class="btn btn-primary"
+												id="inventory_submit" onclick="return add_noninvproduct()">
 
-														<td>
 
-														</td>
-
-														<td>
-															
-
-														</td>
-														<td>
-															
-
-														</td>
-													
-
-														
-														
-														<td> <!-- ACTIONS -->
-                                 <div class="btn-group">
-                                 
-                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    Action <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-                                    
-                                    <!-- view -->
-                                    <li>
-                                        <a href="" onClick="return view_product()">    <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
-                                            <i class="entypo-pencil"></i>
-                                                View Product
-                                            </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    
-                                    
-                                    <!-- EDITING LINK -->
-                                    <li>
-                                        <a href="" onClick="return edit_product()">    <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
-                                            <i class="entypo-pencil"></i>
-                                                Edit Product
-                                            </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    
-                                    <!-- DELETION LINK -->   <!-- DELETE FROM DATABASE -->
-                                    <li>
-                                        <a href="" onClick="return confirm('Are you sure to delete?')"> <!--  pass product id along -->
-                                            <i class="entypo-trash"></i>
-                                                Delete Product
-                                            </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            </td>
-														
-													</tr>
-
-												</tbody>
-											</table>
-											</div>
-											</div>
-							
-							
+										</div>
+									</div>
+								</div>
 							</div>
-                        
-                        
-                        
-                        
-                        </div> <!-- end of nav bar content -->
-                        
-                      
-                  <!--   </div>
+							<!-- close desc of inv prod -->
+
+
+
+						</div>
+						<!-- inner tab content -->
+
+					</div>
+					<!-- close of add product -->
+
+					<!-- NEW NAV BAR CONTENT -->
+					<!--  ASSOCIATION ACTION BUTTON WITH ID SUCH THAT FOR EVERY ROW IT HOLDS TAX_ID, PASS THIS
+                        TO DELETE AND EDIT FUNCTION, SO INTERNAL TAX_ID IS KNOWN -->
+
+					<div class="tab-pane box active " id="view_products">
+						<div class="row">
+							<div class="col-lg-12">
+								<br>
+								<br>
+								<table class="table table-bordered datatable" id="table_export">
+									<thead>
+										<tr>
+
+											<th><div>Product Type</div></th>
+
+
+											<th><div>Product Name</div></th>
+
+											<th><div>Product Description</div></th>
+
+											<th><div>Tax Rate</div></th>
+
+											<th><div>Options</div></th>
+
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<!--  ADD CODE TO POPULATE VALUES FROM JSON FOR EACH TD -->
+
+											</td>
+
+											<td></td>
+
+											<td></td>
+											<td></td>
+
+
+
+
+											<td>
+												<!-- ACTIONS -->
+												<div class="btn-group">
+
+													<button type="button"
+														class="btn btn-default btn-sm dropdown-toggle"
+														data-toggle="dropdown">
+														Action <span class="caret"></span>
+													</button>
+													<ul class="dropdown-menu dropdown-default pull-right"
+														role="menu">
+
+														<!-- view -->
+														<li><a href="" onClick="return view_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
+																<i class="entypo-pencil"></i> View Product
+														</a></li>
+														<li class="divider"></li>
+
+
+														<!-- EDITING LINK -->
+														<li><a href="" onClick="return edit_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
+																<i class="entypo-pencil"></i> Edit Product
+														</a></li>
+														<li class="divider"></li>
+
+														<!-- DELETION LINK -->
+														<!-- DELETE FROM DATABASE -->
+														<li><a href=""
+															onClick="return confirm('Are you sure to delete?')">
+																<!--  pass product id along --> <i class="entypo-trash"></i>
+																Delete Product
+														</a></li>
+													</ul>
+												</div>
+
+											</td>
+
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+
+					</div>
+
+
+
+
+				</div>
+				<!-- end of nav bar content -->
+
+
+				<!--   </div>
                 </div> -->
-                <!-- /.row -->
-</div> <!--  wrapper -->
-
-               
-              
-            </div>
-            <!-- /.container-fluid -->
-
-        </div>
-        <!-- /#page-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
-    
-    
-    <!-- EDIT DIALOGS -->
-    
-    <!-- EDit inventory products -->
-    
-    
-<div id="editinv_dialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			
-			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="einvproduct_name"  name="einvproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="einvproduct_desc" name="einvproduct_desc" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">SKU</label>
-                                <div class="col-md-6"><input class="form-control" id="einvsku" name="einvsku" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="einvcategory" name="einvcategory" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="einvcp" name="einvcp" maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                            <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Expenditure</label>
-                                <div class="col-md-6">
-                                <select name="einvexpenditure" class="form-control selectboxit" id="einvexpenditure">
-                              <option value="None">Select</option>
-                            
-                              <option value="purchase">Purchases</option>
-                             
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="einvsp" name="einvsp" maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Income</label>
-                                <div class="col-md-6">
-                                <select name="einvincome" class="form-control selectboxit" id="einvincome">
-                              <option value="None">Select</option>
-                             
-                              <option value="Sales">Sales</option>
-                            
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Opening Stock</label>
-                                <div class="col-md-6"><input class="form-control" id="einvstock" name="einvstock" maxlength=""  title="" type="number" step="any" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                            <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="einvtax_rate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-
-</form>
-</div>
-</div>
-
-<!-- end of view inventory -->
-
-
-
-
-<!-- edit non inventory INPUT -->
-<div id="editnoninv_indialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			   <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="enoninvproduct_name"  name="enoninvproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="enoninvproduct_desc" name="enoninvproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="enoninvcategory" name="enoninvcategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                             
-                             <br><br>
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="enoninvcp" name="enoninvcp" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                            
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Expenditure</label>
-                                <div class="col-md-6">
-                                <select name="enoninvexpenditure" class="form-control selectboxit" id="enoninvexpenditure">
-                              <option value="None">Select</option>
-                            
-                              <option value="purchase">Purchases</option>
-                             
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                           <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="enoninvtax_rate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-                             
-                             
-			</form>
+				<!-- /.row -->
 			</div>
-			</div>
-<!-- end of non inventory input type -->
+			<!--  wrapper -->
+
+
+
+		</div>
+		<!-- /.container-fluid -->
+
+	</div>
+	<!-- /#page-wrapper -->
+
+	</div>
+	<!-- /#wrapper -->
 
 
 
 
-<!-- view non inventory OUTPUT -->
-<div id="editnoninv_outdialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			   <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Name</label>
-                                <div class="col-md-6"><input class="form-control" id="eononinvproduct_name"  name="eononinvproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Product Description</label>
-                                <div class="col-md-6"><input class="form-control" id="eononinvproduct_desc" name="eononinvproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div id="cat">
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="eononinvcategory" name="eononinvcategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                             
-                             <br><br>
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="eononinvsp" name="eononinvsp" maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Income</label>
-                                <div class="col-md-6">
-                                <select name="eononinvincome" class="form-control selectboxit" id="eononinvincome">
-                              <option value="None">Select</option>
-                             
-                              <option value="Sales">Sales</option>
-                            
-                              </select>
-                                </div>
-                             </div>
-                             
-			<br><br>
-                             
-                            <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="eononinvtax_rate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-			
-			
-			</form>
-			</div>
-			</div>
-<!-- end of non inventory output type -->
 
 
-<!-- service  input dialog -->
-
-<div id="editservice_indialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Service Name</label>
-                                <div class="col-md-6"><input class="form-control" id="esproduct_name"  name="esproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Service Description</label>
-                                <div class="col-md-6"><input class="form-control" id="esproduct_desc" name="esproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div >
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="escategory" name="escategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                          
-			
-			          <br><br>
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="escp" name="escp" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                            
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Expenditure</label>
-                                <div class="col-md-6">
-                                <select name="esexpenditure" class="form-control selectboxit" id="esexpenditure">
-                              <option value="None">Select</option>
-                            
-                              <option value="purchase">Purchases</option>
-                             
-                              </select>
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="esrate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-			
-			
-			
-			
-			</form>
-			</div>
-			</div>
-			<!-- end of servcie dialog -->
-			
-			
-			
-	<!--  service output -->
-	
-
-<div id="editservice_outdialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-			
-			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Service Name</label>
-                                <div class="col-md-6"><input class="form-control" id="eosproduct_name"  name="eosproduct_name" maxlength="30"  placeholder="Product Name" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Service Description</label>
-                                <div class="col-md-6"><input class="form-control" id="eosproduct_desc" name="eosproduct_desc" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                        
-                             
-                             <br>
-                             
-                             <div >
-                             <div class="form-group required" >
-                                <label class="col-md-3 control-label">Category</label>
-                                <div class="col-md-6"><input class="form-control" id="eoscategory" name="eoscategory" maxlength="" required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             </div>
-                          
-			
-			         <br><br>
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="eossp" name="eossp" maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Head of Income</label>
-                                <div class="col-md-6">
-                                <select name="eosincome" class="form-control selectboxit" id="eosincome">
-                              <option value="None">Select</option>
-                             
-                              <option value="Sales">Sales</option>
-                            
-                              </select>
-                                </div>
-                             </div>
-                             
-			<br><br>
-                             
-                             <div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="eosrate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
-													</div>
-												</div>
-			
-			
-			
-			
-			</form>
-			</div>
-			</div>
-			<!-- end of servcie dialog -->
-    
-    
-    
-    
 
 </body>
 
 <script>
- function confirm_delete() {
-  return confirm('Are you sure to delete?');
-  //add ajax code to delete the same
-  //receive internal tax_id as parameter
-}
+
+	function inv_noref1()
+	{
+		//clear all fields
+		
+		$("#invproduct_name").val('');
+		$("#invtax_rate").val('');
+		$("#invproduct_desc").val('');
+		$("#invsku").val('');
+		$("#invcategory").val('');
+		$("#invexpenditure").val(''); //let value be ID
+		$("#invincome").val('');
+		$("#low_stock").val('');
+		$("#invcp").val('');
+		$("#invsp").val('');
+		$("#invstock").val('');
+		
+		
+		$("#inv_batch").text("");
+		$('#costprice').text("");
+		$("#sellingprice").text("");
+		$("#cp").remove();
+		$("#sp").remove();
+		
+		$('#costprice').append('<div class="form-group required" id="cp">' +
+        '<label class="col-md-3 control-label">Cost Price</label>' + 
+        '<div class="col-md-6"><input class="form-control" id="invcp" name="invcp" maxlength=""  title="" type="text" />'+
+        '</div>'+
+     '</div><br><br>');
+		
+		$('#sellingprice').append('<div class="form-group required" id="sp" >' +
+		        '<label class="col-md-3 control-label">Selling Price</label>' + 
+		        '<div class="col-md-6"><input class="form-control" id="invsp" name="invsp" maxlength=""  title="" type="text" />'+
+		        '</div>'+
+		     '</div><br><br>');
+		
+		
+		
+		
+		$("#op_stock").append('<div class="form-group required" id="stock">'+
+                               ' <label class="col-md-3 control-label">Opening Stock</label>'+
+                               ' <div class="col-md-6"><input class="form-control" id="invstock" name="invstock" maxlength=""  title="" type="number" step="any" />' + 
+                               ' </div>' + 
+                             '</div>' + '<br><br>');
+		
+		return true;
+		
+	}
+	
+	function inv_ref1()
+	{
+		
+		$("#op_stock").text("");
+		$("#costprice").text("");
+		$("#sellingprice").text("");
+		$("#cp").remove();
+		$("#sp").remove();
+		$("#stock").remove();
+		
+		//clear all fields
+		
+		
+		$("#invproduct_name").val('');
+		$("#invtax_rate").val('');
+		$("#invproduct_desc").val('');
+		$("#invsku").val('');
+		$("#invcategory").val('');
+		$("#invexpenditure").val(''); //let value be ID
+		$("#invincome").val('');
+		$("#low_stock").val('');
+		$("#invcp").val('');
+		$("#invsp").val('');
+		$("#invstock").val('');
+		
+		
+		return true;
+	}
+	
+ 
+ 
+ 
 
 </script>
 
 
-<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
 
 	jQuery(document).ready(function($)
@@ -2931,23 +1163,38 @@ else
 	
 	function add_invproduct()
 	{
+		
 		var name = $("#invproduct_name").val();
 		var tax = $("#invtax_rate").val();
-		var tid = $('#tax [value="' + tax + '"]').data('customvalue');
+		var tid = $('datalist option[value="'+ tax +'"]').attr('data-customvalue');
 		var desc  = $("#invproduct_desc").val();
 		var sku  = $("#invsku").val();
 		var category  = $("#invcategory").val();
-		//var cp  = $("#invcp").val();
 		var expen  = $("#invexpenditure").val(); //let value be ID
-		//var sp  = $("#invsp").val();                  
 		var income  = $("#invincome").val();
-		var stock  = $("#invstock").val();
+		var invtype = $("input[name='invtype']:checked").val();
+		var low_stock = $("#low_stock").val();
+		var subtype,cp,sp,opening_stock,total_stock ;
 		
-		//for non reqd fields, check if empty and give suitable values
-		//if cp/sp is ''=0
+		if(invtype=="noref")
+			{
+			 subtype = 01;   //inventory product with no reference
+			 cp = $("#invcp").val();
+			 sp = $("#invsp").val();
+			 opening_stock = $("#invstock").val();//opening stock
+			 total_stock = opening_stock;
+			
+			}
+		else        //inventory product with batch#, has no cp,sp,openingstock
+			{
+			subtype=02;
+			cp=0;
+			sp=0;
+			opening_stock=0;
+			total_stock=0;        //as no stock has been entered yet
+			}
 		
 		
-		//alert(tax + tid);
 		if(name==''|| tax==''|| tid=='' || sku=='' )   
 			{
 			alert("Fill in all required fields");
@@ -2955,9 +1202,10 @@ else
 			
 			}
 		
-		var product = {       //populate json
+		var product = {      
 				
-				"product_type": 0,
+				"product_type": 0,       //inventory product
+				"product_subtype": subtype,
 				"product_name":name,
 				"product_desc": desc,
 				"sku":sku,
@@ -2973,230 +1221,95 @@ else
 					 
 					},
 				"category":category,
-				"cp":0,
+				"cp": cp,
 				"head_expenditure": 
 					{
 						"expenditure_id":expen,
 						"expenditure_name":null
 					},
 					
-				"sp": 0,
+				"sp": sp,
 				"head_income":
 					{
 						"income_id":income,
 						"income_name":null
 					},
-				"opening_stock": stock,
-				"in_out":null,
-				"company":null,
+				"opening_stock": opening_stock,
+				"total_stock": total_stock,
+				"lowstock_alert": low_stock,
+				
+				"company":
+					{
+					"company_id" :"CMP445"
+					},
+					
 				"product_id":null,
+				"stocklist":null,  // no stock recorded yet
 				"id":null
+				
 				
 		};
 		alert(product);
 		console.log(product);
 		return true;
-		
-		
 	}
-	
-	function nontypechange()
-	{
-		$("#p").text("");
-		$("#sprice").remove();
-		
-		if($("#inout").val()==0)  //input product
-		{
-			
-			 $("#p").append('<div id="cprice"><div class="form-group required">' + 
-             '<label class="col-md-3 control-label">Cost Price</label>' + 
-             '<div class="col-md-6"><input class="form-control" id="noninvcp" name="noninvcp" maxlength="" required="required" title="" type="number" step="any" />' +
-             '</div>' + 
-          '</div>' + 
-          
-          '<br><br><br>' + 
-          
-         '<div class="form-group required">' + 
-             '<label class="col-md-3 control-label">Head of Expenditure</label>' + 
-             '<div class="col-md-6">' + 
-             '<select name="noninvexpenditure" class="form-control selectboxit" id="noninvexpenditure">' + 
-           '<option value="None">Select</option>' + 
-         
-           '<option value="purchase">Purchases</option>' + 
-          
-           '</select>' + 
-             '</div>' + 
-          '</div></div><br>' );
-			
-			
-		}
-		
-		else if($("#inout").val()==1)
-			{
-			$("#p").text("");
-			$("#cprice").remove();
-			
-			$("#p").append('<div id="sprice"><div class="form-group required">' + 
-            '<label class="col-md-3 control-label">Selling Price</label>' + 
-            '<div class="col-md-6"><input class="form-control" id="noninvsp" name="noninvsp" maxlength="" required="required" title="" type="number" step="any" />' + 
-            '</div>' + 
-        '</div>' + 
-         
-         '<br><br><br>'  + 
-         
-         
-         '<div class="form-group required">' + 
-            '<label class="col-md-3 control-label">Head of Income</label>' + 
-            '<div class="col-md-6">' + 
-            '<select name="noninvincome" class="form-control selectboxit" id="noninvincome">' + 
-          '<option value="None">Select</option>' + 
-         
-          '<option value="Sales">Sales</option>'  + 
-        
-          '</select>' + 
-            '</div>' + 
-         '</div></div><br>');
-			
-			
-			
-			}
-		
-		else
-			{
-			$("#cprice").remove();
-			$("#sprice").remove();
-			$("#p").text("");
-			
-			}
-		
-		
-		
-	}
-	
-	
-	
-	function servicechange()
-	{
-		$("#h").text("");
-		$("#hsprice").remove();
-		
-		if($("#sinout").val()==0)  //input product
-		{
-			
-			 $("#h").append('<div id="hcprice"><div class="form-group required">' + 
-             '<label class="col-md-3 control-label">Cost Price</label>' + 
-             '<div class="col-md-6"><input class="form-control" id="scp" name="scp" maxlength="" required="required" title="" type="number" step="any" />' +
-             '</div>' + 
-          '</div>' + 
-          
-          '<br><br><br>' + 
-          
-         '<div class="form-group required">' + 
-             '<label class="col-md-3 control-label">Head of Expenditure</label>' + 
-             '<div class="col-md-6">' + 
-             '<select name="s_expenditure" class="form-control selectboxit" id="s_expenditure">' + 
-           '<option value="None">Select</option>' + 
-         
-           '<option value="purchase">Purchases</option>' + 
-          
-           '</select>' + 
-             '</div>' + 
-          '</div></div><br>' );
-			
-			
-		}
-		
-		else if($("#sinout").val()==1)
-			{
-			$("#s").text("");
-			$("#hcprice").remove();
-			
-			$("#h").append('<div id="hsprice"><div class="form-group required">' + 
-            '<label class="col-md-3 control-label">Selling Price</label>' + 
-            '<div class="col-md-6"><input class="form-control" id="ssp" name="ssp" maxlength="" required="required" title="" type="number" step="any" />' + 
-            '</div>' + 
-        '</div>' + 
-         
-         '<br><br><br>'  + 
-         
-         
-         '<div class="form-group required">' + 
-            '<label class="col-md-3 control-label">Head of Income</label>' + 
-            '<div class="col-md-6">' + 
-            '<select name="sincome" class="form-control selectboxit" id="sincome">' + 
-          '<option value="None">Select</option>' + 
-         
-          '<option value="Sales">Sales</option>'  + 
-        
-          '</select>' + 
-            '</div>' + 
-         '</div></div><br>');
-			
-			
-			
-			}
-		
-		else
-			{
-			$("#hcprice").remove();
-			$("#hsprice").remove();
-			$("#h").text("");
-			
-			}
-		
-		
-		
-	}
-	
-	
-	
 	
 	
 	
 	function add_noninvproduct()
 	{
 		
-		var type = $("#inout").val();
-		
 		var name = $("#noninvproduct_name").val();
 		var tax = $("#noninvtax_rate").val();
-		var tid = $('#tax [value="' + tax + '"]').data('customvalue');
-		var desc  = $("#noninvproduct_desc").val();
-		
-		var category  = $("#noninvcategory").val();
+		var tid = $('#tax [value="' + tax + '"]').attr('data-customvalue');
+		var desc  = $("#noninvproduct_desc").val();var category  = $("#noninvcategory").val();
 		var cp  = $("#noninvcp").val();
+		
+		if(cp=='')
+			cp=0;
+		
 		var expen  = $("#noninvexpenditure").val(); //let value be ID
-		var sp  = $("#noninvsp").val();                  
+		var sp  = $("#noninvsp").val();  
+		if(sp=='')
+			cp=0;
+		
 		var income  = $("#noninvincome").val();
+		var category  = $("#noninvcategory").val();
 		
-		//ask for compulsory fields in inp and output
+		var noninvtype = $("input[name='noninvtype']:checked").val();
+		var subtype;
 		
-		
-		if(name==''|| tax==''|| tid=='' || type=='' )   
+		if(name==''|| tax==''|| tid=='' )   
 			{
 			alert("Fill in all required fields");
 			return true;
 			
 			}
 		
-		var product=null;
 		
-		if(type==0)  //input product
+		if(noninvtype=="non_product")
 			{
-			//alert("hi 1");
-			var product = {       //populate json
+			   subtype = 11;
+			}
+		else
+			{
+			   subtype = 12;
+			}
+	
+			var product = {      
 					
-					"product_type": 1,
+					"product_type": 1,         //non-inventory
+					"product_subtype" : subtype,
 					"product_name":name,
 					"product_desc": desc,
 					"sku": null,
-					"tax":                     //backend - search for tax obect from table with this id
+					"tax":                     
 						{
 						 "tax_name":null,
 						 "tax_abbreviation":null,
 						 "tax_desc":null,
 						 "tax_rate":null,
-						 "company": null,//company object
+						 "company": null,
 						 "tax_id": tid,
 						 "tax_recoverable":true
 						 
@@ -3209,190 +1322,33 @@ else
 							"expenditure_name":null
 						},
 						
-					"sp": 0,        
-					"head_income":null,
-					"opening_stock": null,
-					"in_out":0,  //input product
-					"company":null,
-					"product_id":null,
-					"id":null
-					
-			};
-			
-			
-			
-			}
-		
-		
-		if(type==1)  //output product
-		{
- product = {       //populate json
-				
-				"product_type": 1,
-				"product_name":name,
-				"product_desc": desc,
-				"sku": null,
-				"tax":                     //backend - search for tax obect from table with this id
-					{
-					 "tax_name":null,
-					 "tax_abbreviation":null,
-					 "tax_desc":null,
-					 "tax_rate":null,
-					 "company": null,//company object
-					 "tax_id": tid,
-					 "tax_recoverable":true
-					 
-					},
-				"category":category,
-				"cp":0,
-				"head_expenditure": null,
-					
-				"sp": sp,        
-				"head_income":{
-					"income_id":income,
-					"income_name":null
-				},
-				"opening_stock": null,
-				"in_out":1,  //input product
-				"company":null,
-				"product_id":null,
-				"id":null
-				
-		};
-		
-		
-		
-		}
-		
-		//alert(product);
-		console.log(product);
-		return true;
-		
-		
-	}
-	
-	// CLEAR ALL FIELDS OF THESE FORMS ONCE CREATED
-	
-	
-	function add_service()
-	{
-		
-		var type = $("#sinout").val();
-		
-		var name = $("#sproduct_name").val();
-		var tax = $("#stax_rate").val();
-		var tid = $('#tax [value="' + tax + '"]').data('customvalue');
-		var desc  = $("#sproduct_desc").val();
-		
-		var category  = $("#scategory").val();
-		var cp  = $("#scp").val();
-		var expen  = $("#s_expenditure").val(); //let value be ID
-		var sp  = $("#ssp").val();                  
-		var income  = $("#sincome").val();
-		
-		//ask for compulsory fields in inp and output
-		
-		
-		if(name==''|| tax==''|| tid=='' || type=='' )   
-			{
-			alert("Fill in all required fields");
-			return true;
-			
-			}
-		
-		var product=null;
-		
-		if(type==0)  //input product
-			{
-			//alert("hi 1");
-			var product = {       //populate json
-					
-					"product_type": 2,
-					"product_name":name,
-					"product_desc": desc,
-					"sku": null,
-					"tax":                     //backend - search for tax obect from table with this id
+					"sp": sp,        
+					"head_income":
 						{
-						 "tax_name":null,
-						 "tax_abbreviation":null,
-						 "tax_desc":null,
-						 "tax_rate":null,
-						 "company": null,//company object
-						 "tax_id": tid,
-						 "tax_recoverable":true
-						 
-						},
-					"category":category,
-					"cp":cp,
-					"head_expenditure": 
-						{
-							"expenditure_id":expen,
-							"expenditure_name":null
-						},
+							"income_id": income,
+							"income_name":null
 						
-					"sp": 0,        
-					"head_income":null,
-					"opening_stock": null,
-					"in_out":0,  //input product
-					"company":null,
-					"product_id":null,
-					"id":null
+						},
+						"opening_stock": 0,          //stock does not apply to non inventory products
+						"total_stock": 0,
+						"lowstock_alert": 0,
+						
+						"company":
+							{
+							"company_id" :"CMP445"
+							},
+							
+						"product_id":null,
+						"stocklist":null,  
+						"id":null
 					
 			};
-			
-			
+			console.log(product);
+			return true;
+
 			
 			}
 		
-		
-		if(type==1)  //output product
-		{
- product = {       //populate json
-				
-				"product_type": 2,
-				"product_name":name,
-				"product_desc": desc,
-				"sku": null,
-				"tax":                     //backend - search for tax obect from table with this id
-					{
-					 "tax_name":null,
-					 "tax_abbreviation":null,
-					 "tax_desc":null,
-					 "tax_rate":null,
-					 "company": null,//company object
-					 "tax_id": tid,
-					 "tax_recoverable":true
-					 
-					},
-				"category":category,
-				"cp":0,
-				"head_expenditure": null,
-					
-				"sp": sp,        
-				"head_income":{
-					"income_id":income,
-					"income_name":null
-				},
-				"opening_stock": null,
-				"in_out":1,  //input product
-				"company":null,
-				"product_id":null,
-				"id":null
-				
-		};
-		
-		
-		
-		}
-		
-		//alert(product);
-		console.log(product);
-		return true;
-		
-		
-	}
-	
-	
 	
 	function addstock(){
 		
@@ -3407,6 +1363,6 @@ else
 		
 </script>
 
-  
+
 
 </html>

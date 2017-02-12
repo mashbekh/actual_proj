@@ -305,6 +305,7 @@ input[readonly] {
 <script>
 function loadName()
 {
+	 $('.dropdown-toggle').dropdown();
    document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
    //get purchase order number and append it to box, also with today's date
    
@@ -465,11 +466,16 @@ function update_prod_details(counter)
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
+					   
+						<li><a href="business_details.html">Company Profile</a></li>
+						 <li class="divider"></li>
 						<li><a href="tax_settings.html" > Tax Settings</a></li>
 						<li class="divider"></li>
 						<li><a href="financial_settings.html">Financial Settings </a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
+						<li class="divider"></li>
+						<li><a href="FormatSettings.html">Format Settings </a></li>
 					</ul>
 				</li>
 
@@ -478,10 +484,7 @@ function update_prod_details(counter)
 					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
 						<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="company_profile.html"><i
-								class="fa fa-fw fa-user"></i> Profile</a></li>
-
-
+						
 						<li class="divider"></li>
 						<li><a href="logout.html"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
@@ -498,13 +501,13 @@ function update_prod_details(counter)
 					<li ><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
 							Purchase Orders</a></li>
 							
-					<li><a href="Bills.html"><i class="fa fa-fw fa-dashboard"></i>
+					<li><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
 							Bills</a></li>
 							
-					<li class="active"><a href="Invoice.html"><i
+					<li><a href="Estimates.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
 					
-					<li><a href="Estimate.html"><i
+					<li><a href="invoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
 					
 					<li><a href="Receipts.html"><i
@@ -513,11 +516,12 @@ function update_prod_details(counter)
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
 							
-					<li><a href="Customers.html"><i
+					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
 							
-					<li><a href="Vendors.html"><i
+					<li class="active"><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
+					
 				
 					
 					
