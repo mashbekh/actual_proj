@@ -78,61 +78,6 @@
 
 </head>
 
-<script>
-
- function edit_product()
- {
-	 
-	 $("#edit_product_dialog").dialog({
-         
-         modal: true,
-         autoOpen: false,
-         title: "Edit Product",
-         width: 700,
-         height: 500
-     });
-       
-         $('#edit_product_dialog').dialog('open');
-         
-         //populate with values from that type of tax
-         return false;
-	 
-	 
- }
- 
- 
- function submit_edit_product() //receive TAX ID, to know which tax to delete
- {
-	 var product_name = $('#new_product_name').val();
-	   var product_desc = $('#new_product_desc').val();
-	   var cost_price = $('#new_cost_price').val();
-	   var selling_price = $('#new_selling_price').val();
-	   var tax_rate = $('#new_tax_rate').val();
-	 //var tax_recovery  = $('#tax_recovery').prop("checked");
-
-	 if(product_name==''||product_desc==''||cost_price==''||selling_price==''||tax_rate=='')
-	 {
-	 return true;
-	 }
-
-	 //alert("all fine");
-	 //
-	 $('#edit_product_dialog').dialog('close');
-	 return false;
-	 // make an ajax call to edit type of tax
- }
-
- function cancel()
- {
-	 $('#edit_product_dialog').dialog('close');
-	 //return false;
- }
-
-
-
-
-</script>
-
 
 <style>
 .dataTables_filter {
@@ -177,6 +122,21 @@
 
 <script>
 
+var tax_list = [
+	{
+		"tax_id" : "CMP123TAX1",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 5.5
+		
+	},
+	{
+		"tax_id" : "CMP123TAX2",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 14.5
+		
+		
+	}
+];
 var prod_json=null; //original
 var prodnew_json = null; //edited
 var edit_counter=null; //when edit gets submitted, has product_id of to be editted product (when edit box opened set this)
@@ -186,9 +146,23 @@ function loadName()
 	 $('.dropdown-toggle').dropdown();
 	
    document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-    var company_id="CMP445";
-    inv_noref1();
+   var company_id="CMP445";
    
+   //ajax call to fetch taxes
+   
+    for(var i=0;i<tax_list.length;i++)
+	 {
+	 
+	 	$('#invtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 
+	 	$('#noninvtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 
+	 }
+     
+   
+   //ajax call to fetch all products
+    
+    /*
 	$.ajax({
 		   		type : 'GET',
 		   		url  : '/Accounting/products/create',
@@ -208,19 +182,8 @@ function loadName()
 				 	console.log(a.status+b+c);
 				}  
 		  });
-   
-   //rest call to fetch all prod - store it in json
-   //onload get all products, each row fields, option functions each get product id as parameter,once editted->go fetch type of product from json and 
-   //open similar type of pop-up with values from json
-   
-   //maintain another json of above which has editted info
-   
-   //if one product edited, once save is clicked - rest call to update product at back end
-   
-   //once rest call succeeds, change json 2 array which holds editted values and now change table row
-   //always when options chosen, get values from json 2 which has new values
-
-   
+   */
+  
 }
 
 
@@ -284,8 +247,6 @@ for(var i=0;i<prod_json.length;i++)
 
                             '</td></tr>');
 	 	 
-	   
-	   
 	
 	}
 	
@@ -305,7 +266,7 @@ for(var i=0;i<prod_json.length;i++)
 
 <body onload="loadName()">
 
-	
+
 
 	<div id="wrapper">
 
@@ -402,27 +363,28 @@ for(var i=0;i<prod_json.length;i++)
 
 
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
-					   
+
 						<li><a href="business_details.html">Company Profile</a></li>
-						 <li class="divider"></li>
-						<li><a href="tax_settings.html" > Tax Settings</a></li>
 						<li class="divider"></li>
-						<li><a href="financial_settings.html">Financial Settings </a></li>
+						<li><a href="tax_settings.html"> Tax Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="financial_settings.html">Financial Settings
+						</a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
 						<li class="divider"></li>
 						<li><a href="FormatSettings.html">Format Settings </a></li>
-					</ul>
-				</li>
+					</ul></li>
 
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
-						<b class="caret"></b></a>
+					data-toggle="dropdown" style="color: white">&nbsp;<i
+						class="fa fa-user" id="name"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						
+
 						<li class="divider"></li>
 						<li><a href="logout.html"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
@@ -433,33 +395,33 @@ for(var i=0;i<prod_json.length;i++)
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="abc">
 
-					<li ><a href="index.html"><i
-							class="fa fa-fw fa-dashboard"></i> Home</a></li>
-							
-					<li class="active"><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
-							Purchase Orders</a></li>
-							
-					<li><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
-							Bills</a></li>
-							
+					<li><a href="index.html"><i class="fa fa-fw fa-dashboard"></i>
+							Home</a></li>
+
+					<li class="active"><a href="PurchaseOrders.html"><i
+							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
+
+					<li><a href="createBill.html"><i
+							class="fa fa-fw fa-dashboard"></i> Bills</a></li>
+
 					<li><a href="Estimates.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
-					
+
 					<li><a href="invoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
-					
+
 					<li><a href="Receipts.html"><i
 							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
-							
+
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
-							
+
 					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
-							
+
 					<li><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
-				
+
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -507,8 +469,7 @@ for(var i=0;i<prod_json.length;i++)
 
 						<!-- another nav tab content -->
 
-						<br>
-						<br>
+						<br> <br>
 
 						<!------ INNER CONTROL TABS START------>
 						<ul class="nav nav-tabs bordered">
@@ -542,19 +503,18 @@ for(var i=0;i<prod_json.length;i++)
 											<form>
 												<label class="radio-inline col-md-2 control-label">
 													<input type="radio" name="invtype" id="inv_noref" checked
-													value="noref" onchange="return inv_noref1()">
+													value="noref" onchange="return clear_invfields()">
 													Inventory without Batch No
 												</label> <label class="radio-inline col-md-2 control-label">
 													<input type="radio" name="invtype" id="inv_batch"
-													value="batchref" onchange="return inv_ref1()">
+													value="batchref" onchange="return clear_invfields()">
 													Inventory with Batch No
 												</label>
 
 											</form>
 
 
-											<br>
-											<br> <br>
+											<br> <br> <br>
 											<form role="form" id="inventory">
 
 
@@ -568,9 +528,7 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
-												<br>
+												<br> <br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label">Product
@@ -581,8 +539,7 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
+												<br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label">SKU</label>
@@ -592,8 +549,7 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
+												<br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label">Category</label>
@@ -603,12 +559,17 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
+												<br> <br>
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Cost Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invcp" name="invcp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+
 												<br>
-												<br>
-
-
-												<div id="costprice"></div>
-
 												<br>
 
 
@@ -627,11 +588,17 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
+												<br> <br>
 
-												<div id="sellingprice"></div>
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Selling Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invsp" name="invsp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
 
+												<br>
 												<br>
 
 
@@ -649,11 +616,27 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
+												<br> <br>
+												
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Discount</label>
+													<div class="col-md-6">
+														<input class="form-control" id="invdiscount" name="invdiscount"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+												
+												<br><br>
 
-												<div id="op_stock"></div>
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Opening Stock</label>
+													<div class="col-md-6">
+														<input class="form-control" id="op_stock" name="op_stock"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
 
+												<br>
 												<br>
 
 												<div class="form-group required">
@@ -665,33 +648,23 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
-												<br>
-
-
+												<br> <br>
 
 												<div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
-													<div class="col-md-6">
+											<label class="col-md-3 control-label">Tax Rate</label>
+											<div class="col-md-6">
 
-														<input list="tax" class="form-control" id="invtax_rate"
-															placeholder="Tax Rate" required>
-														<datalist id="tax">
+												<input list="invtaxlist" class="form-control"
+													id="invtax_rate" placeholder="Tax Rate">
 
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
+												<datalist id="invtaxlist">
 
-														</datalist>
-													</div>
-												</div>
 
-												<br>
-												<br>
+												</datalist>
+											</div>
+										</div>
+
+												<br> <br>
 
 
 											</form>
@@ -729,10 +702,10 @@ for(var i=0;i<prod_json.length;i++)
 
 												<label class="radio-inline col-md-2 control-label">
 													<input type="radio" name="noninvtype" id="non_product"
-													checked value="non_product"> Product
+													checked value="non_product" onchange="return clear_noninvfields()"> Product
 												</label> <label class="radio-inline col-md-2 control-label">
 													<input type="radio" name="noninvtype" id="non_service"
-													value="non_service"> Service
+													value="non_service" onchange="return clear_noninvfields()"> Service
 												</label>
 
 											</form>
@@ -749,9 +722,7 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
-												<br>
+												<br> <br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label"> Description</label>
@@ -777,21 +748,18 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br> <br>
+												<br> <br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label"> Cost Price</label>
 													<div class="col-md-6">
-														<input class="form-control" id="noninvcp"
-															 maxlength=""
+														<input class="form-control" id="noninvcp" maxlength=""
 															required="required" title="" type="text" />
 													</div>
 												</div>
 
 
-												<br>
-												<br>
+												<br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label">Head of
@@ -807,8 +775,7 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
+												<br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label"> Selling
@@ -820,8 +787,7 @@ for(var i=0;i<prod_json.length;i++)
 												</div>
 
 
-												<br>
-												<br>
+												<br> <br>
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label">Head of
@@ -837,30 +803,33 @@ for(var i=0;i<prod_json.length;i++)
 													</div>
 												</div>
 
-												<br>
-												<br>
-
+												<br> <br>
+												
 												<div class="form-group required">
-													<label class="col-md-3 control-label">Tax Rate</label>
+													<label class="col-md-3 control-label">Discount</label>
 													<div class="col-md-6">
-
-														<input list="tax" class="form-control" id="noninvtax_rate"
-															placeholder="Tax Rate">
-														<datalist id="tax">
-
-															<option data-customvalue="14" value="VAT 5.5">VAT
-																5.5</option>
-															<option data-customvalue="15" value="VAT 14.5">VAT
-																14.5</option>
-															<option data-customvalue="16" value="SERVICE 15">SERVICE
-																15</option>
-
-														</datalist>
+														<input class="form-control" id="noninvdiscount" name="noninvdiscount"
+															maxlength="" title="" type="text" />
 													</div>
 												</div>
+												
+												<br><br>
 
-												<br>
-												<br>
+												<div class="form-group required">
+											<label class="col-md-3 control-label">Tax Rate</label>
+											<div class="col-md-6">
+
+												<input list="noninvtaxlist" class="form-control"
+													id="noninvtax_rate" placeholder="Tax Rate">
+
+												<datalist id="noninvtaxlist">
+
+
+												</datalist>
+											</div>
+										</div>
+
+												<br> <br>
 
 
 											</form>
@@ -890,8 +859,7 @@ for(var i=0;i<prod_json.length;i++)
 					<div class="tab-pane box active " id="view_products">
 						<div class="row">
 							<div class="col-lg-12">
-								<br>
-								<br>
+								<br> <br>
 								<table class="table table-bordered datatable" id="table_export">
 									<thead>
 										<tr>
@@ -1005,7 +973,7 @@ for(var i=0;i<prod_json.length;i++)
 
 <script>
 
-	function inv_noref1()
+	function clear_invfields()
 	{
 		//clear all fields
 		
@@ -1020,68 +988,33 @@ for(var i=0;i<prod_json.length;i++)
 		$("#invcp").val('');
 		$("#invsp").val('');
 		$("#invstock").val('');
-		
-		
-		$("#inv_batch").text("");
-		$('#costprice').text("");
-		$("#sellingprice").text("");
-		$("#cp").remove();
-		$("#sp").remove();
-		
-		$('#costprice').append('<div class="form-group required" id="cp">' +
-        '<label class="col-md-3 control-label">Cost Price</label>' + 
-        '<div class="col-md-6"><input class="form-control" id="invcp" name="invcp" maxlength=""  title="" type="text" />'+
-        '</div>'+
-     '</div><br><br>');
-		
-		$('#sellingprice').append('<div class="form-group required" id="sp" >' +
-		        '<label class="col-md-3 control-label">Selling Price</label>' + 
-		        '<div class="col-md-6"><input class="form-control" id="invsp" name="invsp" maxlength=""  title="" type="text" />'+
-		        '</div>'+
-		     '</div><br><br>');
-		
-		
-		
-		
-		$("#op_stock").append('<div class="form-group required" id="stock">'+
-                               ' <label class="col-md-3 control-label">Opening Stock</label>'+
-                               ' <div class="col-md-6"><input class="form-control" id="invstock" name="invstock" maxlength=""  title="" type="number" step="any" />' + 
-                               ' </div>' + 
-                             '</div>' + '<br><br>');
+		$("#op_stock").val('');
+		$("#invdiscount").val('');
 		
 		return true;
 		
 	}
 	
-	function inv_ref1()
+	
+	function clear_noninvfields()
 	{
-		
-		$("#op_stock").text("");
-		$("#costprice").text("");
-		$("#sellingprice").text("");
-		$("#cp").remove();
-		$("#sp").remove();
-		$("#stock").remove();
-		
 		//clear all fields
 		
-		
-		$("#invproduct_name").val('');
-		$("#invtax_rate").val('');
-		$("#invproduct_desc").val('');
-		$("#invsku").val('');
-		$("#invcategory").val('');
-		$("#invexpenditure").val(''); //let value be ID
-		$("#invincome").val('');
-		$("#low_stock").val('');
-		$("#invcp").val('');
-		$("#invsp").val('');
-		$("#invstock").val('');
-		
+		$("#noninvproduct_name").val('');
+		$("#noninvtax_rate").val('');
+		$("#noninvproduct_desc").val('');
+		$("#noninvcategory").val('');
+		$("#noninvexpenditure").val(''); //let value be ID
+		$("#noninvincome").val('');
+		$("#noninvcp").val('');
+		$("#noninvsp").val('');
+		$("#noninvdiscount").val('');
 		
 		return true;
+		
 	}
 	
+
  
  
  
@@ -1160,13 +1093,15 @@ for(var i=0;i<prod_json.length;i++)
 		});
 	});
 	
+	//tax rate not compulsion
+	
 	
 	function add_invproduct()
 	{
 		
 		var name = $("#invproduct_name").val();
 		var tax = $("#invtax_rate").val();
-		var tid = $('datalist option[value="'+ tax +'"]').attr('data-customvalue');
+		var tid = $('datalist option[value="'+ tax +'"]').attr('taxid');
 		var desc  = $("#invproduct_desc").val();
 		var sku  = $("#invsku").val();
 		var category  = $("#invcategory").val();
@@ -1174,28 +1109,30 @@ for(var i=0;i<prod_json.length;i++)
 		var income  = $("#invincome").val();
 		var invtype = $("input[name='invtype']:checked").val();
 		var low_stock = $("#low_stock").val();
-		var subtype,cp,sp,opening_stock,total_stock ;
+		var cp = $("#invcp").val();
+		var sp = $("#invsp").val();
+		var op_stock = $("#op_stock").val();
+		var discount = $("#invdiscount").val();
+		
+		if(discount=='')
+		  discount=0;
+		
+		if(op_stock=='')
+			op_stock=0;
+		var total_stock = op_stock;
+		
+		var subtype;
 		
 		if(invtype=="noref")
-			{
-			 subtype = 01;   //inventory product with no reference
-			 cp = $("#invcp").val();
-			 sp = $("#invsp").val();
-			 opening_stock = $("#invstock").val();//opening stock
-			 total_stock = opening_stock;
+			subtype = 01;                         //inventory product with no reference
 			
-			}
-		else        //inventory product with batch#, has no cp,sp,openingstock
-			{
+		else        
 			subtype=02;
-			cp=0;
-			sp=0;
-			opening_stock=0;
-			total_stock=0;        //as no stock has been entered yet
-			}
+			
+		if(tax=='')
+			tid = null;
 		
-		
-		if(name==''|| tax==''|| tid=='' || sku=='' )   
+		if(name=='' || sku=='' || cp=='' || sp=='')   
 			{
 			alert("Fill in all required fields");
 			return true;
@@ -1204,12 +1141,12 @@ for(var i=0;i<prod_json.length;i++)
 		
 		var product = {      
 				
-				"product_type": 0,       //inventory product
+				"product_type": 0,                 //inventory product
 				"product_subtype": subtype,
 				"product_name":name,
 				"product_desc": desc,
 				"sku":sku,
-				"tax":                     //backend - search for tax obect from table with this id
+				"tax":                             //backend - search for tax obect from table with this id
 					{
 					 "tax_name":null,
 					 "tax_abbreviation":null,
@@ -1222,21 +1159,14 @@ for(var i=0;i<prod_json.length;i++)
 					},
 				"category":category,
 				"cp": cp,
-				"head_expenditure": 
-					{
-						"expenditure_id":expen,
-						"expenditure_name":null
-					},
+				"head_expenditure": expen,
 					
 				"sp": sp,
-				"head_income":
-					{
-						"income_id":income,
-						"income_name":null
-					},
-				"opening_stock": opening_stock,
+				"head_income": income,
+				"opening_stock": op_stock,
 				"total_stock": total_stock,
 				"lowstock_alert": low_stock,
+				"discount" : discount,
 				
 				"company":
 					{
@@ -1258,28 +1188,39 @@ for(var i=0;i<prod_json.length;i++)
 	
 	function add_noninvproduct()
 	{
+		//cp and sp not compulsory
 		
 		var name = $("#noninvproduct_name").val();
 		var tax = $("#noninvtax_rate").val();
-		var tid = $('#tax [value="' + tax + '"]').attr('data-customvalue');
+		var tid = $('#tax [value="' + tax + '"]').attr('taxid');
 		var desc  = $("#noninvproduct_desc").val();var category  = $("#noninvcategory").val();
 		var cp  = $("#noninvcp").val();
+		var expen  = $("#noninvexpenditure").val(); //let value be ID
+		var sp  = $("#noninvsp").val();
+		var income  = $("#noninvincome").val();
+		var category  = $("#noninvcategory").val();
+		var noninvtype = $("input[name='noninvtype']:checked").val();
+		var discount = $("#noninvdiscount").val();
+		
+		if(discount=='')
+		  discount=0;
+		
+		var subtype;
+		
+		if(tax=='')
+			tid = null;
 		
 		if(cp=='')
 			cp=0;
 		
-		var expen  = $("#noninvexpenditure").val(); //let value be ID
-		var sp  = $("#noninvsp").val();  
+		
 		if(sp=='')
-			cp=0;
+			sp=0;
 		
-		var income  = $("#noninvincome").val();
-		var category  = $("#noninvcategory").val();
+		if(tax=='')
+			tid=null;
 		
-		var noninvtype = $("input[name='noninvtype']:checked").val();
-		var subtype;
-		
-		if(name==''|| tax==''|| tid=='' )   
+		if(name=='' )   
 			{
 			alert("Fill in all required fields");
 			return true;
@@ -1288,15 +1229,12 @@ for(var i=0;i<prod_json.length;i++)
 		
 		
 		if(noninvtype=="non_product")
-			{
-			   subtype = 11;
-			}
+			subtype = 11;
 		else
-			{
-			   subtype = 12;
-			}
+			subtype = 12;
+			
 	
-			var product = {      
+		var product = {      
 					
 					"product_type": 1,         //non-inventory
 					"product_subtype" : subtype,
@@ -1316,22 +1254,14 @@ for(var i=0;i<prod_json.length;i++)
 						},
 					"category":category,
 					"cp":cp,
-					"head_expenditure": 
-						{
-							"expenditure_id":expen,
-							"expenditure_name":null
-						},
+					"head_expenditure": expen,
 						
 					"sp": sp,        
-					"head_income":
-						{
-							"income_id": income,
-							"income_name":null
-						
-						},
+					"head_income": income,
 						"opening_stock": 0,          //stock does not apply to non inventory products
 						"total_stock": 0,
 						"lowstock_alert": 0,
+						"discount" :discount,
 						
 						"company":
 							{

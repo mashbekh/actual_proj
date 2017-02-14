@@ -183,6 +183,8 @@ var edit_counter=null; //when edit gets submitted, has product_id of to be editt
 
 function loadName()
 {
+	 $('.dropdown-toggle').dropdown();
+	
    document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
     var company_id="CMP445";
     inv_noref1();
@@ -207,16 +209,7 @@ function loadName()
 				}  
 		  });
    
-   //rest call to fetch all prod - store it in json
-   //onload get all products, each row fields, option functions each get product id as parameter,once editted->go fetch type of product from json and 
-   //open similar type of pop-up with values from json
-   
-   //maintain another json of above which has editted info
-   
-   //if one product edited, once save is clicked - rest call to update product at back end
-   
-   //once rest call succeeds, change json 2 array which holds editted values and now change table row
-   //always when options chosen, get values from json 2 which has new values
+  
 
    
 }
@@ -282,8 +275,6 @@ for(var i=0;i<prod_json.length;i++)
 
                             '</td></tr>');
 	 	 
-	   
-	   
 	
 	}
 	
@@ -400,24 +391,27 @@ for(var i=0;i<prod_json.length;i++)
 
 
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown"><i class="fa fa-fw fa-gear"></i>Settings</a>
+					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
-						<li><a href="tax_settings.html"> Tax Settings</a></li>
+					   
+						<li><a href="business_details.html">Company Profile</a></li>
+						 <li class="divider"></li>
+						<li><a href="tax_settings.html" > Tax Settings</a></li>
 						<li class="divider"></li>
-						<li><a href="financial_settings.html">Financial Settings
-						</a></li>
+						<li><a href="financial_settings.html">Financial Settings </a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
-					</ul></li>
+						<li class="divider"></li>
+						<li><a href="FormatSettings.html">Format Settings </a></li>
+					</ul>
+				</li>
 
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown">&nbsp;<i class="fa fa-user" id="name"></i>
+					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
 						<b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="company_profile.html"><i
-								class="fa fa-fw fa-user"></i> Profile</a></li>
-
+						
 						<li class="divider"></li>
 						<li><a href="logout.html"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
@@ -434,13 +428,13 @@ for(var i=0;i<prod_json.length;i++)
 					<li class="active"><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
 							Purchase Orders</a></li>
 							
-					<li><a href="Bills.html"><i class="fa fa-fw fa-dashboard"></i>
+					<li><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
 							Bills</a></li>
 							
-					<li><a href="Invoice.html"><i
+					<li><a href="Estimates.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
 					
-					<li><a href="Estimate.html"><i
+					<li><a href="invoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
 					
 					<li><a href="Receipts.html"><i
@@ -449,10 +443,10 @@ for(var i=0;i<prod_json.length;i++)
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
 							
-					<li><a href="Customers.html"><i
+					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
 							
-					<li><a href="Vendors.html"><i
+					<li><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
 				
 				</ul>

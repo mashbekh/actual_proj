@@ -122,17 +122,15 @@ input[readonly] {
 
   
   
-var product_list = [
+var product_list = [  //one product of each type
 	
-	{      
-		      
-			
+	{      	
 			"product_type": 0,       
 			"product_subtype": 02,
 			"product_name": "parleg",
 			"product_desc": "biscuit",
 			"sku": "222",
-			"tax":                     //backend - search for tax obect from table with this id
+			"tax":                     
 				{
 				 "tax_name":null,
 				 "tax_abbreviation": "VAT",
@@ -144,39 +142,31 @@ var product_list = [
 				 
 				},
 			"category":"pqr",
-			"cp": 0,
-			"head_expenditure": 
-				{
-					"expenditure_id": null,
-					"expenditure_name":null
-				},
+			"cp": 2,
+			"head_expenditure": "Purchases",
 				
-			"sp": 0,
-			"head_income":
-				{
-					"income_id": null,
-					"income_name":null
-				},
-			"opening_stock": 0,    //no opening stock, has stock only thru batch
-			"total_stock": 300,
+			"sp": 2,
+			"head_income": "Sales",
+			"opening_stock": 100,    
+			"total_stock": 400,
 			"lowstock_alert": 10,
-			
+			"discount" : 0,
 			"company":
 				{
 				"company_id" :"CMP445"
 				},
 				
 			"product_id": "PROD67",
-			"stocklist":                  //just one stock obj
+			"stocklist":                 
 				[
 				{
 				  "stock_id": 1001,
-				  "product_id" : "PROD67",
+				  "product_id" : "PROD67",        //set a product object
 				  "batch_no" : "B11",
-				  "cp" : 12,
-				  "sp" : 13,
+				  "cp" : 2,
+				  "sp" : 2,
 				  "qty" : 100,          //so far total
-				  "discount": 5,
+				  "discount": 0,
 				  "expiry_date": "12/03/2017",
 				  "vendor" : {
 					  "vendor_id" : "VEN222"
@@ -192,10 +182,10 @@ var product_list = [
 					  "stock_id": 1002,
 					  "product_id" : "PROD67",              //product is again an obj
 					  "batch_no" : "B12",
-					  "cp" : 14,
-					  "sp" : 15,
+					  "cp" : 2,
+					  "sp" : 2,
 					  "qty" : 200,          //so far total
-					  "discount": 9,
+					  "discount": 0,
 					  "expiry_date": "17/01/2018",
 					  "vendor" : {
 						  "vendor_id" : "VEN223"
@@ -213,10 +203,142 @@ var product_list = [
 			"id": 67
 			
 		
+			},
+			
+			{      	
+				"product_type": 0,       
+				"product_subtype": 01,
+				"product_name": "200 page book",
+				"product_desc": "book",
+				"sku": "672",
+				"tax":                     
+					{
+					 "tax_name":null,
+					 "tax_abbreviation": "VAT",
+					 "tax_desc":null,
+					 "tax_rate": 14.5,
+					 "company": null,//company object
+					 "tax_id": "CMP123TAX2",
+					 "tax_recoverable":true
+					 
+					},
+				"category":"pqr",
+				"cp": 24,
+				"head_expenditure": "Purchases",
+					
+				"sp": 25,
+				"head_income": "Sales",
+				"opening_stock": 100,      
+				"total_stock": 200,                //same as stock object qty
+				"lowstock_alert": 10,
+				"discount" : 0,
+				"company":
+					{
+					"company_id" :"CMP445"
+					},
+					
+				"product_id": "PROD44",
+				"stocklist":              //has only 1 stock object associated     
+					[
+					{
+					  "stock_id": 1001,
+					  "product_id" : "PROD90",        //set a product object
+					  "batch_no" : "B11",
+					  "cp" : 24,
+					  "sp" : 25,
+					  "qty" : 200,          //so far total
+					  "discount": 0,
+					  "expiry_date": "12/03/2017",
+					  "vendor" : {
+						  "vendor_id" : "VEN222"
+					  },
+					  "bill_ref" : 100,
+					  "company":
+						{
+						"company_id" :"CMP445"
+						}
+					}
+					],  // no stock recorded yet
+					
+				"id": 44				
+			
+	},
+	
+	{      	
+		"product_type": 1,       
+		"product_subtype": 11,
+		"product_name": "100 gsm",
+		"product_desc": "paper",
+		"sku": null,
+		"tax":                     
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 5.5,
+			 "company": null,                   //company object
+			 "tax_id": "CMP123TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"pqr",
+		"cp": 3.5,
+		"head_expenditure": "Purchases",
+		"sp": 0,                            //not mentioned
+		"head_income": "Sales",
+		"opening_stock": null,    
+		"total_stock": null,
+		"lowstock_alert": null,
+		"discount" : 0,
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+			
+		"product_id": "PROD156",
+		"stocklist":null,
+		"id": 156
+		
+},
+
+{      	
+	"product_type": 1,       
+	"product_subtype": 12,
+	"product_name": "designing",
+	"product_desc": "invitations",
+	"sku": null,
+	"tax":                     
+		{
+		 "tax_name":null,
+		 "tax_abbreviation": "VAT",
+		 "tax_desc":null,
+		 "tax_rate": 14.5,
+		 "company": null,//company object
+		 "tax_id": "CMP123TAX2",
+		 "tax_recoverable":true
+		 
+		},
+	"category":"pqr",
+	"cp": 560,
+	"head_expenditure": "Purchases",
+		
+	"sp": 0,
+	"head_income": "Sales",
+	"opening_stock": null,    
+	"total_stock": null,
+	"lowstock_alert": null,
+	"discount" : 0,
+	"company":
+		{
+		"company_id" :"CMP445"
+		},
+		
+	"product_id": "PROD78",
+	"stocklist": null,
+	"id": 78
+	
+
 }
-	
-	
-	
 	];                                 //list of products from backend
 	
 
@@ -514,8 +636,12 @@ function update_prod_details(counter)
     		   if(product_list[i].product_id==prod_id)
     			   {
     			   //get cost price
-    			   var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
-    			   $("#" + counter + "tax_rate").val(taxval);
+    			   if(product_list[i].tax !=null)
+    				   {
+    			   			var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
+    			  			 $("#" + counter + "tax_rate").val(taxval);
+    				   }
+    			   
     			   $("#" + counter + "price").val(product_list[i].cp);
     			   $("#" + counter + "prod_desc").val(product_list[i].product_desc);
     			   update_amount(counter);
