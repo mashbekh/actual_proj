@@ -153,9 +153,9 @@ function loadName()
     for(var i=0;i<tax_list.length;i++)
 	 {
 	 
-	 	$('#invtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 	$('#taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
 	 
-	 	$('#noninvtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 	
 	 
 	 }
      
@@ -187,78 +187,6 @@ function loadName()
 }
 
 
-
-function update()
-{
-	
-for(var i=0;i<prod_json.length;i++)
-	{
-	   var type = prod_json[i].product_type;
-	   var name = prod_json[i].product_name;
-	   var desc = prod_json[i].product_desc;
-	   var tax = prod_json[i].tax.abbreviation  +  " " + prod_json[i].tax.tax_rate ;
-	   var id = prod_json[i].product_id;
-	   
-	   if(type==0)
-		   type="Inventory";
-	   else if(type==1)
-		   type="Non Inventory";
-	   else
-		   type="Service";
-		   
-	   
-	   //td needs product id so that once editted, even fields are changed in table row
-	   $("#table_export").append('<tr>' + 
-			   '<td id="' +  id   + 'type">' + type + '</td>' +
-			   '<td id="' +  id  + 'name">' + name + '</td>' +
-			   '<td id="' +  id  +  'desc">' + desc+ '</td>' +
-			   '<td id="' +  id   + 'tax">' + tax + '</td>' +
-			   '<td>' +  
-                     '<div class="btn-group">' + 
-                      '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
-                                    'Action <span class="caret"></span>' + 
-                                '</button>' + 
-                               '<ul class="dropdown-menu dropdown-default pull-right" role="menu">' +
-                                
-                                    '<li>' + 
-                                       '<a onclick="edit_product('+  id + ')" >' +    
-                                             '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
-                                                'Edit Product' + 
-                                            '</a>' + 
-                                    '</li>' + 
-                                    '<li class="divider"></li>'  +
-                                    '<li>' + 
-                                        '<a onclick="view_product('+  id  +')">' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
-                                           '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
-                                                'View Product'+
-                                            '</a>' + 
-                                    '</li>'  +
-                                    '<li class="divider"></li>' + 
-                                    
-                                    '<li>'  + 
-                                        '<a  onclick="return delete_product(' + id  + '")>'   + 
-                                            '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
-                                                 'Delete Product' + 
-                                            '</a>' +
-                                    '</li>' + 
-                                    
-                                '</ul>'   + 
-                            '</div>' + 
-
-                            '</td></tr>');
-	 	 
-	
-	}
-	
-	
-}
-
-
-
-	
-</script>
-
-<script>
     $(document).ready(function () {
         $('.dropdown-toggle').dropdown();
     });
@@ -439,11 +367,6 @@ for(var i=0;i<prod_json.length;i++)
 
 				<h1 class="page-header">PRODUCTS</h1>
 
-				<button type="button" class="btn btn-info" style="float: right"
-					onclick="addstock()">Add Stock</button>
-
-				<!--     <div class="row">
-                    <div class="col-lg-12">-->
 
 				<!------CONTROL TABS START------>
 				<ul class="nav nav-tabs bordered">
@@ -469,25 +392,8 @@ for(var i=0;i<prod_json.length;i++)
 
 						<!-- another nav tab content -->
 
-						<br> <br>
+						<br> 
 
-						<!------ INNER CONTROL TABS START------>
-						<ul class="nav nav-tabs bordered">
-
-							<li class="active"><a href="#inv_prod" data-toggle="tab"><i
-									class="entypo-menu"></i> Inventory product</a></li>
-
-							<li><a href="#noninv_prod" data-toggle="tab"><i
-									class="entypo-menu"></i> Non Inventory Product</a></li>
-
-
-						</ul>
-						<!------ INNER CONTROL TABS END------>
-
-						<!-- definition of INVENTORY PRODUCTS -->
-
-						<div class="tab-content">
-							<div class="tab-pane box active" id="inv_prod">
 
 
 								<div id="form-panel">
@@ -495,34 +401,15 @@ for(var i=0;i<prod_json.length;i++)
 										<div class="col-lg-8">
 
 											<br>
-											<div style="color: red">Chose Inventory product type.</div>
-											<br> <br>
-
-											<!-- RADIO BUTTON OPTION -->
-
-											<form>
-												<label class="radio-inline col-md-2 control-label">
-													<input type="radio" name="invtype" id="inv_noref" checked
-													value="noref" onchange="return clear_invfields()">
-													Inventory without Batch No
-												</label> <label class="radio-inline col-md-2 control-label">
-													<input type="radio" name="invtype" id="inv_batch"
-													value="batchref" onchange="return clear_invfields()">
-													Inventory with Batch No
-												</label>
-
-											</form>
-
-
-											<br> <br> <br>
-											<form role="form" id="inventory">
+										
+											<form role="form">
 
 
 												<div class="form-group required">
 													<label class="col-md-3 control-label">Product Name</label>
 													<div class="col-md-6">
-														<input class="form-control" id="invproduct_name"
-															name="invproduct_name" maxlength="30"
+														<input class="form-control" id="product_name"
+															name="product_name" maxlength="30"
 															placeholder="Product Name" required="required" title=""
 															type="text" />
 													</div>
@@ -530,41 +417,33 @@ for(var i=0;i<prod_json.length;i++)
 
 												<br> <br> <br>
 
-												<div class="form-group required">
+												<div class="form-group ">
 													<label class="col-md-3 control-label">Product
 														Description</label>
 													<div class="col-md-6">
-														<input class="form-control" id="invproduct_desc"
-															name="invproduct_desc" maxlength="" title="" type="text" />
+														<input class="form-control" id="product_desc"
+															name="product_desc" maxlength="" title="" type="text" />
 													</div>
 												</div>
 
 												<br> <br>
 
-												<div class="form-group required">
-													<label class="col-md-3 control-label">SKU</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invsku" name="invsku"
-															maxlength="" required="required" title="" type="text" />
-													</div>
-												</div>
+												
 
-												<br> <br>
-
-												<div class="form-group required">
+												<div class="form-group ">
 													<label class="col-md-3 control-label">Category</label>
 													<div class="col-md-6">
-														<input class="form-control" id="invcategory"
-															name="invcategory" maxlength="" title="" type="text" />
+														<input class="form-control" id="category"
+															name="category" maxlength="" title="" type="text" />
 													</div>
 												</div>
 
 												<br> <br>
 
-												<div class="form-group required">
+												<div class="form-group ">
 													<label class="col-md-3 control-label">Cost Price</label>
 													<div class="col-md-6">
-														<input class="form-control" id="invcp" name="invcp"
+														<input class="form-control" id="cp" name="cp"
 															maxlength="" title="" type="text" />
 													</div>
 												</div>
@@ -578,8 +457,8 @@ for(var i=0;i<prod_json.length;i++)
 													<label class="col-md-3 control-label">Head of
 														Expenditure</label>
 													<div class="col-md-6">
-														<select name="invexpenditure"
-															class="form-control selectboxit" id="invexpenditure">
+														<select name="expenditure"
+															class="form-control selectboxit" id="expenditure">
 															<option value="None">Select</option>
 
 															<option value="purchase">Purchases</option>
@@ -590,10 +469,10 @@ for(var i=0;i<prod_json.length;i++)
 
 												<br> <br>
 
-												<div class="form-group required">
+												<div class="form-group ">
 													<label class="col-md-3 control-label">Selling Price</label>
 													<div class="col-md-6">
-														<input class="form-control" id="invsp" name="invsp"
+														<input class="form-control" id="sp" name="sp"
 															maxlength="" title="" type="text" />
 													</div>
 												</div>
@@ -606,8 +485,8 @@ for(var i=0;i<prod_json.length;i++)
 													<label class="col-md-3 control-label">Head of
 														Income</label>
 													<div class="col-md-6">
-														<select name="invincome" class="form-control selectboxit"
-															id="invincome">
+														<select name="income" class="form-control selectboxit"
+															id="income">
 															<option value="None">Select</option>
 
 															<option value="Sales">Sales</option>
@@ -618,46 +497,26 @@ for(var i=0;i<prod_json.length;i++)
 
 												<br> <br>
 												
-												<div class="form-group required">
+												<div class="form-group">
 													<label class="col-md-3 control-label">Discount</label>
 													<div class="col-md-6">
-														<input class="form-control" id="invdiscount" name="invdiscount"
+														<input class="form-control" id="discount" name="discount"
 															maxlength="" title="" type="text" />
 													</div>
 												</div>
 												
 												<br><br>
 
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Opening Stock</label>
-													<div class="col-md-6">
-														<input class="form-control" id="op_stock" name="op_stock"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br>
-												<br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Low Stock
-														Alert</label>
-													<div class="col-md-6">
-														<input class="form-control" id="low_stock"
-															name="invcategory" maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br> <br>
+												
 
 												<div class="form-group required">
 											<label class="col-md-3 control-label">Tax Rate</label>
 											<div class="col-md-6">
 
-												<input list="invtaxlist" class="form-control"
-													id="invtax_rate" placeholder="Tax Rate">
+												<input list="taxlist" class="form-control"
+													id="tax_rate" placeholder="Tax Rate">
 
-												<datalist id="invtaxlist">
+												<datalist id="taxlist">
 
 
 												</datalist>
@@ -669,188 +528,18 @@ for(var i=0;i<prod_json.length;i++)
 
 											</form>
 											<input type="submit" class="btn btn-primary"
-												id="inventory_submit" onclick="return add_invproduct()">
+												 onclick="return add_product()">
 
 
-
+<br> <br>
 										</div>
 									</div>
 								</div>
 							</div>
-							<!-- close desc of inv prod -->
+							
+							<!-- close desc of create prod -->
 
 
-
-
-
-
-
-
-							<!-- NON INVENTORY PRODUCT -->
-							<div class="tab-pane box" id="noninv_prod">
-
-
-								<div id="form-panel">
-									<div class="row">
-										<div class="col-lg-8">
-
-											<br>
-											<div style="color: red">Chose Item type.</div>
-											<br> <br>
-
-											<form>
-
-												<label class="radio-inline col-md-2 control-label">
-													<input type="radio" name="noninvtype" id="non_product"
-													checked value="non_product" onchange="return clear_noninvfields()"> Product
-												</label> <label class="radio-inline col-md-2 control-label">
-													<input type="radio" name="noninvtype" id="non_service"
-													value="non_service" onchange="return clear_noninvfields()"> Service
-												</label>
-
-											</form>
-											<br> <br>
-											<form role="form" id="noninventory">
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Name</label>
-													<div class="col-md-6">
-														<input class="form-control" id="noninvproduct_name"
-															name="noninvproduct_name" maxlength="30"
-															placeholder="Product Name" required="required" title=""
-															type="text" />
-													</div>
-												</div>
-
-												<br> <br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label"> Description</label>
-													<div class="col-md-6">
-														<input class="form-control" id="noninvproduct_desc"
-															name="noninvproduct_desc" maxlength=""
-															required="required" title="" type="text" />
-													</div>
-												</div>
-
-
-
-												<br>
-
-												<div id="cat">
-													<div class="form-group required">
-														<label class="col-md-3 control-label">Category</label>
-														<div class="col-md-6">
-															<input class="form-control" id="noninvcategory"
-																name="noninvcategory" maxlength="" required="required"
-																title="" type="text" />
-														</div>
-													</div>
-												</div>
-
-												<br> <br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label"> Cost Price</label>
-													<div class="col-md-6">
-														<input class="form-control" id="noninvcp" maxlength=""
-															required="required" title="" type="text" />
-													</div>
-												</div>
-
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Head of
-														Expenditure</label>
-													<div class="col-md-6">
-														<select name="invexpenditure"
-															class="form-control selectboxit" id="noninvexpenditure">
-															<option value="None">Select</option>
-
-															<option value="purchase">Purchases</option>
-
-														</select>
-													</div>
-												</div>
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label"> Selling
-														Price</label>
-													<div class="col-md-6">
-														<input class="form-control" id="noninvsp" maxlength=""
-															required="required" title="" type="text" />
-													</div>
-												</div>
-
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Head of
-														Income</label>
-													<div class="col-md-6">
-														<select name="noninvsales"
-															class="form-control selectboxit" id="noninvincome">
-															<option value="None">Select</option>
-
-															<option value="sales">Sales</option>
-
-														</select>
-													</div>
-												</div>
-
-												<br> <br>
-												
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Discount</label>
-													<div class="col-md-6">
-														<input class="form-control" id="noninvdiscount" name="noninvdiscount"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-												
-												<br><br>
-
-												<div class="form-group required">
-											<label class="col-md-3 control-label">Tax Rate</label>
-											<div class="col-md-6">
-
-												<input list="noninvtaxlist" class="form-control"
-													id="noninvtax_rate" placeholder="Tax Rate">
-
-												<datalist id="noninvtaxlist">
-
-
-												</datalist>
-											</div>
-										</div>
-
-												<br> <br>
-
-
-											</form>
-
-											<input type="submit" class="btn btn-primary"
-												id="inventory_submit" onclick="return add_noninvproduct()">
-
-
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- close desc of inv prod -->
-
-
-
-						</div>
-						<!-- inner tab content -->
-
-					</div>
-					<!-- close of add product -->
 
 					<!-- NEW NAV BAR CONTENT -->
 					<!--  ASSOCIATION ACTION BUTTON WITH ID SUCH THAT FOR EVERY ROW IT HOLDS TAX_ID, PASS THIS
@@ -971,55 +660,7 @@ for(var i=0;i<prod_json.length;i++)
 
 </body>
 
-<script>
 
-	function clear_invfields()
-	{
-		//clear all fields
-		
-		$("#invproduct_name").val('');
-		$("#invtax_rate").val('');
-		$("#invproduct_desc").val('');
-		$("#invsku").val('');
-		$("#invcategory").val('');
-		$("#invexpenditure").val(''); //let value be ID
-		$("#invincome").val('');
-		$("#low_stock").val('');
-		$("#invcp").val('');
-		$("#invsp").val('');
-		$("#invstock").val('');
-		$("#op_stock").val('');
-		$("#invdiscount").val('');
-		
-		return true;
-		
-	}
-	
-	
-	function clear_noninvfields()
-	{
-		//clear all fields
-		
-		$("#noninvproduct_name").val('');
-		$("#noninvtax_rate").val('');
-		$("#noninvproduct_desc").val('');
-		$("#noninvcategory").val('');
-		$("#noninvexpenditure").val(''); //let value be ID
-		$("#noninvincome").val('');
-		$("#noninvcp").val('');
-		$("#noninvsp").val('');
-		$("#noninvdiscount").val('');
-		
-		return true;
-		
-	}
-	
-
- 
- 
- 
-
-</script>
 
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
@@ -1096,43 +737,36 @@ for(var i=0;i<prod_json.length;i++)
 	//tax rate not compulsion
 	
 	
-	function add_invproduct()
+	function add_product()
 	{
 		
-		var name = $("#invproduct_name").val();
-		var tax = $("#invtax_rate").val();
+		var name = $("#product_name").val();
+		var tax = $("#tax_rate").val();
 		var tid = $('datalist option[value="'+ tax +'"]').attr('taxid');
-		var desc  = $("#invproduct_desc").val();
-		var sku  = $("#invsku").val();
-		var category  = $("#invcategory").val();
-		var expen  = $("#invexpenditure").val(); //let value be ID
-		var income  = $("#invincome").val();
-		var invtype = $("input[name='invtype']:checked").val();
-		var low_stock = $("#low_stock").val();
-		var cp = $("#invcp").val();
-		var sp = $("#invsp").val();
-		var op_stock = $("#op_stock").val();
-		var discount = $("#invdiscount").val();
+		var desc  = $("#product_desc").val();
+		
+		var category  = $("#category").val();
+		var expen  = $("#expenditure").val(); //let value be ID
+		var income  = $("#income").val();
+		
+		var cp = $("#cp").val();
+		var sp = $("#sp").val();
+		
+		if(cp=='')
+			cp=0;
+		if(sp=='')
+			sp=0;
+		
+		var discount = $("#discount").val();
 		
 		if(discount=='')
 		  discount=0;
 		
-		if(op_stock=='')
-			op_stock=0;
-		var total_stock = op_stock;
 		
-		var subtype;
-		
-		if(invtype=="noref")
-			subtype = 01;                         //inventory product with no reference
-			
-		else        
-			subtype=02;
-			
 		if(tax=='')
 			tid = null;
 		
-		if(name=='' || sku=='' || cp=='' || sp=='')   
+		if(name=='' )   
 			{
 			alert("Fill in all required fields");
 			return true;
@@ -1141,11 +775,10 @@ for(var i=0;i<prod_json.length;i++)
 		
 		var product = {      
 				
-				"product_type": 0,                 //inventory product
-				"product_subtype": subtype,
+				
+				
 				"product_name":name,
 				"product_desc": desc,
-				"sku":sku,
 				"tax":                             //backend - search for tax obect from table with this id
 					{
 					 "tax_name":null,
@@ -1163,9 +796,6 @@ for(var i=0;i<prod_json.length;i++)
 					
 				"sp": sp,
 				"head_income": income,
-				"opening_stock": op_stock,
-				"total_stock": total_stock,
-				"lowstock_alert": low_stock,
 				"discount" : discount,
 				
 				"company":
@@ -1174,118 +804,34 @@ for(var i=0;i<prod_json.length;i++)
 					},
 					
 				"product_id":null,
-				"stocklist":null,  // no stock recorded yet
 				"id":null
 				
 				
 		};
 		alert(product);
 		console.log(product);
+		
+		//make ajax call to create product, on success clear all fields
+		
+		
+		
+		
+		alert("product created");
+		
+		
+			$("#product_name").val('');
+			$("#tax_rate").val('');
+			$("#product_desc").val('');
+			$("#category").val('');
+			$("#expenditure").val(''); //let value be ID
+			$("#income").val('');
+			$("#cp").val('');
+			$("#sp").val('');
+			$("#discount").val('');
+		
 		return true;
 	}
 	
-	
-	
-	function add_noninvproduct()
-	{
-		//cp and sp not compulsory
-		
-		var name = $("#noninvproduct_name").val();
-		var tax = $("#noninvtax_rate").val();
-		var tid = $('#tax [value="' + tax + '"]').attr('taxid');
-		var desc  = $("#noninvproduct_desc").val();var category  = $("#noninvcategory").val();
-		var cp  = $("#noninvcp").val();
-		var expen  = $("#noninvexpenditure").val(); //let value be ID
-		var sp  = $("#noninvsp").val();
-		var income  = $("#noninvincome").val();
-		var category  = $("#noninvcategory").val();
-		var noninvtype = $("input[name='noninvtype']:checked").val();
-		var discount = $("#noninvdiscount").val();
-		
-		if(discount=='')
-		  discount=0;
-		
-		var subtype;
-		
-		if(tax=='')
-			tid = null;
-		
-		if(cp=='')
-			cp=0;
-		
-		
-		if(sp=='')
-			sp=0;
-		
-		if(tax=='')
-			tid=null;
-		
-		if(name=='' )   
-			{
-			alert("Fill in all required fields");
-			return true;
-			
-			}
-		
-		
-		if(noninvtype=="non_product")
-			subtype = 11;
-		else
-			subtype = 12;
-			
-	
-		var product = {      
-					
-					"product_type": 1,         //non-inventory
-					"product_subtype" : subtype,
-					"product_name":name,
-					"product_desc": desc,
-					"sku": null,
-					"tax":                     
-						{
-						 "tax_name":null,
-						 "tax_abbreviation":null,
-						 "tax_desc":null,
-						 "tax_rate":null,
-						 "company": null,
-						 "tax_id": tid,
-						 "tax_recoverable":true
-						 
-						},
-					"category":category,
-					"cp":cp,
-					"head_expenditure": expen,
-						
-					"sp": sp,        
-					"head_income": income,
-						"opening_stock": 0,          //stock does not apply to non inventory products
-						"total_stock": 0,
-						"lowstock_alert": 0,
-						"discount" :discount,
-						
-						"company":
-							{
-							"company_id" :"CMP445"
-							},
-							
-						"product_id":null,
-						"stocklist":null,  
-						"id":null
-					
-			};
-			console.log(product);
-			return true;
-
-			
-			}
-		
-	
-	function addstock(){
-		
-		
-		window.location.replace("stockEntry.html");
-	}
-
 	
 	
 	
