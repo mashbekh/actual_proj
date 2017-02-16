@@ -80,139 +80,75 @@
 
 var product_list = [
 	
-	{
-		"product_id" : 213,
-		"product_name" : "Paper",
-		"product_desc" : "200 gsm",
-		"category":"P",
-		"cp":40,
-		"tax":{
-			"tax_id" : "CMP123TAX1",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
-			
-		},
-		"type" : 0, //inventory product
-		"sp" : 45,
-		"stocklist" : [
-			{
-				"batch_no": "abc45",
-				"cp":40,
-				"sp":45,
-				"discount":0,
-				"vendor":
-					{
-					"vendor_id": "ven254"
-					},
-				"bill_reference": 100,
-				"packing_date": null,
-				"expiry_date":null,
-				"qty":100,
-				"stock_id": "CMP445ST1" , //unique to company (auto inc per company)
-				"id":  1          //auto inc id
-				
-			},
-			
-			{
-				"batch_no": "XYZ677",
-				"cp":1000,
-				"sp": 1200,
-				"discount":0,
-				"vendor":
-					{
-					"vendor_id": "ven239"
-					},
-				"bill_reference": 109,
-				"packing_date":null,
-				"expiry_date":null,
-				"qty":50,
-				"stock_id": "CMP445ST2",
-				"id":2
-				
-			}
-		]
- 		
+	{      
 		
-	},
+		"product_name": "eraser",
+		"product_desc": "stationary",
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 5.5,
+			 "company": null,  
+			 "tax_id": "CMP123TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"XYZ",
+		"cp": 40,
+		"head_expenditure": "Purchases",
+			
+		"sp": 45,
+		"head_income": "Sales",
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+		"discount":0,	
+		"product_id": "PROD66",
+		"id": 66
+		
+		
+},
+
+
+{      
+	
+	"product_name": "pens",
+	"product_desc": "stationary",
+	"tax":                     //backend - search for tax obect from table with this id
+		{
+		 "tax_name":null,
+		 "tax_abbreviation": "VAT",
+		 "tax_desc":null,
+		 "tax_rate": 5.5,
+		 "company": null,  
+		 "tax_id": "CMP123TAX1",
+		 "tax_recoverable":true
+		 
+		},
+	"category":"XYZ",
+	"cp": 75,
+	"head_expenditure": "Purchases",
+		
+	"sp": 75,
+	"head_income": "Sales",
+	
+	"company":
+		{
+		"company_id" :"CMP445"
+		},
+	"discount" :0,
+	"product_id": "PROD90",
+	"id": 90
 	
 	
-	{
-		"product_id" : 125,
-		"product_name" : "Toner",
-		"product_desc" : "ink",
-		"category":"P",
-		"cp":5000,
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 14.5
-			
-		},
-		"type" : 0 , //inventory product
-		"sp" : 5060,
-		"stocklist" : [
-			{
-				"batch_no":"ppp45",
-				"cp":45,
-				"sp":50,
-				"discount":0,
-				"vendor":
-					{
-					   "vendor_id": "ven234"
-					},
-				"bill_reference": 456,
-				"packing_date":null,
-				"expiry_date":null,
-				"qty": 89,
-				"stock_id": "CMP445ST3",
-				"id":3
-				
-				
-				
-			},
-			 {
-				"batch_no":"VVV444",
-				"cp":34,
-				"sp":40,
-				"discount":0,
-				"vendor":
-					{
-					"vendor_id": "ven668"
-					},
-				"bill_reference":444,
-				"packing_date":null,
-				"expiry_date":null,
-				"qty":95,
-				"stock_id":"CMP445ST4",
-				"id":4
-				
-				//company entry too
-			 }
-		]
- 		
-		
-	},
-	{
-		"product_id" : 565,
-		"product_name" : "Fevicol",
-		"product_desc" : "adhesive",
-		"category":"P",
-		
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
-			
-		},
-		"type" : 1,  // non inventory product
-		"inout" : 1, //output product
-		"sp" : 70,
-		"stocklist" :null
- 		
-		
-	}
+}
 	];                                 //list of products from backend
 	
+
 
 var tax_list = [
 	{
@@ -328,95 +264,253 @@ function loadName()
  for(var i=0;i<product_list.length;i++)
  {
 
- //show only inventory, noninv and service OUTPUT type products 
- //show category too if needed
-//if(product_list[i].type!=0)
+
   $('#0productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
- 
- /*
-else  //if INV product
-	{
-	  if(product_list[i].stocklist.length==0)             //check if there is stocklist associated
-		  $('#0productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
-	  
-	  else
-		 {
-		  for(var k=0;k<product_list[i].stocklist.length;k++)
-			  {
-			  
-			  $('#0productlist').append("<option prodid='" +  product_list[i].product_id + " " +  product_list[i].stocklist[k].stock_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
-			  
-			  }
-		  
-		  
-		  
-		 }
-	}*/
+
  
  }
 
- //append another option dd to create product
- 
- //TAXES
+ $('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
+
+
  
  for(var i=0;i<tax_list.length;i++)
 	 {
-	 $('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 	$('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 	$('#prodtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 
 	 }
-
+ 
+ //check if TAN No activated, fetch settings and then only show TDS
 }
 
 
 
+var add_product_counter;
+
 function update_prod_details(counter)
 {
-	alert(counter);
+	
 	var prod = $("#" + counter + "product_name").val();
 	
-
-	//consider SP only for output products
-	if(prod!='')
+	
+	if(prod=='+ Add Product')
+	{
+	add_product_counter = counter;  //to select this newly created product in ths box
+	
+	$("#" + counter + "product_name").val('');
+	$("#" + counter + "tax_rate").val('');
+	$("#" + counter + "prod_desc").val('');
+	$("#" + counter + "quantity").val('');
+	
+	
+	
+	$("#product_dialog").dialog({
+        
+        modal: true,
+        autoOpen: false,
+        title: "Add Product",
+        resizable :false,
+        width: 1000,
+        height: 700
+    });
+	
+	$("#product_dialog").dialog('open');  //clear all fields
+	
+	
+	}
+	
+	
+	if(prod!=''  && prod!='+ Add Product')
 		{
 		
-    		var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
-    		
+    		var prod_id = $('datalist option[value="'+ prod +'"]').attr('prodid');
+    		alert(prod_id);
     		for(var i=0;i<product_list.length;i++)
     		 {
     		   if(product_list[i].product_id==prod_id)
     			   {
     			   //get cost price
-    			   var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
-    			   $("#" + counter + "tax_rate").val(taxval);
+    			   if(product_list[i].tax !=null)
+    				   {
+    			   			var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
+    			  			 $("#" + counter + "tax_rate").val(taxval);
+    				   }
+    			   
     			   $("#" + counter + "price").val(product_list[i].sp);
     			   $("#" + counter + "prod_desc").val(product_list[i].product_desc);
     			   update_amount(counter);
+    			   
     		
     			   }
     		 }
     		
-    		//var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
+    		
     		
 		}
 	else
 		{
+		 //no product chosen
 		
-		$("#" + counter + "price").val(counter);
+		$("#" + counter + "price").val(0);
 		
-		update_amount(counter);
+		update_noproduct(counter);
+		
 		$("#" + counter + "tax_rate").val('');
 		$("#" + counter + "prod_desc").val('');
+		$("#" + counter + "quantity").val(1);
 		}
 	
 }
 	
-
-
 
 
 
 </script>
 
 <body onload="loadName()">
+
+<!-- create product dialog-->
+							
+							
+	<div id="product_dialog" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+			<form action="" method="post">
+			
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="product_name"
+															name="product_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br> <br> <br>
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Product
+														Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="product_desc"
+															name="product_desc" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br> <br>
+
+												
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Category</label>
+													<div class="col-md-6">
+														<input class="form-control" id="category"
+															name="category" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br> <br>
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Cost Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="cp" name="cp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="expenditure"
+															class="form-control selectboxit" id="expenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br> <br>
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Selling Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="sp" name="sp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="income" class="form-control selectboxit"
+															id="income">
+															<option value="None">Select</option>
+
+															<option value="Sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br> <br>
+												
+												<div class="form-group">
+													<label class="col-md-3 control-label">Discount</label>
+													<div class="col-md-6">
+														<input class="form-control" id="discount" name="discount"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+												
+												<br><br>
+
+												
+
+												<div class="form-group required">
+											<label class="col-md-3 control-label">Tax Rate</label>
+											<div class="col-md-6">
+
+												<input list="prodtaxlist" class="form-control"
+													id="prodtax_rate" placeholder="Tax Rate">
+
+												<datalist id="prodtaxlist">
+
+
+												</datalist>
+											</div>
+										</div>
+
+												<br> <br>
+
+
+											</form>
+											<input type="submit" class="btn btn-primary"
+												 onclick="return add_product()">
+
+
+
+
+										</div>
+									</div>
+			<!-- end of create product dialog -->
+
+
+
 
 	<div id="wrapper">
 
@@ -546,12 +640,7 @@ function update_prod_details(counter)
 						<ul class="nav nav-tabs bordered">
 							<li class="active"><a href="#estimate" data-toggle="tab"><i
 									class="entypo-menu"></i> Create Estimate </a></li>
-							<li><a href="#bill" data-toggle="tab"><i
-									class="entypo-menu"></i> Create Invoice </a></li>
-							<li><a href="#payments" data-toggle="tab"><i
-									class="entypo-menu"></i> Payments </a></li>
-							<li><a href="#statement" data-toggle="tab"><i
-									class="entypo-menu"></i> Statement </a></li>
+							
 
 						</ul>
 						<!------CONTROL TABS END------>
@@ -930,6 +1019,135 @@ function update_prod_details(counter)
 
 <script>
 
+function add_product()
+{
+	
+	var name = $("#product_name").val();
+	var tax = $("#prodtax_rate").val();
+	var tid = $('datalist option[value="'+ tax +'"]').attr('taxid');
+	var desc  = $("#product_desc").val();
+	var cp = $("#cp").val();
+	var sp = $("#sp").val();
+	var category  = $("#category").val();
+	var expen  = $("#expenditure").val();  
+	var income  = $("#income").val();
+	var discount = $("#discount").val();
+	if(cp=='')
+		cp=0;
+	
+	//CP IS COMPULSORY
+	
+	if(name=='' || sp=='')   
+		{
+		alert("Fill in all required fields");
+		return true;
+		
+		}
+	
+	var product = {      
+			
+			"product_name":name,
+			"product_desc": desc,
+			"tax":                     //backend - search for tax obect from table with this id
+				{
+				 "tax_name":null,
+				 "tax_abbreviation":null,
+				 "tax_desc":null,
+				 "tax_rate":null,
+				 "company": null,//company object
+				 "tax_id": tid,
+				 "tax_recoverable":true
+				 
+				},
+			"category":category,
+			"cp": cp,
+			"head_expenditure": expen,
+				
+			"sp": sp,
+			"head_income": income,
+			
+			"company":
+				{
+				"company_id" :"CMP445"
+				},
+				
+			"product_id": null,
+			"discount":discount,
+			"id":null
+			
+			
+	};
+	alert(product);
+	console.log(product);
+	
+	//ajax call to add product, then on success -pass object back, add to the dropdown
+	
+	
+	//product from back end
+	var product1 = {      
+			
+			
+			"product_name": name,
+			"product_desc": desc,
+			"tax":                     
+				{
+				 "tax_name": null,
+				 "tax_abbreviation": "VAT",
+				 "tax_desc":null,
+				 "tax_rate": 5.5,
+				 "company": null,   
+				 "tax_id": "CMP123TAX2",
+				 "tax_recoverable":true
+				 
+				},
+				"category":category,
+				"cp": cp,
+				"head_expenditure": expen,
+					
+				"sp": sp,
+				"head_income": income,
+				
+				"company":
+					{
+					"company_id" :"CMP445"
+					},
+					
+				"product_id": "PROD44",
+				"discount":discount,
+				"id": 44
+			
+			
+	};
+	 
+	 
+	 //add this product to all existing box counters and to main product list
+	 
+	 product_list.push(product1);
+	 
+	 for(var i=0;i<box_counter.length;i++)
+		 {
+		 $('#' + box_counter[i] + 'productlist').append("<option prodid='" +  product1.product_id   + "' value='" +product1.product_name +  "'>" + "" +  product1.product_desc + "" + "</option>");
+		 }
+	 
+	 $('#' + add_product_counter + 'productlist').val(product1.product_name);   //select this product in box where it got created
+	 
+	 $("#product_dialog").dialog('close');
+	 
+	 alert("product created");
+	 
+	 $("#product_name").val('');
+		$("#tax_rate").val('');
+		$("#product_desc").val('');
+		$("#category").val('');
+		$("#expenditure").val(''); //let value be ID
+		$("#income").val('');
+		$("#cp").val('');
+		$("#sp").val('');
+		$("#discount").val('');
+	
+	
+	return false;
+}
 
 
 $('#submit').click(function(){
@@ -970,12 +1188,19 @@ $('#submit').click(function(){
 			var product = {
   				"product":
   					{
-						"product_id": prod_id,
-						"product_name" : null,
-	  					"product_desc" : null,
-	  					"category":null,
-	  					"sp":0,
-	  					"tax": null   //fill other details
+  					"product_name":null,
+  					"product_desc": null,
+  					"tax":null,
+  					"category":null,
+  					"cp": null,
+  					"head_expenditure": null,
+  					"sp": null,
+  					"head_income": null,
+  					"discount" :null ,
+  					
+  					"company":null,
+  					"product_id": prod_id,
+  					"id":null
 						
   					},
   					
@@ -990,7 +1215,7 @@ $('#submit').click(function(){
   					},
   				"tax_amount": taxAmount,
   				"estimate":null,    //estimate object
-  				"id":null
+  				"id":null           //estimate detail id
 						  };
 					  
 			estimate.estimate_details.push(product);
@@ -1002,10 +1227,7 @@ $('#submit').click(function(){
 	
 	}
 	var customer = $("#customer").val();
-	alert(customer);
 	var customer_id = $('datalist option[value='+ customer +']').attr('customerid');
-	alert(customer_id);
-	
 	estimate.customer = {
 			"customer_id" : customer_id  //json of vendor object
 			
@@ -1016,26 +1238,21 @@ $('#submit').click(function(){
 			"company_id" : "CMP445"
 			};
 	
-	// add customerid, add companyid - get it from local storage, other details of PO
-	
     var date = $("#date").val();
-	alert(date);
 	estimate.order_date = date;
-	//var po_number = $("#po_number").val();
 	estimate.estimate_number = null;
-	estimate.estimate_id = null;  //internal auto inc
+	estimate.estimate_id = null;                          //internal auto inc
 	
 	estimate.amount = $("#subtotal").val();
 	estimate.tax_amount = $("#taxtotal").val();
 	estimate.grand_total = $("#grandtotal").val();
-	estimate.adv_payment = null;  //advance payment received list
+	estimate.adv_payment = null;                        //advance payment received list
 	
 	estimate.note = $("textarea#notes").val();
-	estimate.advance_amount =0;   //total adv payment received
+	estimate.advance_amount =0;                         //total adv payment received
 	estimate.balance = $("#grandtotal").val();
 	estimate.invoice_status=0;
 	
-	//list of adv payment is null here
 	
 	
 	console.log(JSON.stringify(estimate));
@@ -1200,12 +1417,14 @@ $('#submit').click(function(){
 							 
 							 }
 						 
+							$('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
 						  
 						     for(var i=0;i<tax_list.length;i++)
 						    	 {
 						    	 
 						    	 	$('#' + count + 'taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
 						    	 }
+
 
 						});
 
@@ -1259,6 +1478,101 @@ $('#submit').click(function(){
 	}
 
 	
+function update_noproduct(value_counter) {
+		
+		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+		var current_amount = $('#' + value_counter + 'amt').val();
+	
+		//update subtotal
+
+		if (current_amount != 0)                                           //subtract initial value from sub total and grand total 
+		{
+			var subamt = Number($('#subtotal').val()) - current_amount;
+			$('#subtotal').val(subamt.toFixed(2));
+			var finalamt = Number($('#grandtotal').val()) - current_amount;
+			$('#grandtotal').val(finalamt.toFixed(2));
+
+		}
+
+	        // update newly calculated amount (price *quantity)
+
+		var qty = value_counter + 'quantity';
+		var new_amount = ($('#' + qty).val() * $('#' + value_counter + 'price').val());   
+		$('#' + value_counter + 'amt').val(new_amount.toFixed(2));
+
+	         // update subtotal and grand total
+
+		var subtotalamt = Number($('#subtotal').val()) + new_amount;
+		$('#subtotal').val(subtotalamt.toFixed(2));
+		var finalamt = Number($('#grandtotal').val()) + new_amount;
+		$('#grandtotal').val(finalamt.toFixed(2));
+
+	         // Update corresponding tax amount, tax total and grand total
+
+		
+		
+		
+		var tax_input = $('#' + value_counter + 'tax_rate').val();                        //value of input box (vat 5.5)
+		
+		
+
+		if (tax_input != '')                                                              //if a tax type exists
+		{
+			var rate = tax_input.toString().split(" ");                                   // parse tax type get the rate(5.5)
+            var newtaxamt = (rate[1] / 100) * ($('#' + value_counter + 'amt').val());
+			$('#' + value_counter + 'tax_amt').val(newtaxamt.toFixed(2));
+			var taxtotal = Number($('#taxtotal').val()) - Number(existing_taxamt) + Number(newtaxamt.toFixed(2));
+			$('#taxtotal').val(taxtotal.toFixed(2));
+			var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
+			$('#grandtotal').val(finalamt.toFixed(2));
+			tax_addition_exclusive(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
+
+	}
+}
+	
+	
+	
+	function tax_addition_exclusive(tax_val, number_count, tax_amt)
+	{
+		var nd = tax_val.toString().split(" ");                      //VAT 5.5
+    	var x = nd[1].toString().split(".");                         //5 5
+    	var n = nd[0] + x[0] + x[1];                                 //VAT55
+		var intval = n;                                              //tax slab div ID prefix
+		
+           //check if value_counter had contributed to any tax earlier - nullify its effects 
+
+       var counter_index = tax_counter.indexOf(number_count);
+      
+                 alert("entry for this box exists at index" + counter_index);
+                 var divid  = tax_div[counter_index];
+                 alert("div id is " + divid);
+                 var amt   = tax_amount[counter_index];  //old amt
+                 alert("old amount is " + amt);
+                 alert("b4 subtraction amt is" + $('#' + divid).val());
+                 var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
+                 alert("after subtraction amt is"  + subtract_amt);
+
+			     if(subtract_amt==0)
+			     {
+			       //remove table row
+			       $('#' + divid).closest('tr').remove();
+			       tax_rate[counter_index]=-1;
+			            
+			     } 
+			     
+			     else
+			         $('#' + divid).val(subtract_amt.toFixed(2));  
+			     
+			     
+			     tax_div[counter_index] =-1;
+			        tax_amount[counter_index] = 0;
+			        tax_rate[counter_index] =-1;
+		
+		
+		
+	}
+	
+	
 	
 	
 	
@@ -1266,13 +1580,16 @@ $('#submit').click(function(){
 	function update_tax(value_counter)                                        // tax type - dropdown chosen
 	{
 
-		var existing_taxamt = $('#' + value_counter + 'tax_amt').text();
 		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
+		if(tax_value!='')
+		{
+		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
 		var amt = value_counter + 'amt';  
 		var taxamt = value_counter + 'tax_amt';
      	var tax_bracket = tax_value.toString().split(" ");                   //5.5
      	var taxrate = tax_bracket[1];
      	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+     	
      	
      	
      	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
@@ -1285,6 +1602,51 @@ $('#submit').click(function(){
         
         
      	tax_addition(tax_value,value_counter,newtaxamt.toFixed(2));             //call func to handle tax slab div
+	}
+		else  //if tax deselcted
+			{
+			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+			var amt = value_counter + 'amt';  
+			var taxamt = value_counter + 'tax_amt';
+	     	
+	     	var taxrate = 0;
+	     	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+	     	
+	     	
+	     	
+	     	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
+	     	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
+	        $('#taxtotal').val(taxtotal.toFixed(2));
+	           
+	           
+	        var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
+	        $('#grandtotal').val(finalamt.toFixed(2));
+	        
+	        //now handle tax div , get all tax counter,div etc for that box
+	        
+	        var counter_index = tax_counter.indexOf(value_counter);
+	        var divid = tax_div[counter_index];
+	        var div_value = $("#" + divid).val();
+	        var new_value = (Number(div_value) - existing_taxamt).toFixed(2);
+	        
+	        
+	        if(new_value==0)
+      	  	{
+      	    	 $('#' + divid).closest('tr').remove();
+      	  	}
+	        
+	        //else subtract amount in that div
+	        else
+	        	
+	        	$("#" + divid).val(new_value);
+	        
+	        tax_div[counter_index] =-1;
+	        tax_amount[counter_index] = 0;
+	        tax_rate[counter_index] =-1;
+	        
+			
+			
+			}
     
 	}
 	

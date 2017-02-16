@@ -116,67 +116,103 @@ input[readonly] {
 
 <script>
 
-
-  
-  
 var product_list = [
 	
-	{
-		"product_id" : 213,
-		"product_name" : "Paper",
-		"product_desc" : "200 gsm",
-		"category":"P",
-		"cp":40,
-		"tax":{
-			"tax_id" : "CMP123TAX1",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
-			
-		},
-		"type" : 0,  //inventory product
-		"sp":45
- 		
+	{      
 		
-	},
+		"product_name": "eraser",
+		"product_desc": "stationary",
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 5.5,
+			 "company": null,  
+			 "tax_id": "CMP123TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"XYZ",
+		"cp": 40,
+		"head_expenditure": "Purchases",
+			
+		"sp": 45,
+		"head_income": "Sales",
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+		"discount":0,	
+		"product_id": "PROD66",
+		"id": 66
+		
+		
+},
+
+
+{      
+	
+	"product_name": "pens",
+	"product_desc": "stationary",
+	"tax":                     //backend - search for tax obect from table with this id
+		{
+		 "tax_name":null,
+		 "tax_abbreviation": "VAT",
+		 "tax_desc":null,
+		 "tax_rate": 5.5,
+		 "company": null,  
+		 "tax_id": "CMP123TAX1",
+		 "tax_recoverable":true
+		 
+		},
+	"category":"XYZ",
+	"cp": 75,
+	"head_expenditure": "Purchases",
+		
+	"sp": 75,
+	"head_income": "Sales",
+	
+	"company":
+		{
+		"company_id" :"CMP445"
+		},
+	"discount" :0,
+	"product_id": "PROD90",
+	"id": 90
 	
 	
+}
+	];                                 //list of products from backend
+	
+var tax_list = [
 	{
-		"product_id" : 125,
-		"product_name" : "Toner",
-		"product_desc" : "ink",
-		"category":"P",
-		"cp":5000,
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 14.5
-			
-		},
-		"type" : 0,  //inventory product
-		"sp":5899
- 		
+		"tax_id" : "CMP123TAX1",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 5.5
 		
 	},
 	{
-		"product_id" : 565,
-		"product_name" : "Fevicol",
-		"product_desc" : "adhesive",
-		"category":"P",
-		"cp": 65,
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
-			
-		},
-		"type" : 1,  //inventory product
-		"sp":70
- 		
+		"tax_id" : "CMP123TAX2",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 14.5
+		
 		
 	}
-	
-	
-	];                                 //list of products from backend
+];
+
+$(function () {
+    $('#dtpicker').datetimepicker({
+    	
+    	format:'DD/MM/YYYY'
+    	
+    	
+    });
+    
+ 
+});
+
 	
 
 var tax_list = [
@@ -291,16 +327,17 @@ function loadName()
 	 
 	 }
  
-     //append another option dd to create product
-     
-     //TAXES
-     
-     for(var i=0;i<tax_list.length;i++)
-    	 {
-    	 $('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-    	 }
-     
-    //FETCH INVOICE#
+$('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
+
+
+ 
+ for(var i=0;i<tax_list.length;i++)
+	 {
+	 
+	 	$('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 	$('#prodtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 
+	 }
     
     $("#invoice_no").val("VPPL0001");
    
@@ -310,59 +347,77 @@ function loadName()
 
 function update_prod_details(counter)
 {
-	alert(counter);
-	var prod = $("#" + counter + "product_name").val();
 	
-	$("#" + counter + "stock").remove();
-	
-	var sindex = stock_counter.indexOf(counter);
-	if(sindex!=-1)
-    	stock_counter.splice(sindex, 1);
+var prod = $("#" + counter + "product_name").val();
 	
 	
-	if(prod!='')
+	if(prod=='+ Add Product')
+	{
+	add_product_counter = counter;  //to select this newly created product in ths box
+	
+	$("#" + counter + "product_name").val('');
+	$("#" + counter + "tax_rate").val('');
+	$("#" + counter + "prod_desc").val('');
+	$("#" + counter + "quantity").val('');
+	
+	
+	
+	$("#product_dialog").dialog({
+        
+        modal: true,
+        autoOpen: false,
+        title: "Add Product",
+        resizable :false,
+        width: 1000,
+        height: 700
+    });
+	
+	$("#product_dialog").dialog('open');  //clear all fields
+	
+	
+	}
+	
+	
+	if(prod!=''  && prod!='+ Add Product')
 		{
 		
-    		var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
+    		var prod_id = $('datalist option[value="'+ prod +'"]').attr('prodid');
     		alert(prod_id);
     		for(var i=0;i<product_list.length;i++)
     		 {
     		   if(product_list[i].product_id==prod_id)
     			   {
     			   //get cost price
-    			   var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
-    			   $("#" + counter + "tax_rate").val(taxval);
-    			   $("#" + counter + "price").val(product_list[i].sp);
+    			   if(product_list[i].tax !=null)
+    				   {
+    			   			var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
+    			  			 $("#" + counter + "tax_rate").val(taxval);
+    				   }
+    			   
+    			   $("#" + counter + "price").val(product_list[i].cp);
     			   $("#" + counter + "prod_desc").val(product_list[i].product_desc);
     			   update_amount(counter);
     			   
-    		   
-    		   if(product_list[i].type==0)  //inventory product
-    		   		{
-    			  
-    			   $("#" + counter + "stockoption").append('<div class="form-group required">' + 
-
-    						'<div class="col-md-12">' + 
-    				'<input type="submit" value="Enter Stock" id="' +  counter + 'stock" class="btn btn-blue" onclick= stock_entry('+  counter  + ')>'  + 
-    					'</div>' + 
-    					'</div>');
-    			   
-    		   		}
+    		
     			   }
     		 }
     		
-    		//var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
+    		
     		
 		}
 	else
 		{
+		 //no product chosen
 		
-		$("#" + counter + "price").val(counter);
+		$("#" + counter + "price").val(0);
 		
-		update_amount(counter);
+		update_noproduct(counter);
+		
 		$("#" + counter + "tax_rate").val('');
 		$("#" + counter + "prod_desc").val('');
+		$("#" + counter + "quantity").val(1);
 		}
+	
 	
 }
 	
@@ -371,99 +426,145 @@ function update_prod_details(counter)
 </script>
 
 <body onload="loadName()">
-<!-- stock entry dialog -->
 
-<div id="stock_dialog" title="Dialog Form" style="display: none;">
+<!-- create product dialog-->
+							
+							
+	<div id="product_dialog" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
 			<form action="" method="post">
 			
-			
-			
-			<div class="form-group required">
-                                <label class="col-md-3 control-label">Batch No</label>
-                                <div class="col-md-6"><input class="form-control" id="batch_no"  maxlength="30"   required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br><br>
-                             
-                             <div class="form-group ">
-																	<label class="col-md-3 control-label">Packing/Manufacturing Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="packing_date">
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="product_name"
+															name="product_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
 
-																			<input type="text" class="form-control" id="packingdate" >
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-                             
-                             <br><br>
-                             <div class="form-group ">
-																	<label class="col-md-3 control-label">Expiry Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="expiry_date">
+												<br> <br> <br>
 
-																			<input type="text" class="form-control" id="expirydate" >
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-                             
-                             <br><br>
-                             
-                            
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Cost Price</label>
-                                <div class="col-md-6"><input class="form-control" id="cp"  maxlength=""  title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                          
-                           
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Selling Price</label>
-                                <div class="col-md-6"><input class="form-control" id="sp"  maxlength="" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                          
-                             
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Quantity</label>
-                                <div class="col-md-6"><input class="form-control" id="qty"  maxlength=""  title="" type="number" step="any" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
-                             
-                                <div class="form-group">
-                                <label class="col-md-3 control-label">Discount</label>
-                                <div class="col-md-6"><input class="form-control" id="discount"  maxlength=""  title="" type="number" step="any" />
-                                </div>
-                             </div>
-                             
-                        <br><br>
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Product
+														Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="product_desc"
+															name="product_desc" maxlength="" title="" type="text" />
+													</div>
+												</div>
 
-</form>
+												<br> <br>
 
-<input class="btn btn-blue" type='submit' onclick="add_stock()" >
+												
 
-</div>
-</div>
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Category</label>
+													<div class="col-md-6">
+														<input class="form-control" id="category"
+															name="category" maxlength="" title="" type="text" />
+													</div>
+												</div>
 
-<!-- end of view inventory -->
+												<br> <br>
 
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Cost Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="cp" name="cp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="expenditure"
+															class="form-control selectboxit" id="expenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br> <br>
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Selling Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="sp" name="sp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="income" class="form-control selectboxit"
+															id="income">
+															<option value="None">Select</option>
+
+															<option value="Sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br> <br>
+												
+												<div class="form-group">
+													<label class="col-md-3 control-label">Discount</label>
+													<div class="col-md-6">
+														<input class="form-control" id="discount" name="discount"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+												
+												<br><br>
+
+												
+
+												<div class="form-group required">
+											<label class="col-md-3 control-label">Tax Rate</label>
+											<div class="col-md-6">
+
+												<input list="prodtaxlist" class="form-control"
+													id="prodtax_rate" placeholder="Tax Rate">
+
+												<datalist id="prodtaxlist">
+
+
+												</datalist>
+											</div>
+										</div>
+
+												<br> <br>
+
+
+											</form>
+											<input type="submit" class="btn btn-primary"
+												 onclick="return add_product()">
+
+
+
+
+										</div>
+									</div>
+			<!-- end of create product dialog -->
 
 
 	<div id="wrapper">
@@ -704,64 +805,68 @@ function update_prod_details(counter)
 																	<div class="col-md-4">
 																		<div class="input-group date" id="dtpicker">
 
-																			<input type="text" class="form-control" id="date" onchange="get_duedate()">
-																			<span class="input-group-addon"> <span
+																			<input type="text" class="form-control" id="date"
+																				onchange="get_duedate()"> <span
+																				class="input-group-addon"> <span
 																				class="glyphicon glyphicon-calendar"> </span>
 																			</span>
 																		</div>
 																	</div>
 																</div>
-																
-																
-																						<br> <br>
 
-																<div class="form-group required">
-																	<label class="col-md-2 control-label">Invoice Number</label>
-																	<div class="col-md-4">
-																		<input class="form-control" id="invoice_no"  />
-																	</div>
-																</div>
-																
-																
-																
-																
-																
-																
+
 																<br> <br>
 
 																<div class="form-group required">
-																	<label class="col-md-2 control-label">Reference(Estimate# or others)</label>
+																	<label class="col-md-2 control-label">Invoice
+																		Number</label>
 																	<div class="col-md-4">
-																		<input class="form-control" id="ref"  />
+																		<input class="form-control" id="invoice_no" />
 																	</div>
 																</div>
-																
-																<br><br>
-																
+
+
+
+
+
+
+																<br> <br>
+
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Reference(Estimate
+																		# or others)</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="ref" />
+																	</div>
+																</div>
+
+																<br> <br>
+
 																<!-- dropdpown of fixed days , datalist-->
 																<div class="form-group required">
-																	<label class="col-md-2 control-label">Payment Due Interval</label>
+																	<label class="col-md-2 control-label">Payment
+																		Due Interval</label>
 																	<div class="col-md-4">
-																	<input list="duedays" class="form-control"
-																			id="days" placeholder="days"
-																			onchange="get_duedate()">
+																		<input list="duedays" class="form-control" id="days"
+																			placeholder="days" onchange="get_duedate()">
 
 																		<datalist id="duedays">
-																			<option  value="7">7</option>
-																			<option  value="14">14</option>
-																			
+																			<option value="7">7</option>
+																			<option value="14">14</option>
+
 																		</datalist>
-																		
+
 																	</div>
 																</div>
-																
-																<br><br>
-																
+
+																<br> <br>
+
 																<!-- dropdpown of fixed days -->
 																<div class="form-group required">
-																	<label class="col-md-2 control-label">Payment Due Date</label>
+																	<label class="col-md-2 control-label">Payment
+																		Due Date</label>
 																	<div class="col-md-4">
-																		<input class="form-control" id="pay_duedate" readonly/>
+																		<input class="form-control" id="pay_duedate" readonly />
 																	</div>
 																</div>
 																
@@ -1034,10 +1139,7 @@ function update_prod_details(counter)
 							</div>
 							<!-- one tab listing feature ends-->
 
-							<!-- New Nav bar feature listing(create bill) -->
-
-							<div class="tab-pane box " id="bill">hello world</div>
-
+							
 
 
 						</div>
@@ -1060,18 +1162,145 @@ function update_prod_details(counter)
 
 <script>
 
+function add_product()
+{
+	
+	var name = $("#product_name").val();
+	var tax = $("#prodtax_rate").val();
+	var tid = $('datalist option[value="'+ tax +'"]').attr('taxid');
+	var desc  = $("#product_desc").val();
+	var cp = $("#cp").val();
+	var sp = $("#sp").val();
+	var category  = $("#category").val();
+	var expen  = $("#expenditure").val();  
+	var income  = $("#income").val();
+	var discount = $("#discount").val();
+	if(sp=='')
+		sp=0;
+	
+	//CP IS COMPULSORY
+	
+	if(name=='' || cp=='')   
+		{
+		alert("Fill in all required fields");
+		return true;
+		
+		}
+	
+	var product = {      
+			
+			"product_name":name,
+			"product_desc": desc,
+			"tax":                     //backend - search for tax obect from table with this id
+				{
+				 "tax_name":null,
+				 "tax_abbreviation":null,
+				 "tax_desc":null,
+				 "tax_rate":null,
+				 "company": null,//company object
+				 "tax_id": tid,
+				 "tax_recoverable":true
+				 
+				},
+			"category":category,
+			"cp": cp,
+			"head_expenditure": expen,
+				
+			"sp": sp,
+			"head_income": income,
+			
+			"company":
+				{
+				"company_id" :"CMP445"
+				},
+				
+			"product_id": null,
+			"discount":discount,
+			"id":null
+			
+			
+	};
+	alert(product);
+	console.log(product);
+	
+	//ajax call to add product, then on success -pass object back, add to the dropdown
+	
+	
+	//product from back end
+	var product1 = {      
+			
+			
+			"product_name": name,
+			"product_desc": desc,
+			"tax":                     
+				{
+				 "tax_name": null,
+				 "tax_abbreviation": "VAT",
+				 "tax_desc":null,
+				 "tax_rate": 5.5,
+				 "company": null,   
+				 "tax_id": "CMP123TAX2",
+				 "tax_recoverable":true
+				 
+				},
+				"category":category,
+				"cp": cp,
+				"head_expenditure": expen,
+					
+				"sp": sp,
+				"head_income": income,
+				
+				"company":
+					{
+					"company_id" :"CMP445"
+					},
+					
+				"product_id": "PROD44",
+				"discount":discount,
+				"id": 44
+			
+			
+	};
+	 
+	 
+	 //add this product to all existing box counters and to main product list
+	 
+	 product_list.push(product1);
+	 
+	 for(var i=0;i<box_counter.length;i++)
+		 {
+		 $('#' + box_counter[i] + 'productlist').append("<option prodid='" +  product1.product_id   + "' value='" +product1.product_name +  "'>" + "" +  product1.product_desc + "" + "</option>");
+		 }
+	 
+	 $('#' + add_product_counter + 'productlist').val(product1.product_name);   //select this product in box where it got created
+	 
+	 $("#product_dialog").dialog('close');
+	 
+alert("product created");
+	 
+	 $("#product_name").val('');
+		$("#tax_rate").val('');
+		$("#product_desc").val('');
+		$("#category").val('');
+		$("#expenditure").val(''); //let value be ID
+		$("#income").val('');
+		$("#cp").val('');
+		$("#sp").val('');
+		$("#discount").val('');
+	
+	
+	return false;
+}
+
 
 
 $('#submit').click(function(){
 
-  var bill = {};
+  var invoice = {};
   var invoice_details= [];
-  var stock =[];
-  //stock is independent of bill
+ 
+  invoice.invoice_details = invoice_details;
   
-  //var customer;
-  bill.invoice_details = invoice_details;
-  //purchaseOrder.customer = customer;
 	
 	for(var i=0;i<box_counter.length;i++)
 	{
@@ -1094,26 +1323,27 @@ $('#submit').click(function(){
 			var amount = $('#' + index + 'amt').val();
 			
 			var tax = $('#' + index + 'tax_rate').val();
-			alert(tax);
 			
 			var tax_id = $('datalist option[value="'+ tax +'"]').attr('taxid');
-			alert(tax_id);
 			
 			var taxAmount = $('#' + index + 'tax_amt').val();
 			var desc = $('#' + index   + 'prod_desc').val() ;
-		//alert(d);
-			
-			
-			
+		
 		
 			var bdetails = {              //we just need prod id , as other details can change
   				"product": {
-  					"product_id" : prod_id,  //fetch prod from this ID
-  					"product_name" : null,
-  					"product_desc" : null,
+  					"product_name":null,
+  					"product_desc": null,
+  					"tax":null,
   					"category":null,
-  					"cp":0,
-  					"tax": null
+  					"cp": null,
+  					"head_expenditure": null,
+  					"sp": null,
+  					"head_income": null,
+  					"discount" :null ,
+  					"company":null,
+  					"product_id": prod_id,
+  					"id":null
   					},
   				"desc":desc,
   				"quantity": quantity,
@@ -1125,11 +1355,11 @@ $('#submit').click(function(){
   					"tax_name":null
   					},
   				"tax_amount": taxAmount,
-  				"bill":null,                      //bill object
+  				"invoice":null,                      //bill object
   				"id":null                       //billdetail id - this table PK
 						  };
 					  
-			bill.invoice_details.push(bdetails);
+			invoice.invoice_details.push(bdetails);
 			
 			
 	 	 
@@ -1139,7 +1369,7 @@ $('#submit').click(function(){
 	}
 	var customer = $("#customer").val();
 	var customer_id = $('datalist option[value='+ customer +']').attr('customerid');
-	bill.customer = {
+	invoice.customer = {
 			"customer_id" : customer_id  //json of vendor object
 			
 	};
@@ -1149,81 +1379,42 @@ $('#submit').click(function(){
     
     var payment_duedate = $("#pay_duedate").val();
 	
-    bill.days = days;
-    bill.due_date = payment_duedate;
-    bill.invoice_date = date;
-    bill.invoice_number = $("#invoice_no").val();    
+    invoice.days = days;
+    invoice.due_date = payment_duedate;
+    invoice.invoice_date = date;
+    invoice.invoice_number = $("#invoice_no").val();    
 	
-    bill.ref = $("#ref").val();
+    invoice.ref = $("#ref").val();
 	
-	bill.id= 0;  //auto inc per company
-	bill.company = {
+    invoice.id= null;                                    //auto inc per company
+    invoice.company = {
 			
 			"company_id" : "CMP445"
 			};
 	
-	bill.amount = $("#subtotal").val();
-	bill.tax_amount = $("#taxtotal").val();
-	bill.grand_total = $("#grandtotal").val();
-	bill.advance_amount = $("#advance").val(); //if any advance received say from PO, copy it
-	bill.balance = $("#balance").val();
-	bill.payment = null;  //holds all payments made towards the bill (list)
-    bill.payment_amount=0;
-	bill.note = $("textarea#notes").val();
+    invoice.amount = $("#subtotal").val();
+    invoice.tax_amount = $("#taxtotal").val();
+    invoice.grand_total = $("#grandtotal").val();
+    invoice.advance_amount = $("#advance").val(); //if any advance received say from estimate, copy it
+    invoice.balance = $("#balance").val();
+    invoice.payment = null;                           //holds all payments made towards the invoice (list)
+    invoice.payment_amount=0;
+    invoice.note = $("textarea#notes").val();
 	
 	//assign all adv paymets of PO to this bill
-	bill.advance_payment =null;         //check if it exists for bill created from Po
-	bill.status=0;    //paid/due/overdue
+	invoice.advance_payment =null;         //check if it exists for bill created from Po
+	invoice.status=0;    //paid/due/overdue
 
-	/*
-	for(var i=0;i<stock_counter.length;i++) //only existing stocks counters 0,1,2
-		{
-		for(var j=0;j<stock_json.length;j++)
-			{
-			 if(stock_json[j].counter==stock_counter[i])
-				 {
-				 //add company, vendor ref and bill no
-				  var st={
-						  
-						  	"packing_date":stock_json[j].packing_date,
-							"expiry_date":stock_json[j].expiry_date,
-							"cp":stock_json[j].cp,
-							"sp":stock_json[j].sp,
-							"batch_no":stock_json[j].batch_no,
-							"discount":stock_json[j].discount,
-							"qty":stock_json[j].qty,
-							"product":{
-								"product_id":stock_json[j].product.product_id ,
-								"product_name" : null,
-								"product_desc" : null,
-								"category":null,
-								"cp":0,
-								"tax": null
-								
-							},
-							"stock_id":null,
-							"id":0 //increment per company
-						  
-				  };
-				  
-				  stock.push(st);
-				  
-				 }
-			}
-		   
-		}
 	
-	*/
 	
-	console.log(JSON.stringify(bill));
-	var p = JSON.stringify(bill);
+	console.log(JSON.stringify(invoice));
+	var p = JSON.stringify(invoice);
 	
-	//console.log(stock);
 
 	
 	//ajax call
 	
-	//send stock and bill separate
+	/*
 	$.ajax({
 		   type : 'GET',
 		   url  : '/Accounting/bill/create',
@@ -1245,170 +1436,12 @@ $('#submit').click(function(){
 				 console.log(a.status+b+c);
 			}  
 			  });
-	
+	*/
 	
 });
 
 
 
-
-</script>
-
-<script>
-
-
-
-
-function stock_entry(counter)
-{
-	//open dialog only when qty, price not 0
-	//clear all while opening
-	
-	 $("#stockentrydate").val('');
-	 $("#qty").val('');
-	 $("#cp").val('');
-	 $("#discount").val('');
-	 $("#batch_no").val('');
-	 $("#sp").val('');
-	 $("#packingdate").val('');
-	 $("#expirydate").val('');
-	
-	alert(counter);
-	var price = $("#" + counter + "price").val();
-	var qty = $("#" + counter + "quantity").val();
-	
-$("#stock_dialog").dialog({
-        
-        modal: false,
-        autoOpen: false,
-        title: "Enter Stock",
-        width: 700,
-        height: 500
-    });
-    if(price!='' && qty!='')
-    	{
-    	
-        
-    	$('#expiry_date').datetimepicker({
-    	    	
-    	    	format:'DD/MM/YYYY'
-    	    	
-    	    	
-    	    });
-    	    
-    	$('#packing_date').datetimepicker({
-    		
-    		format:'DD/MM/YYYY'
-    		
-    		
-    	});
-    	
-        	$('#stock_dialog').dialog('open');
-        	current_stock=counter;
-        	
-        	$("#qty").val($("#" + counter + "quantity").val());
-        	$("#cp").val($("#" + counter + "price").val());
-        	
-    	}
-    else
-    	alert("Enter all details");
-	
-	}
-
-
-function add_stock()
-{
-	//check for reqd fields and company json
-	
-	alert("add");
-	
-	var pdate = $("#packingdate").val();
-	var qty = $("#qty").val();
-	var cp = $("#cp").val();
-	var discount = $("#discount").val();
-	var batch_no = $("#batch_no").val();
-	var sp = $("#sp").val();
-	var edate = $("#expirydate").val();
-
-	
-	
-	stock_counter.push(current_stock);
-	alert(stock_counter);
-	
-	//store stock with product object
-	
-	var productName= $('#' + current_stock + 'product_name').val();
-	var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
-	alert(prod_id);
-	
-	var stock ={
-			
-			"packing_date": pdate,
-			"qty":qty,
-			"cp":cp,
-			"discount": discount,
-			"batch_no" :batch_no,
-			"sp":sp,
-			"expiry_date" : edate,
-			"counter":current_stock,
-			"product":{
-				"product_id": prod_id,
-				"product_name" : null,
-				"product_desc" : null,
-				"category":null,
-				"cp":0,
-				"tax": null
-				
-			},
-			"stock_id":null,
-			"id":0 //increment per company
-			
-			
-	};
-	
-	console.log(stock);
-	
-	
-	
-	
-	for(var i=0;i<stock_json.length;i++)
-		{
-		if(stock_json[i].counter==current_stock)
-			{
-			alert("already exists for this box");
-				stock_json[i].packing_date=pdate;
-				stock_json[i].expiry_date=edate;
-				stock_json[i].cp=cp;
-				stock_json[i].sp=sp;
-				stock_json[i].batch_no=batch_no;
-				stock_json[i].discount=discount;
-				stock_json[i].qty=qty;
-				stock_json[i].product.product_id = prod_id;
-			
-			}
-		
-		else
-			{
-			
-			alert("new");
-			stock_json.push(stock);
-			}
-		
-		}
-	
-	if(stock_json.length==0)
-	{
-	alert("new");
-	stock_json.push(stock);
-	}
-	
-	  //can have multiple entries for one counter - check if it exists , change all
-	  
-	console.log(stock_json);
-	$('#stock_dialog').dialog('close');
-
-}
-	
 
 </script>
 
@@ -1422,9 +1455,7 @@ function add_stock()
 	var tax_counter = [];
 	var tax_amount = [];
 	var tax_div = [];
-	var stock_counter=[];
-    var current_stock;
-    var stock_json=[];
+	
 	
 	
 		$("#add_row").click(function() {            //dynamically add a row for item entry
@@ -1536,6 +1567,8 @@ function add_stock()
 						      $('#' + count +'productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
 							 
 							 }
+							 
+							 $('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
 						 
 						  
 						     for(var i=0;i<tax_list.length;i++)
@@ -1547,10 +1580,8 @@ function add_stock()
 
 						});
 
-	
-
-	function update_amount(value_counter) {
-		
+function update_noproduct(value_counter) {
+			
 			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
 			var current_amount = $('#' + value_counter + 'amt').val();
 		
@@ -1562,6 +1593,8 @@ function add_stock()
 				$('#subtotal').val(subamt.toFixed(2));
 				var finalamt = Number($('#grandtotal').val()) - current_amount;
 				$('#grandtotal').val(finalamt.toFixed(2));
+				var bal = $("#grandtotal").val() - $("#advance").val();
+				$("#balance").val(bal.toFixed(2));
 
 			}
 
@@ -1577,6 +1610,109 @@ function add_stock()
 			$('#subtotal').val(subtotalamt.toFixed(2));
 			var finalamt = Number($('#grandtotal').val()) + new_amount;
 			$('#grandtotal').val(finalamt.toFixed(2));
+			var bal = $("#grandtotal").val() - $("#advance").val();
+			$("#balance").val(bal.toFixed(2));
+
+		         // Update corresponding tax amount, tax total and grand total
+
+			
+			
+			
+			var tax_input = $('#' + value_counter + 'tax_rate').val();                        //value of input box (vat 5.5)
+			
+			
+
+			if (tax_input != '')                                                              //if a tax type exists
+			{
+				var rate = tax_input.toString().split(" ");                                   // parse tax type get the rate(5.5)
+                var newtaxamt = (rate[1] / 100) * ($('#' + value_counter + 'amt').val());
+				$('#' + value_counter + 'tax_amt').val(newtaxamt.toFixed(2));
+				var taxtotal = Number($('#taxtotal').val()) - Number(existing_taxamt) + Number(newtaxamt.toFixed(2));
+				$('#taxtotal').val(taxtotal.toFixed(2));
+				var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
+				$('#grandtotal').val(finalamt.toFixed(2));
+				var bal = $("#grandtotal").val() - $("#advance").val();
+				$("#balance").val(bal.toFixed(2));
+				tax_addition_exclusive(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
+
+		}
+	}
+		
+		
+		
+		function tax_addition_exclusive(tax_val, number_count, tax_amt)
+		{
+			var nd = tax_val.toString().split(" ");                      //VAT 5.5
+	    	var x = nd[1].toString().split(".");                         //5 5
+	    	var n = nd[0] + x[0] + x[1];                                 //VAT55
+			var intval = n;                                              //tax slab div ID prefix
+			
+	           //check if value_counter had contributed to any tax earlier - nullify its effects 
+
+	       var counter_index = tax_counter.indexOf(number_count);
+	      
+	                 alert("entry for this box exists at index" + counter_index);
+	                 var divid  = tax_div[counter_index];
+	                 alert("div id is " + divid);
+	                 var amt   = tax_amount[counter_index];  //old amt
+	                 alert("old amount is " + amt);
+	                 alert("b4 subtraction amt is" + $('#' + divid).val());
+	                 var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
+	                 alert("after subtraction amt is"  + subtract_amt);
+
+				     if(subtract_amt==0)
+				     {
+				       //remove table row
+				       $('#' + divid).closest('tr').remove();
+				       tax_rate[counter_index]=-1;
+				            
+				     } 
+				     
+				     else
+				         $('#' + divid).val(subtract_amt.toFixed(2));  
+				     
+				     
+				     tax_div[counter_index] =-1;
+				        tax_amount[counter_index] = 0;
+				        tax_rate[counter_index] =-1;
+			
+			
+			
+		}
+		
+
+	function update_amount(value_counter) {
+		
+			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+			var current_amount = $('#' + value_counter + 'amt').val();
+		
+			//update subtotal
+
+			if (current_amount != 0)                                           //subtract initial value from sub total and grand total 
+			{
+				var subamt = Number($('#subtotal').val()) - current_amount;
+				$('#subtotal').val(subamt.toFixed(2));
+				var finalamt = Number($('#grandtotal').val()) - current_amount;
+				$('#grandtotal').val(finalamt.toFixed(2));
+				var bal = $("#grandtotal").val() - $("#advance").val();
+				$("#balance").val(bal.toFixed(2));
+
+			}
+
+		        // update newly calculated amount (price *quantity)
+
+			var qty = value_counter + 'quantity';
+			var new_amount = ($('#' + qty).val() * $('#' + value_counter + 'price').val());   
+			$('#' + value_counter + 'amt').val(new_amount.toFixed(2));
+
+		         // update subtotal and grand total
+
+			var subtotalamt = Number($('#subtotal').val()) + new_amount;
+			$('#subtotal').val(subtotalamt.toFixed(2));
+			var finalamt = Number($('#grandtotal').val()) + new_amount;
+			$('#grandtotal').val(finalamt.toFixed(2));
+			var bal = $("#grandtotal").val() - $("#advance").val();
+			$("#balance").val(bal.toFixed(2));
 
 		         // Update corresponding tax amount, tax total and grand total
 
@@ -1591,7 +1727,10 @@ function add_stock()
 				$('#taxtotal').val(taxtotal.toFixed(2));
 				var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
 				$('#grandtotal').val(finalamt.toFixed(2));
-				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
+				var bal = $("#grandtotal").val() - $("#advance").val();
+				$("#balance").val(bal.toFixed(2));
+				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div 
+				
 
 		}
 	}
@@ -1604,20 +1743,16 @@ function add_stock()
 	function update_tax(value_counter)                                        // tax type - dropdown chosen
 	{
 
+		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
+		if(tax_value!='')
+		{
 		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
-		
-		var tax_value = $("#" + value_counter + "tax_rate").val();
-		alert(tax_value);//VAT 5.5
-		
-		var tid = $('#broswer [value="' + tax_value + '"]').data('customvalue');
-		alert(tid);
-		
-		
 		var amt = value_counter + 'amt';  
 		var taxamt = value_counter + 'tax_amt';
      	var tax_bracket = tax_value.toString().split(" ");                   //5.5
      	var taxrate = tax_bracket[1];
      	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+     	
      	
      	
      	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
@@ -1627,9 +1762,59 @@ function add_stock()
            
         var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
         $('#grandtotal').val(finalamt.toFixed(2));
+        var bal = $("#grandtotal").val() - $("#advance").val();
+		$("#balance").val(bal.toFixed(2));
         
         
      	tax_addition(tax_value,value_counter,newtaxamt.toFixed(2));             //call func to handle tax slab div
+	}
+		else
+			{
+			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+			var amt = value_counter + 'amt';  
+			var taxamt = value_counter + 'tax_amt';
+	     	
+	     	var taxrate = 0;
+	     	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+	     	
+	     	
+	     	
+	     	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
+	     	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
+	        $('#taxtotal').val(taxtotal.toFixed(2));
+	           
+	           
+	        var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
+	        $('#grandtotal').val(finalamt.toFixed(2));
+	        var bal = $("#grandtotal").val() - $("#advance").val();
+			$("#balance").val(bal.toFixed(2));
+	        
+	        //now handle tax div , get all tax counter,div etc for that box
+	        
+	        var counter_index = tax_counter.indexOf(value_counter);
+	        var divid = tax_div[counter_index];
+	        var div_value = $("#" + divid).val();
+	        var new_value = (Number(div_value) - existing_taxamt).toFixed(2);
+	        
+	        
+	        if(new_value==0)
+      	  	{
+      	    	 $('#' + divid).closest('tr').remove();
+      	  	}
+	        
+			else
+				
+	        	$("#" + divid).val(new_value);
+	        
+	        tax_div[counter_index] =-1;
+	        tax_amount[counter_index] = 0;
+	        tax_rate[counter_index] =-1;
+	        
+			
+			
+			}
+    
+    
     
 	}
 	
@@ -1810,6 +1995,8 @@ function add_stock()
       	var final_amount =  Number($('#grandtotal').val())  - (Number(deleted_amt) + Number(deleted_tax_amt));
       	alert("final amt is" + final_amount.toFixed(2)); 
       	$('#grandtotal').val(final_amount.toFixed(2));
+      	var bal = $("#grandtotal").val() - $("#advance").val();
+		$("#balance").val(bal.toFixed(2));
       	alert("grand total is after subtraction" + final_amount.toFixed(2));
       	
       	//get the index of this box
