@@ -64,16 +64,8 @@
 	zoom: 1;
 }
 </style>
-<body onload="loadName()">
 
-	<!DOCTYPE HTML >
-	<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-	<!-- above set at the top of the file will set     -->
-	<!-- the browser's rendering engine into           -->
-	<!-- "Quirks Mode". Replacing this declaration     -->
-	<!-- with a "Standards Mode" doctype is supported, -->
-	<!-- but may lead to some differences in layout.   -->
-<html lang="en">
+
 
 <head>
 
@@ -98,22 +90,6 @@
 
 <link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 
-
-<script type="text/javascript">
-    $(function () {
-        $("#dialog").dialog({
-            
-            modal: true,
-            autoOpen: false,
-            title: "Add Customer",
-            width: 300,
-            height: 150
-        });
-        $("#btnShow").click(function () {
-            $('#dialog').dialog('open');
-        });
-    });
-</script>
 
 
 
@@ -179,13 +155,34 @@ localStorage.removeItem("type_acc");
 localStorage.removeItem("bank");
 localStorage.removeItem("ifsc_code");
 */
-location.replace("index.html");
+//location.replace("index.html");
 
 //collect all values, make ajax call
 
+
+/*
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/rest/file/upload',
+		  
+		    data:	$("#business_details").serialize(),
+		    success: function(response) {
+		    	
+		    	alert(response);
+		    
+		    },
+			error: function (xhr)
+			{ 
+				
+				 console.log(xhr.responseText);
+			}  
+			  });
+*/
+
+
 }
 
-           function form_values()
+function form_values()
 {
              $('#business_name1').val(localStorage.getItem("bname"));
              $('#contact_name1').val(localStorage.getItem("cname"));
@@ -224,35 +221,6 @@ location.replace("index.html");
 </script>
 
 
-<style>
-.form-group.required .control-label:after {
-	content: "*";
-	color: red;
-}
-
-#abc {
-	background-color: #F0F3F4;
-	margin-top: 15px;
-}
-
-#xyz {
-	height: 65px;
-	text-align: center;
-	background-color: #152F37;
-}
-
-#pqr {
-	background-color: #152F37;
-}
-
-.ui-dialog-titlebar {
-	border: 0;
-	padding: .5em 1em;
-	background: black;
-	overflow: auto;
-	zoom: 1;
-}
-</style>
 
 <script>
 function loadName()
@@ -426,9 +394,9 @@ function loadName()
 						<div id="form-panel">
 							<div class="row">
 								<div class="col-lg-12">
-									<form role="form" id="business_details" >
+									<form  id="business_details" enctype="multipart/form-data" action="/Accounting/rest/file/upload"  method="POST">
 
-
+<!--  
 										<div class="form-group">
 											<label class="col-md-3 control-label">Business Name</label>
 											<div class="col-md-6">
@@ -437,16 +405,16 @@ function loadName()
 											</div>
 										</div>
 										
-										
+										-->
 
 										<br> <br><br>
 										
 										<div class="form-group">
 						<label  class="col-sm-3 control-label">Upload Logo</label>
-                         <div class="col-md-6"><input type="file" class="form-control" id="logo" accept="image/*"></div>
+                         <div class="col-md-6"><input type="file" class="form-control" id="logo1" name="logo" accept="image/*"></div>
 					</div>
 					
-					<br><br>
+					<br><br><!--  
 
 										<div class="form-group ">
 											<label class="col-md-3 control-label">Contact Person
@@ -754,10 +722,12 @@ function loadName()
 										</div>
 
 										<br> <br>
+										-->
+										<input  type="submit"
+											value="Submit" class="btn btn-blue" ><!-- can put inside form if ajax jquery used -->
 
 									</form>
-									 <input id="business_submit" type="submit"
-											value="Submit" class="btn btn-blue" onclick="submit1()"><!-- can put inside form if ajax jquery used -->
+									 
 									<div></div>
 								</div>
 

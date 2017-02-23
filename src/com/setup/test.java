@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jwk.RsaJwkGenerator;
@@ -32,11 +35,24 @@ public class test {
 	
 	@GET
 	@Path("/test")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String test()
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response test1() throws AppEx
 	{
-		String abc="Hello World  ";
-		return abc;
+		
+		Student a = new Student(22,"vaish",10);
+		Student b = new Student(22,"abhgg",10);
+		List<Student> c = new ArrayList<>();
+		c.add(a);
+		c.add(b);
+		String abc="abc";
+		if(abc == "abcd")
+		{
+			AppEx ae =  new AppEx(Response.Status.BAD_REQUEST.getStatusCode(),"empty string");
+			return Response.status(ae.getStatus())
+				       .entity(ae.getMsg()).build();
+		}
+		return Response.status(Response.Status.OK)
+				       .entity(c).build();
 		
 	}
 	

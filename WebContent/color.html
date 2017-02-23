@@ -44,6 +44,12 @@ https://bgrins.github.io/spectrum/ -->
 
 
 <input type='text' class="basic"/>
+<input type='submit' value='enter' onclick="ok()"/>
+
+
+<input type='submit' value='get image' onclick="getimage()"/>
+
+<div id="pic"></div>
 
 </body>
 
@@ -57,6 +63,52 @@ $(document).ready(function() {
 	      
 	   });
 	});
+	
+function getimage()
+{
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/rest/file/getpic',
+		  
+		   
+		    success: function(response) {
+		    	
+		    	
+		    	$("#pic").append('<img src="data:image/png;base64,' + response + '">');
+		    
+		    },
+			error: function (xhr)
+			{ 
+				
+				 console.log(xhr.responseText);
+			}  
+			  });	
+	
+	
+}
+	
+
+function ok()
+{
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/rest/hello/test',
+		   
+		    success: function(response) {
+		     alert(response);
+		     console.log(response);
+		    
+		     
+		    },
+		    error: function (xhr) {
+				alert(xhr.responseText);
+				alert(xhr.status);
+			   
+			  }  
+			  });
+	
+	
+	}
 
 </script>
 </html>

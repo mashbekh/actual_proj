@@ -16,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.hibernate.Hibernate;
 
@@ -25,6 +26,7 @@ import com.Models.PurchaseOrderDetails;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.setup.AppEx;
 
 
 @javax.ws.rs.Path("/purchase")
@@ -245,7 +247,7 @@ public class PO {
 	
 	@GET
 	@Path("/deletepo")
-	public String delete_po(@QueryParam("company_id") String company_id)
+	public Response delete_po(@QueryParam("company_id") String company_id) throws AppEx
 	{
 		 EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
 			EntityManager em = emf.createEntityManager();
@@ -255,6 +257,15 @@ public class PO {
 			  //delete POD , then PO
 			
 			PurchaseOrder p = em.find(PurchaseOrder.class, company_id);
+			
+			em.getTransaction().commit();
+			
+			if(p==null)
+			{
+				AppEx a =  new AppEx(Response.Status.NOT_FOUND.getStatusCode(),"not found PO");
+				return Response.status(a.getStatus()).entity(a.getMsg()).build();
+			}
+			
 			for(PurchaseOrderDetails pod : p.getPod())
 			{
 				
@@ -269,11 +280,11 @@ public class PO {
 			//now delete PO
 			
 			em.remove(p);
-			em.getTransaction().commit();
+			
 		    em.close();
 		
 		//return success/failure state
-		return "success";
+		return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity("deleted").build();
 	}
 	
 

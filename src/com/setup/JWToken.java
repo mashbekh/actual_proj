@@ -73,7 +73,7 @@ public class JWToken {
 	@Path("/validateToken")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public void verify_token(@QueryParam("name1") String token) throws Exception
+	public String verify_token(@QueryParam("name1") String token) throws Exception
 	{
 		 List<JsonWebKey> jsonWebKeys = new ArrayList<>();
 		 Map<String, String> properties = new HashMap();
@@ -102,8 +102,8 @@ public class JWToken {
 	  
 			 //System.out.println(status);
 			 
-			System.out.println(isValid(token, jsonWebKeys));
-			//return true;
+			//System.out.println(isValid(token, jsonWebKeys));
+			return isValid(token, jsonWebKeys);
 	}
 	
 	public String isValid(String token, List<JsonWebKey> jsonWebKeys) throws Exception {
