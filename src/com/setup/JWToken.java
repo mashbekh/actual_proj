@@ -26,6 +26,7 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.jwt.consumer.JwtContext;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
 import org.jose4j.lang.JoseException;
 
@@ -102,7 +103,7 @@ public class JWToken {
 	  
 			 //System.out.println(status);
 			 
-			//System.out.println(isValid(token, jsonWebKeys));
+		System.out.println(isValid(token, jsonWebKeys));
 			return isValid(token, jsonWebKeys);
 	}
 	
@@ -115,11 +116,23 @@ public class JWToken {
             .setRequireSubject()
             .setVerificationKeyResolver(jwksVerificationKeyResolver)
             .build();
+      
+       // jwtConsumer.
+        
+       // JwtContext jwtContext = jwtConsumer.process(token);
+        //jwtContext.
 
         try {
         	JwtClaims jwtClaims = jwtConsumer.processToClaims(token);
+        	
+        	//jwtClaims.get
+        	
+        	//String email = jwtClaims.getClaimValue("email", string.class)
+        	
            return "JWT validation succeeded! " + jwtClaims;
         } catch (InvalidJwtException e) {
+        	
+        	//check doc jwt tokens for better check
             return e.getMessage();
         }
     }

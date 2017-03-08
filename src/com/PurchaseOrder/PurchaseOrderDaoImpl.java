@@ -1,7 +1,9 @@
 package com.PurchaseOrder;
 
 
-/* this class handles all rest calls made from the client
+/*This is the service layer
+ * 
+ *  this class handles all rest calls made from the client
  * always returns Response  - status code, with entity(error msg/ data to be returned)
  * 
  * internally make calls to PO.java 

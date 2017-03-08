@@ -30,7 +30,9 @@
 <link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
 
-
+<script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
+			<script src="jarvis/js/moment_locale.js"></script>
+			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
 
 
 <script type="text/javascript">
@@ -75,6 +77,29 @@
 
 
 <style>
+
+
+#container {
+    width:100%;
+    text-align:center;
+}
+
+#left {
+    float:left;
+    width:100px;
+}
+
+#center {
+    display: inline-block;
+    margin:0 auto;
+    width:100px;
+}
+
+#right {
+    float:right;
+    width:100px;
+}
+
 .panel {
 	width: 75%;
 }
@@ -127,6 +152,17 @@ input[readonly] {
 </style>
 <script>
 
+$(function () {
+    $('#dtpicker').datetimepicker({
+    	
+    	format:'DD/MM/YYYY'
+    	
+    	
+    })
+
+    
+});
+
 function add_advpay() {
     
     $("#advance_payment").dialog({
@@ -134,8 +170,8 @@ function add_advpay() {
         modal: true,
         autoOpen: false,
         title: "Advance Payment",
-        width: 600,
-        height: 620
+        width: 900,
+        height: 670
         });
          // use same date 
         
@@ -529,6 +565,12 @@ function tds_change()
 	}
 	
 	
+	function a()
+	{
+		
+		alert("hi");
+	}
+	
 function edittds_change()
 {
 	
@@ -834,8 +876,9 @@ function loadName()
 	//just after creating, when this PO gets loaded, adv pay = null  [check for this and show this too]
 	
 	 var myParam = location.search.split('PONo=')[1];
-	 alert(myParam);
+	// alert(myParam);
 	
+	 
 	$.ajax({
 		   type : 'GET',
 		   url  : '/Accounting/po/purchase/viewpo',
@@ -856,7 +899,30 @@ function loadName()
 			}  
 			  });
 	
+	$("#status").css("height","25px");
+	$("#status").css( "color", "white");
+	$("#status").css( "fontWeight", "bold");
+	
+	
+	
+	var diff = 200;
+	
+	if(diff>0)
+		{
+	$("#status").css( "background-color", "#B00000");
+	$("#status").text("UNPAID");
+		}
+	
+	else if(diff==0)
+	{
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+	}
+	
+	
 }	
+
+
 	
 	
 	
@@ -1126,16 +1192,21 @@ function loadName()
 					</div>
 				</div>
 
-				<br> <br>
+				<br> <br><br>
 
 <!-- DATEPICKER TYPE -->
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Date of Payment</label>
-					<div class="col-md-6">
-						<input class="form-control" id="payment_date" type="text" required
-							value="" />
-					</div>
-				</div>
+																	<label class="col-md-3 control-label">Date</label>
+																	<div class="col-md-6">
+																		<div class="input-group date" id="dtpicker">
+
+																			<input type="text" class="form-control" id="payment_date" onchange="get_duedate()">
+																			<span class="input-group-addon"> <span
+																				class="glyphicon glyphicon-calendar"> </span>
+																			</span>
+																		</div>
+																	</div>
+																</div>
 
 			
 				<br> <br>
@@ -1605,33 +1676,12 @@ function loadName()
 			<div class="container-fluid">
 
 
-
 				<h1 class="page-header">Edit Purchase Order</h1>
 				<!-- Row beginning -->
 				<div class="row" id="row">
 					<div class="col-lg-12">
 
-						<!------CONTROL TABS START------>
-						<ul class="nav nav-tabs bordered">
-							<li class="active"><a href="#po" data-toggle="tab"><i
-									class="entypo-menu"></i> Create Purchase Order </a></li>
-							<li><a href="#bill" data-toggle="tab"><i
-									class="entypo-menu"></i> Create Bill </a></li>
-							<li><a href="#payments" data-toggle="tab"><i
-									class="entypo-menu"></i> Payments </a></li>
-							<li><a href="#statement" data-toggle="tab"><i
-									class="entypo-menu"></i> Statement </a></li>
-
-						</ul>
-						<!------CONTROL TABS END------>
-
-						<!--  Control tab features -->
-
-						<div class="tab-content">
-							<!----TAB LISTING STARTS for purchase order-->
-							<div class="tab-pane box active" id="po">
-								<br>
-
+							
 
 								<div class="panel panel-default">
 									<div class="row">
@@ -1757,8 +1807,7 @@ function loadName()
 												</div>
 
 												<br> <br>
-											</div>
-											<!-- panel default -->
+										
 
 
 											<table class="table borderless datatable" id="table_export">
@@ -1926,22 +1975,30 @@ function loadName()
 					                    
 					                    <!-- new row for notes -->
 									
-									<div class="row" id="row">
-					                    <div class="col-lg-6">
 									
-									
+									<div class="row">
+									<div class="col-lg-12">
+									<form>
+									<div class=form-group>
 									<label class="col-md-1 control-label">Notes</label>
+									<br>
+									<div  class="col-md-6">
 															<textarea class="form-control" id="notes" rows="10"
 																cols="10"></textarea>
+																</div>
+								    </div>
+								    </form>
 																
-									</div>
-									</div>
+								</div>
+								</div>
 									<!-- end of notes -->
 					                    
 					                    
 									
 								</div>
 								<!-- closure for Main panel -->
+
+								<br><br>
 
 								<!-- Another row -->
 								<div class="row">
@@ -1956,12 +2013,13 @@ function loadName()
 								</div>
 
 
+<br><br>
 							</div>
 							<!-- one tab listing feature ends-->
 
 							<!-- New Nav bar feature listing(create bill) -->
 
-							<div class="tab-pane box " id="bill">hello world</div>
+							
 
 
 
