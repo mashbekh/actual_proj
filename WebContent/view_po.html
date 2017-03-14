@@ -164,6 +164,18 @@ $(function () {
     
 });
 
+
+$(function () {
+    $('#dtpicker1').datetimepicker({
+    	
+    	format:'DD/MM/YYYY'
+    	
+    	
+    })
+
+    
+});
+
 function add_advpay() {
     
     $("#advance_payment").dialog({
@@ -177,374 +189,13 @@ function add_advpay() {
          // use same date 
         
         var date = $("#date").val();
-        $('#payment_date').val(date);
+       // $('#payment_date').val(date);
         $("#vendor_name").val($("#vendor").val());
         $("#purpose_title").val("Advance Payment towards Purchase Order " + $("#po_number").val() );
         $('#advance_payment').dialog('open');
     }
     
-     
-    
-
-	/*
-	// edit already existing ones
-function open_advdialog(counter)
-{
-	alert(counter);
-	//$('#advance_payment').dialog('open');
-	console.log(advid_counter);
-	
-	//get advidcounter for id of this adv payment
-	var id = advid_counter[counter];
-	
-	
-	//search for this adv pay detail in oldadv array
-	
-	for(var i=0;i<oldadv.length;i++)
-		{
-		if(oldadv[i].id==id)
-			break;
-		}
-	
-	alert(i);
-	alert(id);
-	
-	$("#editold_payment").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "Edit Advance Payment",
-        width: 600,
-        height: 620
-        });
-         // use same date 
-        
-        $("#oldvendor_name").val($("#vendor").val());
-        $("#oldpurpose_title").val(oldadv[i].purpose_title);
-        $("#oldpurpose_desc").val(oldadv[i].purpose_desc);
-        $("#oldmode_payment").val(oldadv[i].payment_mode);
-        $("#oldpayment_acc").val(oldadv[i].payment_account);
-        $("#oldadv_amount").val(oldadv[i].payment_amount);
-        $("#oldtds_rate").val(oldadv[i].tdsrate);
-        $("#oldtds_amount").val(oldadv[i].tdsamount);
-        $("#oldpayment_date").val(oldadv[i].payment_date);
-
-        editable_old_counter=counter;
-        
-        $('#editold_payment').dialog('open');
-	
-	
-	
-}
-	
-	//submit editted old payment
-	function edit_oldpay()
-	{
-		
-		alert(editable_old_counter);
-		
-	
-		var id = advid_counter[editable_old_counter];
-		
-		
-	
-	
-	//search for this adv pay detail in oldadv array
-	
-	for(var i=0;i<oldadv.length;i++)
-		{
-		if(oldadv[i].id==id)
-			break;
-		}
-	
-	
-	var adv = $("#advtotal").val();
-	$("#advtotal").val(adv - oldadv[i].payment_amount );
-	
-	//alert($("#advtotal").val());
-	
-	var bal = $("#balanceamt").val();
-	$("#balanceamt").val(Number(bal) + Number(oldadv[i].payment_amount) );
-	
-	//alert($("#balanceamt").val());
-	
-	    //collect all values and re-assign
-		
-		
-	    var date = $("#oldpayment_date").val();
-	var amt = $("#oldadv_amount").val();
-	var title = $("#oldpurpose_title").val();
-	var desc = $("#oldpurpose_desc").val();
-	var mode = $("#oldmode_payment").val();
-	var acc = $("#oldpayment_acc").val();
-	var tds = $("#oldtds_rate").val();
-	var tdsamt = $("#oldtds_amount").val();
-	
-	
-			oldadv[i].payment_date= date;
-			oldadv[i].payment_amount=amt;
-			oldadv[i].purpose_title=title;
-			oldadv[i].purpose_desc= desc;
-			oldadv[i].payment_mode=mode;
-			oldadv[i].payment_account=acc;
-			oldadv[i].tdsrate=tds;
-			oldadv[i].tdsamount=tdsamt;
-			//ID remains the same
-			
-    //update new balance and new adv amount
-    
-    var adv = $("#advtotal").val();
-	$("#advtotal").val(Number(adv) +  Number(oldadv[i].payment_amount) );
-	
-	alert($("#advtotal").val());
-	
-	var bal = $("#balanceamt").val();
-	$("#balanceamt").val(Number(bal) - Number(oldadv[i].payment_amount) );
-	
-	alert($("#balanceamt").val());
-    
-			
-	//now remove that row and create new one, insert at end
-	
-	         //insert after gtotal
-	   		$("#" + oldadv[i].id ).remove();
-	
-	
-	   		if(oldadv[i].tdsrate==0)
-			{
-			
-						$(
-						'<tr id="'+ oldadv[i].id  + '"><td colspan="3">'
-								+
-
-								"Advance Payment by "
-								+  oldadv[i].payment_mode
-								+ " "
-								+ " made on "
-								+ " "
-								+  oldadv[i].payment_date
-								+ "<b>"
-								+ ": Rs."
-								+  oldadv[i].payment_amount
-								+ "</b><br>"
-								+
-
-								'</td><td><i class="entypo-pencil" onclick="open_advdialog('
-								+ editable_old_counter
-								+ ')"></i></td>'
-								+ '<td><i class="entypo-trash" onclick="delete_adv('
-								+ editable_old_counter + ')"></i></td></tr>').insertBefore("#totaladv");;
-			}
-
-			else {
-			
-		
-								$(
-								'<tr id="'+ oldadv[i].id  + '">' 
-								+'<td colspan="3">'
-								+ 'Advance Payment by' 
-								+ " "
-								+ oldadv[i].payment_mode
-								+ " "
-								+ "made on"
-								+ " "
-								+ oldadv[i].payment_date
-								+ ":"
-								+ "<b>"
-								+ " Rs."
-								
-								+ oldadv[i].payment_amount
-								+ "</b><br>"
-								+ "TDS Rate : "
-								+ oldadv[i].tdsrate
-								+ "% "
-								+ "<br>"
-								+ "TDS Amount : Rs."
-								+ oldadv[i].tdsamount
-								+ "<br>"
-								+ '</td>'
-								+ '<td>'
-								+ '<i class="entypo-pencil" onclick="open_advdialog('
-								+ editable_old_counter
-								+ ')"></i></td>'
-								+ '<td><i class="entypo-trash" onclick="delete_adv('
-								+ editable_old_counter + ')"></i></td></tr>').insertBefore("#totaladv");
-
-	}
-
-
-	
-		
-		$('#editold_payment').dialog('close');
-		
-	}
-
-	//submit editted new payment
-function edit_advpay()
-
-{
-		//can edit only if adv amt<=balance
-		
-		
-	//UPDATE ADV and balance
-	alert("edit");
-	
-	var adv = $("#advtotal").val();
-	$("#advtotal").val(adv - newadv[0].payment_amount );
-	
-	alert($("#advtotal").val());
-	
-	var bal = $("#balanceamt").val();
-	$("#balanceamt").val(Number(bal) + Number(newadv[0].payment_amount) );
-	
-	alert($("#balanceamt").val());
-	
-	
-	
-	
-	newadv.pop();
-	//show it in table row and in newadv array
-	
-	alert("length is" + newadv.length);
-	
-	var date = $("#newpayment_date").val();
-	var amt = $("#newadv_amount").val();
-	var title = $("#newpurpose_title").val();
-	var desc = $("#newpurpose_desc").val();
-	var mode = $("#newmode_payment").val();
-	var acc = $("#newpayment_acc").val();
-	var tds = $("#newtds_rate").val();
-	var tdsamt = $("#newtds_amount").val();
-	
-	
-	var a = {
-			"payment_date": date,
-			"payment_amount":amt,
-			"purpose_title":title,
-			"purpose_desc": desc,
-			"payment_mode":mode,
-			"payment_account":acc,
-			"tdsrate":tds,
-			"tdsamount":tdsamt,
-			
-	};
-	
-	newadv.push(a);
-	alert(a);
-	console.log(newadv);
-	
-	
-	
-	$("#apay").remove(); //remove table row and insert again
-	
-	//we know that adv total and bal exists, update them too
-	
-	//so insert before advtotal, 2 cases with tds and without tds
-	
-	$("#editnew_payment").dialog('close');
-	
-	
-	var td = newadv[0].tdsrate;
-	
-	var advtotal =  Number($("#advtotal").val()) + Number(newadv[0].payment_amount);
-	$("#advtotal").val(advtotal);
-
-	var bal =  ($("#balanceamt").val() - Number(newadv[0].payment_amount )).toFixed(2);
-	$("#balanceamt").val(bal);
-
-	
-	
-	
-
-	
-	if (td == '')
-	{
-		alert("no tds");
-		$(
-		'<tr id="apay"><td colspan="3">' + 
-
-		"Advance Payment by " 
-		+ mode 
-		+ " "
-				
-		+ " made on " 
-		+ date 
-		+ "<b>"
-		+ ": Rs."
-		+ amt 
-		+ "</b><br>" 
-		+'</td><td><i class="entypo-pencil" onclick="edit_adv('+ editable_counter  +')"></i></td>'
-		+'<td><i class="entypo-trash" onclick="delete_newadv(' +  editable_counter + ')"></i></td></tr>').insertBefore('#totaladv');
-		//$("#adv_pay").hide();
-
-	}
-
-	else 
-	{
-		$(
-		'<tr id="apay"><td colspan="3">' + 
-
-		"Advance Payment by "
-	+ mode
-	+ " " 
-	+ "made on "
-    + date
-    + ":" 
-    + "<b>"
-    +" Rs."
-	+ amt
-	+ "<br>" 
-	+"TDS Rate : " 
-	+ tds 
-	+ "% "
-	+ "<br>" 
-	+"TDS Amount : Rs." 
-	+ tdsamt
-	+ "</b><br>" 
-	+'</td><td><i class="entypo-pencil" onclick="edit_adv('+ editable_counter +')"></i></td>'
-    +'<td><i class="entypo-trash" onclick="delete_newadv(' +  editable_counter + ')"></i></td></tr>').insertBefore('#totaladv');
-	}
-	
-	
-	
-	alert(adv_counter);
-	
-	
-	
-	return false;	
-}
-
-	//edit new adv
-function edit_adv(counter)
-	
-{
-	 $("#editnew_payment").dialog({
-	        
-	        modal: true,
-	        autoOpen: false,
-	        title: "Edit Advance Payment",
-	        width: 600,
-	        height: 620
-	        });
-	         // use same date 
-	        
-	        $("#newvendor_name").val($("#vendor").val());
-	        $("#newpurpose_title").val(newadv[0].purpose_title);
-	        $("#newpurpose_desc").val(newadv[0].purpose_desc);
-	        $("#newmode_payment").val(newadv[0].payment_mode);
-	        $("#newpayment_acc").val(newadv[0].payment_account);
-	        $("#newadv_amount").val(newadv[0].payment_amount);
-	        $("#newtds_rate").val(newadv[0].tdsrate);
-	        $("#newtds_amount").val(newadv[0].tdsamount);
-	        $("#newpayment_date").val(newadv[0].payment_date);
-
-	        editable_counter=counter;
-	        
-	        $('#editnew_payment').dialog('open');
-}
-
-
-*/
+  
 function make_advpay() //new payment
 {
 	
@@ -562,7 +213,17 @@ function make_advpay() //new payment
     var tdsamt = $("#tds_amount").val();
     var mode = $("#mode_payment").val();
     var acc = $("#payment_acc").val();
-    var id = "new" + (newpayment+1);
+    
+    
+    /*make an ajax call , save the payment,
+    On success, save it in adv array
+    update amounts in PO
+    
+    id will be ID of just inserted adv payment
+    
+	*/
+    
+    var id =  (newpayment+1);
     newpayment+= 1;
     
     var a = {
@@ -576,7 +237,9 @@ function make_advpay() //new payment
 			"tdsamount":tdsamt,
 			"id" : id
 	};
-	
+    
+    
+   
 	adv.push(a);
 	console.log(adv);
 	
@@ -599,27 +262,40 @@ function make_advpay() //new payment
 	$("#advtotal").val(Number(oldadv) +  Number(amt));
 	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
 	
+	
+	
+	
 	//show the chngs in payments section
 	
-	var divid = id;
+	var divid = "adv" + id;
 	
 	
 	
 	$("#payments").append('<div id="'+  divid + '">' + 
 				'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
-				'&nbsp;&nbsp;<a onclick="edit_payment(\'' + divid + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
-				'<a onclick="delete_payment(\'' +  divid + '\')">Remove payment</a></div>');
+				'&nbsp;&nbsp;<a onclick="edit_payment(\'' + id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+				'<a onclick="delete_payment(\'' +  id + '\')">Remove payment</a></div>');
 	
 	//check if balance is 0 , if yes, then remove make payment button
 	
-		if($("#balanceamt").val()==0.00)
+	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+	$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
 	{
-	//alert("hi done");
-	$("#pay_button").hide();
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
 	}
 	else
+	{
 		$("#pay_button").show();
-	
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
 	
 	return false;
 	
@@ -691,18 +367,9 @@ function edit_payment(payment_id)
 function delete_payment(payment_id)
 {
 	var divid;
-	var id;
-	if(payment_id.substring(0,3)=="new")
-	{
-		alert("true");
-		divid = payment_id;
-		id= payment_id;
-	}
-	else
-	{
- 		divid = "adv" + payment_id;
- 		id = payment_id;
-	}
+	
+		divid = "adv" + payment_id;
+ 	
 	$("#" + divid).remove();
 
 //adj bal and adv total
@@ -728,13 +395,24 @@ var oldadv = $("#advtotal").val();
 	$("#advtotal").val(Number(oldadv) -  Number(advamt));
 	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
 	
+	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+	$("#dueamt").text($("#balanceamt").val());
+	
 	if($("#balanceamt").val()==0.00)
 	{
-	//alert("hi done");
-	$("#pay_button").hide();
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
 	}
 	else
+	{
 		$("#pay_button").show();
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
 	
 	console.log(adv);
 }
@@ -826,9 +504,10 @@ function edittds_change()
 		var tdsamt = $("#etds_amount").val();
 		
 		//find this entry in adv array to update
+	
 		
-		alert("hi");
-		alert(adv.length);
+		//AJX CALL TO EDIT, PASS ID OF IT ALONG WITH PO#
+		//on success edit in json, and update fields
 		
 		var prev_adv ;
 		
@@ -871,24 +550,30 @@ function edittds_change()
 		
 		//show the chngs in payments section
 		
-			if($("#balanceamt").val()==0.00)
+		$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+		$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
 	{
-	//alert("hi done");
-	$("#pay_button").hide();
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
 	}
 	else
+	{
 		$("#pay_button").show();
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
 	
 		
 		
-		alert(adv_counter.substring(0,3));
+		
 		var divid;
-		if(adv_counter.substring(0,3)=="new")
-			{
-			alert("true");
-			divid = adv_counter;
-			}
-		else
+		
 			
 		 divid = "adv" + adv_counter;
 		
@@ -1136,6 +821,13 @@ function loadName()
 
 				
 			$("#advtotal").val(advance_total);
+			$("#show_due").text("Amount Due : Rs " + $("#advtotal").val());
+			if(bal==0.00 || bal==0)
+				$("#payment_status").text("Status : PO paid in full");
+			else
+				$("#payment_status").text("Status : PO payment is due");
+			
+			$("#dueamt").text($("#advtotal").val());
 			$("#balanceamt").val(bal);
 			console.log(adv);
 			
@@ -1496,25 +1188,28 @@ function loadName()
 						<li><a href="#">View All</a></li>
 					</ul></li>
 					
-				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
+			<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
-						<li><a href="tax_settings.html" > Tax Settings</a></li>
+
+						<li><a href="business_details.html">Company Profile</a></li>
 						<li class="divider"></li>
-						<li><a href="financial_settings.html">Financial Settings </a></li>
+						<li><a href="tax_settings.html"> Tax Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="financial_settings.html">Financial Settings
+						</a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
-					</ul>
-				</li>
+						<li class="divider"></li>
+						<li><a href="FormatSettings.html">Format Settings </a></li>
+					</ul></li>
 
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
-						<b class="caret"></b></a>
+					data-toggle="dropdown" style="color: white">&nbsp;<i
+						class="fa fa-user" id="name"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="company_profile.html"><i
-								class="fa fa-fw fa-user"></i> Profile</a></li>
-
 
 						<li class="divider"></li>
 						<li><a href="logout.html"><i
@@ -1526,31 +1221,31 @@ function loadName()
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="abc">
 
-					<li ><a href="index.html"><i
-							class="fa fa-fw fa-dashboard"></i> Home</a></li>
-							
-					<li class="active"><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
-							Purchase Orders</a></li>
-							
-					<li><a href="Bills.html"><i class="fa fa-fw fa-dashboard"></i>
+					<li><a href="index.html"><i class="fa fa-fw fa-dashboard"></i>
+							Home</a></li>
+
+					<li ><a href="PurchaseOrders.html"><i
+							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
+
+					<li class="active"><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
 							Bills</a></li>
 							
-					<li><a href="Invoice.html"><i
+					<li><a href="createEstimate.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
 					
-					<li><a href="Estimate.html"><i
+					<li><a href="createInvoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
-					
+
 					<li><a href="Receipts.html"><i
 							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
-							
+
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
-							
-					<li><a href="Customers.html"><i
+
+					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
-							
-					<li><a href="Vendors.html"><i
+
+					<li><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
 				
 					
@@ -1588,7 +1283,7 @@ function loadName()
 				
 				<div id="right">
 				<h3>Amount Due</h3>
-				<div>Rs 200</div>
+				<div id="dueamt">Rs 200</div>
 				</div>
 			</div>
 				</div>
@@ -1603,8 +1298,7 @@ function loadName()
 											
 											<div>
 											<p style="float:right">
-												<button type="button" class="btn btn-info"
-												 >Edit Purchase Order</button>
+												<button type="button" class="btn btn-info" onclick="editpo()">Edit Purchase Order</button>
 											</p>
 											
 											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-ok" style="color:#33CCCC"></span>&nbsp;&nbsp;Create Purchase Order
@@ -1663,15 +1357,15 @@ function loadName()
 												
 											
 											<div>
-												<p style="float:right" id="show_due">
-												<b>Amount Due : Rs. 200 </b>
+												<p style="float:right" >
+												<b id="show_due">Amount Due : Rs. 200 </b>
 												</p>
 												
 												
 													
 											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-ok" style="color:gray"></span>&nbsp;&nbsp;Make Advance Payment</h3>
 											
-											<h4>&nbsp;&nbsp;<b>Status:</b> Purchase Order is due. </h4>
+											<h4>&nbsp;&nbsp;<b id="payment_status">Status: Purchase Order is due. </b></h4>
 											</div>
 											
 											
@@ -1784,12 +1478,20 @@ function loadName()
 
 																<br> <br>
 
-																<div class="form-group required">
+																	<div class="form-group required">
 																	<label class="col-md-2 control-label">Date</label>
 																	<div class="col-md-4">
-																		<input class="form-control" id="date" readonly />
+																		<div class="input-group date" id="dtpicker1">
+
+																			<input type="text" class="form-control" id="date"
+																				onchange="get_duedate()"> <span
+																				class="input-group-addon"> <span
+																				class="glyphicon glyphicon-calendar"> </span>
+																			</span>
+																		</div>
 																	</div>
 																</div>
+
 																<br> <br>
 
 
@@ -2659,6 +2361,10 @@ function delete_newadv(counter)
 	}
 
 
+function editpo()
+{
+	window.location.replace("edit.html?PONo=CMP445PO11");
+	}
 
 </script>
 

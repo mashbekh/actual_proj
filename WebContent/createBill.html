@@ -207,6 +207,23 @@ var tax_list = [
 		
 	}
 ];
+	
+var vendor_list = [
+	{
+		"vendor_name" : "Suraj Papers",
+		"vendor_id" : "VEN1234",
+		"addr": "kguyfutef bjhgff jhfuutfuyt"
+	},
+	{
+		"vendor_name" : "Prints",
+		"vendor_id" : "VEN789",
+		"addr": "jhge htydteyfhbvs"
+		
+	}
+	
+	
+];
+
 
 $(function () {
     $('#dtpicker').datetimepicker({
@@ -323,11 +340,70 @@ function loadName()
 	 
 	 }
      
+ for(var i=0;i<vendor_list.length;i++)
+ {
+
+ //show only inventory, noninv and service input type products
+
+  $('#vendor_names').append("<option vendorid='" +  vendor_list[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
+ 
+ }
+ 
+ $('#vendor_names').append("<option value='+ Create Vendor' id='add'>+ Create Vendor</option>");
      
    
 }
 
 //bill needs only CP 
+
+
+function update_vendor()
+{
+var vdr = $("#vendor").val();
+	
+	
+	if(vdr =='+ Create Vendor')
+	{
+	
+		$("#vendor").val('');
+		$("#vendor_detail").val('');
+		
+		$("#vendor_dialog").dialog({
+				modal : true,
+				autoOpen : false,
+				title : "Create Vendor",
+				resizable : false,
+				width : 880,
+				height : 760
+			});
+
+			$("#vendor_dialog").dialog('open'); //clear all fields
+
+		}
+
+		else if(vdr != ''){
+
+			var vendr_id = $('datalist option[value="' + vdr + '"]').attr('vendorid');
+			alert(vendr_id);
+			for (var i = 0; i < vendor_list.length; i++) {
+				if (vendor_list[i].vendor_id == vendr_id) {
+					
+					$("#vendor_detail").val(vendor_list[i].addr);
+
+				}
+			}
+
+		}
+	
+		else if(vdr == '')
+		{
+			$("#vendor").val('');
+			$("#vendor_detail").val('');
+		
+		}
+	
+	
+	}
 
 var add_product_counter;
 
@@ -405,11 +481,54 @@ function update_prod_details(counter)
 		}
 	
 }
+function create_vendor()
+{
+	//ajax call, insert vendor, get ID /json back, add it to vendor list
 	
+	//check validation
+	
+	var bname = $('#business_name').val();
+    var cname = $('#contact_name').val();
+    var btype = $('#type_business').val();
+    var bsector = $('#business_sector').val();
+    
+    var addr1  = $('#addr_line1').val();
+	var addr2  = $('#addr_line2').val();
+    var state  = $('#state').val();
+    var city  = $('#city').val();
+    var locality  = $('#locality').val();
+    var email  = $('#email').val();
+     var mobile  = $('#mobile').val();
+     var website = $('#website').val();
+     var code =$('#code').val();
+     var landline = $('#landline').val();
+     
+     var tin = $('#tin_no').val();
+     var cin =  $('#cin_no').val();
+     var strn = $('#strn_no').val();
+     var gst =  $('#gst_no').val();
+     var pan =  $('#pan_no').val();
+     
+     var acc_num = $('#account_num').val();
+     var type_account = $('#type_account').val();
+     var ifsc_code = $('#ifsc_code').val();   
+     var bank = $('#bank').val(); 
+	
+	//AJAX CALL
+	
+   vendor_list.push(new_vendor);
+	
+   $('#vendor_names').append("<option vendorid='" +  new_vendor[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
+   	
+	
+	
+	}
 
 </script>
 
 <body onload="loadName()">
+
+
 
 
 				<!-- create product dialog-->
@@ -551,6 +670,444 @@ function update_prod_details(counter)
 									</div>
 			<!-- end of create product dialog -->
 
+
+	<div id="vendor_dialog" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+		
+		
+		<!------CONTROL TABS START------>
+						<ul class="nav nav-tabs bordered">
+							<li class="active"><a href="#business" data-toggle="tab"><i
+									class="entypo-menu"></i> Business Details </a></li>
+							<li><a href="#contact" data-toggle="tab"><i
+									class="entypo-menu"></i> Contact Details </a></li>
+							<li><a href="#tax" data-toggle="tab"><i
+									class="entypo-menu"></i>  Tax Details </a></li>
+							<li><a href="#account" data-toggle="tab"><i
+									class="entypo-menu"></i> Account Details </a></li>
+
+						</ul>
+						<!------CONTROL TABS END------>
+						
+						
+							
+						<!--  Control tab features -->
+
+						<div class="tab-content">
+							<!----    BUSINESS-->
+							<div class="tab-pane box active" id="business">
+								<br>
+								
+								
+			<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Business Name</label>
+					<div class="col-md-6">
+						<input class="form-control" id="business_name" type="text"
+							required value="" />
+					</div>
+				</div>
+
+				<br> <br><br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Contact Person Name</label>
+					<div class="col-md-6">
+						<input class="form-control" id="contact_name" type="text" required
+							value="" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Type of Business</label>
+					<div class="col-md-6">
+						<select class="form-control" id="type_business" required>
+							<option value=''>Select</option>
+							<option value="Propreitorship">Propreitorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Business Sector</label>
+					<div class="col-md-6">
+						<input class="form-control" id="business_sector" type="text"
+							required value="" />
+					</div>
+				</div>
+				
+				<br><br>
+				<div class="form-group required">
+				<div class="col-md-6">
+				<input id="business" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_business()"> 
+					</div>
+					</div>
+				</form>
+				
+								<br><br><br>
+								
+								
+								
+								</div> <!-- end of vendor dialog -->
+								
+								
+								
+								
+								
+							<div class="tab-pane box " id="contact">
+								<br>
+								
+								
+			<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Address Line 1</label>
+					<div class="col-md-6">
+						<input class="form-control" id="addr_line1" type="text"
+							required="required" />
+					</div>
+				</div>
+
+				<br> <br><br>
+
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Address Line 2</label>
+					<div class="col-md-6">
+						<input class="form-control" id="addr_line2" type="text" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">State</label>
+					<div class="col-md-6">
+						<select class="form-control" id="state" required="required">
+								<option value="New Delhi">New Delhi</option>
+							<option value="Andaman/Nicobar Islands">Andaman/Nicobar Islands</option>
+							<option value="Andhra Pradesh">Andhra Pradesh</option>
+							<option value="Arunachal Pradesh">Arunachal Pradesh</option>
+							<option value="Assam">Assam</option>
+							<option value="Bihar">Bihar</option>
+							<option value="Chandigarh">Chandigarh</option>
+							<option value="Dadra/Nagar Haveli">Dadra/Nagar Haveli</option>
+							<option value="Daman/Diu">Daman/Diu</option>
+							<option value="Goa">Bihar</option>
+							<option value="Gujarat">Gujarat</option>
+							<option value="Haryana">Haryana</option>
+							<option value="Himachal Pradesh">Himachal Pradesh</option>
+							<option value="Jammu/Kashmir">Jammu/Kashmir</option>
+							<option value="Jharkhand">Jharkhand</option>
+							<option value="Karnataka">Karnataka</option>
+							<option value="Kerala">Kerala</option>
+							<option value="Lakshadweep">Lakshadweep</option>
+							<option value="Madhya Pradesh">Madhya Pradesh</option>
+							<option value="Maharashtra">Maharashtra</option>
+							
+							<option value="Manipur">Manipur</option>
+							<option value="Meghalaya">Meghalaya</option>
+							<option value="Mizoram">Mizoram</option>
+							<option value="Nagaland">Nagaland</option>
+							<option value="Orissa">Orissa</option>
+							<option value="Pondicherry">Pondicherry</option>
+							<option value="Punjab">Punjab</option>
+							<option value="Rajasthan">Rajasthan</option>
+							<option value="Sikkim">Sikkim</option>
+							<option value="Tamil Nadu">Tamil Nadu</option>
+							<option value="Telangana">Telangana</option>
+							<option value="Tripura">Tripura</option>
+							<option value="Uttaranchal">Uttaranchal</option>
+							<option value="Uttar Pradesh">Uttar Pradesh</option>
+							<option value="West Bengal">West Bengal</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">City</label>
+					<div class="col-md-6">
+						<input class="form-control" id="city" type="text"
+						 required="required" />
+							
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Locality</label>
+					<div class="col-md-6">
+						<input class="form-control" id="locality" type="text"
+							placeholder="Prominent Landmark" required="required" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Email</label>
+					<div class="col-md-6">
+						<input class="form-control" id="email" name="email" maxlength="30"
+							required="required" title="" type="email" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Website</label>
+					<div class="col-md-6">
+						<input class="form-control" id="website" name="website"
+							maxlength="30" title="" type="email" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Mobile No</label>
+					<div class="col-md-1">+91</div>
+					<div class="col-md-5">
+						<input class="form-control" id="mobile" name="mobile"
+							required="required" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="10" />
+					</div>
+				</div>
+
+
+
+				<br> <br>
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Landline No</label>
+					<div class="col-md-1">+91</div>
+					<div class="col-md-2">
+						<input class="form-control" id="code" name="code"
+							placeholder="STD Code" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							maxlength="3" />&nbsp;
+					</div>
+					<div class="col-md-3">
+						<input class="form-control" id="landline" name="landline"
+							placeholder="Landline number" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							maxlength="8" />
+
+					</div>
+
+				</div>
+
+				<br> <br>
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="contact" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_contact()"> 
+
+					</div>
+					</div>
+
+			</form>
+				
+								<br><br><br>
+								
+								
+								</div> <!-- end of contact -->
+								
+								
+								
+								
+								<!-- tax details -->
+								
+								<div class="tab-pane box " id="tax">
+								<br>
+								
+								
+								<form action="" method="post">
+
+
+
+
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Company PAN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="pan_no" name="pan_no"
+							maxlength="10" required="required" title="" type="text" />
+					</div>
+				</div>
+
+				<br>
+				<br><br>
+
+				<div class="form-group ">
+					<label class="col-md-3 control-label"> TIN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="tin_no" name="tin_no" title=""
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="11" />
+					</div>
+				</div>
+				
+				
+					<br>
+				<br>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Service Tax Registration No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="strn_no" name="cin_no"
+							maxlength="21" title="" type="text" />
+					</div>
+				</div>
+				
+
+				<br>
+				<br>
+				
+				
+				<div class="form-group">
+					<label class="col-md-3 control-label">GST No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="gst_no" name="cin_no"
+							maxlength="21" title="" type="text" />
+					</div>
+				</div>
+				
+
+					<br>
+				<br>
+
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Company CIN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="cin_no" name="cin_no"
+							maxlength="21" title="" type="text" />
+					</div>
+				</div>
+				
+			
+
+				<br> <br> 
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="taxdetails" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_tax()"> 
+					</div>
+					</div>
+				
+				
+			</form>
+								<br><br><br>
+								
+								
+								</div>
+								
+					<!-- end of tax -->			
+								
+								
+								
+								<div class="tab-pane box " id="account">
+								<br>
+								
+								
+								<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Account Number</label>
+					<div class="col-md-6">
+						<input class="form-control" id="account_num" type="number" />
+					</div>
+				</div>
+
+				<br> <br><br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Type of Account</label>
+					<div class="col-md-6">
+						<select class="form-control" id="type_account">
+							<option value="Savings">Savings</option>
+							<option value="Overdraft">Overdraft</option>
+							<option value="Current Account">Current Account</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+
+
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Bank</label>
+					<div class="col-md-6">
+						<select class="form-control" id="bank">
+							<option value="Proprietorship">Proprietorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">IFSC Code</label>
+					<div class="col-md-6">
+						<input class="form-control" id="ifsc_code" type="text"
+							maxlength="30" />
+					</div>
+				</div>
+
+				<br> <br> 
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="account" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_account()"> 
+					</div>
+					</div>
+					
+			</form>
+								<br><br><br>
+								
+								
+								</div>
+								<!-- end of account -->
+								
+								
+								
+								</div> <!-- end of tab content -->
+		
+		
+		</div>
+		</div>
 
 	
 
@@ -755,15 +1312,11 @@ function update_prod_details(counter)
 																	<div class="col-md-4">
 																		<input list="vendor_names" class="form-control"
 																			id="vendor" placeholder="Vendor Name"
-																			onchange="getvendor_details()">
-
-																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
-                                  store customer id save this -->
-
-																		<datalist id="vendor_names">
-																			<option vendorid="145" value="Vaishnavi">Vaishnavi</option>
-																			<option vendorid="167" value="Vidhya">Vidhya</option>
-
+																			onchange="update_vendor()">
+																			
+																			<datalist id="vendor_names">
+																			
+																			
 																		</datalist>
 
 
@@ -779,7 +1332,7 @@ function update_prod_details(counter)
 
 																	<div class="col-md-6">
 																		<textarea class="form-control" id="vendor_detail"
-																			rows="5" cols="80" readonly>#31, 3rd cross Vijayanagar Bangalore</textarea>
+																			rows="5" cols="80" readonly></textarea>
 																	</div>
 																</div>
 

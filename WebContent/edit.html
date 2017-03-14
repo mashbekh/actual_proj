@@ -163,6 +163,95 @@ $(function () {
     
 });
 
+var product_list = [
+	
+	{      
+		
+		"product_name": "eraser",
+		"product_desc": "stationary",
+		"tax":                     //backend - search for tax obect from table with this id
+			{
+			 "tax_name":null,
+			 "tax_abbreviation": "VAT",
+			 "tax_desc":null,
+			 "tax_rate": 5.5,
+			 "company": null,  
+			 "tax_id": "CMP123TAX1",
+			 "tax_recoverable":true
+			 
+			},
+		"category":"XYZ",
+		"cp": 40,
+		"head_expenditure": "Purchases",
+			
+		"sp": 45,
+		"head_income": "Sales",
+		
+		"company":
+			{
+			"company_id" :"CMP445"
+			},
+		"discount":0,	
+		"product_id": "PROD66",
+		"id": 66
+		
+		
+},
+
+
+{      
+	
+	"product_name": "pens",
+	"product_desc": "stationary",
+	"tax":                     //backend - search for tax obect from table with this id
+		{
+		 "tax_name":null,
+		 "tax_abbreviation": "VAT",
+		 "tax_desc":null,
+		 "tax_rate": 5.5,
+		 "company": null,  
+		 "tax_id": "CMP123TAX1",
+		 "tax_recoverable":true
+		 
+		},
+	"category":"XYZ",
+	"cp": 75,
+	"head_expenditure": "Purchases",
+		
+	"sp": 75,
+	"head_income": "Sales",
+	
+	"company":
+		{
+		"company_id" :"CMP445"
+		},
+	"discount" :0,
+	"product_id": "PROD90",
+	"id": 90
+	
+	
+}
+	];                                 //list of products from backend
+	
+
+var tax_list = [
+	{
+		"tax_id" : "CMP123TAX1",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 5.5
+		
+	},
+	{
+		"tax_id" : "CMP123TAX2",
+		"tax_abbreviation" : "VAT",
+		"tax_rate": 14.5
+		
+		
+	}
+];
+
+
+/*
 function add_advpay() {
     
     $("#advance_payment").dialog({
@@ -847,8 +936,26 @@ function oldtds_change()
 		return false;
 
 	}
+	
+	*/
 </script>
 <script>
+var vendor_list = [
+	{
+		"vendor_name" : "Suraj Papers",
+		"vendor_id" : "VEN1234",
+		"addr": "kguyfutef bjhgff jhfuutfuyt"
+	},
+	{
+		"vendor_name" : "Prints",
+		"vendor_id" : "VEN789",
+		"addr": "jhge htydteyfhbvs"
+		
+	}
+	
+	
+];
+	
 var count=0;
 var first_count=0;
 
@@ -878,6 +985,24 @@ function loadName()
 	 var myParam = location.search.split('PONo=')[1];
 	// alert(myParam);
 	
+	for(var i=0;i<tax_list.length;i++)
+	 {
+	 	
+	 	$('#prodtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+	 
+	 }
+	
+	
+	 for(var i=0;i<vendor_list.length;i++)
+ {
+
+ //show only inventory, noninv and service input type products
+
+  $('#vendor_names').append("<option vendorid='" +  vendor_list[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
+ 
+ }
+ 
+ $('#vendor_names').append("<option value='+ Create Vendor' id='add'>+ Create Vendor</option>");
 	 
 	$.ajax({
 		   type : 'GET',
@@ -919,7 +1044,7 @@ function loadName()
 		$("#status").text("PAID");
 	}
 	
-	
+	 $('.dropdown-toggle').dropdown();
 }	
 
 
@@ -1022,10 +1147,9 @@ function loadName()
 							+ '</td>' + '</tr>').insertBefore('#last_row');
 
 			$("#" + i + "tax_rate").val(x.pod[i].tax_id);
-			alert(i);
+		//	alert(i);
 			update_amount(i);
-			//update_ta
-//(i);
+			
 		}
 
 	
@@ -1038,140 +1162,164 @@ function loadName()
 		$("#date").val(v);
 
 
-		if(x.adv_payment.length>0)  
-			{
-			alert("yo");
-				var advance_total = x.advance_amount;
-				var bal = x.balance;
+	}
+	
+	function update_vendor()
+	{
+	var vdr = $("#vendor").val();
+		
+		
+		if(vdr =='+ Create Vendor')
+		{
+		
+			$("#vendor").val('');
+			$("#vendor_detail").val('');
 			
-				for (var j = 0; j < x.adv_payment.length; j++) {
-					
-					var date = new Date(x.adv_payment[j].payment_date);
-					var dt = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-					alert(dt);	
-				
-					//copy all contents from this to oldadv
-					
-					var a = {
-							"payment_date": dt,
-							"payment_amount":x.adv_payment[j].payment_amount,
-							"purpose_title":x.adv_payment[j].purpose_title,
-							"purpose_desc":x.adv_payment[j].purpose_desc,
-							"payment_mode":x.adv_payment[j].payment_mode,
-							"payment_account":x.adv_payment[j].payment_account,
-							"tdsrate":x.adv_payment[j].tdsrate,
-							"tdsamount":x.adv_payment[j].tdsamount,
-							"id" : x.adv_payment[j].id
-					};
-					
-					oldadv.push(a);
-					
-					adv_counter.push(j);
-					advid_counter[j] = x.adv_payment[j].id;
-					
-					alert(x.adv_payment[j].tdsrate);
-					
-					
-					if(x.adv_payment[j].tdsrate==0)
-						{
-						
-					
-					$("#table_export")
-							.append(
-									'<tr id="'+ x.adv_payment[j].id  + '"><td colspan="3">'
-											+
+			$("#vendor_dialog").dialog({
+					modal : true,
+					autoOpen : false,
+					title : "Create Vendor",
+					resizable : false,
+					width : 880,
+					height : 760
+				});
 
-											"Advance Payment by "
-											+ x.adv_payment[j].payment_mode
-											+ " "
-											+ " made on "
-											+ " "
-											+ dt
-											+ "<b>"
-											+ ": Rs."
-											+ x.adv_payment[j].payment_amount
-											+ "</b><br>"
-											+
-
-											'</td><td><i class="entypo-pencil" onclick="open_advdialog('
-											+ j
-											+ ')"></i></td>'
-											+ '<td><i class="entypo-trash" onclick="delete_adv('
-											+ j + ')"></i></td></tr>');
-				}
-
-				else {
-					
-					$("#table_export").append(
-											'<tr id="'+ x.adv_payment[j].id  + '">' 
-											+'<td colspan="3">'
-											+ 'Advance Payment by' 
-											+ " "
-											+ x.adv_payment[j].payment_mode
-											+ " "
-											+ "made on"
-											+ " "
-											+ dt
-											+ ":"
-											+ "<b>"
-											+ " Rs."
-											
-											+ x.adv_payment[j].payment_amount
-											+ "</b><br>"
-											+ "TDS Rate : "
-											+ x.adv_payment[j].tdsrate
-											+ "% "
-											+ "<br>"
-											+ "TDS Amount : Rs."
-											+ x.adv_payment[j].tdsamount
-											+ "<br>"
-											+ '</td>'
-											+ '<td>'
-											+ '<i class="entypo-pencil" onclick="open_advdialog('
-											+ j
-											+ ')"></i></td>'
-											+ '<td><i class="entypo-trash" onclick="delete_adv('
-											+ j + ')"></i></td></tr>');
-
-				}
+				$("#vendor_dialog").dialog('open'); //clear all fields
 
 			}
 
-				console.log(oldadv);
-			//add due amount and total advance amount table rows
+			else if(vdr != ''){
 
-			acount = acount + x.adv_payment.length - 1; //strt other adv payment from this ID
-			$("#table_export")
-					.append(
+				var vendr_id = $('datalist option[value="' + vdr + '"]').attr('vendorid');
+				alert(vendr_id);
+				for (var i = 0; i < vendor_list.length; i++) {
+					if (vendor_list[i].vendor_id == vendr_id) {
+						
+						$("#vendor_detail").val(vendor_list[i].addr);
 
-							'<tr id="totaladv">'
-									+ '<td colspan="5" class="right">'
-									+ '<div class="form-group ">'
-									+ '<label class="col-md-2 control-label">Total Advance Amount</label>'
-									+ '<div class="col-md-3">'
-									+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="advtotal"/>'
-									+ '</div>' + '</div>' +
+					}
+				}
 
-									'</td></tr>');
+			}
+		
+			else if(vdr == '')
+			{
+				$("#vendor").val('');
+				$("#vendor_detail").val('');
+			
+			}
+		
+		
+		}
 
-			$("#table_export")
-					.append(
+	function create_vendor()
+	{
+		//ajax call, insert vendor, get ID /json back, add it to vendor list
+		
+		//check validation
+		
+		var bname = $('#business_name').val();
+	    var cname = $('#contact_name').val();
+	    var btype = $('#type_business').val();
+	    var bsector = $('#business_sector').val();
+	    
+	    var addr1  = $('#addr_line1').val();
+		var addr2  = $('#addr_line2').val();
+	    var state  = $('#state').val();
+	    var city  = $('#city').val();
+	    var locality  = $('#locality').val();
+	    var email  = $('#email').val();
+	     var mobile  = $('#mobile').val();
+	     var website = $('#website').val();
+	     var code =$('#code').val();
+	     var landline = $('#landline').val();
+	     
+	     var tin = $('#tin_no').val();
+	     var cin =  $('#cin_no').val();
+	     var strn = $('#strn_no').val();
+	     var gst =  $('#gst_no').val();
+	     var pan =  $('#pan_no').val();
+	     
+	     var acc_num = $('#account_num').val();
+	     var type_account = $('#type_account').val();
+	     var ifsc_code = $('#ifsc_code').val();   
+	     var bank = $('#bank').val(); 
+		
+		//AJAX CALL
+		
+	   vendor_list.push(new_vendor);
+		
+	   $('#vendor_names').append("<option vendorid='" +  new_vendor[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
+	   	
+		
+		
+		}
+	
+	
+	var add_product_counter;
 
-							'<tr id="bal">'
-									+ '<td colspan="5" class="right">'
-									+ '<div class="form-group ">'
-									+ '<label class="col-md-2 control-label">Balance Amount</label>'
-									+ '<div class="col-md-3">'
-									+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="balanceamt"/>'
-									+ '</div>' + '</div>' +
+	function update_prod_details(counter) {
 
-									'</td></tr>');
+		var prod = $("#" + counter + "product_name").val();
 
-			$("#advtotal").val(advance_total);
-			$("#balanceamt").val(bal);
+		if (prod == '+ Add Product') {
+			add_product_counter = counter; //to select this newly created product in ths box
+
+			$("#" + counter + "product_name").val('');
+			$("#" + counter + "tax_rate").val('');
+			$("#" + counter + "prod_desc").val('');
+			$("#" + counter + "quantity").val('');
+
+			$("#product_dialog").dialog({
+
+				modal : true,
+				autoOpen : false,
+				title : "Add Product",
+				resizable : false,
+				width : 1000,
+				height : 700
+			});
+
+			$("#product_dialog").dialog('open'); //clear all fields
 
 		}
+
+		if (prod != '' && prod != '+ Add Product') {
+
+			var prod_id = $('datalist option[value="' + prod + '"]').attr(
+					'prodid');
+			alert(prod_id);
+			for (var i = 0; i < product_list.length; i++) {
+				if (product_list[i].product_id == prod_id) {
+					//get cost price
+					if (product_list[i].tax != null) {
+						var taxval = product_list[i].tax.tax_abbreviation + " "
+								+ product_list[i].tax.tax_rate;
+						$("#" + counter + "tax_rate").val(taxval);
+					}
+
+					$("#" + counter + "price").val(product_list[i].cp);
+					$("#" + counter + "prod_desc").val(
+							product_list[i].product_desc);
+					update_amount(counter);
+
+				}
+			}
+
+		} else {
+			//no product chosen
+
+			$("#" + counter + "price").val(0);
+
+			update_noproduct(counter);
+
+			$("#" + counter + "tax_rate").val('');
+			$("#" + counter + "prod_desc").val('');
+			$("#" + counter + "quantity").val(1);
+		}
+
 	}
+	
 </script>
 
 <body onload="loadName()">
@@ -1432,131 +1580,587 @@ function loadName()
 	
 	
 	
-	<!-- EDIT  old PAYMENT DIALOG -->
 	
-	<div id="editold_payment" title="Dialog Form" style="display: none;">
+	
+		<!-- create product dialog-->
+							
+							
+	<div id="product_dialog" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
+			<form action="" method="post">
+			
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Product Name</label>
+													<div class="col-md-6">
+														<input class="form-control" id="product_name"
+															name="product_name" maxlength="30"
+															placeholder="Product Name" required="required" title=""
+															type="text" />
+													</div>
+												</div>
+
+												<br> <br> <br>
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Product
+														Description</label>
+													<div class="col-md-6">
+														<input class="form-control" id="product_desc"
+															name="product_desc" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br> <br>
+
+												
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Category</label>
+													<div class="col-md-6">
+														<input class="form-control" id="category"
+															name="category" maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br> <br>
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Cost Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="cp" name="cp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Expenditure</label>
+													<div class="col-md-6">
+														<select name="expenditure"
+															class="form-control selectboxit" id="expenditure">
+															<option value="None">Select</option>
+
+															<option value="purchase">Purchases</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br> <br>
+
+												<div class="form-group ">
+													<label class="col-md-3 control-label">Selling Price</label>
+													<div class="col-md-6">
+														<input class="form-control" id="sp" name="sp"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+
+												<br>
+												<br>
+
+
+												<div class="form-group required">
+													<label class="col-md-3 control-label">Head of
+														Income</label>
+													<div class="col-md-6">
+														<select name="income" class="form-control selectboxit"
+															id="income">
+															<option value="None">Select</option>
+
+															<option value="Sales">Sales</option>
+
+														</select>
+													</div>
+												</div>
+
+												<br> <br>
+												
+												<div class="form-group">
+													<label class="col-md-3 control-label">Discount</label>
+													<div class="col-md-6">
+														<input class="form-control" id="discount" name="discount"
+															maxlength="" title="" type="text" />
+													</div>
+												</div>
+												
+												<br><br>
+
+												
+
+												<div class="form-group required">
+											<label class="col-md-3 control-label">Tax Rate</label>
+											<div class="col-md-6">
+
+												<input list="prodtaxlist" class="form-control"
+													id="prodtax_rate" placeholder="Tax Rate">
+
+												<datalist id="prodtaxlist">
+
+
+												</datalist>
+											</div>
+										</div>
+
+												<br> <br>
+
+
+											</form>
+											<input type="submit" class="btn btn-primary"
+												 onclick="return add_product()">
+
+
+
+
+										</div>
+									</div>
+			<!-- end of create product dialog -->
+	
+	
+<!-- CREATE VENDOR DIALOG -->
+
+<div id="vendor_dialog" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+		
+		
+		<!------CONTROL TABS START------>
+						<ul class="nav nav-tabs bordered">
+							<li class="active"><a href="#business" data-toggle="tab"><i
+									class="entypo-menu"></i> Business Details </a></li>
+							<li><a href="#contact" data-toggle="tab"><i
+									class="entypo-menu"></i> Contact Details </a></li>
+							<li><a href="#tax" data-toggle="tab"><i
+									class="entypo-menu"></i>  Tax Details </a></li>
+							<li><a href="#account" data-toggle="tab"><i
+									class="entypo-menu"></i> Account Details </a></li>
+
+						</ul>
+						<!------CONTROL TABS END------>
+						
+						
+							
+						<!--  Control tab features -->
+
+						<div class="tab-content">
+							<!----    BUSINESS-->
+							<div class="tab-pane box active" id="business">
+								<br>
+								
+								
 			<form action="" method="post">
 
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Vendor Name</label>
+					<label class="col-md-3 control-label">Business Name</label>
 					<div class="col-md-6">
-						<input class="form-control" id="oldvendor_name" type="text"
-							required value="" readonly/>
+						<input class="form-control" id="business_name" type="text"
+							required value="" />
 					</div>
 				</div>
 
-				<br> <br>
+				<br> <br><br>
 
-<!-- DATEPICKER TYPE -->
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Date of Payment</label>
+					<label class="col-md-3 control-label">Contact Person Name</label>
 					<div class="col-md-6">
-						<input class="form-control" id="oldpayment_date" type="text" required
+						<input class="form-control" id="contact_name" type="text" required
 							value="" />
 					</div>
 				</div>
 
-			
 				<br> <br>
 
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Amount</label>
+					<label class="col-md-3 control-label">Type of Business</label>
 					<div class="col-md-6">
-						<input class="form-control" id="oldadv_amount" type="number" step="any"
-							required value="" onchange="oldtds_change()"/>
+						<select class="form-control" id="type_business" required>
+							<option value=''>Select</option>
+							<option value="Propreitorship">Propreitorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
 					</div>
 				</div>
-				
+
 				<br> <br>
 
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Purpose Title</label>
-					<div class="col-md-9">
-						<input class="form-control" id="oldpurpose_title" type="text"
+					<label class="col-md-3 control-label">Business Sector</label>
+					<div class="col-md-6">
+						<input class="form-control" id="business_sector" type="text"
 							required value="" />
 					</div>
 				</div>
 				
-				<br> <br>
+				<br><br>
+				<div class="form-group required">
+				<div class="col-md-6">
+				<input id="business" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_business()"> 
+					</div>
+					</div>
+				</form>
+				
+								<br><br><br>
+								
+								
+								
+								</div> <!-- end of vendor dialog -->
+								
+								
+								
+								
+								
+							<div class="tab-pane box " id="contact">
+								<br>
+								
+								
+			<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Address Line 1</label>
+					<div class="col-md-6">
+						<input class="form-control" id="addr_line1" type="text"
+							required="required" />
+					</div>
+				</div>
+
+				<br> <br><br>
 
 				<div class="form-group ">
-					<label class="col-md-3 control-label">Purpose Description</label>
-					<div class="col-md-9">
-						<input class="form-control" id="oldpurpose_desc" type="text"
-							value="" />
+					<label class="col-md-3 control-label">Address Line 2</label>
+					<div class="col-md-6">
+						<input class="form-control" id="addr_line2" type="text" />
 					</div>
 				</div>
-				
-				<br><br>
-				
+
+				<br> <br>
+
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Mode of Payment</label>
+					<label class="col-md-3 control-label">State</label>
 					<div class="col-md-6">
-						<select class="form-control" id="oldmode_payment" required>
-							<option value=''>Select</option>
-							<option value="cash">Cash</option>
-							<option value="card">Card</option>
-							<option value="online">Online transfer</option>
-							<option value="cheque">Cheque</option>
+						<select class="form-control" id="state" required="required">
+								<option value="New Delhi">New Delhi</option>
+							<option value="Andaman/Nicobar Islands">Andaman/Nicobar Islands</option>
+							<option value="Andhra Pradesh">Andhra Pradesh</option>
+							<option value="Arunachal Pradesh">Arunachal Pradesh</option>
+							<option value="Assam">Assam</option>
+							<option value="Bihar">Bihar</option>
+							<option value="Chandigarh">Chandigarh</option>
+							<option value="Dadra/Nagar Haveli">Dadra/Nagar Haveli</option>
+							<option value="Daman/Diu">Daman/Diu</option>
+							<option value="Goa">Bihar</option>
+							<option value="Gujarat">Gujarat</option>
+							<option value="Haryana">Haryana</option>
+							<option value="Himachal Pradesh">Himachal Pradesh</option>
+							<option value="Jammu/Kashmir">Jammu/Kashmir</option>
+							<option value="Jharkhand">Jharkhand</option>
+							<option value="Karnataka">Karnataka</option>
+							<option value="Kerala">Kerala</option>
+							<option value="Lakshadweep">Lakshadweep</option>
+							<option value="Madhya Pradesh">Madhya Pradesh</option>
+							<option value="Maharashtra">Maharashtra</option>
 							
+							<option value="Manipur">Manipur</option>
+							<option value="Meghalaya">Meghalaya</option>
+							<option value="Mizoram">Mizoram</option>
+							<option value="Nagaland">Nagaland</option>
+							<option value="Orissa">Orissa</option>
+							<option value="Pondicherry">Pondicherry</option>
+							<option value="Punjab">Punjab</option>
+							<option value="Rajasthan">Rajasthan</option>
+							<option value="Sikkim">Sikkim</option>
+							<option value="Tamil Nadu">Tamil Nadu</option>
+							<option value="Telangana">Telangana</option>
+							<option value="Tripura">Tripura</option>
+							<option value="Uttaranchal">Uttaranchal</option>
+							<option value="Uttar Pradesh">Uttar Pradesh</option>
+							<option value="West Bengal">West Bengal</option>
 						</select>
 					</div>
 				</div>
 
-				<br><br>
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">City</label>
+					<div class="col-md-6">
+						<input class="form-control" id="city" type="text"
+						 required="required" />
+							
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Locality</label>
+					<div class="col-md-6">
+						<input class="form-control" id="locality" type="text"
+							placeholder="Prominent Landmark" required="required" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Email</label>
+					<div class="col-md-6">
+						<input class="form-control" id="email" name="email" maxlength="30"
+							required="required" title="" type="email" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Website</label>
+					<div class="col-md-6">
+						<input class="form-control" id="website" name="website"
+							maxlength="30" title="" type="email" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Mobile No</label>
+					<div class="col-md-1">+91</div>
+					<div class="col-md-5">
+						<input class="form-control" id="mobile" name="mobile"
+							required="required" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="10" />
+					</div>
+				</div>
+
+
+
+				<br> <br>
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Landline No</label>
+					<div class="col-md-1">+91</div>
+					<div class="col-md-2">
+						<input class="form-control" id="code" name="code"
+							placeholder="STD Code" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							maxlength="3" />&nbsp;
+					</div>
+					<div class="col-md-3">
+						<input class="form-control" id="landline" name="landline"
+							placeholder="Landline number" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							maxlength="8" />
+
+					</div>
+
+				</div>
+
+				<br> <br>
 				
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Payment Account</label>
+				<div class="col-md-6">
+				 <input id="contact" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_contact()"> 
+
+					</div>
+					</div>
+
+			</form>
+				
+								<br><br><br>
+								
+								
+								</div> <!-- end of contact -->
+								
+								
+								
+								
+								<!-- tax details -->
+								
+								<div class="tab-pane box " id="tax">
+								<br>
+								
+								
+								<form action="" method="post">
+
+
+
+
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Company PAN No</label>
 					<div class="col-md-6">
-						<select class="form-control" id="oldpayment_acc" required>
-							<option value=''>Select</option>
-							<option value="cash">Cash</option>
-							<option value="card">Card</option>
-							<option value="online">Online transfer</option>
-							<option value="cheque">Cheque</option>
-							
-						</select>
+						<input class="form-control" id="pan_no" name="pan_no"
+							maxlength="10" required="required" title="" type="text" />
+					</div>
+				</div>
+
+				<br>
+				<br><br>
+
+				<div class="form-group ">
+					<label class="col-md-3 control-label"> TIN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="tin_no" name="tin_no" title=""
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="11" />
 					</div>
 				</div>
 				
-				<br><br>
 				
-				<!-- To deduct TDS., company TAN is required, check if TAN number given then show this -->
+					<br>
+				<br>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Service Tax Registration No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="strn_no" name="cin_no"
+							maxlength="21" title="" type="text" />
+					</div>
+				</div>
+				
+
+				<br>
+				<br>
 				
 				
 				<div class="form-group">
-					<label class="col-md-3 control-label">TDS Rate(%)</label>
+					<label class="col-md-3 control-label">GST No</label>
 					<div class="col-md-6">
-						<input class="form-control" id="oldtds_rate" type="number" step="any"
-							 value=""  onchange="oldtds_change()"/>
+						<input class="form-control" id="gst_no" name="cin_no"
+							maxlength="21" title="" type="text" />
 					</div>
 				</div>
 				
-				<br> <br>
-				
-				
-				<div class="form-group ">
-					<label class="col-md-3 control-label">TDS Amount</label>
+
+					<br>
+				<br>
+
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Company CIN No</label>
 					<div class="col-md-6">
-						<input class="form-control" id="oldtds_amount" type="number" step="any"
-							 value="" />
+						<input class="form-control" id="cin_no" name="cin_no"
+							maxlength="21" title="" type="text" />
 					</div>
 				</div>
 				
-				
+			
 
 				<br> <br> 
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="taxdetails" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_tax()"> 
+					</div>
+					</div>
+				
+				
 			</form>
-			<input id="oldadvpay_submit" type="submit"
-					value="Save" class="btn btn-blue" onclick="return edit_oldpay()">
+								<br><br><br>
+								
+								
+								</div>
+								
+					<!-- end of tax -->			
+								
+								
+								
+								<div class="tab-pane box " id="account">
+								<br>
+								
+								
+								<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Account Number</label>
+					<div class="col-md-6">
+						<input class="form-control" id="account_num" type="number" />
+					</div>
+				</div>
+
+				<br> <br><br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Type of Account</label>
+					<div class="col-md-6">
+						<select class="form-control" id="type_account">
+							<option value="Savings">Savings</option>
+							<option value="Overdraft">Overdraft</option>
+							<option value="Current Account">Current Account</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+
+
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Bank</label>
+					<div class="col-md-6">
+						<select class="form-control" id="bank">
+							<option value="Proprietorship">Proprietorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">IFSC Code</label>
+					<div class="col-md-6">
+						<input class="form-control" id="ifsc_code" type="text"
+							maxlength="30" />
+					</div>
+				</div>
+
+				<br> <br> 
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="account" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_account()"> 
+					</div>
+					</div>
+					
+			</form>
+								<br><br><br>
+								
+								
+								</div>
+								<!-- end of account -->
+								
+								
+								
+								</div> <!-- end of tab content -->
+		
+		
 		</div>
-	</div>
-
-
-	<!-- END OF EDIT PAYMENT DIALOG -->
-	
-	
+		</div>
 	
 	
 
@@ -1739,18 +2343,13 @@ function loadName()
 																<div class="form-group required">
 																	<label class="col-md-2 control-label">Vendor</label>
 																	<div class="col-md-4">
-																		<input list="customer_names" class="form-control" id="vendor" placeholder="Vendor Name" onchange="getcustomer_details()">
+																		<input list="vendor_names" class="form-control" id="vendor" placeholder="Vendor Name" onchange="update_vendor()">
 
 																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
                                   store customer id save this -->
 
-																		<datalist id="customer_names">
-																		<option data-customvalue="VEN222" value="Vaishnavi">Vaishnavi</option>
-																			<option data-customvalue="5.5" value="Karnataka">Karnataka</option>
-																			<option data-customvalue="14.5" value="VAT 14.5">VAT
-																				14.5</option>
-																			<option data-customvalue="15" value="SERVICE 15">SERVICE
-																				15</option>
+																		<datalist id="vendor_names">
+																	
 
 																		</datalist>
 
@@ -1767,7 +2366,7 @@ function loadName()
 
 																	<div class="col-md-6">
 																		<textarea class="form-control" id="customer_detail"
-																			rows="5" cols="80" readonly>#31, 3rd cross Vijayanagar Bangalore</textarea>
+																			rows="5" cols="80" readonly></textarea>
 																	</div>
 																</div>
 
@@ -1824,76 +2423,7 @@ function loadName()
 													</tr>
 												</thead>
 												<tbody>
-												<!--  	<tr>
-														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input class="form-control" id="0product_name"
-																		name="product_name" 
-																		placeholder="Product Name" required="required"
-																		title="" type="text" />
-																</div>
-															</div>
-
-														</td>
-
-														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="1" class="form-control"
-																		id="0quantity" maxlength="30" name="quantity"
-																		placeholder="Quantity" required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div>
-
-														</td>
-														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="0" class="form-control"
-																		id="0price" name="price" maxlength="30"
-																		 placeholder="Price"
-																		required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div> <br> <br>
-
-															<div class="form-group required">
-																<label class="col-md-3 control-label">Tax Rate</label>
-																<div class="col-md-9">
-
-																	<input list="browser" class="form-control"
-																		id="0tax_rate" placeholder="Tax Rate"
-																		onchange="update_tax(first_count)">
-																	<datalist id="browser">
-																		<option data-customvalue="5.5" value="VAT 5.5">VAT
-																			5.5</option>
-																		<option data-customvalue="14.5" value="VAT 14.5">VAT
-																			14.5</option>
-																		<option data-customvalue="15" value="SERVICE 15">SERVICE
-																			15</option>
-
-																	</datalist>
-																</div>
-															</div>
-
-														</td>
-
-														<td>
-															<div id="0amt">0</div> <i class="entypo-trash"
-															onClick="delete1(this,first_count)"></i> <br> <br>
-															<div id="0tax_amt">0</div>
-
-														</td>
-
-													</tr>
-
--->
-													<tr id="last_row" class="middle">
+												<tr id="last_row" class="middle">
 														<td colspan="5" id="add_row"><i
 															class="entypo-plus-circled"></i>Add new item</td>
 													</tr>
@@ -2054,7 +2584,7 @@ function loadName()
 
 <script>
                           
-                           $(function(){
+                           
                            $("#add_row").click(function(){
                            
                         	   alert(count+1);
@@ -2068,13 +2598,15 @@ function loadName()
                             
                            $( '<tr >' + 
                           
-                              '<td>' + 
-                                  '<div class="form-group required">' + 
-                                  '<div class="col-md-12">' + 
-                                  '<input class="form-control" id="' + count + 'product_name"  name="company_name"   placeholder="Product Name" required="required" title="" type="text" />' + 
-                                  '</div>'+
-                                  '</div>'+
-                              '</td>'  + 
+                        		   '<td>'
+									+ '<div class="form-group required">'
+									+ '<div class="col-md-12">'
+									+ '<input class="form-control" list="' +  count  + 'productlist" id="' + count + 'product_name"  name="company_name"   placeholder="Chose Product"  onchange="update_prod_details(' +   count + ')"  required="required" title="" type="text" />'
+									+ '<datalist id="' +  count + 'productlist">' 
+									+ '</datalist>' 
+									+'</div>'
+									+ '</div>'
+									+ '</td>' + 
                               
                               '<td>'+
                               	'<div class="form-group required">'+
@@ -2084,27 +2616,31 @@ function loadName()
                               	'</div>'+
                               '</td>' + 
                               
- 							'<td>' +
- 								'<div class="form-group required">'+
- 								'<div class="col-md-12">'+
- 								'<input type="number" value="0" class="form-control" id="' + count + 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount(' +count +')" />'+
- 								'</div>'+
- 								'</div>'+
- 								'<br><br>'+
- 								'<div class="form-group required">'+ 
- 								'<label class="col-md-3 control-label">Tax Rate</label>'+
- 								'<div class="col-md-9">'+ 
- 									'<input list="browser"  class="form-control" id="' + count + 'tax_rate" placeholder="Tax Rate" onchange="update_tax(' + count   + ')">'+
- 							 		'<datalist id="browser">'+
- 							 		'<option data-customvalue="VAT 5.5" value="VAT 5.5">VAT 5.5</option>'+
- 							 		'<option data-customvalue="VAT 14.5" value="VAT 14.5">VAT 14.5</option>'+
- 							 		'<option data-customvalue="SERVICE 15" value="SERVICE 15">SERVICE 15</option>'+
- 							 		
- 							 		'</datalist>'+
- 							 '</div>'+
- 							 '</div>'+
- 							 '</td>' + 
- 							 
+                              '<td>'
+								+ '<div class="form-group required">'
+								+ '<div class="col-md-12">'
+								+ '<input type="number" value="0" class="form-control" id="'
+								+ count
+								+ 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount('
+								+ count
+								+ ')" />'
+								+ '</div>'
+								+ '</div>'
+								+ '<br><br>'
+								+ '<div class="form-group required">'
+								+ '<label class="col-md-3 control-label">Tax Rate</label>'
+								+ '<div class="col-md-9">'
+								+ '<input list="' + count + 'taxlist"  class="form-control" id="'
+								+ count
+								+ 'tax_rate" placeholder="Tax Rate" onchange="update_tax('
+								+ count
+								+ ')">'
+								+ '<datalist id="'  +    count + 'taxlist">'
+								
+								+'</datalist>'
+								+ '</div>'
+								+ '</div>'
+								+ '</td>' + 
  							 '<td>' 
 							+ '<div class="form-group required">'
 							+'<div class="col-md-12">'
@@ -2134,15 +2670,28 @@ function loadName()
 							+ ')"></i>' 
 							+ '</td>'
 							+'</tr>').insertBefore('#last_row');
+                           
+                       	for(var i=0;i<product_list.length;i++)
+						 {
+						
+					      $('#' + count +'productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
+						 
+						 }
+					 
+						$('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
+					  
+					     for(var i=0;i<tax_list.length;i++)
+					    	 {
+					    	 
+					    	 	$('#' + count + 'taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+					    	 }
+                           
                             
                             });
                             
-                            
-                            
-                            });
-                            
-                            
-                            
+                       
+                           
+                          
                            function update_amount(value_counter) {
                        		
                    			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
@@ -2171,7 +2720,6 @@ function loadName()
                    			$('#subtotal').val(subtotalamt.toFixed(2));
                    			var finalamt = Number($('#grandtotal').val()) + new_amount;
                    			$('#grandtotal').val(finalamt.toFixed(2));
-                   			update_due();
 
                    		         // Update corresponding tax amount, tax total and grand total
 
@@ -2186,13 +2734,105 @@ function loadName()
                    				$('#taxtotal').val(taxtotal.toFixed(2));
                    				var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
                    				$('#grandtotal').val(finalamt.toFixed(2));
-                   				update_due();
-                   				
                    				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
 
                    		}
                    	}
 
+                   	
+                   	function update_noproduct(value_counter) {
+                   		
+                   		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+                   		var current_amount = $('#' + value_counter + 'amt').val();
+                   	
+                   		//update subtotal
+
+                   		if (current_amount != 0)                                           //subtract initial value from sub total and grand total 
+                   		{
+                   			var subamt = Number($('#subtotal').val()) - current_amount;
+                   			$('#subtotal').val(subamt.toFixed(2));
+                   			var finalamt = Number($('#grandtotal').val()) - current_amount;
+                   			$('#grandtotal').val(finalamt.toFixed(2));
+
+                   		}
+
+                   	        // update newly calculated amount (price *quantity)
+
+                   		var qty = value_counter + 'quantity';
+                   		var new_amount = ($('#' + qty).val() * $('#' + value_counter + 'price').val());   
+                   		$('#' + value_counter + 'amt').val(new_amount.toFixed(2));
+
+                   	         // update subtotal and grand total
+
+                   		var subtotalamt = Number($('#subtotal').val()) + new_amount;
+                   		$('#subtotal').val(subtotalamt.toFixed(2));
+                   		var finalamt = Number($('#grandtotal').val()) + new_amount;
+                   		$('#grandtotal').val(finalamt.toFixed(2));
+
+                   	         // Update corresponding tax amount, tax total and grand total
+
+                   		
+                   		
+                   		
+                   		var tax_input = $('#' + value_counter + 'tax_rate').val();                        //value of input box (vat 5.5)
+                   		
+                   		
+
+                   		if (tax_input != '')                                                              //if a tax type exists
+                   		{
+                   			var rate = tax_input.toString().split(" ");                                   // parse tax type get the rate(5.5)
+                               var newtaxamt = (rate[1] / 100) * ($('#' + value_counter + 'amt').val());
+                   			$('#' + value_counter + 'tax_amt').val(newtaxamt.toFixed(2));
+                   			var taxtotal = Number($('#taxtotal').val()) - Number(existing_taxamt) + Number(newtaxamt.toFixed(2));
+                   			$('#taxtotal').val(taxtotal.toFixed(2));
+                   			var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
+                   			$('#grandtotal').val(finalamt.toFixed(2));
+                   			tax_addition_exclusive(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
+
+                   	}
+                   }
+                   	
+                   	
+                   	
+                   	function tax_addition_exclusive(tax_val, number_count, tax_amt)
+                   	{
+                   		var nd = tax_val.toString().split(" ");                      //VAT 5.5
+                       	var x = nd[1].toString().split(".");                         //5 5
+                       	var n = nd[0] + x[0] + x[1];                                 //VAT55
+                   		var intval = n;                                              //tax slab div ID prefix
+                   		
+                              //check if value_counter had contributed to any tax earlier - nullify its effects 
+
+                          var counter_index = tax_counter.indexOf(number_count);
+                         
+                                    alert("entry for this box exists at index" + counter_index);
+                                    var divid  = tax_div[counter_index];
+                                    alert("div id is " + divid);
+                                    var amt   = tax_amount[counter_index];  //old amt
+                                    alert("old amount is " + amt);
+                                    alert("b4 subtraction amt is" + $('#' + divid).val());
+                                    var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
+                                    alert("after subtraction amt is"  + subtract_amt);
+
+                   			     if(subtract_amt==0)
+                   			     {
+                   			       //remove table row
+                   			       $('#' + divid).closest('tr').remove();
+                   			       tax_rate[counter_index]=-1;
+                   			            
+                   			     } 
+                   			     
+                   			     else
+                   			         $('#' + divid).val(subtract_amt.toFixed(2));  
+                   			     
+                   			     
+                   			     tax_div[counter_index] =-1;
+                   			        tax_amount[counter_index] = 0;
+                   			        tax_rate[counter_index] =-1;
+                   		
+                   		
+                   		
+                   	}
                    	
                    	
                    	
@@ -2201,13 +2841,16 @@ function loadName()
                    	function update_tax(value_counter)                                        // tax type - dropdown chosen
                    	{
 
-                   		var existing_taxamt = $('#' + value_counter + 'tax_amt').text();
                    		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
+                   		if(tax_value!='')
+                   		{
+                   		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
                    		var amt = value_counter + 'amt';  
                    		var taxamt = value_counter + 'tax_amt';
                         	var tax_bracket = tax_value.toString().split(" ");                   //5.5
                         	var taxrate = tax_bracket[1];
                         	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+                        	
                         	
                         	
                         	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
@@ -2217,13 +2860,55 @@ function loadName()
                               
                            var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
                            $('#grandtotal').val(finalamt.toFixed(2));
-                           update_due();
                            
                            
-                       	alert("tax amt is"  + newtaxamt);
                         	tax_addition(tax_value,value_counter,newtaxamt.toFixed(2));             //call func to handle tax slab div
+                   	}
+                   		else  //if tax deselcted
+                   			{
+                   			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+                   			var amt = value_counter + 'amt';  
+                   			var taxamt = value_counter + 'tax_amt';
+                   	     	
+                   	     	var taxrate = 0;
+                   	     	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+                   	     	
+                   	     	
+                   	     	
+                   	     	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
+                   	     	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
+                   	        $('#taxtotal').val(taxtotal.toFixed(2));
+                   	           
+                   	           
+                   	        var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
+                   	        $('#grandtotal').val(finalamt.toFixed(2));
+                   	        
+                   	        //now handle tax div , get all tax counter,div etc for that box
+                   	        
+                   	        var counter_index = tax_counter.indexOf(value_counter);
+                   	        var divid = tax_div[counter_index];
+                   	        var div_value = $("#" + divid).val();
+                   	        var new_value = (Number(div_value) - existing_taxamt).toFixed(2);
+                   	        
+                   	        
+                   	        if(new_value==0)
+                         	  	{
+                         	    	 $('#' + divid).closest('tr').remove();
+                         	  	}
+                   	        
+                   	        //else subtract amount in that div
+                   	        else
+                   	        	
+                   	        	$("#" + divid).val(new_value);
+                   	        
+                   	        tax_div[counter_index] =-1;
+                   	        tax_amount[counter_index] = 0;
+                   	        tax_rate[counter_index] =-1;
+                   	        
+                   			
+                   			
+                   			}
                        
-                   
                    	}
                    	
                    	
@@ -2281,7 +2966,7 @@ function loadName()
                    									tax_rate[counter_index]  = tax_val;
                    									tax_div[counter_index]  = intval + 'check';
                    									tax_amount[counter_index]  = tax_amt;
-                   									alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + " " + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
+                   									alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
                    							     
                    							     }
                    							     
@@ -2397,22 +3082,18 @@ function loadName()
                          	var final_amount =  Number($('#grandtotal').val())  - (Number(deleted_amt) + Number(deleted_tax_amt));
                          	alert("final amt is" + final_amount.toFixed(2)); 
                          	$('#grandtotal').val(final_amount.toFixed(2));
-                         	update_due();
                          	alert("grand total is after subtraction" + final_amount.toFixed(2));
                          	
                          	//get the index of this box
                          	
-                         	//alert("number is " + number + "tax counter index is" + )
                          	var counter_index = tax_counter.indexOf(number);
                          	alert("found at index" + counter_index);
-                         	alert(tax_rate[counter_index] + " " + tax_amount[counter_index] + " "  + tax_div[counter_index]);
                          	if(counter_index!=-1)
                          	{
-                         	 	 var tax_val = tax_rate[counter_index];
+                         	 	 var tax_val = tax_rate[counter_index];  //VAT 5.5
                          	  	alert("tax rate in this box is " + tax_val);
                          	  
-                   	
-                         	   
+                   		
                          		var nd = tax_val.toString().split(" ");
                        		var x = nd[1].toString().split(".");     //5 5
                        		var n = nd[0] + x[0] + x[1];             //VAT55
@@ -2448,6 +3129,9 @@ function loadName()
                          	 $(o).closest('tr').remove();
                          	
                    	}
+                            
+                            
+                          
 					          
 					          
 </script>
@@ -2456,9 +3140,6 @@ function loadName()
 function send()
 {
 	
-	alert("x is");
-		alert(x);
-	alert($("#vendor").val());
 	
 	//[CHECK THAT NO MANDATORY FIELDS ARE EMPTY]
 	//similar to previous test.html submit
@@ -2662,84 +3343,135 @@ function send()
 	
 }
 
-
-//delete old adv
-function delete_adv(counter)
+function add_product()
 {
-	//check length of adv_counter array, if 0 then remove adv etc
-	alert(counter);
-	var id = advid_counter[counter];
-	alert(id);
-	//update balance and adv amount
 	
-	for(var i=0;i<oldadv.length;i++)
+	var name = $("#product_name").val();
+	var tax = $("#prodtax_rate").val();
+	var tid = $('datalist option[value="'+ tax +'"]').attr('taxid');
+	var desc  = $("#product_desc").val();
+	var cp = $("#cp").val();
+	var sp = $("#sp").val();
+	var category  = $("#category").val();
+	var expen  = $("#expenditure").val();  
+	var income  = $("#income").val();
+	var discount = $("#discount").val();
+	if(sp=='')
+		sp=0;
+	
+	//CP IS COMPULSORY
+	
+	if(name=='' || cp=='')   
 		{
-		 if(oldadv[i].id==id)
-			 break;
-		}
-	
-	var a = $("#advtotal").val();
-	$("#advtotal").val( (Number(a) - Number(oldadv[i].payment_amount)).toFixed(2));
-	
-	var a = $("#balanceamt").val();
-	$("#balanceamt").val( (Number(a) + Number(oldadv[i].payment_amount)).toFixed(2));
-	
-	
-	
-	$("#" + id).remove();  //remove row
-	
-	var index = adv_counter.indexOf(counter);
-    adv_counter.splice(index, 1);
-	
-	if(adv_counter.length==0)  //there are no more adv payments
-		{
-		$("#totaladv").remove();
-		$("#bal").remove();
-		$("#adv_pay").show();
+		alert("Fill in all required fields");
+		return true;
 		
 		}
 	
-	alert(adv_counter);
+	var product = {      
+			
+			"product_name":name,
+			"product_desc": desc,
+			"tax":                     //backend - search for tax obect from table with this id
+				{
+				 "tax_name":null,
+				 "tax_abbreviation":null,
+				 "tax_desc":null,
+				 "tax_rate":null,
+				 "company": null,//company object
+				 "tax_id": tid,
+				 "tax_recoverable":true
+				 
+				},
+			"category":category,
+			"cp": cp,
+			"head_expenditure": expen,
+				
+			"sp": sp,
+			"head_income": income,
+			
+			"company":
+				{
+				"company_id" :"CMP445"
+				},
+				
+			"product_id": null,
+			"discount":discount,
+			"id":null
+			
+			
+	};
+	alert(product);
+	console.log(product);
 	
-	}
+	//ajax call to add product, then on success -pass object back, add to the dropdown
 	
 	
+	//product from back end
+	var product1 = {      
+			
+			
+			"product_name": name,
+			"product_desc": desc,
+			"tax":                     
+				{
+				 "tax_name": null,
+				 "tax_abbreviation": "VAT",
+				 "tax_desc":null,
+				 "tax_rate": 5.5,
+				 "company": null,   
+				 "tax_id": "CMP123TAX2",
+				 "tax_recoverable":true
+				 
+				},
+				"category":category,
+				"cp": cp,
+				"head_expenditure": expen,
+					
+				"sp": sp,
+				"head_income": income,
+				
+				"company":
+					{
+					"company_id" :"CMP445"
+					},
+					
+				"product_id": "PROD44",
+				"discount":discount,
+				"id": 44
+			
+			
+	};
+	 
+	 
+	 //add this product to all existing box counters and to main product list
+	 
+	 product_list.push(product1);
+	 
+	 for(var i=0;i<box_counter.length;i++)
+		 {
+		 $('#' + box_counter[i] + 'productlist').append("<option prodid='" +  product1.product_id   + "' value='" +product1.product_name +  "'>" + "" +  product1.product_desc + "" + "</option>");
+		 }
+	 
+	 $('#' + add_product_counter + 'productlist').val(product1.product_name);   //select this product in box where it got created
+	 
+	 $("#product_dialog").dialog('close');
+	 
+	 alert("product created");
+	 
+	 $("#product_name").val('');
+		$("#tax_rate").val('');
+		$("#product_desc").val('');
+		$("#category").val('');
+		$("#expenditure").val(''); //let value be ID
+		$("#income").val('');
+		$("#cp").val('');
+		$("#sp").val('');
+		$("#discount").val('');
 	
 	
-	
-function delete_newadv(counter)
-{
-	//check length of adv_counter array, if 0 then remove adv etc
-	alert(counter);
-	var id = advid_counter[counter];
-	alert(id);  //will be null
-	//update balance and adv amount
-
-	
-	var a = $("#advtotal").val();
-	$("#advtotal").val( (Number(a) - Number(newadv[0].payment_amount) ).toFixed(2));
-	
-	var a = $("#balanceamt").val();
-	$("#balanceamt").val( (Number(a) + Number(newadv[0].payment_amount)).toFixed(2) );
-	
-	
-	
-	$("#apay" ).remove();  //remove row
-	
-	var index = adv_counter.indexOf(counter);
-    adv_counter.splice(index, 1);
-	
-	if(adv_counter.length==0)  //there are no more adv payments
-		{
-		$("#totaladv").remove();
-		$("#bal").remove();
-		$("#adv_pay").show();
-		
-		}
-	
-	alert(adv_counter);
-	
-	}
+	return false;
+}
 
 
 

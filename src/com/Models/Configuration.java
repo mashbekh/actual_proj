@@ -36,7 +36,7 @@ public class Configuration {
 	}
 
 	public Configuration() {
-		super();
+		//super();
 	}
 
 	@Id

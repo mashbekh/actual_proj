@@ -1,5 +1,6 @@
 <!DOCTYPE HTML >
 
+
 <html lang="en">
 
 <head>
@@ -12,55 +13,92 @@
 
 <title>Tax System</title>
 
-
-<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
-<link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
-
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script
 	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
 	type="text/javascript"></script>
-
-
-
-<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
-
 <link
 	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
 	rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
-<script src="jarvis/js/moment_locale.js"></script>
-<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
 
+<script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
+			<script src="jarvis/js/moment_locale.js"></script>
+			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
+
+
+<script type="text/javascript">
+  
+  
+  //add customer dialog
+</script>
 
 
 
 <link rel="stylesheet"
 	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
 
-
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom CSS -->
 <link href="jarvis/css1/sb-admin.css" rel="stylesheet">
 
-
+<!-- Morris Charts CSS -->
+<link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
 
 <!-- Custom Fonts -->
 <link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
 
-
-
 <link rel="stylesheet"
 	href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
 
 </head>
 
 
 
+
 <style>
+
+#table_export th,td{
+padding:5px;
+
+}
+
+#container {
+    width:100%;
+    text-align:center;
+}
+
+#left {
+    float:left;
+    width:100px;
+}
+
+#center {
+    display: inline-block;
+    margin:0 auto;
+    width:100px;
+}
+
+#right {
+    float:right;
+    width:100px;
+}
+
 .panel {
 	width: 75%;
 }
@@ -86,7 +124,7 @@
 }
 
 input[readonly] {
-	background-color: red;
+	background-color: white;
 }
 
 #xyz {
@@ -99,264 +137,22 @@ input[readonly] {
 	background-color: #152F37;
 }
 
-#date, #vendor_detail, #grandtotal, #taxtotal, #subtotal, #advance,
-	#balance, #pay_duedate {
-	background-color: white;
-}
 
-.select2-results li {
-	padding-right: 80px;
+
+#date, #customer_detail, #grandtotal, #taxtotal, #subtotal {
+	background-color: white;
 }
 
 .ui-dialog-titlebar {
 	border: 0;
 	padding: .5em 1em;
-	background: gray;
+	background: black;
 	overflow: auto;
 	zoom: 1;
 }
 </style>
-
 <script>
 
-
-  
-  
-var product_list = [  //one product of each type
-	
-	{      	
-			"product_type": 0,       
-			"product_subtype": 02,
-			"product_name": "parleg",
-			"product_desc": "biscuit",
-			"sku": "222",
-			"tax":                     
-				{
-				 "tax_name":null,
-				 "tax_abbreviation": "VAT",
-				 "tax_desc":null,
-				 "tax_rate": 14.5,
-				 "company": null,//company object
-				 "tax_id": "CMP123TAX2",
-				 "tax_recoverable":true
-				 
-				},
-			"category":"pqr",
-			"cp": 2,
-			"head_expenditure": "Purchases",
-				
-			"sp": 2,
-			"head_income": "Sales",
-			"opening_stock": 100,    
-			"total_stock": 400,
-			"lowstock_alert": 10,
-			"discount" : 0,
-			"company":
-				{
-				"company_id" :"CMP445"
-				},
-				
-			"product_id": "PROD67",
-			"stocklist":                 
-				[
-				{
-				  "stock_id": 1001,
-				  "product_id" : "PROD67",        //set a product object
-				  "batch_no" : "B11",
-				  "cp" : 2,
-				  "sp" : 2,
-				  "qty" : 100,          //so far total
-				  "discount": 0,
-				  "expiry_date": "12/03/2017",
-				  "vendor" : {
-					  "vendor_id" : "VEN222"
-				  },
-				  "bill_ref" : 100,
-				  "company":
-					{
-					"company_id" :"CMP445"
-					}
-				},
-				
-				{
-					  "stock_id": 1002,
-					  "product_id" : "PROD67",              //product is again an obj
-					  "batch_no" : "B12",
-					  "cp" : 2,
-					  "sp" : 2,
-					  "qty" : 200,          //so far total
-					  "discount": 0,
-					  "expiry_date": "17/01/2018",
-					  "vendor" : {
-						  "vendor_id" : "VEN223"
-					  },
-					  "bill_ref" : 577,
-					  "company":
-						{
-						"company_id" :"CMP445"
-						}
-					}
-				
-				
-				],  // no stock recorded yet
-				
-			"id": 67
-			
-		
-			},
-			
-			{      	
-				"product_type": 0,       
-				"product_subtype": 01,
-				"product_name": "200 page book",
-				"product_desc": "book",
-				"sku": "672",
-				"tax":                     
-					{
-					 "tax_name":null,
-					 "tax_abbreviation": "VAT",
-					 "tax_desc":null,
-					 "tax_rate": 14.5,
-					 "company": null,//company object
-					 "tax_id": "CMP123TAX2",
-					 "tax_recoverable":true
-					 
-					},
-				"category":"pqr",
-				"cp": 24,
-				"head_expenditure": "Purchases",
-					
-				"sp": 25,
-				"head_income": "Sales",
-				"opening_stock": 100,      
-				"total_stock": 200,                //same as stock object qty
-				"lowstock_alert": 10,
-				"discount" : 0,
-				"company":
-					{
-					"company_id" :"CMP445"
-					},
-					
-				"product_id": "PROD44",
-				"stocklist":              //has only 1 stock object associated     
-					[
-					{
-					  "stock_id": 1001,
-					  "product_id" : "PROD90",        //set a product object
-					  "batch_no" : "B11",
-					  "cp" : 24,
-					  "sp" : 25,
-					  "qty" : 200,          //so far total
-					  "discount": 0,
-					  "expiry_date": "12/03/2017",
-					  "vendor" : {
-						  "vendor_id" : "VEN222"
-					  },
-					  "bill_ref" : 100,
-					  "company":
-						{
-						"company_id" :"CMP445"
-						}
-					}
-					],  // no stock recorded yet
-					
-				"id": 44				
-			
-	},
-	
-	{      	
-		"product_type": 1,       
-		"product_subtype": 11,
-		"product_name": "100 gsm",
-		"product_desc": "paper",
-		"sku": null,
-		"tax":                     
-			{
-			 "tax_name":null,
-			 "tax_abbreviation": "VAT",
-			 "tax_desc":null,
-			 "tax_rate": 5.5,
-			 "company": null,                   //company object
-			 "tax_id": "CMP123TAX1",
-			 "tax_recoverable":true
-			 
-			},
-		"category":"pqr",
-		"cp": 3.5,
-		"head_expenditure": "Purchases",
-		"sp": 0,                            //not mentioned
-		"head_income": "Sales",
-		"opening_stock": null,    
-		"total_stock": null,
-		"lowstock_alert": null,
-		"discount" : 0,
-		"company":
-			{
-			"company_id" :"CMP445"
-			},
-			
-		"product_id": "PROD156",
-		"stocklist":null,
-		"id": 156
-		
-},
-
-{      	
-	"product_type": 1,       
-	"product_subtype": 12,
-	"product_name": "designing",
-	"product_desc": "invitations",
-	"sku": null,
-	"tax":                     
-		{
-		 "tax_name":null,
-		 "tax_abbreviation": "VAT",
-		 "tax_desc":null,
-		 "tax_rate": 14.5,
-		 "company": null,//company object
-		 "tax_id": "CMP123TAX2",
-		 "tax_recoverable":true
-		 
-		},
-	"category":"pqr",
-	"cp": 560,
-	"head_expenditure": "Purchases",
-		
-	"sp": 0,
-	"head_income": "Sales",
-	"opening_stock": null,    
-	"total_stock": null,
-	"lowstock_alert": null,
-	"discount" : 0,
-	"company":
-		{
-		"company_id" :"CMP445"
-		},
-		
-	"product_id": "PROD78",
-	"stocklist": null,
-	"id": 78
-	
-
-}
-	];                                 //list of products from backend
-	
-
-var tax_list = [
-	{
-		"tax_id" : "CMP123TAX1",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 5.5
-		
-	},
-	{
-		"tax_id" : "CMP123TAX2",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 14.5
-		
-		
-	}
-];
 
 $(function () {
     $('#dtpicker').datetimepicker({
@@ -366,56 +162,20 @@ $(function () {
     	
     });
     
-    $('#expiry_date').datetimepicker({
-	    	
-	    	format:'DD/MM/YYYY'
-	    	});
-	    
-
-    
 });
-
-function clear_invfields()
-{
-	//clear all fields
-	
-	$("#invproduct_name").val('');
-	$("#invtax_rate").val('');
-	$("#invproduct_desc").val('');
-	$("#invsku").val('');
-	$("#invcategory").val('');
-	$("#invexpenditure").val(''); //let value be ID
-	$("#invincome").val('');
-	$("#low_stock").val('');
-	$("#invcp").val('');
-	$("#invsp").val('');
-	$("#invstock").val('');
-	$("#op_stock").val('');
-	$("#invdiscount").val('');
-	
-	return true;
-	
-}
-
-
-function clear_noninvfields()
-{
-	//clear all fields
-	
-	$("#noninvproduct_name").val('');
-	$("#noninvtax_rate").val('');
-	$("#noninvproduct_desc").val('');
-	$("#noninvcategory").val('');
-	$("#noninvexpenditure").val(''); //let value be ID
-	$("#noninvincome").val('');
-	$("#noninvcp").val('');
-	$("#noninvsp").val('');
-	$("#noninvdiscount").val('');
-	
-	return true;
-	
-}
-
+    
+    $(function () {
+        $('#dtpicker1').datetimepicker({
+        	
+        	format:'DD/MM/YYYY'
+        	
+        	
+        });
+    
+ 
+});
+    
+ 
 
 
 
@@ -454,963 +214,1532 @@ function get_duedate()
 	}
 	
 	
-
-	   
-
-function loadName()
-{
-   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-   //get purchase order number and append it to box, also with today's date
-  
-   var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0!
-
-	var yyyy = today.getFullYear();
-	if(dd<10){
-    	dd='0'+dd
-		} 
-	if(mm<10){
-    	mm='0'+mm
-		} 
-	var today = dd+'/'+mm+'/'+yyyy;
-	document.getElementById("date").value = today;
- 
- var first_count=0;
-
- //ajax call to fetch taxes
- 
- 										
- 
- 
- 
- 
- //ajax call to fetch products
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- //CHECK REF PARAMETER, IF PO# EXISTS LOAD IT
-  
-   //PRODUCTS
-// product_list = response;        //json with all products
- for(var i=0;i<product_list.length;i++)
- {
-
- //show only inventory, noninv and service input type products
-
-  $('#0productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
- 
- }
- 
- $('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
-
- //append another option dd to create product
- 
- //TAXES
- 
- for(var i=0;i<tax_list.length;i++)
-	 {
-	 $('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-	 $('#invtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-	 
-	 $('#noninvtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-	 }
-     
-     
-   
-}
-
-//bill needs only CP 
-
-var add_product_counter;
-
-function update_prod_details(counter)
-{
-	alert(counter);
-	clear_invfields();
-	clear_noninvfields();
-	var prod = $("#" + counter + "product_name").val();
 	
-	$("#" + counter + "stock").remove();
-	$("#" + counter + "editstock").remove();
-	$("#" + counter + "rmstock").remove();
-	
-	var sindex = stock_counter.indexOf(counter);
-	if(sindex!=-1)
-    	stock_counter.splice(sindex, 1);
-	
-	//remove stock entry details too
-	
-	for(var i=0;i<stock_json.length;i++)
-		{
-		   if(stock_json[i].counter == counter)
-			   
-		   {
-			   alert(stock_json.length);
-			   alert("stock entry made b4");
-			   stock_json.splice(i, 1);
-			   alert("removing it");
-			   alert(stock_json.length);
-		   }
-		
-		}
-	
-	
-	if(prod=='+ Add Product')
-	{
-	add_product_counter = counter;  //to select this newly created product in ths box
-	
-	$("#" + counter + "product_name").val('');
-	$("#" + counter + "tax_rate").val('');
-	$("#" + counter + "prod_desc").val('');
-	$("#" + counter + "quantity").val('');
-	
-	
-	
-	$("#product_dialog").dialog({
+function add_advpay() {
+    
+    $("#advance_payment").dialog({
         
         modal: true,
         autoOpen: false,
-        title: "Add Product",
-        resizable :false,
-        width: 1000,
-        height: 700
-    });
+        title: "Advance Payment",
+        width: 900,
+        height: 670
+        });
+         // use same date 
+        
+        var date = $("#date").val();
+       // $('#payment_date').val(date);
+        $("#vendor_name").val($("#vendor").val());
+        $("#purpose_title").val(" Payment towards Bill " + $("#bill_number").val() );
+        $('#advance_payment').dialog('open');
+    }
+    
+  
+function make_advpay() //new payment
+{
 	
-	$("#product_dialog").dialog('open');  //clear all fields
+	$("#advance_payment").dialog('close');
+	
+	
+	var date = $('#payment_date').val();
+    var vendor = $("#vendor_name").val();
+    var title=  $("#purpose_title").val();
+    var desc = $("#purpose_desc").val();
+    var amt = $("#adv_amount").val();
+    var tds = $("#tds_rate").val();
+    var tdsamt = $("#tds_amount").val();
+    var mode = $("#mode_payment").val();
+    var acc = $("#payment_acc").val();
+    
+    
+    /*make an ajax call , save the payment,
+    On success, save it in adv array
+    update amounts in PO
+    
+    id will be ID of just inserted adv payment
+    
+	*/
+    
+    var id =  (newpayment+1);
+    newpayment+= 1;
+    
+    var a = {
+			"payment_date": date,
+			"payment_amount":amt,
+			"purpose_title":title,
+			"purpose_desc":desc,
+			"payment_mode":mode,
+			"payment_account":acc,
+			"tdsrate":tds,
+			"tdsamount":tdsamt,
+			"id" : id
+	};
+    
+    
+   
+	adv.push(a);
+	console.log(adv);
+	
+	 $('#payment_date').val('');
+     $("#vendor_name").val('');
+     $("#purpose_title").val('');
+     $("#purpose_desc").val('');
+     $("#adv_amount").val('');
+     $("#tds_rate").val('');
+     $("#tds_amount").val('');
+     $("#mode_payment").val('');
+     $("#payment_acc").val('');
+	
+	//change adv and balance, add it to list of payments
+	
+	var oldadv = $("#advtotal").val();
+	//alert(oldadv);
+	var oldbal = $("#balanceamt").val();
+	//alert(oldbal);
+	$("#advtotal").val(Number(oldadv) +  Number(amt));
+	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
+	
+	
+	
+	
+	//show the chngs in payments section
+	
+	var divid = "adv" + id;
+	
+	
+	
+	$("#payments").append('<div id="'+  divid + '">' + 
+				'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
+				'&nbsp;&nbsp;<a onclick="edit_payment(\'' + id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+				'<a onclick="delete_payment(\'' +  id + '\')">Remove payment</a></div>');
+	
+	//check if balance is 0 , if yes, then remove make payment button
+	
+	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+	$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : Bill paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : Bill payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+	return false;
+	
+	
+	}
+
+
+
+function edit_payment(payment_id)
+{
+	alert(payment_id);
+	var date;
+	var vendor; //anyway its part of po , not detail, show currently selected or old?
+	var amt;
+	var title;
+	var desc;
+	var mode;
+	var acc;
+	var tdsrate;
+	var tdsamt;
+	//chk conditions for adv payments
+	
+	adv_counter = payment_id;
+	
+	for(var i=0;i<adv.length;i++)
+		{
+			if(payment_id == adv[i].id)
+				{
+			      date = adv[i].payment_date;
+			      vendor  = adv[i].vendor_name;
+			      amt = adv[i].payment_amount;
+			      title = adv[i].purpose_title;
+			      desc = adv[i].purpose_desc;
+			      tdsrate = adv[i].tdsrate;
+			      tdsamt = adv[i].tdsamount;
+			      mode = adv[i].payment_mode;
+			      acc = adv[i].payment_account;
+				
+				}
+		
+		
+		}
+	 $("#edit_payment").dialog({
+	        
+	        modal: true,
+	        autoOpen: false,
+	        title: "Edit Payment",
+	        width: 900,
+	        height: 670
+	        });
+	         // use same date 
+	        
+	       
+	        $('#epayment_date').val(date);
+	        $("#evendor_name").val($("#vendor").val());
+	        $("#epurpose_title").val(title);
+	        $("#epurpose_desc").val(desc);
+	        $("#eadv_amount").val(amt);
+	        $("#etds_rate").val(tdsrate);
+	        $("#etds_amount").val(tdsamt);
+	        $("#emode_payment").val(mode);
+	        $("#epayment_acc").val(acc);
+	        
+	        $('#edit_payment').dialog('open');
+	
+}
+
+
+function delete_payment(payment_id)
+{
+	var divid;
+	var id;
+	if(payment_id.substring(0,3)=="new")
+	{
+		alert("true");
+		divid = payment_id;
+		id= payment_id;
+	}
+	else
+	{
+ 		divid = "adv" + payment_id;
+ 		id = payment_id;
+	}
+	$("#" + divid).remove();
+
+//adj bal and adv total
+//remove entry from json adv
+
+	
+	var advamt;
+	
+	for(var i=0;i<adv.length;i++)
+	{
+		if(id == adv[i].id)
+			{
+			 advamt = adv[i].payment_amount;
+			  adv.splice(i,1);
+			}
+
+	}
+	
+var oldadv = $("#advtotal").val();
+	
+	var oldbal = $("#balanceamt").val();
+	
+	$("#advtotal").val(Number(oldadv) -  Number(advamt));
+	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
+	
+	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+	$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status :Bill paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : Bill payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+	console.log(adv);
+}
+
+function tds_change()
+{
+	
+
+	//when amount and tds rate changes
+		var amt = $("#adv_amount").val();
+		if ($("#tds_rate").val() != '') {
+			var tdsrate = $("#tds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#tds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#tds_amount").val('');
+		}
+		
+		
+		
+		var amt = $("#eadv_amount").val();
+		if ($("#etds_rate").val() != '') {
+			var tdsrate = $("#etds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#etds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#etds_amount").val('');
+		}
+
+	}
+	
+
+	
+function edittds_change()
+{
+	
+
+	//when amount and tds rate changes
+		var amt = $("#newadv_amount").val();
+		if ($("#newtds_rate").val() != '') {
+			var tdsrate = $("#newtds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#newtds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#newtds_amount").val('');
+		}
+
+	}
+	
+
+	
+	function update_due()
+	{
+		if(adv_counter.length>0)
+			{
+			  var due = $("#grandtotal").val() - $("#advtotal").val();
+			  $("#balanceamt").val(due.toFixed(2));
+			}
+		
+	}
+	
+	
+
+	function edit_pay() {
+		
+		alert(adv_counter);   //the payment id which just got editted
+		
+		var date = $("#epayment_date").val();
+		var amt = $("#eadv_amount").val();
+		var title  = $("#epurpose_title").val();
+		var acc = $("#epayment_acc").val();
+		var mode = $("#emode_payment").val();
+		
+		if( date==''|| amt=='' || title=='' || acc=='' || mode=='')
+			{
+			return true;
+			}
+
+		
+		
+		var tds = $("#etds_rate").val();
+		var desc = $("#epurpose_desc").val();
+		var tdsamt = $("#etds_amount").val();
+		
+		//find this entry in adv array to update
+	
+		
+		//AJX CALL TO EDIT, PASS ID OF IT ALONG WITH PO#
+		//on success edit in json, and update fields
+		
+		var prev_adv ;
+		
+		for(var k=0;k<adv.length;k++)
+			{
+				if(adv_counter==adv[k].id)
+					{
+					
+					prev_adv = adv[k].payment_amount;
+					
+					  alert(k);
+					  adv[k].payment_date = date;
+					  adv[k].payment_amount = amt;
+					  adv[k].purpose_title = title;
+					  adv[k].purpose_desc = desc;
+					  adv[k].payment_mode  = mode;
+					  adv[k].payment_account = acc;
+					  adv[k].tdsrate = tds;
+					  adv[k].tdsamount = tdsamt;
+					
+					break;
+					}
+			
+			}
+		
+		
+		
+		console.log(adv);
+		
+		$("#edit_payment").dialog('close');
+		
+		//update adv and balance of po
+		
+		var oldadv = $("#advtotal").val();
+		//alert(oldadv);
+		var oldbal = $("#balanceamt").val();
+		//alert(oldbal);
+		$("#advtotal").val(Number(oldadv) - Number(prev_adv)  +  Number(amt));
+		$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
+		
+		//show the chngs in payments section
+		
+		$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+		$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : Bill paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : Bill payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+		
+		
+		
+		var divid;
+		
+			
+		 divid = "adv" + adv_counter;
+		
+		$("#" + divid).remove();
+		
+		$("#payments").append('<div id="'+  divid + '">' + 
+					'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
+					'&nbsp;&nbsp;<a onclick="edit_payment(\'' +  adv_counter + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+					'<a onclick="delete_payment(\'' +  adv_counter + '\')">Remove payment</a></div>');
+		
+		
+		return false;
+
+	}
+</script>
+<script>
+
+
+
+var vendor_list = [
+	{
+		"vendor_name" : "Suraj Papers",
+		"vendor_id" : "VEN1234",
+		"addr": "kguyfutef bjhgff jhfuutfuyt"
+	},
+	{
+		"vendor_name" : "Prints",
+		"vendor_id" : "VEN789",
+		"addr": "jhge htydteyfhbvs"
+		
+	}
+	
+	
+];
+
+var count=0;
+var first_count=0;
+
+var adv_counter=[];
+var advid_counter={};
+var acount=0;
+
+var box_counter=[];
+var tax_rate = [];
+var tax_counter = [];
+var tax_amount=[];
+var tax_div=[];
+var porder = null;
+var productid_counter= {};
+var x=null;
+var newpayment=0 ;
+var adv = [];
+var editable_counter;
+var editable_old_counter;
+//individual po edit, on load
+
+function loadName()
+{
+	$('.dropdown-toggle').dropdown();
+	
+	//just after creating, when this PO gets loaded, adv pay = null  [check for this and show this too]
+	
+	 var myParam = location.search.split('PONo=')[1];
+	// alert(myParam);
+	
+	 
+	$.ajax({
+		   type : 'GET',
+		   url  : '/Accounting/po/purchase/viewpo',
+		    dataType :'text',
+		    data:{'po_num' : myParam},
+		    success: function(response) {
+		     
+		    	alert(response);
+		     //JSON.parse(response);
+		     porder = response;
+		     fetchpo();
+		     
+		    },
+			error: function (a,b,c)
+			{ 
+				alert(a.status+b+c);
+				 console.log(a.status+b+c);
+			}  
+			  });
+	
+	$("#status").css("height","25px");
+	$("#status").css( "color", "white");
+	$("#status").css( "fontWeight", "bold");
+	
+    
+	 for(var i=0;i<vendor_list.length;i++)
+	 {
+
+	 //show only inventory, noninv and service input type products
+
+	  $('#vendor_names').append("<option vendorid='" +  vendor_list[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
+	 
+	 }
+	 
+	 $('#vendor_names').append("<option value='+ Create Vendor' id='add'>+ Create Vendor</option>");
+	
+	
+}	
+
+function update_vendor()
+{
+var vdr = $("#vendor").val();
+	
+	
+	if(vdr =='+ Create Vendor')
+	{
+	
+		$("#vendor").val('');
+		$("#vendor_detail").val('');
+		
+		$("#vendor_dialog").dialog({
+				modal : true,
+				autoOpen : false,
+				title : "Create Vendor",
+				resizable : false,
+				width : 880,
+				height : 760
+			});
+
+			$("#vendor_dialog").dialog('open'); //clear all fields
+
+		}
+
+		else if(vdr != ''){
+
+			var vendr_id = $('datalist option[value="' + vdr + '"]').attr('vendorid');
+			alert(vendr_id);
+			for (var i = 0; i < vendor_list.length; i++) {
+				if (vendor_list[i].vendor_id == vendr_id) {
+					
+					$("#vendor_detail").val(vendor_list[i].addr);
+
+				}
+			}
+
+		}
+	
+		else if(vdr == '')
+		{
+			$("#vendor").val('');
+			$("#vendor_detail").val('');
+		
+		}
 	
 	
 	}
 	
 	
-	if(prod!=''  && prod!='+ Add Product')
-		{
-		
-    		var prod_id = $('datalist option[value="'+ prod +'"]').attr('prodid');
-    		alert(prod_id);
-    		for(var i=0;i<product_list.length;i++)
-    		 {
-    		   if(product_list[i].product_id==prod_id)
-    			   {
-    			   //get cost price
-    			   if(product_list[i].tax !=null)
-    				   {
-    			   			var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
-    			  			 $("#" + counter + "tax_rate").val(taxval);
-    				   }
-    			   
-    			   $("#" + counter + "price").val(product_list[i].cp);
-    			   $("#" + counter + "prod_desc").val(product_list[i].product_desc);
-    			   update_amount(counter);
-    			   
-    		   
-    		   if(product_list[i].product_subtype== 01 || product_list[i].product_subtype== 02)  //inventory product with ref or without ref
-    		   		{
-    			   //if existing remove it and add again
-    			   alert("inv");
-    			   
-    			   var subtype = product_list[i].product_subtype;
-    			   
-    			   $("#" + counter + "stockoption").append('<div class="form-group required">' + 
+	
+	function fetchpo() {
+		x = JSON.parse(porder);
+		//console.log(x);
+		count = x.pod.length - 1;
 
-    						'<div class="col-md-12">' + 
-    				'<input type="submit" value="Enter Stock" id="' +  counter + 'stock" class="btn btn-blue" onclick= stock_entry('+  counter  + ','+  subtype  + ')>'  + 
-    				 
-    					'</div>' + 
-    					'</div>');
-    			   
-    		   		}
-    			   }
-    		 }
-    		
-    		//var prod_id = $('datalist option[value='+ prod +']').attr('prodid');
-    		
+		var taxid_array = {};
+		var taxbox_array = {};
+		var pqr = [];
+		
+		
+		for (var i = 0; i < x.pod.length; i++) {
+			
+			//var index = taxid_array.indexOf(x.pod[i].tax_id);
+			
+			if(!(x.pod[i].tax_id in taxid_array))
+				{
+				
+				taxid_array[x.pod[i].tax_id] = x.pod[i].tax_amount;
+				
+				taxbox_array[x.pod[i].tax_id] = [];
+				var num = Number(Number(i)   + Number(1));
+				taxbox_array[x.pod[i].tax_id].push(num);
+				
+				}
+			else
+				{
+				taxid_array[x.pod[i].tax_id] += x.pod[i].tax_amount;
+				var num = Number(Number(i)   + Number(1));
+				taxbox_array[x.pod[i].tax_id].push(num);
+				}
+			
+			box_counter.push(i);
+			productid_counter[i] = x.pod[i].id;
+
+			$(
+					'<tr >'
+							+
+							'<td>'
+							+ '<div class="form-group required">'
+							+ '<div class="col-lg-3">'
+							+ Number(Number(i)+Number(1))
+							+ '</div>' + '</div>' + '</td>' +
+
+							'<td>'
+							+ '<div class="form-group required">'
+							+ '<div class="col-lg-6">'
+							+  x.pod[i].product_id 
+							+ '</div>' + '</div>' + '</td>' +
+
+							'<td>' + '<div class="form-group required">'
+							+ '<div class="col-lg-3">'
+							
+							+ x.pod[i].quantity
+							
+							+ '</div>'
+							+ '</div>'
+							+ '</td>'
+							+
+
+							'<td>'
+							+ '<div class="form-group required">'
+							+ '<div class="col-md-8"><i class="fa fa-inr"></i> '
+							
+							+ x.pod[i].cost
+							
+							+ '</div>'
+							+ '</div>'
+							+ '<br><br>'
+							
+							+
+
+							'</td>'
+							+ '<td>'
+							+ '<div class="form-group required">'
+							+ '<div class="col-lg-5"><i class="fa fa-inr"></i> '
+							+ x.pod[i].amount
+							+ '</div>'
+							+ '</div>'
+							+ '<br><br>'
+							
+							+ '</td>'
+							+ '</tr>').insertBefore('#last_row');
+
+			
 		}
-	else
-		{
-		 //no product chosen
+
+	
+		$("#subtotal").val( x.amount);
+		$("#taxtotal").val(x.tax_amount);
+		$("#grandtotal").val(x.grand_total);
 		
-		$("#" + counter + "price").val(0);
+		$("#vendor").val("Suraj Papers");
+		$("#po_number").val(x.po_number);
+		$("#po_number").prop("readonly", true);
+		$('textarea#notes').val(x.note);
+		$('textarea#vendor_detail').val("ytghh hgfrtt hjfytrtf");
+		var d = new Date(x.order_date);
+		var v = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+		$("#date").val(v);
+
+		var bal;
+		if(x.adv_payment.length>0)  
+			{
+			
+				var advance_total = x.advance_amount;
+				 bal = x.balance;
+			
+				for (var j = 0; j < x.adv_payment.length; j++) {
+					
+					var date = new Date(x.adv_payment[j].payment_date);
+					var dt = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+					
+					var divid = "adv" + x.adv_payment[j].id;
+					var id =  x.adv_payment[j].id;
+					
+					
+					$("#payments").append('<div id="'+  divid + '">' + 
+					'&nbsp;&nbsp;' + dt +' : A payment for Rs.' + x.adv_payment[j].payment_amount  + ' was made using ' +  x.adv_payment[j].payment_mode + '<br>' + 
+					'&nbsp;&nbsp;<a onclick="edit_payment(\'' +  id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+					'<a onclick="delete_payment(\'' +  id + '\')">Remove payment</a></div>');
+					
+					
+					
+					
+					var a = {
+							"payment_date": dt,
+							"payment_amount":x.adv_payment[j].payment_amount,
+							"purpose_title":x.adv_payment[j].purpose_title,
+							"purpose_desc":x.adv_payment[j].purpose_desc,
+							"payment_mode":x.adv_payment[j].payment_mode,
+							"payment_account":x.adv_payment[j].payment_account,
+							"tdsrate":x.adv_payment[j].tdsrate,
+							"tdsamount":x.adv_payment[j].tdsamount,
+							"id" : x.adv_payment[j].id
+					};
+					
+					adv.push(a);
+					
+					
+				}
+				
+				//console.log(adv);
+
+				$("#table_export")
+				.append(
+
+						'<tr id="totaladv"><td></td><td></td><td></td><td><b>Advance Amount</b><br><br><b>Balance Amount</b></td>'
+								+ '<td >'
+								+ '<div class="form-group ">'
+								
+								
+								+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="advtotal"/>'
+							  
+								+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="balanceamt"/>'
+								 + '</div>' +
+
+								'</td></tr>');
+
+				
+			$("#advtotal").val(advance_total);
+			$("#show_due").text("Amount Due : Rs " + $("#advtotal").val());
+			if(bal==0.00 || bal==0)
+				$("#payment_status").text("Status : PO paid in full");
+			else
+				$("#payment_status").text("Status : PO payment is due");
+			
+			$("#dueamt").text($("#advtotal").val());
+			$("#balanceamt").val(bal);
+			console.log(adv);
+			
+			}
 		
-		update_noproduct(counter);
+			
 		
-		$("#" + counter + "tax_rate").val('');
-		$("#" + counter + "prod_desc").val('');
-		$("#" + counter + "quantity").val(1);
+			for(var k in taxid_array)
+				{
+				  var str = "";
+				  for(var g=0;g<taxbox_array[k].length;g++)
+					  {
+					    if(g!=taxbox_array[k].length-1)
+					    	str+= taxbox_array[k][g] + ',';
+					    	else 
+					    		str+= taxbox_array[k][g] ;
+					    		
+					  
+					  }
+				 $( '<tr cell-padding:0>' + 
+    						'<td></td><td></td><td></td><td ><b>'+ k + "  " +  " (" + str  +  ")"  + '</b></td><td>'+
+    						'<div class="form-group ">' +
+    						'<input type="number" style="background-color:white" value="' + taxid_array[k] + '" class="form-control no-border" readonly id="' +  taxid_array[k] +  'check" name="company_name" maxlength="30" name="username"  required="required" title=""  />'+
+    	  				    '</div>'+
+    						'</td>'+
+    						'</tr>').insertAfter('#last_row');
+				}
+			
+			var diff = bal;
+			
+			if(diff>0)
+				{
+			$("#status").css( "background-color", "#B00000");
+			$("#status").text("UNPAID");
+				}
+			
+			else if(diff==0)
+			{
+				$("#status").css( "background-color", "#336600");
+				$("#status").text("PAID");
+			}
+
+			
+	}
+	
+	
+	function create_vendor()
+	{
+		//ajax call, insert vendor, get ID /json back, add it to vendor list
+		
+		//check validation
+		
+		var bname = $('#business_name').val();
+	    var cname = $('#contact_name').val();
+	    var btype = $('#type_business').val();
+	    var bsector = $('#business_sector').val();
+	    
+	    var addr1  = $('#addr_line1').val();
+		var addr2  = $('#addr_line2').val();
+	    var state  = $('#state').val();
+	    var city  = $('#city').val();
+	    var locality  = $('#locality').val();
+	    var email  = $('#email').val();
+	     var mobile  = $('#mobile').val();
+	     var website = $('#website').val();
+	     var code =$('#code').val();
+	     var landline = $('#landline').val();
+	     
+	     var tin = $('#tin_no').val();
+	     var cin =  $('#cin_no').val();
+	     var strn = $('#strn_no').val();
+	     var gst =  $('#gst_no').val();
+	     var pan =  $('#pan_no').val();
+	     
+	     var acc_num = $('#account_num').val();
+	     var type_account = $('#type_account').val();
+	     var ifsc_code = $('#ifsc_code').val();   
+	     var bank = $('#bank').val(); 
+		
+		//AJAX CALL
+		
+	   vendor_list.push(new_vendor);
+		
+	   $('#vendor_names').append("<option vendorid='" +  new_vendor[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
+	   	
+		
+		
 		}
 	
-}
 	
-
-
 </script>
 
 <body onload="loadName()">
 
 
-	<!-- create product dialog-->
+<!-- ADVANCE PAYMENT DIALOG -->
 
 
-	<div id="product_dialog" title="Dialog Form" style="display: none;">
+	<div id="advance_payment" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
 			<form action="" method="post">
 
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Vendor Name</label>
+					<div class="col-md-6">
+						<input class="form-control" id="vendor_name" type="text"
+							required value="" readonly/>
+					</div>
+				</div>
+
+				<br> <br><br>
+
+<!-- DATEPICKER TYPE -->
+				<div class="form-group required">
+																	<label class="col-md-3 control-label">Date</label>
+																	<div class="col-md-6">
+																		<div class="input-group date" id="dtpicker">
+
+																			<input type="text" class="form-control" id="payment_date" onchange="get_duedate()">
+																			<span class="input-group-addon"> <span
+																				class="glyphicon glyphicon-calendar"> </span>
+																			</span>
+																		</div>
+																	</div>
+																</div>
+
+			
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Amount</label>
+					<div class="col-md-6">
+						<input class="form-control" id="adv_amount" type="number" step="any"
+							required value="" onchange="tds_change()"/>
+					</div>
+				</div>
+				
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Purpose Title</label>
+					<div class="col-md-9">
+						<input class="form-control" id="purpose_title" type="text"
+							required value="" />
+					</div>
+				</div>
+				
+				<br> <br>
+
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Purpose Description</label>
+					<div class="col-md-9">
+						<input class="form-control" id="purpose_desc" type="text"
+							value="" />
+					</div>
+				</div>
+				
+				<br><br>
+				
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Mode of Payment</label>
+					<div class="col-md-6">
+						<select class="form-control" id="mode_payment" required>
+							<option value=''>Select</option>
+							<option value="cash">Cash</option>
+							<option value="card">Card</option>
+							<option value="online">Online transfer</option>
+							<option value="cheque">Cheque</option>
+							
+						</select>
+					</div>
+				</div>
+
+				<br><br>
+				
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Payment Account</label>
+					<div class="col-md-6">
+						<select class="form-control" id="payment_acc" required>
+							<option value=''>Select</option>
+							<option value="cash">Cash</option>
+							<option value="card">Card</option>
+							<option value="online">Online transfer</option>
+							<option value="cheque">Cheque</option>
+							
+						</select>
+					</div>
+				</div>
+				
+				<br><br>
+				
+				<!-- To deduct TDS., company TAN is required, check if TAN number given then show this -->
+				
+				
+				<div class="form-group">
+					<label class="col-md-3 control-label">TDS Rate(%)</label>
+					<div class="col-md-6">
+						<input class="form-control" id="tds_rate" type="number" step="any"
+							 value=""  onchange="tds_change()"/>
+					</div>
+				</div>
+				
+				<br> <br>
+				
+				
+				<div class="form-group ">
+					<label class="col-md-3 control-label">TDS Amount</label>
+					<div class="col-md-6">
+						<input class="form-control" id="tds_amount" type="number" step="any"
+							 value="" />
+					</div>
+				</div>
+				
+				
+
+				<br> <br>
+			</form>
+			 <input id="advpay_submit" type="submit"
+					value="Add Payment" class="btn btn-blue" onclick="return make_advpay()">
+		</div>
+	</div>
+
+
+	<!-- END OF ADVANCE PAYMENT DIALOG -->
+	
+	
+	
+	<!-- EDIT PAYMENT DIALOG -->
+
+
+	<div id="edit_payment" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+			<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Vendor Name</label>
+					<div class="col-md-6">
+						<input class="form-control" id="evendor_name" type="text"
+							required value="" readonly/>
+					</div>
+				</div>
+
+				<br> <br><br>
+
+<!-- DATEPICKER TYPE -->
+				<div class="form-group required">
+																	<label class="col-md-3 control-label">Date</label>
+																	<div class="col-md-6">
+																		<div class="input-group date" id="dtpicker">
+
+																			<input type="text" class="form-control" id="epayment_date" onchange="get_duedate()">
+																			<span class="input-group-addon"> <span
+																				class="glyphicon glyphicon-calendar"> </span>
+																			</span>
+																		</div>
+																	</div>
+																</div>
+
+			
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Amount</label>
+					<div class="col-md-6">
+						<input class="form-control" id="eadv_amount" type="number" step="any"
+							required value="" onchange="tds_change()"/>
+					</div>
+				</div>
+				
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Purpose Title</label>
+					<div class="col-md-9">
+						<input class="form-control" id="epurpose_title" type="text"
+							required value="" />
+					</div>
+				</div>
+				
+				<br> <br>
+
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Purpose Description</label>
+					<div class="col-md-9">
+						<input class="form-control" id="epurpose_desc" type="text"
+							value="" />
+					</div>
+				</div>
+				
+				<br><br>
+				
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Mode of Payment</label>
+					<div class="col-md-6">
+						<select class="form-control" id="emode_payment" required>
+							<option value=''>Select</option>
+							<option value="cash">Cash</option>
+							<option value="card">Card</option>
+							<option value="online">Online transfer</option>
+							<option value="cheque">Cheque</option>
+							
+						</select>
+					</div>
+				</div>
+
+				<br><br>
+				
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Payment Account</label>
+					<div class="col-md-6">
+						<select class="form-control" id="epayment_acc" required>
+							<option value=''>Select</option>
+							<option value="cash">Cash</option>
+							<option value="card">Card</option>
+							<option value="online">Online transfer</option>
+							<option value="cheque">Cheque</option>
+							
+						</select>
+					</div>
+				</div>
+				
+				<br><br>
+				
+				<!-- To deduct TDS., company TAN is required, check if TAN number given then show this -->
+				
+				
+				<div class="form-group">
+					<label class="col-md-3 control-label">TDS Rate(%)</label>
+					<div class="col-md-6">
+						<input class="form-control" id="etds_rate" type="number" step="any"
+							 value=""  onchange="tds_change()"/>
+					</div>
+				</div>
+				
+				<br> <br>
+				
+				
+				<div class="form-group ">
+					<label class="col-md-3 control-label">TDS Amount</label>
+					<div class="col-md-6">
+						<input class="form-control" id="etds_amount" type="number" step="any"
+							 value="" />
+					</div>
+				</div>
+				
+				
+
+				<br> <br> 
+			</form>
+			<input  type="submit"
+					value="Edit Payment" class="btn btn-blue" onclick="return edit_pay()">
+		</div>
+	</div>
+
+
+	<!-- END OF ADVANCE PAYMENT DIALOG -->
+	
+	
+	<div id="vendor_dialog" title="Dialog Form" style="display: none;">
+		<div id="form-panel">
+		
+		
+		<!------CONTROL TABS START------>
+						<ul class="nav nav-tabs bordered">
+							<li class="active"><a href="#business" data-toggle="tab"><i
+									class="entypo-menu"></i> Business Details </a></li>
+							<li><a href="#contact" data-toggle="tab"><i
+									class="entypo-menu"></i> Contact Details </a></li>
+							<li><a href="#tax" data-toggle="tab"><i
+									class="entypo-menu"></i>  Tax Details </a></li>
+							<li><a href="#account" data-toggle="tab"><i
+									class="entypo-menu"></i> Account Details </a></li>
+
+						</ul>
+						<!------CONTROL TABS END------>
+						
+						
+							
+						<!--  Control tab features -->
+
+						<div class="tab-content">
+							<!----    BUSINESS-->
+							<div class="tab-pane box active" id="business">
+								<br>
+								
+								
+			<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Business Name</label>
+					<div class="col-md-6">
+						<input class="form-control" id="business_name" type="text"
+							required value="" />
+					</div>
+				</div>
+
+				<br> <br><br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Contact Person Name</label>
+					<div class="col-md-6">
+						<input class="form-control" id="contact_name" type="text" required
+							value="" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Type of Business</label>
+					<div class="col-md-6">
+						<select class="form-control" id="type_business" required>
+							<option value=''>Select</option>
+							<option value="Propreitorship">Propreitorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Business Sector</label>
+					<div class="col-md-6">
+						<input class="form-control" id="business_sector" type="text"
+							required value="" />
+					</div>
+				</div>
+				
+				<br><br>
+				<div class="form-group required">
+				<div class="col-md-6">
+				<input id="business" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_business()"> 
+					</div>
+					</div>
+				</form>
+				
+								<br><br><br>
+								
+								
+								
+								</div> <!-- end of vendor dialog -->
+								
+								
+								
+								
+								
+							<div class="tab-pane box " id="contact">
+								<br>
+								
+								
+			<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Address Line 1</label>
+					<div class="col-md-6">
+						<input class="form-control" id="addr_line1" type="text"
+							required="required" />
+					</div>
+				</div>
+
+				<br> <br><br>
+
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Address Line 2</label>
+					<div class="col-md-6">
+						<input class="form-control" id="addr_line2" type="text" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">State</label>
+					<div class="col-md-6">
+						<select class="form-control" id="state" required="required">
+								<option value="New Delhi">New Delhi</option>
+							<option value="Andaman/Nicobar Islands">Andaman/Nicobar Islands</option>
+							<option value="Andhra Pradesh">Andhra Pradesh</option>
+							<option value="Arunachal Pradesh">Arunachal Pradesh</option>
+							<option value="Assam">Assam</option>
+							<option value="Bihar">Bihar</option>
+							<option value="Chandigarh">Chandigarh</option>
+							<option value="Dadra/Nagar Haveli">Dadra/Nagar Haveli</option>
+							<option value="Daman/Diu">Daman/Diu</option>
+							<option value="Goa">Bihar</option>
+							<option value="Gujarat">Gujarat</option>
+							<option value="Haryana">Haryana</option>
+							<option value="Himachal Pradesh">Himachal Pradesh</option>
+							<option value="Jammu/Kashmir">Jammu/Kashmir</option>
+							<option value="Jharkhand">Jharkhand</option>
+							<option value="Karnataka">Karnataka</option>
+							<option value="Kerala">Kerala</option>
+							<option value="Lakshadweep">Lakshadweep</option>
+							<option value="Madhya Pradesh">Madhya Pradesh</option>
+							<option value="Maharashtra">Maharashtra</option>
+							
+							<option value="Manipur">Manipur</option>
+							<option value="Meghalaya">Meghalaya</option>
+							<option value="Mizoram">Mizoram</option>
+							<option value="Nagaland">Nagaland</option>
+							<option value="Orissa">Orissa</option>
+							<option value="Pondicherry">Pondicherry</option>
+							<option value="Punjab">Punjab</option>
+							<option value="Rajasthan">Rajasthan</option>
+							<option value="Sikkim">Sikkim</option>
+							<option value="Tamil Nadu">Tamil Nadu</option>
+							<option value="Telangana">Telangana</option>
+							<option value="Tripura">Tripura</option>
+							<option value="Uttaranchal">Uttaranchal</option>
+							<option value="Uttar Pradesh">Uttar Pradesh</option>
+							<option value="West Bengal">West Bengal</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">City</label>
+					<div class="col-md-6">
+						<input class="form-control" id="city" type="text"
+						 required="required" />
+							
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Locality</label>
+					<div class="col-md-6">
+						<input class="form-control" id="locality" type="text"
+							placeholder="Prominent Landmark" required="required" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Email</label>
+					<div class="col-md-6">
+						<input class="form-control" id="email" name="email" maxlength="30"
+							required="required" title="" type="email" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Website</label>
+					<div class="col-md-6">
+						<input class="form-control" id="website" name="website"
+							maxlength="30" title="" type="email" />
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Mobile No</label>
+					<div class="col-md-1">+91</div>
+					<div class="col-md-5">
+						<input class="form-control" id="mobile" name="mobile"
+							required="required" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="10" />
+					</div>
+				</div>
+
+
+
+				<br> <br>
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Landline No</label>
+					<div class="col-md-1">+91</div>
+					<div class="col-md-2">
+						<input class="form-control" id="code" name="code"
+							placeholder="STD Code" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							maxlength="3" />&nbsp;
+					</div>
+					<div class="col-md-3">
+						<input class="form-control" id="landline" name="landline"
+							placeholder="Landline number" title="" type="number"
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							maxlength="8" />
+
+					</div>
+
+				</div>
+
+				<br> <br>
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="contact" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_contact()"> 
+
+					</div>
+					</div>
+
+			</form>
+				
+								<br><br><br>
+								
+								
+								</div> <!-- end of contact -->
+								
+								
+								
+								
+								<!-- tax details -->
+								
+								<div class="tab-pane box " id="tax">
+								<br>
+								
+								
+								<form action="" method="post">
+
+
+
+
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Company PAN No</label>
+					<div class="col-md-6">
+						<input class="form-control" id="pan_no" name="pan_no"
+							maxlength="10" required="required" title="" type="text" />
+					</div>
+				</div>
 
 				<br>
-
-				<!------ INNER CONTROL TABS START------>
-				<ul class="nav nav-tabs bordered">
-
-					<li class="active"><a href="#inv_prod" data-toggle="tab"><i
-							class="entypo-menu"></i> Inventory product</a></li>
-
-					<li><a href="#noninv_prod" data-toggle="tab"><i
-							class="entypo-menu"></i> Non Inventory Product</a></li>
-
-
-				</ul>
-				<!------ INNER CONTROL TABS END------>
-
-				<!-- definition of INVENTORY PRODUCTS -->
-
-				<div class="tab-content">
-					<div class="tab-pane box active" id="inv_prod">
-
-
-						<div id="form-panel">
-							<div class="row">
-								<div class="col-lg-12">
-
-									<br>
-									<div style="color: red">Chose Inventory product type.</div>
-									<br> <br>
-
-									<!-- RADIO BUTTON OPTION -->
-
-									<form>
-												<label class="radio-inline col-md-2 control-label">
-													<input type="radio" name="invtype" id="inv_noref" checked
-													value="noref" onchange="return clear_invfields()">
-													Inventory without Batch No
-												</label> <label class="radio-inline col-md-2 control-label">
-													<input type="radio" name="invtype" id="inv_batch"
-													value="batchref" onchange="return clear_invfields()">
-													Inventory with Batch No
-												</label>
-
-											</form>
-
-
-											<br> <br> <br>
-											<form role="form" id="inventory">
-
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Product Name</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invproduct_name"
-															name="invproduct_name" maxlength="30"
-															placeholder="Product Name" required="required" title=""
-															type="text" />
-													</div>
-												</div>
-
-												<br> <br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Product
-														Description</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invproduct_desc"
-															name="invproduct_desc" maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">SKU</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invsku" name="invsku"
-															maxlength="" required="required" title="" type="text" />
-													</div>
-												</div>
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Category</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invcategory"
-															name="invcategory" maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Cost Price</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invcp" name="invcp"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br>
-												<br>
-
-
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Head of
-														Expenditure</label>
-													<div class="col-md-6">
-														<select name="invexpenditure"
-															class="form-control selectboxit" id="invexpenditure">
-															<option value="None">Select</option>
-
-															<option value="purchase">Purchases</option>
-
-														</select>
-													</div>
-												</div>
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Selling Price</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invsp" name="invsp"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br>
-												<br>
-
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Head of
-														Income</label>
-													<div class="col-md-6">
-														<select name="invincome" class="form-control selectboxit"
-															id="invincome">
-															<option value="None">Select</option>
-
-															<option value="Sales">Sales</option>
-
-														</select>
-													</div>
-												</div>
-
-												<br> <br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Opening Stock</label>
-													<div class="col-md-6">
-														<input class="form-control" id="op_stock" name="op_stock"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br>
-												<br>
-
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Low Stock
-														Alert</label>
-													<div class="col-md-6">
-														<input class="form-control" id="low_stock"
-															name="invcategory" maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br> <br>
-												
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Discount</label>
-													<div class="col-md-6">
-														<input class="form-control" id="invdiscount" name="invdiscount"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-												
-												<br><br>
-
-												<div class="form-group required">
-											<label class="col-md-3 control-label">Tax Rate</label>
-											<div class="col-md-6">
-
-												<input list="invtaxlist" class="form-control"
-													id="invtax_rate" placeholder="Tax Rate">
-
-												<datalist id="invtaxlist">
-
-
-												</datalist>
-											</div>
-										</div>
-
-												<br> <br>
-
-
-											</form>
-									<input type="submit" class="btn btn-primary"
-										id="inventory_submit" onclick="return add_invproduct()">
-
-
-
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- close desc of inv prod -->
-
-
-
-
-
-
-
-
-					<!-- NON INVENTORY PRODUCT -->
-					<div class="tab-pane box" id="noninv_prod">
-
-
-						<div id="form-panel">
-							<div class="row">
-								<div class="col-lg-12">
-
-									<br>
-									<div style="color: red">Chose Item type.</div>
-									<br> <br>
-
-									<form>
-
-										<label class="radio-inline col-md-3 control-label"> <input
-											type="radio" name="noninvtype" id="non_product" checked
-											value="non_product"> Product
-										</label> <label class="radio-inline col-md-3 control-label"> <input
-											type="radio" name="noninvtype" id="non_service"
-											value="non_service"> Service
-										</label>
-
-									</form>
-									<br> <br>
-									<form role="form" id="noninventory">
-
-										<div class="form-group required">
-											<label class="col-md-3 control-label">Name</label>
-											<div class="col-md-6">
-												<input class="form-control" id="noninvproduct_name"
-													name="noninvproduct_name" maxlength="30"
-													placeholder="Product Name" required="required" title=""
-													type="text" />
-											</div>
-										</div>
-
-										<br> <br> <br>
-
-										<div class="form-group required">
-											<label class="col-md-3 control-label"> Description</label>
-											<div class="col-md-6">
-												<input class="form-control" id="noninvproduct_desc"
-													name="noninvproduct_desc" maxlength="" required="required"
-													title="" type="text" />
-											</div>
-										</div>
-
-
-
-										<br>
-
-										<div id="cat">
-											<div class="form-group required">
-												<label class="col-md-3 control-label">Category</label>
-												<div class="col-md-6">
-													<input class="form-control" id="noninvcategory"
-														name="noninvcategory" maxlength="" required="required"
-														title="" type="text" />
-												</div>
-											</div>
-										</div>
-
-										<br> <br> <br>
-
-										<div class="form-group required">
-											<label class="col-md-3 control-label"> Cost Price</label>
-											<div class="col-md-6">
-												<input class="form-control" id="noninvcp" maxlength=""
-													required="required" title="" type="text" />
-											</div>
-										</div>
-
-
-										<br> <br>
-
-										<div class="form-group required">
-											<label class="col-md-3 control-label">Head of
-												Expenditure</label>
-											<div class="col-md-6">
-												<select name="invexpenditure"
-													class="form-control selectboxit" id="noninvexpenditure">
-													<option value="None">Select</option>
-
-													<option value="purchase">Purchases</option>
-
-												</select>
-											</div>
-										</div>
-
-										<br> <br>
-
-										<div class="form-group required">
-											<label class="col-md-3 control-label"> Selling Price</label>
-											<div class="col-md-6">
-												<input class="form-control" id="noninvsp" maxlength=""
-													required="required" title="" type="text" />
-											</div>
-										</div>
-
-
-										<br> <br>
-
-										<div class="form-group required">
-											<label class="col-md-3 control-label">Head of Income</label>
-											<div class="col-md-6">
-												<select name="noninvsales" class="form-control selectboxit"
-													id="noninvincome">
-													<option value="None">Select</option>
-
-													<option value="sales">Sales</option>
-
-												</select>
-											</div>
-										</div>
-
-										<br> <br>
-										
-										<div class="form-group required">
-													<label class="col-md-3 control-label">Discount</label>
-													<div class="col-md-6">
-														<input class="form-control" id="noninvdiscount" name="noninvdiscount"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-												
-												<br><br>
-
-										<div class="form-group required">
-											<label class="col-md-3 control-label">Tax Rate</label>
-											<div class="col-md-6">
-
-												<input list="noninvtaxlist" class="form-control"
-													id="noninvtax_rate" placeholder="Tax Rate">
-
-												<datalist id="noninvtaxlist">
-
-
-												</datalist>
-											</div>
-										</div>
-
-										<br> <br>
-
-
-									</form>
-
-									<input type="submit" class="btn btn-primary"
-										id="inventory_submit" onclick="return add_noninvproduct()">
-
-
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- close desc of inv prod -->
-
-
-
-				</div>
-				<!-- inner tab content -->
-
-
-
-
-
-
-			</form>
-
-
-
-		</div>
-	</div>
-
-
-
-	<!-- end of product dialog -->
-
-
-
-
-
-
-
-	<!-- stock entry dialog  for 01 type-->
-
-	<div id="norefstock_dialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Cost Price</label>
-					<div class="col-md-6">
-						<input class="form-control" readonly id="norefstockcp" maxlength=""
-							title="" type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Selling Price</label>
-					<div class="col-md-6">
-						<input class="form-control" readonly id="norefstocksp" maxlength=""
-							title="" type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Available Stock</label>
-					<div class="col-md-6">
-						<input class="form-control" id="available" maxlength="" title=""
-							type="number" readonly step="any" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Quantity</label>
-					<div class="col-md-6">
-						<input class="form-control" id="norefqty" maxlength="" title=""
-							type="number" step="any" />
-					</div>
-				</div>
-
-
-
-
-				<br> <br>
-
-			</form>
-
-			<input class="btn btn-blue" type='submit' onclick="add_stock()">
-
-		</div>
-	</div>
-
-	<!-- end of  inventory type 01 -->
-
-
-
-	<!-- stock entry dialog  for 02 type-->
-
-	<div id="stock_dialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Batch No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="batch_no" maxlength="" title=""
-							type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<!--  
-                             <div class="form-group ">
-																	<label class="col-md-3 control-label">Packing/Manufacturing Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="packing_date">
-
-																			<input type="text" class="form-control" id="packingdate" >
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-																-->
-
+				<br><br>
 
 				<div class="form-group ">
-					<label class="col-md-3 control-label">Expiry Date</label>
+					<label class="col-md-3 control-label"> TIN No</label>
 					<div class="col-md-6">
-						<div class="input-group date" id="expiry_date">
-
-							<input type="text" class="form-control" id="expirydate">
-							<span class="input-group-addon"> <span
-								class="glyphicon glyphicon-calendar"> </span>
-							</span>
-						</div>
+						<input class="form-control" id="tin_no" name="tin_no" title=""
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+							type="number" maxlength="11" />
 					</div>
 				</div>
-
-				<br> <br>
-
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Cost Price</label>
-					<div class="col-md-6">
-						<input class="form-control" id="stockcp" maxlength="" title=""
-							type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Selling Price</label>
-					<div class="col-md-6">
-						<input class="form-control" id="stocksp" maxlength="" title=""
-							type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Quantity</label>
-					<div class="col-md-6">
-						<input class="form-control" id="qty" maxlength="" title=""
-							type="number" step="any" />
-					</div>
-				</div>
-
-				<br> <br>
+				
+				
+					<br>
+				<br>
 
 				<div class="form-group">
-					<label class="col-md-3 control-label">Discount</label>
+					<label class="col-md-3 control-label">Service Tax Registration No</label>
 					<div class="col-md-6">
-						<input class="form-control" id="discount" maxlength="" title=""
-							type="number" step="any" />
+						<input class="form-control" id="strn_no" name="cin_no"
+							maxlength="21" title="" type="text" />
 					</div>
 				</div>
+				
 
-				<br> <br>
-
-			</form>
-
-			<input class="btn btn-blue" type='submit' onclick="add_stock()">
-
-		</div>
-	</div>
-
-	<!-- end of type 02 inventory -->
-
-
-
-
-<!-- stock entry dialog EDIT  for 01 type-->
-
-	<div id="enorefstock_dialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Cost Price</label>
+				<br>
+				<br>
+				
+				
+				<div class="form-group">
+					<label class="col-md-3 control-label">GST No</label>
 					<div class="col-md-6">
-						<input class="form-control" readonly id="enorefstockcp" maxlength=""
-							title="" type="text" />
+						<input class="form-control" id="gst_no" name="cin_no"
+							maxlength="21" title="" type="text" />
 					</div>
 				</div>
+				
 
-				<br> <br>
+					<br>
+				<br>
 
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Selling Price</label>
-					<div class="col-md-6">
-						<input class="form-control" readonly id="enorefstocksp" maxlength=""
-							title="" type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Available Stock</label>
-					<div class="col-md-6">
-						<input class="form-control" id="eavailable" maxlength="" title=""
-							type="number" readonly step="any" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Quantity</label>
-					<div class="col-md-6">
-						<input class="form-control" id="enorefqty" maxlength="" title=""
-							type="number" step="any" />
-					</div>
-				</div>
-
-
-
-
-				<br> <br>
-
-			</form>
-
-			<input class="btn btn-blue" type='submit' onclick="editnoref_stock()">
-
-		</div>
-	</div>
-
-	<!-- end of  inventory type 01 -->
-
-
-
-	<!-- stock entry dialog  for 02 type-->
-
-	<div id="estock_dialog" title="Dialog Form" style="display: none;">
-		<div id="form-panel">
-			<form action="" method="post">
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Batch No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="ebatch_no" maxlength="" title=""
-							type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<!--  
-                             <div class="form-group ">
-																	<label class="col-md-3 control-label">Packing/Manufacturing Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="packing_date">
-
-																			<input type="text" class="form-control" id="packingdate" >
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-																-->
-
-
-				<div class="form-group ">
-					<label class="col-md-3 control-label">Expiry Date</label>
-					<div class="col-md-6">
-						<div class="input-group date" id="eexpiry_date">
-
-							<input type="text" class="form-control" id="eexpirydate">
-							<span class="input-group-addon"> <span
-								class="glyphicon glyphicon-calendar"> </span>
-							</span>
-						</div>
-					</div>
-				</div>
-
-				<br> <br>
-
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Cost Price</label>
-					<div class="col-md-6">
-						<input class="form-control" id="estockcp" maxlength="" title=""
-							type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Selling Price</label>
-					<div class="col-md-6">
-						<input class="form-control" id="estocksp" maxlength="" title=""
-							type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Quantity</label>
-					<div class="col-md-6">
-						<input class="form-control" id="eqty" maxlength="" title=""
-							type="number" step="any" />
-					</div>
-				</div>
-
-				<br> <br>
 
 				<div class="form-group">
-					<label class="col-md-3 control-label">Discount</label>
+					<label class="col-md-3 control-label">Company CIN No</label>
 					<div class="col-md-6">
-						<input class="form-control" id="ediscount" maxlength="" title=""
-							type="number" step="any" />
+						<input class="form-control" id="cin_no" name="cin_no"
+							maxlength="21" title="" type="text" />
+					</div>
+				</div>
+				
+			
+
+				<br> <br> 
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="taxdetails" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_tax()"> 
+					</div>
+					</div>
+				
+				
+			</form>
+								<br><br><br>
+								
+								
+								</div>
+								
+					<!-- end of tax -->			
+								
+								
+								
+								<div class="tab-pane box " id="account">
+								<br>
+								
+								
+								<form action="" method="post">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Account Number</label>
+					<div class="col-md-6">
+						<input class="form-control" id="account_num" type="number" />
+					</div>
+				</div>
+
+				<br> <br><br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Type of Account</label>
+					<div class="col-md-6">
+						<select class="form-control" id="type_account">
+							<option value="Savings">Savings</option>
+							<option value="Overdraft">Overdraft</option>
+							<option value="Current Account">Current Account</option>
+						</select>
 					</div>
 				</div>
 
 				<br> <br>
 
+
+
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Bank</label>
+					<div class="col-md-6">
+						<select class="form-control" id="bank">
+							<option value="Proprietorship">Proprietorship</option>
+							<option value="Partnership">Partnership</option>
+							<option value="Limited Liability Partnership">Limited
+								Liability Partnership</option>
+							<option value="One Person Company">One Person Company</option>
+							<option value="Private Limited Company">Private Limited
+								Company</option>
+							<option value="Limited Company">Limited Company</option>
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">IFSC Code</label>
+					<div class="col-md-6">
+						<input class="form-control" id="ifsc_code" type="text"
+							maxlength="30" />
+					</div>
+				</div>
+
+				<br> <br> 
+				
+				<div class="form-group required">
+				<div class="col-md-6">
+				 <input id="account" type="submit"
+					value="Save" class="btn btn-blue" 
+					onclick="return save_account()"> 
+					</div>
+					</div>
+					
 			</form>
-
-			<input class="btn btn-blue" type='submit' onclick="edit_stock()">
-
+								<br><br><br>
+								
+								
+								</div>
+								<!-- end of account -->
+								
+								
+								
+								</div> <!-- end of tab content -->
+		
+		
 		</div>
-	</div>
-
-	<!-- end of type EDIT 02 inventory -->
-
-
-
-
+		</div>
+	
+	
+	
 
 	<div id="wrapper">
 
@@ -1426,21 +1755,20 @@ function update_prod_details(counter)
 						class="icon-bar"></span>
 				</button>
 
-				<a class="navbar-brand" href="index.html" id="xyz"
-					style="color: white; font-size: 30px">SIMPLIFY TAX</a> <a
-					class="navbar-brand" id="xyz" class="company_name"
+				<a class="navbar-brand" href="index.html" id="xyz" style="color:white;font-size:30px">SIMPLIFY TAX</a>
+				<a class="navbar-brand" id="xyz" class="company_name"
 					style="font-size: 30px"></a>
 
 
 			</div>
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav" id="pqr">
-
-				<li><a href="#" style="color: white"><i class="entypo-plus"></i></a></li>
-
+				
+				<li><a href="#" style="color:white"><i class="entypo-plus"></i></a></li>
+				
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color: white"><i
-						class="fa fa-bell"></i> <b class="caret"></b></a>
+					data-toggle="dropdown" style="color:white"><i class="fa fa-bell"></i> <b
+						class="caret"></b></a>
 					<ul class="dropdown-menu alert-dropdown">
 						<li><a href="#">Alert Name <span
 								class="label label-default">Alert Badge</span></a></li>
@@ -1457,17 +1785,22 @@ function update_prod_details(counter)
 						<li class="divider"></li>
 						<li><a href="#">View All</a></li>
 					</ul></li>
-
+					
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" style="color: white"><i
 						class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
+
+						<li><a href="business_details.html">Company Profile</a></li>
+						<li class="divider"></li>
 						<li><a href="tax_settings.html"> Tax Settings</a></li>
 						<li class="divider"></li>
 						<li><a href="financial_settings.html">Financial Settings
 						</a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
+						<li class="divider"></li>
+						<li><a href="FormatSettings.html">Format Settings </a></li>
 					</ul></li>
 
 
@@ -1475,9 +1808,6 @@ function update_prod_details(counter)
 					data-toggle="dropdown" style="color: white">&nbsp;<i
 						class="fa fa-user" id="name"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="company_profile.html"><i
-								class="fa fa-fw fa-user"></i> Profile</a></li>
-
 
 						<li class="divider"></li>
 						<li><a href="logout.html"><i
@@ -1492,16 +1822,16 @@ function update_prod_details(counter)
 					<li><a href="index.html"><i class="fa fa-fw fa-dashboard"></i>
 							Home</a></li>
 
-					<li class="active"><a href="PurchaseOrders.html"><i
+					<li ><a href="PurchaseOrders.html"><i
 							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
 
-					<li><a href="Bills.html"><i class="fa fa-fw fa-dashboard"></i>
+					<li class="active"><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
 							Bills</a></li>
-
-					<li><a href="Invoice.html"><i
+							
+					<li><a href="createEstimate.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
-
-					<li><a href="Estimate.html"><i
+					
+					<li><a href="createInvoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
 
 					<li><a href="Receipts.html"><i
@@ -1510,14 +1840,14 @@ function update_prod_details(counter)
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
 
-					<li><a href="Customers.html"><i
+					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
 
-					<li><a href="Vendors.html"><i
+					<li><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
-
-
-
+				
+					
+					
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -1527,46 +1857,148 @@ function update_prod_details(counter)
 		<div id="page-wrapper">
 
 			<div class="container-fluid">
-
-
-
-				<h1 class="page-header"> Bill</h1>
-				<!-- Row beginning -->
+			<!-- Row beginning  MAIN SIZE outer panel width-->
 				<div class="row" id="row">
 					<div class="col-lg-12">
 
+<h1 class="page-header"> Bill #001</h1>
+				
+				
+				<div class="row">
+					<div class="col-lg-8">
+					
+					<div id ="container">
+				<div id="left">
+					<h3>Status</h3>
+					<div id="status"></div>
+				</div>
+				
+				<div id="center">
+				<h3>Vendor</h3>
+				<div><a onclick="return a()"><h3>Suraj Papers</h3></a></div>
+				</div>
+				
+				
+				<div id="right">
+				<h3>Amount Due</h3>
+				<div id="dueamt">Rs 200</div>
+				</div>
+			</div>
+				</div>
+				</div>
+			
 
-
-
-						<!------CONTROL TABS START------>
-						<ul class="nav nav-tabs bordered">
-							<li class="active"><a href="#bill" data-toggle="tab"><i
-									class="entypo-menu"></i> View Bill</a></li>
-
-
-						</ul>
-						<!------CONTROL TABS END------>
-
-						<!--  Control tab features -->
-
-						<div class="tab-content">
-							<!----TAB LISTING STARTS for purchase order-->
-							<div class="tab-pane box active" id="bill">
-								<br>
-
-
-								<div class="panel panel-default">
-									<button type="button" class="btn btn-info" style="width: 100%"
-										data-toggle="collapse" data-target="#portionOne">Business
-										Details</button>
+						<div class="panel panel-default">
 									<div class="row">
 										<div class="col-lg-12">
+											
+												
+											
+											<div>
+											<p style="float:right">
+												<button type="button" class="btn btn-info" onclick="editpo()">Edit Bill</button>
+											</p>
+											
+											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-ok" style="color:#33CCCC"></span>&nbsp;&nbsp;Create Bill
+											</h3>
+											
+											<br><br>
 
+												<!-- ADD YOUR BUSINESS DETAILS -->
 
+											</div>
+											<!-- end of portion one -->
+
+										</div>
+										<!-- end of row1 -->
+									</div>
+								</div>
+								
+								
+								<div class="panel panel-default">
+									<div class="row">
+										<div class="col-lg-12">
+											
+												
+											
+											<div>
+											<p style="float:right">
+												<button type="button" class="btn btn-info">Send Billr</button>
+											</p>
+											
+											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope" style="color:#B0B0B0"></span>&nbsp;Send
+											</h3>
+											</div>
+											<br><br>
+
+												<!-- ADD YOUR BUSINESS DETAILS -->
+
+											
+										</div>
+										<!-- end of row1 -->
+									</div>
+								</div>
+								
+								
+								
+								
+								<div class="panel panel-default">
+									<div class="row">
+										<div class="col-lg-12">
+											
+												
+											
+											<div>
+												<p style="float:right" >
+												<b id="show_due">Amount Due : Rs. 200 </b>
+												</p>
+												
+												
+													
+											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-ok" style="color:gray"></span>&nbsp;&nbsp;Make  Payment</h3>
+											
+											<h4>&nbsp;&nbsp;<b id="payment_status">Status: Bill payment is due. </b></h4>
+											</div>
+											
+											
+											<hr>
+											
+											<div id="payments">
+											<p style="float:right">
+												<button type="button" class="btn btn-info" id="pay_button" onclick="return add_advpay()">Make Payment</button>
+											</p>
+											<h4>&nbsp;&nbsp;Payments made:</h4>
+											
+											<br>
+											</div>
+											
+											<br>
+
+												<!-- ADD YOUR BUSINESS DETAILS -->
+
+											
+
+										</div>
+										<!-- end of row1 -->
+									</div>
+								</div>
+								
+								
+
+								<div class="panel panel-default">
+									<div class="row">
+										<div class="col-lg-12">
+											<button type="button" class="btn btn-info"
+												style=" width: 100%" data-toggle="collapse"
+												
+												data-target="#portionOne">Business Details</button>
+												
 											<div id="portionOne" class="panel-collapse collapse in">
-
-												<br> VISTAR PRINTSOL PRIVATE LIMITED<br> B.D.A
-												Layout, Nagarbhavi, <br> Bangalore. <br> <br>
+											<br>
+												VISTAR PRINTSOL PRIVATE LIMITED<br>
+											B.D.A Layout, Nagarbhavi, <br>
+											Bangalore.
+											<br><br>
 
 												<!-- ADD YOUR BUSINESS DETAILS -->
 
@@ -1586,40 +2018,30 @@ function update_prod_details(counter)
 
 
 								<div class="panel panel-default">
-									<button type="button" class="btn btn-info" style="width: 100%">Vendor
-										Details</button>
+									<button type="button" class="btn btn-info"
+										style=" width: 100%">Vendor Details</button>
 									<div class="row">
 										<!-- ROW 2 -->
 										<div class="col-lg-12">
-											<!-- How wide table should be -->
+											<!-- How wide table should be apart from outer panel -->
 
 
-											<!-- make another row for vendor details -->
+											<!-- make another row for customer details -->
 											<div class="panel panel-default" id="inner_panel">
 												<div class="row">
 													<div class="col-lg-12">
-
-
-
-
-
 														<div id="form-panel">
 															<form role="form" id="customer_profile">
 
 																<div class="form-group required">
 																	<label class="col-md-2 control-label">Vendor</label>
 																	<div class="col-md-4">
-																		<input list="vendor_names" class="form-control"
-																			id="vendor" placeholder="Vendor Name"
-																			onchange="getvendor_details()">
+																		<input list="vendor_names" class="form-control" id="vendor" placeholder="Vendor Name" onchange="update_vendor()">
 
-																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
-                                  store customer id save this -->
-
-																		<datalist id="vendor_names">
-																			<option vendorid="145" value="Vaishnavi">Vaishnavi</option>
-																			<option vendorid="167" value="Vidhya">Vidhya</option>
-
+														
+																			<datalist id="vendor_names">
+																			
+																			
 																		</datalist>
 
 
@@ -1635,19 +2057,16 @@ function update_prod_details(counter)
 
 																	<div class="col-md-6">
 																		<textarea class="form-control" id="vendor_detail"
-																			rows="5" cols="80" readonly>#31, 3rd cross Vijayanagar Bangalore</textarea>
+																			rows="5" cols="80" readonly style="border: none; background-color:white"></textarea>
 																	</div>
 																</div>
 
-
-
 																<br> <br>
-
-
+																
 																<div class="form-group required">
 																	<label class="col-md-2 control-label">Date</label>
 																	<div class="col-md-4">
-																		<div class="input-group date" id="dtpicker">
+																		<div class="input-group date" id="dtpicker1">
 
 																			<input type="text" class="form-control" id="date"
 																				onchange="get_duedate()"> <span
@@ -1713,249 +2132,103 @@ function update_prod_details(counter)
 																		<input class="form-control" id="pay_duedate" readonly />
 																	</div>
 																</div>
+																
+
 
 															</form>
 														</div>
 														<!-- form panel -->
 
+
+
+
+
+
 													</div>
 												</div>
 
 												<br> <br>
-											</div>
-										</div>
-									</div>
+										
 
-									<!-- panel default -->
 
-									<div class="row">
-										<!-- ROW 2 -->
-										<div class="col-lg-12">
 											<table class="table borderless datatable" id="table_export">
 												<thead>
 													<tr>
+													
+														<th bgcolor="#B0B0B0" style="width:10%"><div>Sl No</div></th>
 
-														<th><div>Product</div></th>
-														<th><div>Description</div></th>
 
-														<th><div>Quantity</div></th>
-														<th><div>Price</div></th>
+														<th bgcolor="#B0B0B0" style="width:30%"><div>Product</div></th>
 
-														<th><div>Amount</div></th>
-														<th><div></div></th>
+														<th bgcolor="#B0B0B0" style="width:10%"><div>Quantity</div></th>
+														<th bgcolor="#B0B0B0" style="width:25%"><div>Price</div></th>
+
+														<th bgcolor="#B0B0B0" style="width:25%"><div>Amount</div></th>
+														
 													</tr>
 												</thead>
 												<tbody>
-													<tr>
-														<td id="0stockoption">
-															<div class="form-group required">
+												
+													
 
-																<div class="col-md-12">
-																	<input list="0productlist" class="form-control"
-																		id="0product_name" placeholder="Chose Product"
-																		onchange="update_prod_details(0)"></input>
-
-
-																	<datalist id="0productlist">
-
-
-
-																	</datalist>
-																</div>
-															</div> <br> <br>
-
-
-
-
-
-														</td>
-
+													<tr id="last_row"  >
+													<td></td>
+													<td></td><td></td><td><b>SubTotal</b> <br><br><b>Tax Total</b> </td>
+													
 														<td>
-
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="text" class="form-control" id="0prod_desc"
-																		maxlength="30" placeholder="Description"
-																		required="required" title="" />
-																</div>
-															</div>
-
-														</td>
-
-
-
-														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="1" class="form-control"
-																		id="0quantity" maxlength="30" name="quantity"
-																		placeholder="Quantity" required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div>
-
-														</td>
-														<td>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input type="number" value="0" class="form-control"
-																		id="0price" name="price" maxlength="30"
-																		placeholder="Price" required="required" title=""
-																		onchange="update_amount(first_count)" />
-																</div>
-															</div> <br> <br>
-
-															<div class="form-group required">
-																<label class="col-md-3 control-label">Tax Rate</label>
-																<div class="col-md-9">
-
-																	<input list="0taxlist" class="form-control"
-																		id="0tax_rate" placeholder="Tax Rate"
-																		onchange="update_tax(first_count)">
-
-																	<datalist id="0taxlist">
-
-
-																	</datalist>
-																</div>
-															</div>
-
-														</td>
-
-														<td>
-
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input class="form-control no-border" id="0amt"
-																		value="0" readonly style="background-color: white"
-																		title="" type="text" />
-																</div>
-															</div> <br> <br>
-															<div class="form-group required">
-
-																<div class="col-md-12">
-																	<input class="form-control no-border" id="0tax_amt"
-																		value="0" readonly style="background-color: white"
-																		title="" type="text" />
-																</div>
-															</div>
-
-														</td>
-
-														<td><br> <i class="entypo-trash"
-															onClick="delete1(this,first_count)"></i></td>
-
-
-													</tr>
-
-
-													<tr id="last_row" class="middle">
-														<td colspan="6" id="add_row"><i
-															class="entypo-plus-circled"></i>Add new item</td>
-													</tr>
-
-													<tr>
-														<td colspan="6" class="right">
 															<div class="form-group ">
-																<label class="col-md-2 control-label">SubTotal</label>
-																<div class="col-md-3">
+																
+																
 																	<input type="number" value="0"
 																		class="form-control no-border" readonly id="subtotal"
-																		maxlength="30" name="subtotal" placeholder="SubTotal"
-																		required="required" title="" />
-																</div>
-															</div>
-
-														</td>
-													</tr>
-
-													<tr id="taxfinalamt">
-														<td colspan="6" class="right">
-															<div class="form-group ">
-																<label class="col-md-2 control-label">Tax Amount</label>
-																<div class="col-md-3">
-																	<input type="number" value="0"
+																		 maxlength="30" name="subtotal"
+																		placeholder="SubTotal" required="required" title=""
+																		 />
+																		 
+																	
+																		 
+																		 <input type="number" value="0"
 																		class="form-control no-border" readonly id="taxtotal"
-																		name="taxtotal" maxlength="30" placeholder="TaxTotal"
-																		required="required" title="" />
-																</div>
+																		name="taxtotal" maxlength="30" 
+																		placeholder="TaxTotal" required="required" title=""
+																		 />
+																		
+																
 															</div>
 
 														</td>
 													</tr>
 
+													
 
-													<tr>
-														<td colspan="6" class="right">
+
+													<tr id="gtotal">
+													<td></td>
+													<td></td><td></td><td><b>Grand Total</b></td>
+														<td >
 															<div class="form-group ">
-																<label class="col-md-2 control-label">Grand
-																	Total</label>
-																<div class="col-md-3">
+																
+																
 																	<input type="number" value="0"
 																		class="form-control no-border" readonly
-																		id="grandtotal" maxlength="30" name="grandtotal"
-																		placeholder="GrandTotal" required="required" title="" />
-																</div>
+																		id="grandtotal"  maxlength="30"
+																		name="grandtotal" placeholder="GrandTotal"
+																		required="required" title=""
+																		 />
+																
 															</div>
 
 														</td>
 													</tr>
-
-													<!-- advance payment from PO  - readonly / editable -->
-													<tr>
-														<td colspan="6" class="right">
-															<div class="form-group ">
-																<label class="col-md-2 control-label">Advance
-																	Paid</label>
-																<div class="col-md-3">
-																	<input type="number" value="0"
-																		class="form-control no-border" readonly id="advance"
-																		maxlength="30" name="advance" required="required"
-																		title="" />
-																</div>
-															</div>
-
-														</td>
-													</tr>
-
-
-													<!-- balance amount to be paid for the bill -->
-													<tr>
-														<td colspan="6" class="right">
-															<div class="form-group ">
-																<label class="col-md-2 control-label">Balance</label>
-																<div class="col-md-3">
-																	<input type="number" value="0"
-																		class="form-control no-border" readonly id="balance"
-																		maxlength="30" name="balance" required="required"
-																		title="" />
-																</div>
-															</div>
-
-														</td>
-													</tr>
-
-
-
-
-													<tr>
-
-														<td><label class="col-md-1 control-label">Notes</label>
-															<textarea class="form-control" id="notes" rows="10"
-																cols="100"></textarea></td>
-
-													</tr>
-
-
+												
+													
+													
 												</tbody>
 											</table>
 
 
 
+														
 
 										</div>
 
@@ -1963,33 +2236,60 @@ function update_prod_details(counter)
 
 									</div>
 									<!-- /.row -->
+									
+									
+									
+									<br>
+									
+									
+					                    
+					                    
+					                    
+					                    <!-- new row for notes -->
+									
+									
+									<div class="row">
+									<div class="col-lg-12">
+									<form>
+									<div class=form-group>
+									<label class="col-md-1 control-label">Notes</label>
+									<br>
+									<div  class="col-md-6">
+															<textarea class="form-control" id="notes" rows="10"
+																cols="10"></textarea>
+																</div>
+								    </div>
+								    </form>
+																
 								</div>
-								<!-- closure for panel -->
-
-
-								<!-- Another row -->
-								<div class="row">
-									<div class="col-lg-6">
-										<input type="submit" class="btn btn-blue" name="submit"
-											id="submit" value="Save and Continue">
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-										<!-- create another row -->
-									</div>
 								</div>
+									<!-- end of notes -->
+					                    
+					                    
+									
+								</div>
+								<!-- closure for Main panel -->
 
-
+							
+<br><br>
 							</div>
 							<!-- one tab listing feature ends-->
 
 							<!-- New Nav bar feature listing(create bill) -->
 
-							<div class="tab-pane box " id="bill">hello world</div>
+							
+
+
 
 
 
 						</div>
 						<!-- nav content -->
+
+
+
+
+
 
 					</div>
 					<!--  wrapper -->
@@ -2009,593 +2309,707 @@ function update_prod_details(counter)
 
 
 
+
 <script>
+                          /*
+                           $(function(){
+                           $("#add_row").click(function(){
+                           
+                        	   alert(count+1);
                           
-	var count = 0;
-	var first_count = 0;
-	var box_counter = [ 0 ];          //array to keep track of indices of table rows
-	var tax_rate = [];
-	var tax_counter = [];
-	var tax_amount = [];
-	var tax_div = [];
-	
-	
-		$("#add_row").click(function() {            //dynamically add a row for item entry
+                           count=count+1;
+                           
+                            box_counter.push(count);
+                            productid_counter[count] = null;
+                            
+                            
+                            
+                           $( '<tr >' + 
+                          
+                              '<td>' + 
+                                  '<div class="form-group required">' + 
+                                  '<div class="col-md-12">' + 
+                                  '<input class="form-control" id="' + count + 'product_name"  name="company_name"   placeholder="Product Name" required="required" title="" type="text" />' + 
+                                  '</div>'+
+                                  '</div>'+
+                              '</td>'  + 
+                              
+                              '<td>'+
+                              	'<div class="form-group required">'+
+                              	'<div class="col-md-12">'+
+                              	'<input type="number" value="1" class="form-control" id="' + count + 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount(' + count + ')"  />' + 
+                              	'</div>'+
+                              	'</div>'+
+                              '</td>' + 
+                              
+ 							'<td>' +
+ 								'<div class="form-group required">'+
+ 								'<div class="col-md-12">'+
+ 								'<input type="number" value="0" class="form-control" id="' + count + 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount(' +count +')" />'+
+ 								'</div>'+
+ 								'</div>'+
+ 								'<br><br>'+
+ 								'<div class="form-group required">'+ 
+ 								'<label class="col-md-3 control-label">Tax Rate</label>'+
+ 								'<div class="col-md-9">'+ 
+ 									'<input list="browser"  class="form-control" id="' + count + 'tax_rate" placeholder="Tax Rate" onchange="update_tax(' + count   + ')">'+
+ 							 		'<datalist id="browser">'+
+ 							 		'<option data-customvalue="VAT 5.5" value="VAT 5.5">VAT 5.5</option>'+
+ 							 		'<option data-customvalue="VAT 14.5" value="VAT 14.5">VAT 14.5</option>'+
+ 							 		'<option data-customvalue="SERVICE 15" value="SERVICE 15">SERVICE 15</option>'+
+ 							 		
+ 							 		'</datalist>'+
+ 							 '</div>'+
+ 							 '</div>'+
+ 							 '</td>' + 
+ 							 
+ 							 '<td>' 
+							+ '<div class="form-group required">'
+							+'<div class="col-md-12">'
+							+ '<input class="form-control no-border" id="' +  count  +'amt" value="0"' + 
+												 ' readonly style="background-color:white"' + 
+												' title="" type="text" />'
+							+ '</div>'
+							+ '</div>'
+							+
 
-							count = count + 1;
-							box_counter.push(count);
-							
-							$(
-									'<tr >'
-											+
+							'<br><br>'
+							+ '<div class="form-group required">'
+							+
 
-											'<td id="' +  count + 'stockoption">'
-											+ '<div class="form-group required">'
-											+ '<div class="col-md-12">'
-											+ '<input class="form-control" list="' +  count  + 'productlist" id="' + count + 'product_name"  name="company_name"   placeholder="Chose Product"  onchange="update_prod_details(' +   count + ')"  required="required" title="" type="text" />'
-											+ '<datalist id="' +  count + 'productlist">' 
-											+ '</datalist>' 
-											+'</div>'
-											+ '</div>'
-											+ '</td>'
-											+
-											
-											'<td>' 
-											+ '<div class="form-group required">'
-											+ '<div class="col-md-12">'
-										    + '<input type="text"  class="form-control"' 
-										    + 'id="' +  count + 'prod_desc" maxlength="30" name="proddesc"'
-											+ 'placeholder="Description" required="required" title=""'
-											+ '/>' 
-											+'</div>' 
-											+'</div>' 
-											+'</td>' 
-											+ 
-											
+							'<div class="col-md-12">'
+							+ '<input class="form-control no-border" id="' + count + 'tax_amt" value="0"' + 
+												   ' readonly style="background-color:white"' + 
+												' title="" type="text" />'
+							+ '</div>'
+							+ '</div>'
+							+'</td>'
+							+'<td>'
+							+ '<br>'
+							+ '<i class="entypo-trash"'
+							+ ' onClick="delete1(this,'
+							+ count
+							+ ')"></i>' 
+							+ '</td>'
+							+'</tr>').insertBefore('#last_row');
+                            
+                            });
+                            
+                            
+                            
+                            });
+                            
+                            */
+                            
+                           function update_amount(value_counter) {
+                       		
+                   			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
+                   			var current_amount = $('#' + value_counter + 'amt').val();
+                   		
+                   			//update subtotal
 
-											'<td>'
-											+ '<div class="form-group required">'
-											+ '<div class="col-md-12">'
-											+ '<input type="number" value="1" class="form-control" id="'
-											+ count
-											+ 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount('
-											+ count
-											+ ')"  />'
-											+ '</div>'
-											+ '</div>'
-											+ '</td>'
-											+
+                   			if (current_amount != 0)                                           //subtract initial value from sub total and grand total 
+                   			{
+                   				var subamt = Number($('#subtotal').val()) - current_amount;
+                   				$('#subtotal').val(subamt.toFixed(2));
+                   				var finalamt = Number($('#grandtotal').val()) - current_amount;
+                   				$('#grandtotal').val(finalamt.toFixed(2));
 
-											'<td>'
-											+ '<div class="form-group required">'
-											+ '<div class="col-md-12">'
-											+ '<input type="number" value="0" class="form-control" id="'
-											+ count
-											+ 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount('
-											+ count
-											+ ')" />'
-											+ '</div>'
-											+ '</div>'
-											+ '<br><br>'
-											+ '<div class="form-group required">'
-											+ '<label class="col-md-3 control-label">Tax Rate</label>'
-											+ '<div class="col-md-9">'
-											+ '<input list="' + count + 'taxlist"  class="form-control" id="'
-											+ count
-											+ 'tax_rate" placeholder="Tax Rate" onchange="update_tax('
-											+ count
-											+ ')">'
-											+ '<datalist id="'  +    count + 'taxlist">'
-											
-											+'</datalist>'
-											+ '</div>'
-											+ '</div>'
-											+ '</td>'
-											+ '<td>' 
-											+ '<div class="form-group required">'
-											+'<div class="col-md-12">'
-											+ '<input class="form-control no-border" id="' +  count  +'amt" value="0"' + 
-																 ' readonly style="background-color:white"' + 
-																' title="" type="text" />'
-											+ '</div>'
-											+ '</div>'
-											+
+                   			}
 
-											'<br><br>'
-											+ '<div class="form-group required">'
-											+
+                   		        // update newly calculated amount (price *quantity)
 
-											'<div class="col-md-12">'
-											+ '<input class="form-control no-border" id="' + count + 'tax_amt" value="0"' + 
-																   ' readonly style="background-color:white"' + 
-																' title="" type="text" />'
-											+ '</div>'
-											+ '</div>'
-											+'</td>'
-											+'<td>'
-											+ '<br>'
-											+ '<i class="entypo-trash"'
-											+ ' onClick="delete1(this,'
-											+ count
-											+ ')"></i>' 
-											+ '</td>'
-											+'</tr>').insertBefore('#last_row');
-							
-							 for(var i=0;i<product_list.length;i++)
-							 {
-							
-							 //show only inventory, noninv and service input type products
-							
-						      $('#' + count +'productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
-							 
-							 }
-							 
-							 $('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
-						 
-						  
-						     for(var i=0;i<tax_list.length;i++)
-						    	 {
-						    	 
-						    	 	$('#' + count + 'taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-						    	 }
-							
+                   			var qty = value_counter + 'quantity';
+                   			var new_amount = ($('#' + qty).val() * $('#' + value_counter + 'price').val());   
+                   			$('#' + value_counter + 'amt').val(new_amount.toFixed(2));
 
-						});
+                   		         // update subtotal and grand total
 
-	
-		function update_noproduct(value_counter) {
-			
-			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
-			var current_amount = $('#' + value_counter + 'amt').val();
-		
-			//update subtotal
+                   			var subtotalamt = Number($('#subtotal').val()) + new_amount;
+                   			$('#subtotal').val(subtotalamt.toFixed(2));
+                   			var finalamt = Number($('#grandtotal').val()) + new_amount;
+                   			$('#grandtotal').val(finalamt.toFixed(2));
+                   			update_due();
 
-			if (current_amount != 0)                                           //subtract initial value from sub total and grand total 
-			{
-				var subamt = Number($('#subtotal').val()) - current_amount;
-				$('#subtotal').val(subamt.toFixed(2));
-				var finalamt = Number($('#grandtotal').val()) - current_amount;
-				$('#grandtotal').val(finalamt.toFixed(2));
+                   		         // Update corresponding tax amount, tax total and grand total
 
-			}
+                   			var tax_input = $('#' + value_counter + 'tax_rate').val();                        //value of input box (vat 5.5)
 
-		        // update newly calculated amount (price *quantity)
+                   			if (tax_input != '')                                                              //if a tax type exists
+                   			{
+                   				var rate = tax_input.toString().split(" ");                                   // parse tax type get the rate(5.5)
+                                   var newtaxamt = (rate[1] / 100) * ($('#' + value_counter + 'amt').val());
+                   				$('#' + value_counter + 'tax_amt').val(newtaxamt.toFixed(2));
+                   				var taxtotal = Number($('#taxtotal').val()) - Number(existing_taxamt) + Number(newtaxamt.toFixed(2));
+                   				$('#taxtotal').val(taxtotal.toFixed(2));
+                   				var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
+                   				$('#grandtotal').val(finalamt.toFixed(2));
+                   				update_due();
+                   				
+                   				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
 
-			var qty = value_counter + 'quantity';
-			var new_amount = ($('#' + qty).val() * $('#' + value_counter + 'price').val());   
-			$('#' + value_counter + 'amt').val(new_amount.toFixed(2));
+                   		}
+                   	}
 
-		         // update subtotal and grand total
+                   	
+                   	
+                   	
+                   	
+                   	
+                   	function update_tax(value_counter)                                        // tax type - dropdown chosen
+                   	{
 
-			var subtotalamt = Number($('#subtotal').val()) + new_amount;
-			$('#subtotal').val(subtotalamt.toFixed(2));
-			var finalamt = Number($('#grandtotal').val()) + new_amount;
-			$('#grandtotal').val(finalamt.toFixed(2));
+                   		var existing_taxamt = $('#' + value_counter + 'tax_amt').text();
+                   		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
+                   		var amt = value_counter + 'amt';  
+                   		var taxamt = value_counter + 'tax_amt';
+                        	var tax_bracket = tax_value.toString().split(" ");                   //5.5
+                        	var taxrate = tax_bracket[1];
+                        	var newtaxamt = (taxrate/100)*($('#' + amt).val());
+                        	
+                        	
+                        	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
+                        	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
+                           $('#taxtotal').val(taxtotal.toFixed(2));
+                              
+                              
+                           var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
+                           $('#grandtotal').val(finalamt.toFixed(2));
+                           update_due();
+                           
+                           
+                       	alert("tax amt is"  + newtaxamt);
+                        	tax_addition(tax_value,value_counter,newtaxamt.toFixed(2));             //call func to handle tax slab div
+                       
+                   
+                   	}
+                   	
+                   	
+                   	
+                   	//function to add/remove tax slab div
 
-		         // Update corresponding tax amount, tax total and grand total
+                   	function tax_addition(tax_val, number_count, tax_amt) {
+                   		
+                   		var nd = tax_val.toString().split(" ");                      //VAT 5.5
+                       	var x = nd[1].toString().split(".");                         //5 5
+                       	var n = nd[0] + x[0] + x[1];                                 //VAT55
+                   		var intval = n;                                              //tax slab div ID prefix
+                   		
+                              //check if value_counter had contributed to any tax earlier - nullify its effects 
 
-			
-			
-			
-			var tax_input = $('#' + value_counter + 'tax_rate').val();                        //value of input box (vat 5.5)
-			
-			
+                          var counter_index = tax_counter.indexOf(number_count);
+                          if(counter_index!=-1)                                           //if earlier entry exists
+                                {
+                                    alert("entry for this box exists at index" + counter_index);
+                                    var divid  = tax_div[counter_index];
+                                    alert("div id is " + divid);
+                                    var amt   = tax_amount[counter_index];  //old amt
+                                    alert("old amount is " + amt);
+                                    alert("b4 subtraction amt is" + $('#' + divid).val());
+                                    var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
+                                    alert("after subtraction amt is"  + subtract_amt);
 
-			if (tax_input != '')                                                              //if a tax type exists
-			{
-				var rate = tax_input.toString().split(" ");                                   // parse tax type get the rate(5.5)
-                var newtaxamt = (rate[1] / 100) * ($('#' + value_counter + 'amt').val());
-				$('#' + value_counter + 'tax_amt').val(newtaxamt.toFixed(2));
-				var taxtotal = Number($('#taxtotal').val()) - Number(existing_taxamt) + Number(newtaxamt.toFixed(2));
-				$('#taxtotal').val(taxtotal.toFixed(2));
-				var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
-				$('#grandtotal').val(finalamt.toFixed(2));
-				tax_addition_exclusive(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
+                   			     if(subtract_amt==0)
+                   			     {
+                   			       //remove table row
+                   			       $('#' + divid).closest('tr').remove();
+                   			       tax_rate[counter_index]=-1;
+                   			            
+                   			     } 
+                   			     
+                   			     else
+                   			         $('#' + divid).val(subtract_amt.toFixed(2));                      //update new value in tax slab div
+                   			         
+                   			         
+                   			         
+                                     //update new values, b4 that check if new tax type exists, find it in tax_rate array
+                                     
 
-		}
-	}
-		
-		
-		
-		function tax_addition_exclusive(tax_val, number_count, tax_amt)
-		{
-			var nd = tax_val.toString().split(" ");                      //VAT 5.5
-	    	var x = nd[1].toString().split(".");                         //5 5
-	    	var n = nd[0] + x[0] + x[1];                                 //VAT55
-			var intval = n;                                              //tax slab div ID prefix
-			
-	           //check if value_counter had contributed to any tax earlier - nullify its effects 
+                   	            var new_tax_index = tax_rate.indexOf(tax_val);
+                   			    alert("index of new tax entry" + tax_val + "is"  + new_tax_index);
+                   			    
+                   			    if(new_tax_index!=-1)                      //its present so add to its value , may be at same place/other box
+                   							     {  
+                   							       
+                   							        var new_tax_value = $('#' + tax_div[new_tax_index]).val();
+                   							        alert("value at div" + tax_val + "is" + new_tax_value);
+                   							        var updated_val = Number(new_tax_value) + Number(tax_amt) ;
+                   							        $('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
+                   							        alert("new value at div" + tax_val + "is" + updated_val);
+                   									tax_rate[counter_index]  = tax_val;
+                   									tax_div[counter_index]  = intval + 'check';
+                   									tax_amount[counter_index]  = tax_amt;
+                   									alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + " " + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
+                   							     
+                   							     }
+                   							     
+                   							     
+                                  else
+                   				  {                                               // new tax entry doesnt exists
+                   									     
+                   					alert("create div for"   + tax_val);
+                   					tax_rate[counter_index] = (tax_val);
+                   				    tax_div[counter_index] = intval + 'check';  //div id of input box
+                   				    tax_amount[counter_index] =(tax_amt);
+                   					alert("doesnt have" + tax_val + "entry");
+                   									
+                   				    $( '<tr >' + 
+                   						'<td colspan="5" >'+
+                   						'<div class="form-group ">' + 
+                   						'<label class="col-md-2 control-label">Tax@ ' + 
+                   						tax_val +
+                   						'</label>'+
+                   						'<div class="col-md-3">'+ 
+                   						'<input type="number" style="background-color:white" value="' + tax_amt + '" class="form-control no-border" readonly id="' +  intval +  'check" name="company_name" maxlength="30" name="username"  required="required" title=""  />'+
+                   	  				    '</div>'+
+                   						'</div>'+ 
+                   						'</td>'+
+                   						'</tr>').insertBefore('#taxfinalamt');
+                   					 	alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[counter_index] + "is " + $('#' + tax_div[counter_index]).val());
+                   									     
+                   									     
+                   				}    
 
-	       var counter_index = tax_counter.indexOf(number_count);
-	      
-	                 alert("entry for this box exists at index" + counter_index);
-	                 var divid  = tax_div[counter_index];
-	                 alert("div id is " + divid);
-	                 var amt   = tax_amount[counter_index];  //old amt
-	                 alert("old amount is " + amt);
-	                 alert("b4 subtraction amt is" + $('#' + divid).val());
-	                 var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
-	                 alert("after subtraction amt is"  + subtract_amt);
+                            }                                                                   // if loop ends(box entry found)
+                            
+                            
+                   		else{                                                            //no entry as of now corresponding to the box , but if tax value is present elsewhere                      
+                   		      
+                   			alert("no entry of the box");
+                   			var new_tax_index = tax_rate.indexOf(tax_val);
+                   		    alert("tax rate entry found at" + new_tax_index);
+                   			
+                   		    if(new_tax_index!=-1) //its present so add to its value
+                   			{  
 
-				     if(subtract_amt==0)
-				     {
-				       //remove table row
-				       $('#' + divid).closest('tr').remove();
-				       tax_rate[counter_index]=-1;
-				            
-				     } 
-				     
-				     else
-				         $('#' + divid).val(subtract_amt.toFixed(2));  
-				     
-				     
-				     tax_div[counter_index] =-1;
-				        tax_amount[counter_index] = 0;
-				        tax_rate[counter_index] =-1;
-			
-			
-			
-		}
-		
-		
+                   				alert("tax rate found at " + new_tax_index);
+                   				alert("div id is" + tax_div[new_tax_index]);
+                   				var new_tax_value = $('#' + tax_div[new_tax_index]).val();
+                   				alert($('#' + tax_div[new_tax_index]).val());
+                   				alert("existing amount at" + tax_val + "is" + new_tax_value);
+                   				var updated_val = Number(new_tax_value) + Number(tax_amt) ;
+                   				alert("now value is" + updated_val);
+                   				alert("div to update is " + '#' + tax_div[new_tax_index]);
+                   				$('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
+                   				alert("after updating at " + tax_div[new_tax_index] + " " + $('#' + tax_div[new_tax_index]).val());
+                   				tax_rate.push(tax_val);
+                   				tax_div.push(intval + 'check');  //div id of input box
+                   				tax_counter.push(number_count);
+                   				tax_amount.push(tax_amt);
 
-	function update_amount(value_counter) {
-		
-			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
-			var current_amount = $('#' + value_counter + 'amt').val();
-		
-			//update subtotal
-
-			if (current_amount != 0)                                           //subtract initial value from sub total and grand total 
-			{
-				var subamt = Number($('#subtotal').val()) - current_amount;
-				$('#subtotal').val(subamt.toFixed(2));
-				var finalamt = Number($('#grandtotal').val()) - current_amount;
-				$('#grandtotal').val(finalamt.toFixed(2));
-
-			}
-
-		        // update newly calculated amount (price *quantity)
-
-			var qty = value_counter + 'quantity';
-			var new_amount = ($('#' + qty).val() * $('#' + value_counter + 'price').val());   
-			$('#' + value_counter + 'amt').val(new_amount.toFixed(2));
-
-		         // update subtotal and grand total
-
-			var subtotalamt = Number($('#subtotal').val()) + new_amount;
-			$('#subtotal').val(subtotalamt.toFixed(2));
-			var finalamt = Number($('#grandtotal').val()) + new_amount;
-			$('#grandtotal').val(finalamt.toFixed(2));
-
-		         // Update corresponding tax amount, tax total and grand total
-
-			
-			
-			
-			var tax_input = $('#' + value_counter + 'tax_rate').val();                        //value of input box (vat 5.5)
-			
-			
-
-			if (tax_input != '')                                                              //if a tax type exists
-			{
-				var rate = tax_input.toString().split(" ");                                   // parse tax type get the rate(5.5)
-                var newtaxamt = (rate[1] / 100) * ($('#' + value_counter + 'amt').val());
-				$('#' + value_counter + 'tax_amt').val(newtaxamt.toFixed(2));
-				var taxtotal = Number($('#taxtotal').val()) - Number(existing_taxamt) + Number(newtaxamt.toFixed(2));
-				$('#taxtotal').val(taxtotal.toFixed(2));
-				var finalamt = Number($('#grandtotal').val()) - Number(existing_taxamt)+ Number(newtaxamt.toFixed(2));
-				$('#grandtotal').val(finalamt.toFixed(2));
-				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
-
-		}
-	}
-
-	
-	
-	
-	
-	
-	function update_tax(value_counter)                                        // tax type - dropdown chosen
-	{
-
-		var tax_value = $("#" + value_counter + "tax_rate").val();            //VAT 5.5
-		if(tax_value!='')
-		{
-		var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
-		var amt = value_counter + 'amt';  
-		var taxamt = value_counter + 'tax_amt';
-     	var tax_bracket = tax_value.toString().split(" ");                   //5.5
-     	var taxrate = tax_bracket[1];
-     	var newtaxamt = (taxrate/100)*($('#' + amt).val());
-     	
-     	
-     	
-     	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
-     	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
-        $('#taxtotal').val(taxtotal.toFixed(2));
-           
-           
-        var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
-        $('#grandtotal').val(finalamt.toFixed(2));
-        
-        
-     	tax_addition(tax_value,value_counter,newtaxamt.toFixed(2));             //call func to handle tax slab div
-	}
-		else
-			{
-			var existing_taxamt = $('#' + value_counter + 'tax_amt').val();
-			var amt = value_counter + 'amt';  
-			var taxamt = value_counter + 'tax_amt';
-	     	
-	     	var taxrate = 0;
-	     	var newtaxamt = (taxrate/100)*($('#' + amt).val());
-	     	
-	     	
-	     	
-	     	$('#' + taxamt).val(newtaxamt.toFixed(2));                              //update corresponding tax amt
-	     	var taxtotal =  Number($('#taxtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));     //update txtotal
-	        $('#taxtotal').val(taxtotal.toFixed(2));
-	           
-	           
-	        var finalamt =  Number($('#grandtotal').val()) - existing_taxamt + Number(newtaxamt.toFixed(2));    //update grand total
-	        $('#grandtotal').val(finalamt.toFixed(2));
-	        
-	        //now handle tax div , get all tax counter,div etc for that box
-	        
-	        var counter_index = tax_counter.indexOf(value_counter);
-	        var divid = tax_div[counter_index];
-	        var div_value = $("#" + divid).val();
-	        var new_value = (Number(div_value) - existing_taxamt).toFixed(2);
-	        
-	        
-	        if(new_value==0)
-      	  	{
-      	    	 $('#' + divid).closest('tr').remove();
-      	  	}
-	        
-	        tax_div[counter_index] =-1;
-	        tax_amount[counter_index] = 0;
-	        tax_rate[counter_index] =-1;
-	        
-			
-			
-			}
-    
-    
-	}
-	
-	
-	
-	//function to add/remove tax slab div
-
-	function tax_addition(tax_val, number_count, tax_amt) {
-		
-		var nd = tax_val.toString().split(" ");                      //VAT 5.5
-    	var x = nd[1].toString().split(".");                         //5 5
-    	var n = nd[0] + x[0] + x[1];                                 //VAT55
-		var intval = n;                                              //tax slab div ID prefix
-		
-           //check if value_counter had contributed to any tax earlier - nullify its effects 
-
-       var counter_index = tax_counter.indexOf(number_count);
-       if(counter_index!=-1)                                           //if earlier entry exists
-             {
-                 alert("entry for this box exists at index" + counter_index);
-                 var divid  = tax_div[counter_index];
-                 alert("div id is " + divid);
-                 var amt   = tax_amount[counter_index];  //old amt
-                 alert("old amount is " + amt);
-                 alert("b4 subtraction amt is" + $('#' + divid).val());
-                 var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
-                 alert("after subtraction amt is"  + subtract_amt);
-
-			     if(subtract_amt==0)
-			     {
-			       //remove table row
-			       $('#' + divid).closest('tr').remove();
-			       tax_rate[counter_index]=-1;
-			            
-			     } 
-			     
-			     else
-			         $('#' + divid).val(subtract_amt.toFixed(2));                      //update new value in tax slab div
-			         
-			         
-			         
-                  //update new values, b4 that check if new tax type exists, find it in tax_rate array
-                  
-
-	            var new_tax_index = tax_rate.indexOf(tax_val);
-			    alert("index of new tax entry" + tax_val + "is"  + new_tax_index);
-			    
-			    if(new_tax_index!=-1)                      //its present so add to its value , may be at same place/other box
-							     {  
-							       
-							        var new_tax_value = $('#' + tax_div[new_tax_index]).val();
-							        alert("value at div" + tax_val + "is" + new_tax_value);
-							        var updated_val = Number(new_tax_value) + Number(tax_amt) ;
-							        $('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
-							        alert("new value at div" + tax_val + "is" + updated_val);
-									tax_rate[counter_index]  = tax_val;
-									tax_div[counter_index]  = intval + 'check';
-									tax_amount[counter_index]  = tax_amt;
-									alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
-							     
-							     }
-							     
-							     
-               else
-				  {                                               // new tax entry doesnt exists
-									     
-					alert("create div for"   + tax_val);
-					tax_rate[counter_index] = (tax_val);
-				    tax_div[counter_index] = intval + 'check';  //div id of input box
-				    tax_amount[counter_index] =(tax_amt);
-					alert("doesnt have" + tax_val + "entry");
-									
-				    $( '<tr >' + 
-						'<td colspan="5" >'+
-						'<div class="form-group ">' + 
-						'<label class="col-md-2 control-label">Tax@ ' + 
-						tax_val +
-						'</label>'+
-						'<div class="col-md-3">'+ 
-						'<input type="number" style="background-color:white" value="' + tax_amt + '" class="form-control no-border" readonly id="' +  intval +  'check" name="company_name" maxlength="30" name="username"  required="required" title=""  />'+
-	  				    '</div>'+
-						'</div>'+ 
-						'</td>'+
-						'</tr>').insertBefore('#taxfinalamt');
-					 	alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[counter_index] + "is " + $('#' + tax_div[counter_index]).val());
-									     
-									     
-				}    
-
-         }                                                                   // if loop ends(box entry found)
-         
-         
-		else{                                                            //no entry as of now corresponding to the box , but if tax value is present elsewhere                      
-		      
-			alert("no entry of the box");
-			var new_tax_index = tax_rate.indexOf(tax_val);
-		    alert("tax rate entry found at" + new_tax_index);
-			
-		    if(new_tax_index!=-1) //its present so add to its value
-			{  
-
-				alert("tax rate found at " + new_tax_index);
-				alert("div id is" + tax_div[new_tax_index]);
-				var new_tax_value = $('#' + tax_div[new_tax_index]).val();
-				alert($('#' + tax_div[new_tax_index]).val());
-				alert("existing amount at" + tax_val + "is" + new_tax_value);
-				var updated_val = Number(new_tax_value) + Number(tax_amt) ;
-				alert("now value is" + updated_val);
-				alert("div to update is " + '#' + tax_div[new_tax_index]);
-				$('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
-				alert("after updating at " + tax_div[new_tax_index] + " " + $('#' + tax_div[new_tax_index]).val());
-				tax_rate.push(tax_val);
-				tax_div.push(intval + 'check');  //div id of input box
-				tax_counter.push(number_count);
-				tax_amount.push(tax_amt);
-
-				alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
+                   				alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
 
 
-            }
-		
-		   else
-			{
+                               }
+                   		
+                   		   else
+                   			{
 
-				alert("tax entry for "   + tax_val + "not found");
-				tax_rate.push(tax_val);
-				tax_div.push(intval + 'check');  //div id of input box
-				tax_counter.push(number_count);
-				tax_amount.push(tax_amt);
+                   				alert("tax entry for "   + tax_val + "not found");
+                   				tax_rate.push(tax_val);
+                   				tax_div.push(intval + 'check');  //div id of input box
+                   				tax_counter.push(number_count);
+                   				tax_amount.push(tax_amt);
 
 
-				$( '<tr >' + 
-				   '<td colspan="5" >'+
-					'<div class="form-group ">' + 
-					'<label class="col-md-2 control-label">Tax@ ' + 
-					tax_val +
-					'</label>'+
-					'<div class="col-md-3">'+ 
-					'<input type="number" value="' + tax_amt + '" class="form-control no-border" readonly id="' +  intval +  'check" name="company_name" maxlength="30" name="username"  required="required" title="" style="background-color:white" />'+
-					'</div>'+
-					'</div>'+ 
-					'</td>'+
-					'</tr>').insertBefore('#taxfinalamt');
+                   				$( '<tr >' + 
+                   				   '<td colspan="5" >'+
+                   					'<div class="form-group ">' + 
+                   					'<label class="col-md-2 control-label">Tax@ ' + 
+                   					tax_val +
+                   					'</label>'+
+                   					'<div class="col-md-3">'+ 
+                   					'<input type="number" value="' + tax_amt + '" class="form-control no-border" readonly id="' +  intval +  'check" name="company_name" maxlength="30" name="username"  required="required" title="" style="background-color:white" />'+
+                   					'</div>'+
+                   					'</div>'+ 
+                   					'</td>'+
+                   					'</tr>').insertBefore('#taxfinalamt');
 
-					alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt)  ;
+                   					alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt)  ;
 
-			}
+                   			}
 
 
 
 
-	}
-         
-	}//function ends
+                   	}
+                            
+                   	}//function ends
 
-	function delete1(o, number) {
+                   	function delete1(o, number) {
 
-		var index = box_counter.indexOf(number);
-        box_counter.splice(index, 1);
-      
-        
-        
-      	var deleted_amt = $('#' + number + 'amt').val();
-      	alert("deleted amt is " + deleted_amt);
-      	var deleted_tax_amt = $('#' + number + 'tax_amt').val();
-      	alert("deleted tax amt is " + deleted_tax_amt);
-      	var sub_amount =  Number($('#subtotal').val())  - deleted_amt;
-      	$('#subtotal').val(sub_amount.toFixed(2));
-      	alert("sub total is after subtraction" + sub_amount);
-      	var taxfinal_amount =  Number($('#taxtotal').val())  - Number(deleted_tax_amt);
-      	$('#taxtotal').val(taxfinal_amount.toFixed(2));
-      	alert("tax total is after subtraction" + taxfinal_amount.toFixed(2));
-      	alert("gtotal now is "  + Number($('#grandtotal').val()));
-      	
-      	var final_amount =  Number($('#grandtotal').val())  - (Number(deleted_amt) + Number(deleted_tax_amt));
-      	alert("final amt is" + final_amount.toFixed(2)); 
-      	$('#grandtotal').val(final_amount.toFixed(2));
-      	alert("grand total is after subtraction" + final_amount.toFixed(2));
-      	
-      	//get the index of this box
-      	
-      	var counter_index = tax_counter.indexOf(number);
-      	alert("found at index" + counter_index);
-      	if(counter_index!=-1)
-      	{
-      	 	 var tax_val = tax_rate[counter_index];  //VAT 5.5
-      	  	alert("tax rate in this box is " + tax_val);
-      	  
-		
-      		var nd = tax_val.toString().split(" ");
-    		var x = nd[1].toString().split(".");     //5 5
-    		var n = nd[0] + x[0] + x[1];             //VAT55
-      	  
-      	  	var divid = n  + 'check';    //use diff ID of div
-      	  	alert("div corresp to tax rate is"  + divid);
-      	  
-      	  	var div_value = $('#' + divid).val();
-      	  	alert("value in this tax rate div is" + div_value);
-      	  
-      	  	var old_amt = tax_amount[counter_index];
-      	  	alert("amt to be subtracted is" + old_amt);
-      	  
-      	  	var new_value = Number(div_value) - Number(old_amt);
-      	  	alert("new value in this tax rate div is " + new_value);
-      	  
-      	  	if(new_value==0)
-      	  	{
-      	    	 $('#' + divid).closest('tr').remove();
-      	  	}
-      	  
-      	  else
-      	    
-      	     $('#' + divid).val(new_value.toFixed(2));
-      	     
-      	  	tax_rate[counter_index] = -1;
-      	  	tax_counter[counter_index] = -1;
-      	  	tax_div[counter_index] = -1;
-      	  	tax_amount[counter_index] = -1;
-      	
-      	}
-      	
-      	 $(o).closest('tr').remove();
-      	
-	}
-	
-
-	
-	
+                   		var index = box_counter.indexOf(number);
+                           box_counter.splice(index, 1);
+                         	var deleted_amt = $('#' + number + 'amt').val();
+                         	alert("deleted amt is " + deleted_amt);
+                         	var deleted_tax_amt = $('#' + number + 'tax_amt').val();
+                         	alert("deleted tax amt is " + deleted_tax_amt);
+                         	var sub_amount =  Number($('#subtotal').val())  - deleted_amt;
+                         	$('#subtotal').val(sub_amount.toFixed(2));
+                         	alert("sub total is after subtraction" + sub_amount);
+                         	var taxfinal_amount =  Number($('#taxtotal').val())  - Number(deleted_tax_amt);
+                         	$('#taxtotal').val(taxfinal_amount.toFixed(2));
+                         	alert("tax total is after subtraction" + taxfinal_amount.toFixed(2));
+                         	alert("gtotal now is "  + Number($('#grandtotal').val()));
+                         	
+                         	var final_amount =  Number($('#grandtotal').val())  - (Number(deleted_amt) + Number(deleted_tax_amt));
+                         	alert("final amt is" + final_amount.toFixed(2)); 
+                         	$('#grandtotal').val(final_amount.toFixed(2));
+                         	update_due();
+                         	alert("grand total is after subtraction" + final_amount.toFixed(2));
+                         	
+                         	//get the index of this box
+                         	
+                         	//alert("number is " + number + "tax counter index is" + )
+                         	var counter_index = tax_counter.indexOf(number);
+                         	alert("found at index" + counter_index);
+                         	alert(tax_rate[counter_index] + " " + tax_amount[counter_index] + " "  + tax_div[counter_index]);
+                         	if(counter_index!=-1)
+                         	{
+                         	 	 var tax_val = tax_rate[counter_index];
+                         	  	alert("tax rate in this box is " + tax_val);
+                         	  
+                   	
+                         	   
+                         		var nd = tax_val.toString().split(" ");
+                       		var x = nd[1].toString().split(".");     //5 5
+                       		var n = nd[0] + x[0] + x[1];             //VAT55
+                         	  
+                         	  	var divid = n  + 'check';    //use diff ID of div
+                         	  	alert("div corresp to tax rate is"  + divid);
+                         	  
+                         	  	var div_value = $('#' + divid).val();
+                         	  	alert("value in this tax rate div is" + div_value);
+                         	  
+                         	  	var old_amt = tax_amount[counter_index];
+                         	  	alert("amt to be subtracted is" + old_amt);
+                         	  
+                         	  	var new_value = Number(div_value) - Number(old_amt);
+                         	  	alert("new value in this tax rate div is " + new_value);
+                         	  
+                         	  	if(new_value==0)
+                         	  	{
+                         	    	 $('#' + divid).closest('tr').remove();
+                         	  	}
+                         	  
+                         	  else
+                         	    
+                         	     $('#' + divid).val(new_value.toFixed(2));
+                         	     
+                         	  	tax_rate[counter_index] = -1;
+                         	  	tax_counter[counter_index] = -1;
+                         	  	tax_div[counter_index] = -1;
+                         	  	tax_amount[counter_index] = -1;
+                         	
+                         	}
+                         	
+                         	 $(o).closest('tr').remove();
+                         	
+                   	}
+					          
+					          
 </script>
 
+<script>
+function send()
+{
+	
+	alert("x is");
+		alert(x);
+	alert($("#vendor").val());
+	
+	//[CHECK THAT NO MANDATORY FIELDS ARE EMPTY]
+	//similar to previous test.html submit
+	//onky diff is here NOW WE HAVE PO NUMBER TO SEND ALONG
+	
+	console.log(" p array is");
+	console.log(productid_counter);
+	
+	console.log(" a array is");
+	console.log(advid_counter);
+	
+	
+	var purchaseOrder = {};
+	  var pod= [];
+	  var advpay=[];
+	  //var customer;
+	  purchaseOrder.pod = pod;
+	  purchaseOrder.adv_payment = advpay;
+	  //purchaseOrder.customer = customer;
+		
+		for(var i=0;i<box_counter.length;i++)
+		{
+		  var index = box_counter[i];
+		  var product_identifier = index + "product_name";
+		  var tax_identifier = index + "tax_rate";
+		  if($('#' + product_identifier).val()=='')
+		     	 alert("Please select a product ");
+		     	 
+		  //add checks for customer being selected, date and PO number(read only)
+		  //each product must have name, amt, tax _amt etc
+		  //do validations
+		  
+		  else 
+		  {
+		       
+			  //search for product ID of each and use it (may have a value/ or is null)
+		  		var productName= $('#' + index + 'product_name').val();
+				var quantity = $('#' + index + 'quantity').val();
+				var price = $('#' + index + 'price').val();
+				var amount = $('#' + index + 'amt').val();
+				var tax = $('#' + index + 'tax_rate').val();
+				var taxAmount = $('#' + index + 'tax_amt').val();
+				var product_id = productid_counter[index];
+				var po_number = $("#po_number").val();
+			
+				var product = {
+	  				"product_id": productName,
+	  				"quantity": quantity,
+	  				"cost": price,
+	  				"amount": amount,
+	  				"tax_id": tax,
+	  				"tax_amount": taxAmount,
+	  				"po":null,    //Po Object (take it from main object later)
+	  				"id":product_id     //backend id
+							  };
+						  
+				purchaseOrder.pod.push(product);
+				
+		}
+		
+		}
+	
+	
+		
+		
+		var vendor = $("#vendor").val(); //$("#vendpor").val(); - value has vendorID
+		purchaseOrder.vendor_id = vendor;
+		
+		
+		var a = JSON.parse(porder);
+	    var date = $("#date").val();
+		//alert(date);
+		purchaseOrder.order_date = date;
+		//var po_number = $("#po_number").val();
+		purchaseOrder.po_number =  $("#po_number").val();
+		purchaseOrder.po_id = x.po_id;
+		alert(x.po_id);
+		purchaseOrder.company_id = "CMP445";
+		purchaseOrder.amount = $("#subtotal").val();
+		purchaseOrder.tax_amount = $("#taxtotal").val();
+		purchaseOrder.grand_total = $("#grandtotal").val();
+		
+		
+		/*analyse existing adv payment
+		
+		
+		purchaseOrder.advance_amount = $("#adv_amount").val(); // - $("#advancetotal").val();           
+		purchaseOrder.balance = ($("#grandtotal").val() -  $("#adv_amount").val()).toFixed(2);
+		purchaseOrder.bill_status = 0;
+		*/
+		
+		
+		
+		purchaseOrder.note = $("textarea#notes").val();
+		
+		//list of ADVANCE PAYMENT is to added here
+		
+		for(var i=0;i<adv_counter.length;i++)
+		{
+		alert(advid_counter[adv_counter[i]]);
+		var h = advid_counter[adv_counter[i]];
+		if(h!=null)
+			{
+				for(var j=0;j< oldadv.length;j++)
+				{
+				if(oldadv[j].id==h)
+					{
+					
+						var tdsrate = oldadv[j].tdsrate;
+						if(tdsrate=='')
+							{
+								tdsrate= 0;
+								tdsamt=0;
+							}
+						else
+							tdsamt = oldadv[j].tdsamount
+					
+						var advance={
+							"payment_date":		oldadv[j].payment_date,
+							"payment_amount" :	oldadv[j].payment_amount,
+					        "purpose_title" :	oldadv[j].purpose_title,
+					 		"purpose_desc" :    oldadv[j].purpose_desc,
+							"payment_mode" :	oldadv[j].payment_mode,
+							"payment_account" : oldadv[j].payment_account,
+							"tdsrate" : 		tdsrate,
+							"tdsamount":		tdsamt,
+							"id":				oldadv[j].id
+					
+							};
+						purchaseOrder.adv_payment.push(advance);
+					}
+					//console.log(oldadv[j]);
+				}
+			}
+		else
+			{
+			//console.log(newadv[0]);
+				var tdsrate = newadv[0].tdsrate;
+				if(tdsrate=='')
+					{
+						tdsrate= 0;
+						tdsamt=0;
+					}
+				else
+					tdsamt = newadv[0].tdsamount
+		
+				var advance={
+					"payment_date":		newadv[0].payment_date,
+					"payment_amount" :	newadv[0].payment_amount,
+		        	"purpose_title" :	newadv[0].purpose_title,
+		 			"purpose_desc" :    newadv[0].purpose_desc,
+					"payment_mode" :	newadv[0].payment_mode,
+					"payment_account" : newadv[0].payment_account,
+					"tdsrate" : 		tdsrate,
+					"tdsamount":		tdsamt,
+					"id" :null
+					
+		
+				};
+				purchaseOrder.adv_payment.push(advance);
+			}
+		
+		
+	}
+		
+		
+		
+		
+		
+		
+	
+		console.log(JSON.stringify(purchaseOrder));
+		var p = JSON.stringify(purchaseOrder);
+	
+		
+		
+		//ajax call TO BE MADE TO UPDATE A PO
+		
+		
+		/*
+		$.ajax({
+			   type : 'GET',
+			   url  : '/Accounting/po/purchase/editpo',
+			    dataType :'text',
+			    data:{'jsondata' : p},
+			    success: function(response) {
+			     alert(response);
+			     console.log(response);
+			  
+			    },
+			    error: function (xhr) {
+					alert(xhr.responseText);
+				    var jsonResponse = JSON.parse(xhr.responseText);
+				    alert(jsonResponse.message);
+				   
+				  } 
+				  });
+		*/
+		
 
+	
+}
+
+
+//delete old adv
+function delete_adv(counter)
+{
+	//check length of adv_counter array, if 0 then remove adv etc
+	alert(counter);
+	var id = advid_counter[counter];
+	alert(id);
+	//update balance and adv amount
+	
+	for(var i=0;i<oldadv.length;i++)
+		{
+		 if(oldadv[i].id==id)
+			 break;
+		}
+	
+	var a = $("#advtotal").val();
+	$("#advtotal").val( (Number(a) - Number(oldadv[i].payment_amount)).toFixed(2));
+	
+	var a = $("#balanceamt").val();
+	$("#balanceamt").val( (Number(a) + Number(oldadv[i].payment_amount)).toFixed(2));
+	
+	
+	
+	$("#" + id).remove();  //remove row
+	
+	var index = adv_counter.indexOf(counter);
+    adv_counter.splice(index, 1);
+	
+	if(adv_counter.length==0)  //there are no more adv payments
+		{
+		$("#totaladv").remove();
+		$("#bal").remove();
+		$("#adv_pay").show();
+		
+		}
+	
+	alert(adv_counter);
+	
+	}
+	
+	
+	
+	
+	
+function delete_newadv(counter)
+{
+	//check length of adv_counter array, if 0 then remove adv etc
+	alert(counter);
+	var id = advid_counter[counter];
+	alert(id);  //will be null
+	//update balance and adv amount
+
+	
+	var a = $("#advtotal").val();
+	$("#advtotal").val( (Number(a) - Number(newadv[0].payment_amount) ).toFixed(2));
+	
+	var a = $("#balanceamt").val();
+	$("#balanceamt").val( (Number(a) + Number(newadv[0].payment_amount)).toFixed(2) );
+	
+	
+	
+	$("#apay" ).remove();  //remove row
+	
+	var index = adv_counter.indexOf(counter);
+    adv_counter.splice(index, 1);
+	
+	if(adv_counter.length==0)  //there are no more adv payments
+		{
+		$("#totaladv").remove();
+		$("#bal").remove();
+		$("#adv_pay").show();
+		
+		}
+	
+	alert(adv_counter);
+	
+	}
+
+
+function editpo()
+{
+	window.location.replace("edit.html?PONo=CMP445PO11");
+	}
+
+</script>
 
 <!-- jQuery 
     <script src="js/jquery.js"></script>-->
 
 <!-- Bootstrap Core JavaScript -->
 <script src="jarvis/js/bootstrap.min.js"></script>
+

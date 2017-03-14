@@ -135,6 +135,8 @@ function loadName()
    //fetch all PO for this company , just pass company_id
    var x = "CMP445";
    
+   //get all bills for the company
+   
    /*
    $.ajax({
 	   type : 'GET',
@@ -200,7 +202,7 @@ function update()
                                     '</li>' + 
                                     '<li class="divider"></li>'  +
                                     '<li>' + 
-                                        '<a href="view_po.html?PONo='  + po_number  + '" >' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
+                                        '<a href="view_purchaseOrder.html?PONo='  + po_number  + '" >' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
                                            '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
                                                 'View PO'+
                                             '</a>' + 
@@ -219,7 +221,7 @@ function update()
                                    ' <li>' + 
                                         '<a href="re-send.html?PONo=' +  po_number  + '">' + //FUNCTION
                                            ' <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;' + 
-                                               'Send PO' + 
+                                               'Re send PO' + 
                                             '</a>' + 
                                     '</li>' + 
                                     '<li class="divider"></li>'  + 
@@ -391,10 +393,10 @@ function update()
 
 
 
-				<h1 class="page-header">Purchase Orders</h1>
+				<h1 class="page-header">Bills</h1>
 
 				<button type="button" class="btn btn-info" style="float: right"
-					onclick="createpo()">Create Purchase Order</button>
+					onclick="createbill()">Create Bill</button>
 
 
 				<!--     <div class="row">
@@ -404,7 +406,7 @@ function update()
 				<ul class="nav nav-tabs bordered">
 
 					<li class="active"><a href="#view_taxes" data-toggle="tab"><i
-							class="entypo-menu"></i> Purchase Orders</a></li>
+							class="entypo-menu"></i> Bills</a></li>
 
 
 
@@ -419,10 +421,10 @@ function update()
 							<thead>
 								<tr>
 
-									<th><div>PurchaseOrder No</div></th>
+									<th><div>Bill No</div></th>
 									<th><div>Vendor</div></th>
-									<th><div>Order Date</div></th>
-									<th><div>Order Amount</div></th>
+									<th><div>Bill Date</div></th>
+									<th><div>Bill Amount</div></th>
 									<th><div>Advance</div></th>
 									<th><div>Balance</div></th>
 									<th><div>Options</div></th>
@@ -450,33 +452,33 @@ function update()
 												<li><a
 													href="edit_purchaseOrder.html?PONo=' + po_number + '">
 														<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;
-														Edit PO
+														Edit Bill
 												</a></li>
 												<li class="divider"></li>
 												<li><a
 													href="view_purchaseOrder.html?PONo='  + po_number  + '">
 														<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;
-														View PO
+														View Bill
 												</a></li>
 												<li class="divider"></li>
 
 												<li><a href=''
 													onClick="return confirm('Are you sure to delete?)"> <span
 														class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;
-														Delete PO
+														Delete Bill
 												</a></li>
 
 												<li class="divider"></li>
 
 												<li><a href="re-send.html?PONo=' +  po_number  + '">
 														<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;
-														Re send PO
+														Send Bill
 												</a></li>
 												<li class="divider"></li>
 
 												<li><a href="view_advance?PONo=' +   po_number + '">
 														<i class="fa fa-inr"></i>&nbsp;&nbsp;&nbsp;&nbsp; View
-														Advance Payments
+														Payments
 												</a></li>
 
 												<li class="divider"></li>
@@ -484,15 +486,12 @@ function update()
 												<li><a href=""
 													onClick="return add_adv(' + po_number  + ')"> <span
 														class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; Add
-														Advance Payment
+														 Payment
 												</a></li>
 
-												<li class="divider"></li>
+												
 
-												<li><a href="PO_to_Bill.html?PONo='  +   po_number + '">
-														<span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;
-														Convert to Bill
-												</a></li>
+												
 
 											</ul>
 										</div>
@@ -530,46 +529,14 @@ function update()
   //receive internal tax_id as parameter
 }
   
-function createpo(){
+function createbill(){
 	
 	
-	window.location.replace("createPO.html");
+	window.location.replace("createBill.html");
 }
 
 </script>
 
 
-
-<!-----  DATA TABLE EXPORT CONFIGURATIONS
-if two tables needed in same page for export this code is needed   
-                   
-<script type="text/javascript">
-
-	jQuery(document).ready(function($)
-	{
-		
-
-		$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-	
-	var jqTable = $('table.datatable', $(e.target).attr("href"));
-	    if ( jqTable.length > 0 ) {
-	    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
-	    if ( oTableTools != null && oTableTools.fnResizeRequired() ){
-	        jqTable.dataTable().fnAdjustColumnSizing();
-	        oTableTools.fnResizeButtons();
-	    }
-	}	
-	
-	return false;
-});
-
-
-		var table = $("#table_export").dataTable();
-		
-	});
-		
-</script>
-
-  ---->
 
 </html>

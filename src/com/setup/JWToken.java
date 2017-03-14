@@ -23,6 +23,7 @@ import org.jose4j.jwk.RsaJwkGenerator;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.NumericDate;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
@@ -40,8 +41,8 @@ public class JWToken {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String generate_token() throws JoseException
 	{
-		//MODIFY TO TAKE IN A USER_ID
-		Long userid= (long) 4;
+		
+		Long userid = (long) 5;
 		RsaJsonWebKey rsaJsonWebKey =  RsaJwkGenerator.generateJwk(2048);
 	    String key_id   = "Key" + userid;
 	    // Give the JWK a Key ID (kid), which is just the polite thing to do
@@ -58,15 +59,23 @@ public class JWToken {
 	    claims.setSubject("subject"); // the subject/principal is whom the token is about
 	    
 	    
+	    EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		em.persist(new Configuration(userid,"PUBLIC_KEY",rsaJsonWebKey.toJson(),key_id));
+		em.getTransaction().commit();
+		em.close();
+	    
 	    JsonWebSignature jws = new JsonWebSignature();
 	    jws.setPayload(claims.toJson());
 	    jws.setKey(rsaJsonWebKey.getPrivateKey());
 	    jws.setKeyIdHeaderValue(rsaJsonWebKey.getKeyId());
 	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 	    String jwt = jws.getCompactSerialization();
-	    //System.out.println(rsaJsonWebKey.toJson());
-	    //System.out.println("JWT: " + jwt);
-		
+	  
+	    System.out.println(rsaJsonWebKey.getPrivateKey());
+
+	    System.out.println(rsaJsonWebKey.getKeyId());
 	    return jwt;
 	}
 	
@@ -77,37 +86,39 @@ public class JWToken {
 	public String verify_token(@QueryParam("name1") String token) throws Exception
 	{
 		 List<JsonWebKey> jsonWebKeys = new ArrayList<>();
-		 Map<String, String> properties = new HashMap();
-	
-		    EntityManagerFactory emf = Persistence.createEntityManagerFactory(
-			        "Demo", properties);
+		
+		    EntityManagerFactory emf = Persistence.createEntityManagerFactory("Demo");
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
 			Query query=  em.createQuery("SELECT g FROM  Configuration g  WHERE g.key_name= :name");
 			query.setParameter("name", "PUBLIC_KEY");
-			List<Configuration> publicKeys =  query.getResultList();
+			Configuration publicKey =  (Configuration) query.getSingleResult();
 			em.getTransaction().commit();
 			em.close();
-	        //String status=null;
-			
-			for (Configuration publicKey : publicKeys) {
+	       
 	            PublicJsonWebKey jsonWebKey = PublicJsonWebKey.Factory.newPublicJwk(publicKey.getValue());
+	            
+	        
+	            
+	           // System.out.println(jsonWebKey.getPrivateKey());
+	            
 	            RsaJsonWebKey rsaJsonWebKey = new RsaJsonWebKey((RSAPublicKey) jsonWebKey.getPublicKey());
 	            
 
-	            rsaJsonWebKey.setKeyId(publicKey.getNodeId());
+	            //rsaJsonWebKey.setKeyId(publicKey.getNodeId());
+	            
+	            //System.out.println(rsaJsonWebKey.getKeyId());
+	            
 	            jsonWebKeys.add(rsaJsonWebKey);
-				
-				
-	        }
-	  
-			 //System.out.println(status);
-			 
-		System.out.println(isValid(token, jsonWebKeys));
-			return isValid(token, jsonWebKeys);
+			
+		System.out.println(isValid(token, jsonWebKeys, rsaJsonWebKey));
+			return isValid(token, jsonWebKeys, rsaJsonWebKey);
 	}
 	
-	public String isValid(String token, List<JsonWebKey> jsonWebKeys) throws Exception {
+	public String isValid(String token, List<JsonWebKey> jsonWebKeys, RsaJsonWebKey a) throws Exception {
+		
+		//System.out.println(a.getKeyId());
+		//System.out.println(a.getPrivateKey());
 
         JwksVerificationKeyResolver jwksVerificationKeyResolver = new JwksVerificationKeyResolver(jsonWebKeys);
 
@@ -117,22 +128,17 @@ public class JWToken {
             .setVerificationKeyResolver(jwksVerificationKeyResolver)
             .build();
       
-       // jwtConsumer.
-        
-       // JwtContext jwtContext = jwtConsumer.process(token);
-        //jwtContext.
-
+    
         try {
         	JwtClaims jwtClaims = jwtConsumer.processToClaims(token);
         	
-        	//jwtClaims.get
-        	
-        	//String email = jwtClaims.getClaimValue("email", string.class)
         	
            return "JWT validation succeeded! " + jwtClaims;
         } catch (InvalidJwtException e) {
         	
         	//check doc jwt tokens for better check
+        	
+        	//if at all expired, generate a new one, and also store it in db, call generate token method
             return e.getMessage();
         }
     }

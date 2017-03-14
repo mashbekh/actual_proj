@@ -1,19 +1,20 @@
 package com.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
-@Entity
-@Table(name = "fileupload")
+@Entity("file")
 public class FileUpload {
 	
 	
 	private byte[] file;
 	
 	@Id
-	private int id;
+	private ObjectId id;
+	
+	
+	private int idp;
 	
 	
 	
@@ -24,7 +25,7 @@ public class FileUpload {
 	public FileUpload(byte[] file, int id) {
 		super();
 		this.file = file;
-		this.id = id;
+		this.idp = id;
 	}
 
 	public byte[] getFile() {
@@ -36,11 +37,11 @@ public class FileUpload {
 	}
 
 	public int getId() {
-		return id;
+		return idp;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.idp = id;
 	}
 	
 	
