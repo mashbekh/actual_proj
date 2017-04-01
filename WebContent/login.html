@@ -50,6 +50,18 @@
 
 </head>
 <script>
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
 $(document).ready(function () {
     var $inputs = $("#login input");
     
@@ -231,6 +243,9 @@ $(document).ready(function () {
                         <h1 class="page-header">
                             Login <small>&nbsp; &nbsp;&nbsp;&nbsp;Need an account? <a href="register.html">Sign up now!</a></small>
                         </h1>
+                        <p id="content">
+                        
+                        </p>
                         
                         <div class="row">
                     <div class="col-lg-6">
@@ -354,6 +369,13 @@ else return true;
       console.log(error);
     }
     function renderButton() {
+    	
+    	var error = getCookie('conferror');
+    	if(error == 'exists')
+    		$("#content").append("User exists. Please login to continue.");
+    	
+    	setCookie('conferror',"",-1);
+    	
    
       gapi.load('auth2,signin2', function() {
         var auth2 = gapi.auth2.init();

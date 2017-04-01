@@ -136,16 +136,15 @@ function getCookie(key) {
 
 function loadName()
 {
-	// if email could be verified, go to confirm mobile step
-	// if it cant be verified, go to confirm email 
+	//open confirmMobile with place to enter otp
 	
 	var code = location.search.split('?')[1];
 	var x = code.split('&')[0];
 	var mail   =x.split('=')[1];
 	var y = code.split('&')[1];
-	var hex   = y.split('=')[1];
+	var id   = y.split('=')[1];
 
-	if(code!='' && hex!='')
+	if(code!='' && id!='')
 	 {
 		
 	    $.ajax({

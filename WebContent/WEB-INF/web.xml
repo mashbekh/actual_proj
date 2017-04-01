@@ -4,24 +4,26 @@
   
   
   <servlet>
-    <servlet-name>jersey-serlvet</servlet-name>
+    <servlet-name>jersey-servlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>jersey.config.server.provider.packages</param-name>
-      <param-value>com.setup</param-value>
+      <param-value>com.setup;com.Register</param-value>
       
     </init-param>
     
     <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
-            <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+            <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature; com.ErrorHandling.AppExceptionMapper;
+            com.ErrorHandling.IOExceptionMapper; com.ErrorHandling.JsonMappingExceptionMapper;com.ErrorHandling.JsonParserMapper; 
+            com.ErrorHandling.GenericExceptionMapper;com.ErrorHandling.MailException; com.ErrorHandling.EntityExceptionMapper</param-value>
         </init-param>
     
     <load-on-startup>1</load-on-startup>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>jersey-serlvet</servlet-name>
+    <servlet-name>jersey-servlet</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
   
@@ -43,6 +45,7 @@
 </servlet-mapping>
 
 
+
   	<servlet>
     <servlet-name>PurchaseOrder</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -57,6 +60,23 @@
 <servlet-mapping>
     <servlet-name>PurchaseOrder</servlet-name>
     <url-pattern>/po/*</url-pattern>
+</servlet-mapping>
+
+
+<servlet>
+    <servlet-name>Test</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+    <init-param>
+        <param-name>jersey.config.server.provider.packages</param-name>
+        <param-value>com.test</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+
+<servlet-mapping>
+    <servlet-name>Test</servlet-name>
+    <url-pattern>/test1/*</url-pattern>
 </servlet-mapping>
   
   

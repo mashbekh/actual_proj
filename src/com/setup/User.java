@@ -127,12 +127,7 @@ public class User {
 		  });
 		
 		try {
-			
-			
-			
-			
-			
-
+		
 			Message message = new MimeMessage(session);
 			InternetAddress from  = new InternetAddress("vaishnavirao17@gmail.com","Vaishnavi");
 			message.setFrom(from);

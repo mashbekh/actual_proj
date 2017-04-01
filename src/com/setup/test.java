@@ -26,17 +26,38 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 
+import com.ErrorHandling.AppException;
 import com.Models.Student;
 
 
 
-@Path("/hello")
+@Path("hello")
 public class test {
 	
 	@GET
-	@Path("/test")
+	@Path("test")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response test1() throws AppEx
+	public Response test1() throws AppException 
+	{
+		List<Student> cp;
+		//try
+		//{
+		cp = p();
+		//}
+		/*
+		catch(AppException ex)
+		{
+			return Response.status(ex.getCode())
+						   .entity(ex.getMessage())
+						   .build();	
+		}*/
+		return Response.status(Response.Status.OK.getStatusCode())
+				       .entity(cp).build();
+		
+	}
+	
+	
+	public List<Student> p( ) throws AppException
 	{
 		
 		Student a = new Student(22,"vaish",10);
@@ -44,17 +65,28 @@ public class test {
 		List<Student> c = new ArrayList<>();
 		c.add(a);
 		c.add(b);
-		String abc="abc";
+		String abc="abcd";
 		if(abc == "abcd")
 		{
-			AppEx ae =  new AppEx(Response.Status.BAD_REQUEST.getStatusCode(),"empty string");
-			return Response.status(ae.getStatus())
-				       .entity(ae.getMsg()).build();
+		//	throw  new AppException("empty string",Response.Status.BAD_REQUEST.getStatusCode());
+			
 		}
-		return Response.status(Response.Status.OK)
-				       .entity(c).build();
-		
+		return c;
 	}
+	
+	
+	@GET
+	@Path("/p")
+	public Response t()
+	{
+		Response y =  Response.status(Response.Status.OK.getStatusCode())
+			       .build();
+		
+		System.out.println(y.getStatus());
+		return y;
+	}
+	
+	
 	
 	
 	@GET

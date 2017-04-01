@@ -11,7 +11,7 @@ public class Taxes {
 	private double rate;
 	
 	@Id
-	private ObjectId id;
+	private ObjectId taxid;
 
 	public Taxes(String name, double rate) {
 		super();
@@ -25,7 +25,7 @@ public class Taxes {
 
 	@Override
 	public String toString() {
-		return "Taxes [name=" + name + ", rate=" + rate + ", id=" + id + "]";
+		return "Taxes [name=" + name + ", rate=" + rate + ", id=" + taxid + "]";
 	}
 
 	public String getName() {
@@ -45,11 +45,11 @@ public class Taxes {
 	}
 
 	public ObjectId getId() {
-		return id;
+		return taxid;
 	}
 
 	public void setId(ObjectId id) {
-		this.id = id;
+		this.taxid = id;
 	}
 	
 	

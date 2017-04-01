@@ -3,47 +3,47 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
 
-    <title>Register</title>
-  
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js" type="text/javascript"></script>
-<meta name="google-signin-client_id" content="49796868187-9j499iatoahdjru9liiun3lqggp7a53e.apps.googleusercontent.com">
-<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
-    rel="stylesheet" type="text/css" />
-    
-    
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-    
+<title>Register</title>
 
-<link rel="stylesheet" href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
-
-    <!-- Bootstrap Core CSS -->
-    <link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="jarvis/css1/sb-admin.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    
-    <link rel="stylesheet" href="jarvis/css/font-icons/entypo/css/entypo.css">
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<meta name="google-signin-client_id"
+	content="230903295209-qfhj977v4aa60i0sjthdd0nuc0u1fkga.apps.googleusercontent.com">
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
 
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+<!-- Morris Charts CSS -->
+<link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="jarvis/css/font-icons/entypo/css/entypo.css">
 
 
 
@@ -80,46 +80,47 @@ $(document).ready(function () {
 </script>
 
 <style>
-
-
-
-#pqr{
-     background-color:#152F37;
-     
-
+#pqr {
+	background-color: #152F37;
 }
 
-#wrapper{
-     background-color:white;
-
+#wrapper {
+	background-color: white;
 }
 
-#pwrap{
-  margin-top: 70px;
-  background-color: white;
-
+#pwrap {
+	margin-top: 70px;
+	background-color: white;
 }
+
 .ui-dialog-titlebar {
-    border: 0;
-    padding: .5em 1em;
-    background: black;
-    overflow: auto;
-    zoom: 1;
+	border: 0;
+	padding: .5em 1em;
+	background: black;
+	overflow: auto;
+	zoom: 1;
 }
 
-#main{
-    color:white;
-   text-align: center;
+#main {
+	color: white;
+	text-align: center;
 }
-#content{
-  
-  margin-left:290px;
-  font-size: 25px;
+
+#content {
+	margin-left: 290px;
+	font-size: 25px;
 }
-#form-panel{
-  
-  margin-left:290px;
-  
+
+
+#errormsg {
+	margin-left: 290px;
+	font-size: 15px;
+	font-color:red;
+}
+
+
+#form-panel {
+	margin-left: 290px;
 }
 </style>
 
@@ -127,118 +128,129 @@ $(document).ready(function () {
 
 <body bgcolor="#E6E6FA" onload="renderButton()">
 
-    <div id="wrapper">
+	<div id="wrapper">
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="pqr">
-           <h1 id="main">SIMPLIFY TAX</h1>
-         </nav>
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
+			id="pqr">
+			<h1 id="main">SIMPLIFY TAX</h1>
+		</nav>
 
 
 
-            <div class="container-fluid">
+		<div class="container-fluid">
 
-<br><br><br>
-                 <p id="content"> <b>Check out Simplify Tax — it’s free!</b><br><br>
-More than two million freelancers, consultants,<br>
-and small business owners use Simplify Tax around the world.</p>
+			<br> <br> <br>
+			<p id="content">
+				<b>Check out Simplify Tax — it’s free!</b><br> <br> More
+				than two million freelancers, consultants,<br> and small
+				business owners use Simplify Tax around the world.
+			</p>
+			
+			<p id="errormsg">
+			
+			</p>
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-6">
+			<!-- Page Heading -->
+			<div class="row">
+				<div class="col-lg-6">
 
-                      <div id="form-panel">
-                        <div class="row">
-                        <div class="col-lg-12">
-                        <form role="form" id="register">
-                        
-                        <div class="form-group">
-                                <label></label>
-                                <input class="form-control"  id="business_name" placeholder="Company Name" required>
-                            </div>
-                        
-                         <div class="form-group">
-                                <label></label>
-                                <input class="form-control"  id="name" placeholder="User Name" required>
-                            </div>
-               
-                            <div class="form-group">
-                                <label></label>
-                                <input class="form-control" type="text" id="email" placeholder="User Email" onchange="return verify_mail()" required>
-                                <div id="email_msg"></div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label></label>
-                                <input class="form-control" type="text" id="mobile" placeholder="Mobile No"  required>
-                                <div id="email_msg"></div>
-                            </div>
+					<div id="form-panel">
+						<div class="row">
+							<div class="col-lg-12">
+								<form role="form" id="register">
 
-                            <div class="form-group">
-                                <label></label>
-                                <input class="form-control" type="password" id="password" placeholder="Password" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label></label>
-                                <input class="form-control" type="password" id="confirm_password" placeholder="Confirm Password" required>
-                                <div id="password_verify"></div>
-                            </div>
-                            
-                              
-                             
-                           
-                             
-                        </form>
-                        
-                        <input type="submit" class="btn btn-primary" id="submit" onclick="return verify(this)" disabled="disabled" value="Lets get started!">
-                        
-                        <br> <br> <br>
-                       <p>-------------or-------------</p>
-                            <div class="form-group">
-                             <div  id="google-signin-button"></div>
-                            
-                                  </div>  
-                                  <br><br><br>
-                      
-                        </div>
-                      
-                    </div>
-                </div>
-                <!-- /.row -->
 
-                        
-               
 
-              
+									<div class="form-group">
+										<label></label> <input class="form-control" id="name"
+											placeholder="User Name" required>
+									</div>
 
-              
+									<div class="form-group">
+										<label></label> <input class="form-control" type="text"
+											id="email" placeholder="User Email"
+											onchange="return verify_mail()" required>
+										<div id="email_msg"></div>
+									</div>
 
-                
+									<div class="form-group">
+										<label></label> <input class="form-control" type="text"
+											id="mobile" placeholder="Mobile No" required>
+										<div id="email_msg"></div>
+									</div>
 
-            </div>
-            <!-- /.container-fluid -->
+									<div class="form-group">
+										<label></label> <input class="form-control" type="password"
+											id="password" placeholder="Password" required>
+									</div>
 
-        </div>
-        <!-- /#page-wrapper -->
+									<div class="form-group">
+										<label></label> <input class="form-control" type="password"
+											id="confirm_password" placeholder="Confirm Password" required>
+										<div id="password_verify"></div>
+									</div>
 
-    </div>
-    <!-- /#wrapper -->
 
-    <!-- jQuery 
+
+
+
+								</form>
+
+								<input type="submit" class="btn btn-primary" id="submit"
+									onclick="return verify(this)" disabled="disabled"
+									value="Lets get started!"> <br> <br> <br>
+								<p>-------------or-------------</p>
+
+								<div class="form-group">
+									<label></label> <input class="form-control" type="text"
+										id="mobileNo" placeholder="Mobile No" required>
+									<div id="email_msg"></div>
+								</div>
+
+								<div class="form-group">
+									<div id="google-signin-button"></div>
+
+								</div>
+
+
+
+								<br> <br> <br>
+
+							</div>
+
+						</div>
+					</div>
+					<!-- /.row -->
+
+				</div>
+				<!-- /.container-fluid -->
+
+			</div>
+			<!-- /#page-wrapper -->
+
+		</div>
+		<!-- /#wrapper -->
+
+		<!-- jQuery 
     <script src="js/jquery.js"></script>-->
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="jarvis/js/bootstrap.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="jarvis/js1/plugins/morris/raphael.min.js"></script>
-    <script src="jarvis/js1/plugins/morris/morris.min.js"></script>
-    <script src="jarvis/js1/plugins/morris/morris-data.js"></script>
-
+		<!-- Bootstrap Core JavaScript -->
+		<script src="jarvis/js/bootstrap.min.js"></script>
 </body>
- <script>
-                              
+<script>
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
 function verify_mail()
 {
  var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -259,7 +271,6 @@ else return true;
 	
 	var name = $('#name').val();
 	var email = $('#email').val();
-	var business_name = $('#company_name').val();
 	
 	var mobile = $('#mobile').val();
 	var password  = $('#password').val();
@@ -269,40 +280,135 @@ else return true;
 	
 	var details={
 			
-		"company_name" : business_name,
-		"name":name,
-		"email":email,
+		
+		"userName":name,
+		"userEmail":email,
 		"password":password,
-		"email_hexcode": null,
-		"email_status": 2,
-		"mobile": mobile,
-		"mobile_status": 2,
-		"otp":null,
-		"id":null
+		"emailHexcode": null,
+		"createdAt":null,
+		"mobileNumber":mobile,
+		"otp":0,
+		"type":1, //normal user.
+		"emailVerified": 0,
+		"mobileVerified": 0,
+		"id":null,
+		"userStatus":0
 	};
 	
+	setCookie('email', email,1);
+	setCookie('mobile',mobile,1);
 	var p = JSON.stringify(details);
-	console.log(p);
 	
   if (password === confirm_password){
 	  
+	  alert("yes");
    		$.ajax({
-   		type : 'GET',
-   		url  : '/Accounting/rest/user/email',
-    	dataType :'text',
-    	data: {'details': p},
+   		type : 'POST',
+   		url  : '/Accounting/rest/register/add',
+   		contentType: "application/json; charset=utf-8",
+    	data: p,
+    	dataType : "text",
   
- 		success: function(response) {
-           
-           alert(response);
-           console.log(response);
+ 		success: function(response, text, xhr) {
+          
+ 			console.log("id " +  response);
+ 			setCookie('identifier',response);
+ 			setCookie('mailCode',1);
+            window.location.replace("confirmMail.html");
            return false;
     },
     
-    error: function (xhr) {
-		alert(xhr.responseText);
-	    var jsonResponse = JSON.parse(xhr.responseText);
-	    console.log(jsonResponse.message);
+    error: function (xhr, statusText) {
+		
+	  
+	    console.log(xhr.status);
+	    var code = xhr.status;
+	    
+	    if(code == 432)
+	    	{
+	    	 $("#errormsg").append("User exists with given email and mobileNo. Please try again!");
+	    	 setCookie('email',"",-1);
+	    	 setCookie('mobile',"",-1);
+	    	 $("#register").trigger('reset'); 
+	    	}
+	    
+	    if(code == 433)
+	    	{
+	    	 $("#errormsg").append("User exists with given email. Please try again!");
+	    	 setCookie('email',"",-1);
+	    	 setCookie('mobile',"",-1);
+	    	 $("#register").trigger('reset'); 
+	    	}
+	    
+	    if(code == 434)
+    	{
+    	 $("#errormsg").append("User exists with given mobileNo. Please try again!");
+    	 setCookie('email',"",-1);
+    	 setCookie('mobile',"",-1);
+    	 $("#register").trigger('reset'); 
+    	}
+	    
+	    if(code == 435)
+    	{
+	     
+    	 $("#errormsg").append("Given email and mobileNo is under verification. Please try again later!");
+    	 setCookie('email',"",-1);
+    	 setCookie('mobile',"",-1);
+    	 $("#register").trigger('reset'); 
+    	}
+	    
+	    if(code == 436)
+    	{
+    	 $("#errormsg").append("Given email is under verification. Please try again later!");
+    	 setCookie('email',"",-1);
+    	 setCookie('mobile',"",-1);
+    	 $("#register").trigger('reset'); 
+    	}
+	    
+	    if(code == 437)
+    	{
+    	 $("#errormsg").append("Given mobileNo is under verification. Please try again later!");
+    	 setCookie('email',"",-1);
+    	 setCookie('mobile',"",-1);
+    	 $("#register").trigger('reset'); 
+    	}
+	    
+	    
+	    if(code == 438 || code == 439 || code == 440 )
+    	{
+    	 $("#errormsg").append("Oops, something went wrong! Please try again.");
+    	 setCookie('email',"",-1);
+    	 setCookie('mobile',"",-1);
+    	 $("#register").trigger('reset'); 
+    	}
+	    
+	    
+	    if(code == 516 || code == 500)
+	    	{
+	    	  if(xhr.responseText == null)
+	    		  {
+	    		     $("#errormsg").append("Oops, something went wrong! Please try again.");
+	    	    	 setCookie('email',"",-1);
+	    	    	 setCookie('mobile',"",-1);
+	    	    	 $("#register").trigger('reset'); 
+	    		  }
+	    	  else
+	    		  {
+	    		     setCookie('identifier',statusText,1);
+	    		     setCookie('mailCode',0,1);
+	    		    window.location.replace("confirmMail.html");
+	    		  }
+	    	}
+	    
+	    if(code == 515)
+	    	{
+	    	
+	    	 setCookie('identifier',xhr.responseText,1);
+		     setCookie('mailCode',0,1);
+		     window.location.replace("confirmMail.html");
+	    	}
+	    
+	  
 	   return false;
 	  }
     
@@ -319,42 +425,121 @@ else return true;
 }
                               
                               </script>
+
+
+<script>
                               
-                               
-                              <script>
-                              
-                              
+      var count=0; 
+      var state;
     function onSignIn(googleUser) 
     {
     	
-      alert('Logged in as: ' + googleUser.getBasicProfile().getName());
+    	count= count+1;
+    	
+    	if( state ==2 && count!=1 || state == 1)  //count is 2
+    	{
+    		if($("#mobileNo").val() == '')
+    			{
+        			alert("Please enter mobile number");
+    				console.log("pls enter");   //already logged in here
+    				signOut();
+          	  		state =2; //sign him out
+          	  		
+    			}
+    		else
+    		{
+    		alert('Logged in as: ' + googleUser.getBasicProfile().getName());
+    		var name = googleUser.getBasicProfile().getName();
+        	var email = googleUser.getBasicProfile().getEmail();
+        	var mobile = $("#mobileNo").val();
+
+    		var details = {
+    			
+    		
+    		"userName":name,
+    		"userEmail":email,
+    		"password": null,
+    		"emailHexcode": null,
+    		"createdAt":null,
+    		"mobileNumber":mobile,
+    		"otp":0,
+    		"type":2, //normal user.
+    		"emailVerified": 1,
+    		"mobileVerified": 0,
+    		"id":null,
+    		"userStatus":0
+    	};
+    	
+    	var p = JSON.stringify(details);
+    	console.log(p);
+    	
+    	$.ajax({
+     		type : 'POST',
+     		url  : '/Accounting/rest/register/add',
+     		contentType: "application/json; charset=utf-8",
+      	data: p,
+      	dataType : "json",
+    
+   		success: function(response, text, xhr) {
+             
+             console.log(xhr.status);
+             console.log(text);
+             console.log(response);
+           
+             return false;
+      },
       
-      $.ajax({
-   type : 'GET',
-   url  : '/rest/elink/add_google_user',
-   dataType : 'text',
-   data: {'name':googleUser.getBasicProfile().getName(),'email':googleUser.getBasicProfile().getEmail()},
-   success :  function(response)
-      {
-          alert(response);
-          var user_data = response.split(":");
-           window.localStorage.setItem("user_id",user_data[1]);
-           window.localStorage.setItem("user_name",user_data[2]);
-           window.localStorage.setItem("auth_token",user_data[3]);
-           //window.localStorage.setItem("",user_data[2]);
-           location.href = "business_details.html";
-	  },
-	  error: function (textStatus, errorThrown) {
-               alert("error" + errorThrown);
-            }
-	 
-	  });
+      error: function (xhr, statusText) {
+  		
+  	    console.log(xhr);
+  	    console.log(xhr.responseText);
+  	    console.log(xhr.status);
+  	    var code = xhr.status;
+  	  if(code == 435)
+  		{		  
+  			 setCookie('errormsg',"Given email and mobileNo is under verification. Please try again later!",1);
+  	 		 setCookie('email',"",-1);
+  	 		 setCookie('mobile',"",-1);
+  	 		 window.location.replace("register.html");
+  	 
+  	    }
+  	   return false;
+  	  }
       
+  	  });
+    		}
+    	  }
     }
+    
+    
+  
     function onFailure(error) {
       console.log(error);
     }
     function renderButton() {
+    	
+    	//clear all other cookies
+    	
+    	setCookie('email',"",-1);
+    	setCookie('newemail',"",-1);
+    	setCookie('mobile',"",-1);
+    	setCookie('identifier',"",-1);
+    	setCookie('mailCode',"",-1);
+    	setCookie('mobCode',"",-1);
+    
+    	var error = getCookie('conferror');
+    	if(error == 'notfound')
+    		$("#errormsg").append("Invalid Email Verification");
+    	
+    	if(error == 'session')
+    		$("#errormsg").append("Session timed out. Try Again!");
+    	
+    	setCookie('conferror',"",-1);
+   
+    	
+    	var errormsg = getCookie('errormsg');
+    	$("#errormsg").append(errormsg);
+    	setCookie('errormsg',"",-1);
    
       gapi.load('auth2,signin2', function() {
         var auth2 = gapi.auth2.init();
@@ -364,7 +549,7 @@ else return true;
           var currentUser = auth2.currentUser.get();
 
           if (!isSignedIn) {
-            // Rendering g-signin2 button.
+        	  state = 1;  //not signed in
             gapi.signin2.render('google-signin-button', {
               'onsuccess': 'onSignIn'  
             });
@@ -372,6 +557,7 @@ else return true;
           else
           {
         	  signOut();
+        	  state =2; //sign him out
         	  gapi.signin2.render('google-signin-button', {
                   'onsuccess': 'onSignIn'  
                 });

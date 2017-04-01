@@ -45,7 +45,7 @@ https://bgrins.github.io/spectrum/ -->
 
 <input type='text' class="basic"/>
 <input type='submit' value='enter' onclick="ok()"/>
-
+<input type='submit' value='obj' onclick="chk()"/>
 
 <input type='submit' value='get image' onclick="getimage()"/>
 
@@ -108,6 +108,13 @@ function ok()
 			  });
 	
 	
+	}
+	
+	function chk()
+	{
+		
+		  var objJson = {"inc":1365419770,"machine":-856505582,"timeSecond":1375343587,"time":1375343587000,"new":false};
+		   alert(ObjectId(objJson).toString());
 	}
 
 </script>

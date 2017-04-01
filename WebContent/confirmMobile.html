@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Register</title>
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	type="text/javascript"></script>
+<meta name="google-signin-client_id"
+	content="230903295209-qfhj977v4aa60i0sjthdd0nuc0u1fkga.apps.googleusercontent.com">
+<link
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
+
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="jarvis/css1/sb-admin.css" rel="stylesheet">
+
+<!-- Morris Charts CSS -->
+<link href="jarvis/css1/plugins/morris.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="jarvis/css/font-icons/entypo/css/entypo.css">
+
+
+
+</head>
+
+
+<style>
+#pqr {
+	background-color: #152F37;
+}
+
+#wrapper {
+	background-color: white;
+}
+
+#pwrap {
+	margin-top: 70px;
+	background-color: white;
+}
+
+.ui-dialog-titlebar {
+	border: 0;
+	padding: .5em 1em;
+	background: black;
+	overflow: auto;
+	zoom: 1;
+}
+
+#main {
+	color: white;
+	text-align: center;
+}
+
+#content {
+	margin-left: 290px;
+	font-size: 25px;
+}
+
+
+#msg {
+	margin-left: 290px;
+	font-size: 15px;
+}
+
+#form-panel {
+	margin-left: 290px;
+}
+</style>
+
+<script>
+
+function check()
+{
+	//if mobcode is 2, then from link, gv space to enter otp or resend or chng number - call upload pg method
+	
+	$("#mobile").hide();
+	$("#submit").hide();
+	$("#resend").hide();
+	$("#msg").hide();
+	$("#otp").hide();
+	$("#submitotp").hide();
+	}
+
+</script>
+
+
+<body bgcolor="#E6E6FA" onload="check()">
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"
+			id="pqr">
+			<h1 id="main">SIMPLIFY TAX</h1>
+		</nav>
+
+
+
+		<div class="container-fluid">
+
+			<br> <br> <br>
+			<p id="content">
+				Your mail has been successfully verified!<br> Please click on the button below to receive an OTP.
+			</p>
+			
+			<p id="msg">
+			If you did not receive OTP, try to resend or change mobile number;
+			</p>
+			
+			
+
+			<!-- Page Heading -->
+			<div class="row">
+				<div class="col-lg-12">
+
+					<div id="form-panel">
+						<div class="row">
+							<div class="col-lg-12">
+							
+							
+						<form class="form-inline">
+							
+							<input type="button" class="btn btn-primary" id="send"  onclick="return sendotp()" value="Send OTP">
+							
+									<div class="form-group">
+										<input class="form-control" id="otp"
+											placeholder="Enter OTP" >
+											
+									</div>
+									
+									<input type="button" class="btn btn-primary" id="submitotp"
+									onclick="return verify(this)" 
+									value="Submit">
+						
+						</form>
+						
+						<br>
+						
+						<form class="form-inline">
+									<div class="form-group">
+										<input class="form-control" id="mobile"
+											placeholder="Enter Alternative Mobile Number" >
+											
+									</div>
+									
+									<input type="button" class="btn btn-primary" id="submit"
+									onclick="return verify(this)" 
+									value="Submit">
+
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+									<div class="form-group">
+									<input type="button" class="btn btn-primary" id="sendagain"
+									onclick="return resend()" 
+									value="Resend">
+								</div>
+							<br> <br>
+</form>
+							</div>
+
+						</div>
+					</div>
+					<!-- /.row -->
+
+
+				</div>
+				<!-- /.container-fluid -->
+
+			</div>
+			<!-- /#page-wrapper -->
+
+		</div>
+		<!-- /#wrapper -->
+		</div>
+
+		<!-- jQuery 
+    <script src="js/jquery.js"></script>-->
+
+		<!-- Bootstrap Core JavaScript -->
+		<script src="jarvis/js/bootstrap.min.js"></script>
+</body>
+
+<script>
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
+function sendotp()
+{
+	
+  $("#send").hide();	
+  var id = getCookie("identifier");
+  $.ajax({
+ 		type : 'POST',
+ 		url  : '/Accounting/rest/register/sendOtp?' + $.param({'id' : id}),
+  		dataType : 'text',
+			success: function(response, text, xhr) {
+         
+       			console.log(response);
+       			console.log(xhr.status);
+       			if(xhr.status == 200)
+      	 		{
+      	  			setCookie('mobCode',1);  //otp sent successfully
+      	  			updatePg();
+      	 		}
+         
+         return false;
+  },
+  
+  error: function (xhr) {
+  	 
+  	var code = xhr.status;
+  	if(code == 404)
+		{
+			setCookie('conferror',"notfound",1);
+		   	window.location.replace("register.html");
+		}
+  }
+  });
+  }
+  
+  function updatePg()
+  {
+   
+    var mobCode = getCookie('mobCode') ; //failure - local storage
+	var userId = getCookie('identifier') ; //get user Id
+	var phone = getCookie('mobile');
+	
+	if( mobCode == 0 )
+		{
+		  $("#content").append("<br>Oops,  Something went wrong!<br> OTP could not be sent to " +  phone + " . <br>Please try to resend/ change mobile number.");
+		return false;
+		}
+	
+	if(mobCode == 1)
+		{
+		
+		 $("#content").html('');
+		 $("#content").append("<br><br>OTP has been successfully sent to mobileNo" +   phone + ".<br>Enter the OTP within next few minutes")	;
+		 
+		 $("#otp").show();
+		 $("#submitotp").show();
+		 
+		 $("#submit").show();
+		 $("#resend").show();
+		 $("#mobile").show();
+		 
+		 $("#submit").prop('disabled', true);
+  	 setTimeout(function()
+  			{
+  	 $("#submit").prop('disabled', false);
+              }, 60*1000);
+
+		 
+		 $("#resend").prop('disabled', true);
+  	 setTimeout(function()
+  			{
+  	 $("#resend").prop('disabled', false);
+              }, 60*1000);
+  	 
+  	 $("#mobile").prop('readonly', true);
+  	 setTimeout(function()
+  			{
+  	 $("#mobile").prop('readonly', false);
+              }, 60*1000);
+
+  	 
+  	$('#otp').show().delay(60000).hide(0);
+  	$('#submitotp').show().delay(60000).hide(0);
+	$('#msg').hide().delay(60000).show(0);
+		
+	return true;
+	
+	
+		}
+	
+}
+</script>
+</html>
