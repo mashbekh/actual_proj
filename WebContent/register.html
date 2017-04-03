@@ -526,6 +526,8 @@ else return true;
     	setCookie('identifier',"",-1);
     	setCookie('mailCode',"",-1);
     	setCookie('mobCode',"",-1);
+    	
+    	//errors coming up from confirmation fail
     
     	var error = getCookie('conferror');
     	if(error == 'notfound')
@@ -536,7 +538,7 @@ else return true;
     	
     	setCookie('conferror',"",-1);
    
-    	
+    	//in case of google signup fail, reload register and show error msg
     	var errormsg = getCookie('errormsg');
     	$("#errormsg").append(errormsg);
     	setCookie('errormsg',"",-1);

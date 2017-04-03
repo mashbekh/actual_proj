@@ -82,7 +82,6 @@
 	font-size: 25px;
 }
 
-
 #msg {
 	margin-left: 290px;
 	font-size: 15px;
@@ -97,16 +96,38 @@
 
 function check()
 {
-	//if mobcode is 2, then from link, gv space to enter otp or resend or chng number - call upload pg method
+	//when page loaded first time, after email verification, mobCode doesnt exist
+	//delete mailCode as its already verified
 	
-	$("#mobile").hide();
-	$("#submit").hide();
-	$("#resend").hide();
-	$("#msg").hide();
-	$("#otp").hide();
-	$("#submitotp").hide();
+	//assume mobile/email/id all set
+	
+	alert(getCookie('mobCode'));
+	
+	if(getCookie('mobCode') == null)   //SEND OTP BUTTON VISIBLE
+		{
+			$("#content").html("");
+			$("#content").append("Your mail has been successfully verified!<br> Please click on the button below to receive an OTP.");
+			$("#mobile").hide();
+			$("#submitCode").hide();
+			$("#sendagain").hide();
+			$("#msg").hide();
+			$("#otp").hide();
+			$("#submitphone").hide();
+	   }
+	
+	else if(getCookie('mobCode') == 1)
+	{
+		//coming from verifyOtp.html -> make place to enter otp
+		updatePg(1);
+		
 	}
-
+	
+	else  //mobCode already set and page reload happens - taken appropriate action
+	{
+		updatePg(getCookie('mobCode'));
+		
+	}
+}
 </script>
 
 
@@ -125,15 +146,9 @@ function check()
 		<div class="container-fluid">
 
 			<br> <br> <br>
-			<p id="content">
-				Your mail has been successfully verified!<br> Please click on the button below to receive an OTP.
-			</p>
-			
-			<p id="msg">
-			If you did not receive OTP, try to resend or change mobile number;
-			</p>
-			
-			
+			<p id="content"></p>
+
+
 
 			<!-- Page Heading -->
 			<div class="row">
@@ -142,47 +157,59 @@ function check()
 					<div id="form-panel">
 						<div class="row">
 							<div class="col-lg-12">
-							
-							
-						<form class="form-inline">
-							
-							<input type="button" class="btn btn-primary" id="send"  onclick="return sendotp()" value="Send OTP">
-							
+
+
+								<form class="form-inline">
+								
+								 <!-- send OTP -->
+
+									<input type="button" class="btn btn-primary" id="send"                   
+										onclick="return sendotp()" value="Send OTP">
+										
+								 <!-- enter OTP received -->
+
+
 									<div class="form-group">
-										<input class="form-control" id="otp"
-											placeholder="Enter OTP" >
-											
+										<input class="form-control" id="otp" placeholder="Enter OTP">
+
 									</div>
 									
-									<input type="button" class="btn btn-primary" id="submitotp"
-									onclick="return verify(this)" 
-									value="Submit">
-						
-						</form>
-						
-						<br>
-						
-						<form class="form-inline">
+								 <!-- submit OTP received -->
+
+									<input type="button" class="btn btn-primary" id="submitCode"
+										onclick="return submitotp()" value="Submit OTP">
+
+								</form>
+
+								<br>
+
+								<form class="form-inline">
+								
+								 <!-- enter new mobile # -->
+
 									<div class="form-group">
 										<input class="form-control" id="mobile"
-											placeholder="Enter Alternative Mobile Number" >
-											
+											placeholder="Enter Alternative Mobile Number">
+
 									</div>
 									
-									<input type="button" class="btn btn-primary" id="submit"
-									onclick="return verify(this)" 
-									value="Submit">
+								 <!-- submit new mobile # -->
+
+									<input type="button" class="btn btn-primary" id="submitphone"
+										onclick="return updatephone()" value="Update Phone No">
 
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									
+								 <!-- Re send OTP -->
+								
 
 									<div class="form-group">
-									<input type="button" class="btn btn-primary" id="sendagain"
-									onclick="return resend()" 
-									value="Resend">
-								</div>
-							<br> <br>
-</form>
+										<input type="button" class="btn btn-primary" id="sendagain"
+											onclick="return resend()" value="Resend">
+									</div>
+									<br> <br>
+								</form>
 							</div>
 
 						</div>
@@ -198,13 +225,13 @@ function check()
 
 		</div>
 		<!-- /#wrapper -->
-		</div>
+	</div>
 
-		<!-- jQuery 
+	<!-- jQuery 
     <script src="js/jquery.js"></script>-->
 
-		<!-- Bootstrap Core JavaScript -->
-		<script src="jarvis/js/bootstrap.min.js"></script>
+	<!-- Bootstrap Core JavaScript -->
+	<script src="jarvis/js/bootstrap.min.js"></script>
 </body>
 
 <script>
@@ -221,6 +248,8 @@ function getCookie(key) {
     return keyValue ? keyValue[2] : null;
 }
 
+
+
 function sendotp()
 {
 	
@@ -236,8 +265,8 @@ function sendotp()
        			console.log(xhr.status);
        			if(xhr.status == 200)
       	 		{
-      	  			setCookie('mobCode',1);  //otp sent successfully
-      	  			updatePg();
+      	  			setCookie('mobCode',1,1);  //otp sent successfully
+      	  			updatePg(1);
       	 		}
          
          return false;
@@ -246,69 +275,378 @@ function sendotp()
   error: function (xhr) {
   	 
   	var code = xhr.status;
+  
   	if(code == 404)
 		{
 			setCookie('conferror',"notfound",1);
 		   	window.location.replace("register.html");
 		}
-  }
-  });
-  }
-  
-  function updatePg()
-  {
-   
-    var mobCode = getCookie('mobCode') ; //failure - local storage
-	var userId = getCookie('identifier') ; //get user Id
-	var phone = getCookie('mobile');
+  	if(code == 435)
+	{
+		setCookie('conferror',"session",1);
+   		window.location.replace("register.html");
+	}
+
+	if( code == 433)
+	{
+		setCookie('conferror',"exists",1);
+		window.location.replace("login.html");
+  	}
 	
-	if( mobCode == 0 )
-		{
-		  $("#content").append("<br>Oops,  Something went wrong!<br> OTP could not be sent to " +  phone + " . <br>Please try to resend/ change mobile number.");
-		return false;
+	if(code ==  439 || code == 440 || code == 516 || code == 500)
+	 {
+		setCookie('mobCode',0,1);
+  	  	updatePg(0);
+  	}
+  
+	if(code == 515)   //mail not send, dont close browser
+		{ 
+			setCookie('mobCode',2,1);
+  	  		updatePg(2);
 		}
 	
-	if(mobCode == 1)
+}
+  });
+ }
+ 
+ 
+ 
+ function submitotp()  //submit otp entered
+ {
+	 
+	var otp = $("#otp").val();	 
+    var id = getCookie('identifier');
+	 if(otp == '')
+		 alert("Please enter OTP received");
+	 
+	 else
+	 {
+	 
+	  $.ajax({
+	 		type : 'POST',
+	 		url  : '/Accounting/rest/register/confirmOtp?' + $.param({'id' : id, "otp" : otp }),
+	  		dataType : 'text',
+				success: function(response, text, xhr) {
+	         
+	       			console.log(response);
+	       			console.log(xhr.status);
+	       			if(xhr.status == 200)
+	      	 		{
+	       				var resp =  response.split('*'); // user id and token
+	       				setCookie('identifier',resp[0],1);
+	       				setCookie('token',resp[1],1);  
+	       				setCookie('name',resp[2],1);
+	      	  			window.location.replace("business_details.html");
+	      	 		}
+	         
+	  },
+	  
+	  error: function (xhr) {
+	  	 
+	  	var code = xhr.status;
+	  
+	  	if(code == 404)
+			{
+				setCookie('conferror',"notfound",1);
+			   	window.location.replace("register.html");
+			}
+	  	if(code == 435)
+		{
+			setCookie('conferror',"session",1);
+	   		window.location.replace("register.html");
+		}
+
+		if( code == 433)
+		{
+			setCookie('conferror',"exists",1);
+			window.location.replace("login.html");
+	  	}
+		
+		if(code ==  439 || code == 440 || code == 516 || code == 500)
+		 {
+			setCookie('mobCode',3,1);
+	  	  	updatePg(3);
+	  	}
+		
+		if(code == 441) //could not match , try again
+			{
+			setCookie('mobCode',7,1);
+	  	  	updatePg(7);
+			}
+	  
+	}
+	  });
+	}
+	 
+ }
+ 
+ function resend()
+ {
+	 var id = getCookie('identifier');
+	  $.ajax({
+	 		type : 'POST',
+	 		url  : '/Accounting/rest/register/resendOtp?' + $.param({'id' : id}),
+	  		dataType : 'text',
+				success: function(response, text, xhr) {
+	         
+	       			console.log(response);
+	       			console.log(xhr.status);
+	       			if(xhr.status == 200)
+	      	 		{
+	       				setCookie('mobCode',1,1);
+	       				updatePg(1);
+	      	 		}
+	         
+	  },
+	  
+	  error: function (xhr) {
+		  
+		  var code  = xhr.status;
+		  
+		if(code == 404)
+		{
+			setCookie('conferror',"notfound",1);
+			window.location.replace("register.html");
+		}
+	  	if(code == 435)
+		{
+			setCookie('conferror',"session",1);
+	   		window.location.replace("register.html");
+		}
+
+		if( code == 433)
+		{
+			setCookie('conferror',"exists",1);
+			window.location.replace("login.html");
+	  	}
+		
+		if(code ==  439 || code == 440 || code == 516 || code == 500)
+		 {
+			setCookie('mobCode',0,1);
+	  	  	updatePg(0);
+	  	}
+	  
+		if(code == 515)   //mail not send, dont close browser
+			{ 
+				setCookie('mobCode',2,1);
+	  	  		updatePg(2);
+			}
+	}
+	  });
+	 
+	 
+ }
+ 
+ 
+ 
+ function updatephone()
+ {
+	 
+	 var phone = $("#mobile").val();
+	 var id = getCookie('identifier');
+	 alert(phone);
+	 if(phone == '')
+		 alert("Please enter mobile No");
+	
+	 
+	 else
+	 {
+		 //set cookie for new phone
+		 setCookie('newphone',phone,1);
+	  $.ajax({
+	 		type : 'POST',
+	 		url  : '/Accounting/rest/register/updateMobile?' + $.param({'id' : id, "mobile" : phone}),
+	  		dataType : 'text',
+				success: function(response, text, xhr) {
+	         
+	       			console.log(response);
+	       			console.log(xhr.status);
+	       			if(xhr.status == 200)  //successful update then reset mobile cookie
+	      	 		{
+	       				setCookie('mobile',phone,1);   //updated and mail sent - just enter
+	       				setCookie('mobCode',1,1);
+	       				updatePg(1);
+	      	 		}
+	         
+	  },
+	  
+	  error: function (xhr) {
+		  
+		  var code  = xhr.status;
+		  console.log(code);
+		  
+		if(code == 404)
+		{
+			setCookie('conferror',"notfound",1);
+			window.location.replace("register.html");
+		}
+	  	if(code == 435)
+		{
+			setCookie('conferror',"session",1);
+	   		window.location.replace("register.html");
+		}
+
+		if( code == 433)
+		{
+			setCookie('conferror',"exists",1);
+			window.location.replace("login.html");
+	  	}
+		
+		if(code == 436)  //cant update phone verified user
+		{
+			setCookie('mobCode',4,1);
+			updatePg(4);
+		}
+		
+		if(code == 437)  //cant update phone -  try later, under verification
+		{
+			setCookie('mobCode',5,1);
+			updatePg(5);
+		}
+		
+		if(code ==  439 || code == 438 || code == 516 || code == 500)
+		 {
+			setCookie('mobCode',0,1);
+	  	  	updatePg(0);
+	  	}
+	  
+		if(code == 515)   //mail not send, dont close browser
+			{ 
+				setCookie('mobCode',2,1);
+	  	  		updatePg(2);
+			}
+	}
+	  });
+	 }
+	 
+ }
+ 
+ 
+  
+  function updatePg(mobCode)
+  {
+   //(MAKE SURE MOBILE AND IDENTIFIER ISNT NULL)
+  
+	var userId = getCookie('identifier') ; //get user Id
+	var phone = getCookie('mobile');
+	$("#mobile").val('');
+	$("#otp").val('');
+	
+	if( mobCode == 0 )    // chng/ resend
+		{
+		  $("#content").append('');
+		  $("#content").append("<br>Oops,  Something went wrong!<br> OTP could not be sent to " +  phone + " . <br>Please try to resend/ change mobile number.");
+		  $("#send").hide();
+		  
+		  $("#otp").hide();
+		  $("#submitCode").hide();
+		  
+		  $("#mobile").show();
+		  $("#submitphone").show();
+		  $("#sendagain").show();
+		  
+		}
+	
+	if(mobCode == 1)    //enter/ resend/ chng
 		{
 		
 		 $("#content").html('');
-		 $("#content").append("<br><br>OTP has been successfully sent to mobileNo" +   phone + ".<br>Enter the OTP within next few minutes")	;
+		 $("#content").append("<br><br>OTP has been successfully sent to mobileNo " +   phone + ".<br>Enter the OTP within next few minutes")	;
+		 
+		 $("#send").hide();
 		 
 		 $("#otp").show();
-		 $("#submitotp").show();
+		 $("#submitCode").show();
+		 $('#otp').show().delay(60000).hide(0);
+		 $('#submitCode').show().delay(60000).hide(0);
 		 
-		 $("#submit").show();
-		 $("#resend").show();
+		 $("#submitphone").show();
+		 $("#sendagain").show();
 		 $("#mobile").show();
 		 
-		 $("#submit").prop('disabled', true);
-  	 setTimeout(function()
-  			{
-  	 $("#submit").prop('disabled', false);
-              }, 60*1000);
 
-		 
-		 $("#resend").prop('disabled', true);
-  	 setTimeout(function()
-  			{
-  	 $("#resend").prop('disabled', false);
-              }, 60*1000);
-  	 
-  	 $("#mobile").prop('readonly', true);
-  	 setTimeout(function()
-  			{
-  	 $("#mobile").prop('readonly', false);
-              }, 60*1000);
-
-  	 
-  	$('#otp').show().delay(60000).hide(0);
-  	$('#submitotp').show().delay(60000).hide(0);
-	$('#msg').hide().delay(60000).show(0);
+		  $("#submitphone").prop('disabled', true);
+		  setTimeout(function() {   $("#submitphone").prop('disabled', false);}, 60*1000);
+		  
+		  $("#sendagain").prop('disabled', true);
+		  setTimeout(function() {   $("#sendagain").prop('disabled', false);}, 60*1000);
+		  
+		  $("#mobile").prop('readonly', true);
+		  setTimeout(function(){$("#mobile").prop('readonly', false);}, 60*1000);
 		
-	return true;
-	
+		return true;
 	
 		}
+	
+	if(mobCode == 2)
+		{
+		 $("#content").html('');
+		 $("#content").append("<br><br>OTP has been successfully sent to mobileNo" +   phone + ".<br>Enter the OTP within next few minutes. Please do not close the browser.")	;
+		 
+		 $("#send").hide();
+		 
+		 $("#otp").show();
+		 $("#submitCode").show();
+		 $('#otp').show().delay(60000).hide(0);
+		 $('#submitCode').show().delay(60000).hide(0);
+		 
+		 $("#submitphone").show();
+		 $("#sendagain").show();
+		 $("#mobile").show();
+		 
+
+		  $("#submitphone").prop('disabled', true);
+		  setTimeout(function() {   $("#submitphone").prop('disabled', false);}, 60*1000);
+		  
+		  $("#sendagain").prop('disabled', true);
+		  setTimeout(function() {   $("#sendagain").prop('disabled', false);}, 60*1000);
+		  
+		  $("#mobile").prop('readonly', true);
+		  setTimeout(function(){$("#mobile").prop('readonly', false);}, 60*1000);
+		
+		return true;
+	
+		}
+	
+	if( mobCode == 3 || mobCode == 4 || mobCode == 5)
+	{
+		$("#content").html('');
+		if(mobCode == 3)
+			$("#content").append("<br><br>OTP could not be verified. Please resend/ change mobile Number")	;
+		
+		if(mobCode == 4)
+			$("#content").append("<br><br>User already exists with given phone no. Please resend on previous number/ change mobile Number")	;
+		
+		if(mobCode == 5)
+			$("#content").append("<br><br>Phone Number is under verification by another user. Please resend/ change mobile Number")	;
+		
+		$("#send").hide();
+		$("#otp").hide();
+		$("#submitCode").hide();
+		
+		$("#submitphone").show();
+		 $("#sendagain").show();
+		 $("#mobile").show();
+		
+	}
+	
+	if(mobCode == 7)
+		{
+		$("#content").html('');
+		$("#content").append("<br><br>OTP entered could not be matched. Please try again or resend/ change mobile Number")	;
+		
+		$("#send").hide();
+		$("#otp").show();
+		 $("#submitCode").show();
+		 $('#otp').show().delay(60000).hide(0);
+		 $('#submitCode').show().delay(60000).hide(0);
+		
+		$("#submitphone").show();
+		 $("#sendagain").show();
+		 $("#mobile").show();
+		
+		}
+	
 	
 }
 </script>

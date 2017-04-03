@@ -89,7 +89,7 @@ public class RegisterDaoImplementation {
 				temp.setOtp(otp);
 				temp.setCreatedAt(new Date());
 				key = ds.save(temp);
-				if(key.getId() == null)
+				if(key == null)
 					throw new AppException(440,"could not create",null,null);
 
 				objectIdhex = key.getId().toString();               //create successful
@@ -105,7 +105,7 @@ public class RegisterDaoImplementation {
 				temp.setOtp(otp);
 				temp.setCreatedAt(new Date());
 				key = ds.save(temp);
-				if(key.getId() == null)
+				if(key == null)
 					throw new AppException(440,"could not create",null,null);
 				objectIdhex = key.getId().toString();               //create successful
 				return objectIdhex;
@@ -194,7 +194,7 @@ public class RegisterDaoImplementation {
 			String emailHex = helper.generateHex(valuate) ; 
 			user.setEmailHexcode(emailHex);
 			key = ds.merge(user);                                          //updates if existing
-			if(key.getId() == null)
+			if(key == null)
 				throw new AppException(440,"could not update",null,null);
 
 			updatedIdhex = key.getId().toString();
@@ -312,7 +312,7 @@ public class RegisterDaoImplementation {
 			user.setUserEmail(newEmail);
 			user.setEmailHexcode(emailHex);
 			key = ds.merge(user);
-			if(key.getId() == null)                          //merge failed
+			if(key == null)                          //merge failed
 				throw new AppException(438,"update failed",null,null);
 			updatedIdhex = key.getId().toString();
 			helper.sendMail(user.getEmailHexcode(), objectIdhex , user.getUserEmail());
@@ -402,10 +402,14 @@ public class RegisterDaoImplementation {
 			{
 				user.setEmailVerified(1);
 				key = ds.merge(user);
-				if(key.getId() == null)
+				if(key == null)
 					throw new EntityException(440,"could not verify",user,null);
 				updatedIdhex =  key.getId().toString();
 
+			}
+			else //wrong hexcode
+			{
+				throw new EntityException(441, "could not match", user, null);
 			}
 		}
 		catch(AppException e)
@@ -462,21 +466,19 @@ public class RegisterDaoImplementation {
 			objectIdhex = user.getId().toString();
 			
 			if(user.getUserStatus() == 1)
-				throw new EntityException(433,"verified user", user,null);
+				throw new EntityException(433,"verified user", objectIdhex,null);
 
 			                                                                            //status = 0 and mobile verified not possible 
 			long timeDiff = (new Date().getTime()/60000) - (user.getCreatedAt().getTime()/60000);
 
 			if( (int)timeDiff > 15)                                           
-				throw new EntityException(435,"session time out",user,null);
+				throw new EntityException(435,"session time out", objectIdhex,null);
 			
 			System.out.println(user.getOtp());
 			RegisterHelperFunctions helper = new RegisterHelperFunctions();
 			                                                                           //send otp and if that succeeds link in mail, now assume that otp has been sent
 			
 				helper.sendMail("empty", objectIdhex, user.getUserEmail());
-			
-			
 		
 		}
 		catch(AppException e)
@@ -535,19 +537,19 @@ public class RegisterDaoImplementation {
 			objectIdhex = user.getId().toString();
 			
 			if(user.getUserStatus() == 1)
-				throw new EntityException(433,"verified user", user,null);
+				throw new EntityException(433,"verified user",  objectIdhex,null);
 
 			                                                                            //status = 0 and mobile verified not possible 
 			long timeDiff = (new Date().getTime()/60000) - (user.getCreatedAt().getTime()/60000);
 
 			if( (int)timeDiff > 15)                                           
-				throw new EntityException(435,"session time out",user,null);
+				throw new EntityException(435,"session time out", objectIdhex,null);
 			
 			RegisterHelperFunctions helper = new RegisterHelperFunctions();
 			int otp = helper.generateRandomInt();
 			user.setOtp(otp); 
 			key = ds.merge(user);
-			if(key.getId() == null)
+			if(key == null)
 				throw new AppException(440,"could not update",null,null);
 			
 			System.out.println(otp);
@@ -593,6 +595,8 @@ public class RegisterDaoImplementation {
 		return objectIdhex;
 }
 	
+	
+	
 	   public String confirmOtp(String id, int otp) throws EntityException, AppException  //dont have to send id, but on success send token
 	   { 
 		   Datastore ds;
@@ -614,13 +618,13 @@ public class RegisterDaoImplementation {
 				objectIdhex = user.getId().toString();
 
 				if(user.getUserStatus() == 1)
-					throw new EntityException(433,"verified user", user,null);
+					throw new EntityException(433,"verified user", objectIdhex,null);
 
 
 				long timeDiff = (new Date().getTime()/60000) - (user.getCreatedAt().getTime()/60000);
 
 				if( (int)timeDiff > 15)                                           
-					throw new EntityException(435,"session time out",user,null);
+					throw new EntityException(435,"session time out", objectIdhex,null);
 
 				if(otp == user.getOtp())     //check otp
 				{
@@ -628,10 +632,14 @@ public class RegisterDaoImplementation {
 					user.setUserStatus(1);   //successful verification
 					user.setCreatedAt(null);  //prevent deletion
 					key = ds.merge(user);
-					if(key.getId() == null)
-						throw new EntityException(440,"could not update",user,null);
+					if(key == null)
+						throw new EntityException(440,"could not update", objectIdhex,null);
 					updatedIdhex =  key.getId().toString();
 
+				}
+				else     //wrong OTP entered
+				{
+					throw new EntityException(441, "could not match", user, null);
 				}
 			}
 			catch(AppException e)
@@ -697,7 +705,7 @@ public class RegisterDaoImplementation {
 				long timeDiff = (new Date().getTime()/60000) - (user.getCreatedAt().getTime()/60000);
 
 				if( (int)timeDiff > 15)                                           
-					throw new AppException(435,"session time out",null,null);
+					throw new AppException(435,"session time out", objectIdhex,null);
 
 				                                                                                       // check if email already exists with verified user
 				Query<User> queryMob = ds.createQuery(User.class).field("mobileNumber").equal(newMobile).field("userStatus").equal(1);
@@ -720,11 +728,11 @@ public class RegisterDaoImplementation {
 				user.setMobileNumber(newMobile);
 				user.setOtp(otp);
 				key = ds.merge(user);
-				if(key.getId() == null)                          //merge failed
+				if(key == null)                          //merge failed
 					throw new AppException(438,"update failed",null,null);
 				
 				updatedIdhex = key.getId().toString();
-				System.out.println(otp);  //send otp if success then send mail
+				System.out.println("new" + otp);  //send otp if success then send mail
 				helper.sendMail("empty", updatedIdhex, user.getUserEmail());
 
 			}
@@ -761,14 +769,66 @@ public class RegisterDaoImplementation {
 			}
 			catch(Exception e)
 			{
-				throw new EntityException(516,"unknown db error",updatedIdhex,null); 
+				throw new EntityException(500,e.getMessage(),null,null);
 			}
 			catch(Throwable e)
 			{
-				throw new EntityException(516,"unknown db error",updatedIdhex,null); 
+				throw new EntityException(500,e.getMessage(),null,null);
 			}
 			return updatedIdhex;
 
 		}
-	
+	   
+	   //get user if not verified
+	   public User confirmOtpMail(String id) throws AppException, EntityException
+	   {
+		   Datastore ds;
+			String objectIdhex = null;
+			User user = null;
+		
+			try
+			{ 
+				ds = Morphiacxn.getInstance().getMORPHIADB("test");
+				ObjectId oid  = new ObjectId(id);                                   //find unverified user
+				Query<User> query = ds.createQuery(User.class).field("id").equal(oid);
+				user = query.get(); 
+				if(user == null)                                                                                      //doesnt exist/ deleted
+					throw new AppException(Response.Status.NOT_FOUND.getStatusCode(),"user does not exist",null,null);
+
+				objectIdhex = user.getId().toString();
+				
+				if(user.getUserStatus() == 1)
+					throw new EntityException(433,"verified user", user,null);
+
+				                                                                                        //check if within session
+				long timeDiff = (new Date().getTime()/60000) - (user.getCreatedAt().getTime()/60000);
+
+				if( (int)timeDiff > 15)                                           
+					throw new EntityException(435,"session time out", user,null);
+				
+
+			}
+			catch(AppException e)
+			{
+				throw e;
+			}
+			catch (MongoException e)
+			{
+				if(objectIdhex == null)
+					throw new AppException(439,"get with id failed",null,null);
+				
+				throw new EntityException(516,"unknown db error",user,null);  //check if user null
+			}
+			catch(Exception e)
+			{
+				throw new EntityException(500,e.getMessage(),user,null);
+			}
+			catch(Throwable e)
+			{
+				throw new EntityException(500,e.getMessage(),user,null);
+			}
+		
+			return user;
 }
+}
+

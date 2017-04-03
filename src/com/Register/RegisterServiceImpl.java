@@ -111,6 +111,7 @@ public class RegisterServiceImpl {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateMobile(@QueryParam("id") String id, @QueryParam("mobile") String mobile)throws  EntityException, JsonMappingException , JsonParseException, IOException, AppException, Exception, Throwable
 	{
+		System.out.println("hi");
 		String userId;
 		RegisterDaoImplementation regdao = new RegisterDaoImplementation();
 		
@@ -135,6 +136,19 @@ public class RegisterServiceImpl {
 	}
 	
 	
+	@POST
+	@Path("/confirmOtpMail")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response confirmOtpMail(@QueryParam("id") String id)throws  EntityException, JsonMappingException , JsonParseException, IOException, AppException, Exception, Throwable
+	{
+		User user;
+		RegisterDaoImplementation regdao = new RegisterDaoImplementation();
+		user = regdao.confirmOtpMail(id);
+		return Response.status(Response.Status.OK)
+				   .entity(user).build();
+		
+		
+	}
 	
 	
 	/*

@@ -84,7 +84,7 @@ public class RegisterHelperFunctions {
 					}
 					else
 					{
-						link = "<a href=\"http://localhost:8080/Accounting/VerifyOtp.html?email=" +  email + "&identifier=" + userId + "\">\n" ;
+						link = "<a href=\"http://localhost:8080/Accounting/verifyOtp.html?email=" +  email + "&identifier=" + userId + "\">\n" ;
 						body = "Congratulations! Click below to enter Otp and verify your mobile Number";
 					}
 					String htmlContent = "<html>\n" +

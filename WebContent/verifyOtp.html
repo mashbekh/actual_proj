@@ -138,18 +138,26 @@ function loadName()
 {
 	//open confirmMobile with place to enter otp
 	
+	if(location.search == null)
+		{
+		$("#content").append("Sorry ! Please retry confirmation process."); 
+		}
+	else
+		{
 	var code = location.search.split('?')[1];
 	var x = code.split('&')[0];
 	var mail   =x.split('=')[1];
 	var y = code.split('&')[1];
 	var id   = y.split('=')[1];
 
+	alert(id);
+	
 	if(code!='' && id!='')
 	 {
 		
 	    $.ajax({
    		type : 'POST',
-   		url  : '/Accounting/rest/register/confirmMail?' + $.param({'verifyCode' : hex}),
+   		url  : '/Accounting/rest/register/confirmOtpMail?' + $.param({'id' : id}),
     	dataType : 'json',
  		success: function(response, text, xhr) {
            
@@ -164,7 +172,7 @@ function loadName()
          
          if(xhr.status == 200)
         	 {
-        	  
+        	  setCookie('mobCode',1,1);
         	  window.location.replace("confirmMobile.html");
         	 }
          
@@ -193,33 +201,10 @@ function loadName()
 		   	window.location.replace("login.html");
 		}
     	
-    	if(code == 434)   //need id
-    		{
-    		var tmp = user;
-    		setCookie('identifier',tmp.id,1);
-    		setCookie('email',tmp.userEmail,1);
-    		setCookie('mobile',tmp.mobileNumber,1);
-    		setCookie('conferror',"verifiedmail",1);
-		   	window.location.replace("confirmMobile.html");
-    		}
-    	
-    	if(code == 440 || code == 439)     //try confirming again
-    		{
-    		  setCookie('mailCode',2);
-    		  var tmp = user;
-      	      setCookie('identifier',tmp.id,1);
-      		  setCookie('email',tmp.userEmail,1);
-    		  setCookie('mobile',tmp.mobileNumber,1);
-      	      window.location.replace("confirmMail.html");
-    		}
-    	
-    	if(code == 515 || code ==500)
-    		{
-    		var tmp = JSON.parse(user);
-    		setCookie('identifier',tmp.id,1);
-    		  setCookie('mailCode',2);    //could not verify(db issue/ java exception)
-    	      window.location.replace("confirmMail.html");
-    		}
+    	if(code == 439 || code == 516 || code == 500)   //error from our side, couldnt get to confirmMobile    
+    	{
+    	 alert("Oops, something went wrong! Please try again");
+    	}
     	 
 	   return false;
 	  }
@@ -229,9 +214,9 @@ function loadName()
 	
 	else if(code == '' && hex == '')   //ensured that link has hexcode
 		{
-		  $("#content").append("Sorry, email verification failed ! Please retry confirmation process."); 
+		  $("#content").append("Sorry ! Please retry confirmation process."); 
 		}
-
+		}
 }
 
 

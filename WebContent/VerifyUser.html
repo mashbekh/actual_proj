@@ -221,7 +221,17 @@ function loadName()
     		  setCookie('mailCode',2);    //could not verify(db issue/ java exception)
     	      window.location.replace("confirmMail.html");
     		}
-    	 
+    	
+    	if(code == 441) //no match, try again
+    	{
+    		setCookie('mailCode',2);
+  		  var tmp = user;
+    	      setCookie('identifier',tmp.id,1);
+    		  setCookie('email',tmp.userEmail,1);
+  		  setCookie('mobile',tmp.mobileNumber,1);
+    	      window.location.replace("confirmMail.html");
+    	}
+    	
 	   return false;
 	  }
     
