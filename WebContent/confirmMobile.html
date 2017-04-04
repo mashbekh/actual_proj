@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>Register</title>
+<title>Mobile Confirmation</title>
 
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -333,9 +333,9 @@ function sendotp()
 	       			if(xhr.status == 200)
 	      	 		{
 	       				var resp =  response.split('*'); // user id and token
-	       				setCookie('identifier',resp[0],1);
-	       				setCookie('token',resp[1],1);  
-	       				setCookie('name',resp[2],1);
+	       				setCookie('NID',resp[0],1);
+	       				setCookie('SID',resp[1],1);  
+	       				setCookie('TTID',resp[2],1);
 	      	  			window.location.replace("business_details.html");
 	      	 		}
 	         
@@ -370,8 +370,15 @@ function sendotp()
 		
 		if(code == 441) //could not match , try again
 			{
-			setCookie('mobCode',7,1);
-	  	  	updatePg(7);
+				setCookie('mobCode',7,1);
+	  	  		updatePg(7);
+			}
+		
+		if(code == 512 || code == 513 || code == 514)   //verified but error in tokenisation (db/internal issues)
+			{
+				setCookie('conferror',"Account Successfully Activated!",1);
+				window.location.replace("login.html");
+			 
 			}
 	  
 	}

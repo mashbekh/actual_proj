@@ -8,12 +8,15 @@ import javax.mail.MessagingException;
 import javax.ws.rs.core.Response;
 
 import org.bson.types.ObjectId;
+import org.jose4j.lang.JoseException;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
 
 import com.ErrorHandling.AppException;
 import com.ErrorHandling.EntityException;
+import com.JwtTokens.JwtToken;
+import com.Models.JWTConfig;
 import com.Models.User;
 import com.mongodb.MongoException;
 import com.setup.Morphiacxn;
@@ -596,14 +599,17 @@ public class RegisterDaoImplementation {
 }
 	
 	
-	
-	   public String confirmOtp(String id, int otp) throws EntityException, AppException  //dont have to send id, but on success send token
+	//dont have to send id, but on success send token
+	   public String confirmOtp(String id, int otp) throws EntityException, AppException  
 	   { 
 		   Datastore ds;
 			Key<User> key;
 			String objectIdhex = null;
 			String updatedIdhex = null;
 			User user = null;
+			String token = null;
+			String data = null;
+			Key<JWTConfig> jwtKey = null;
 
 			try
 			{ 
@@ -641,6 +647,22 @@ public class RegisterDaoImplementation {
 				{
 					throw new EntityException(441, "could not match", user, null);
 				}
+				
+				//send token
+				JwtToken jwt = new JwtToken();
+				token = jwt.generateToken(user.getId().toString(), user.getUserEmail(), user.getPassword());
+				
+				if(token  == null)
+					throw new EntityException(512,"could not generate token",null,null);  //verified user, login for token
+				
+				//save the token 
+				JWTConfig config = new JWTConfig(user.getId().toString(),token);
+				jwtKey = ds.save(config);
+				if(jwtKey == null)
+					throw new AppException(513,"could not save",null,null);    //verified user, login for token
+				
+				data = user.getUserName() + "*" + user.getId().toString() + "*" + token;
+				
 			}
 			catch(AppException e)
 			{
@@ -652,28 +674,38 @@ public class RegisterDaoImplementation {
 			{
 				throw e;
 			}
+			catch(JoseException e)
+			{
+				throw new EntityException(512,"could not generate token",null,null);  //verified user, login for token
+			}
 			catch(MongoException e)
 			{
-				if(objectIdhex == null)   //gt failed
+				if(objectIdhex == null)                                                //get failed
 					throw new EntityException(439,"get with id failed",null,null);    //could not do get op, -  retry conf, dont send anythng
 
-				if(objectIdhex !=null && updatedIdhex == null)
+				if(objectIdhex !=null && updatedIdhex == null)                          //update failed
 					throw new EntityException(440,"could not update",user,null); 
+				
+				if(objectIdhex !=null && updatedIdhex != null && jwtKey == null)           //create token failed, login for token
+					throw new EntityException(512,"could not create token",user,null);
 
 				throw new EntityException(515,"unknown db error", user, e.getMessage());
 
 			}
 			
-			catch(Exception e)
-			{
-				throw new EntityException(500,e.getMessage(),user,null);
-			}
 			catch(Throwable e)
 			{
-				throw new EntityException(500,e.getMessage(),user,null);
+				if(objectIdhex == null)   
+					throw new EntityException(500,"get with id failed",user,null);    
+
+				if(objectIdhex !=null && updatedIdhex == null)                          
+					throw new EntityException(500,"could not update",user,null); 
+				
+				else                                                                    //if both not null, error in tokenisation  - login
+					throw new EntityException(514,"could not create token",user,null);
 			}
 		   
-		   return updatedIdhex;
+		   return data;
 	   }
 	
 	   
@@ -819,8 +851,13 @@ public class RegisterDaoImplementation {
 				
 				throw new EntityException(516,"unknown db error",user,null);  //check if user null
 			}
+			catch(EntityException e)
+			{
+				throw e;
+			}
 			catch(Exception e)
 			{
+				
 				throw new EntityException(500,e.getMessage(),user,null);
 			}
 			catch(Throwable e)

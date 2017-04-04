@@ -13,7 +13,8 @@
   
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js" type="text/javascript"></script>
-<meta name="google-signin-client_id" content="49796868187-9j499iatoahdjru9liiun3lqggp7a53e.apps.googleusercontent.com">
+<meta name="google-signin-client_id"
+	content="230903295209-qfhj977v4aa60i0sjthdd0nuc0u1fkga.apps.googleusercontent.com">
 <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
     rel="stylesheet" type="text/css" />
     
@@ -135,47 +136,17 @@ $(document).ready(function () {
                     <ul class="dropdown-menu message-dropdown">
                         <li class="message-preview">
                             <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
+                               
                             </a>
                         </li>
                         <li class="message-preview">
                             <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
+                               
                             </a>
                         </li>
                         <li class="message-preview">
                             <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
+                              
                             </a>
                         </li>
                         <li class="message-footer">
@@ -270,7 +241,7 @@ $(document).ready(function () {
                              <button type="submit" class="btn btn-primary" id="submit" onclick="return verify(this,event)" disabled="disabled">Lets get started!</button>
                                 <script>
                               
-                              function verify_mail()
+function verify_mail()
 {
  var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 var x= document.getElementById("email").value;
@@ -284,7 +255,17 @@ else return true;
 
 }
                               
-                              
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}                          
                               
     function verify(sender,e){
     
@@ -293,41 +274,41 @@ else return true;
 	e.preventDefault();
 	
    $.ajax({
-   type : 'GET',
-   url  : '/rest/login/verify_user',
-    dataType :'text',
-    
-   
-   data: {'email': email, 'password': password},
-  
-    success: function(response) {
-      if(response!="Not valid guser" && response!= "Not valid user" && response!="Sorry wrong password. Try again!!")
-      {
-          // alert(response);
-           var user_data = response.split(":");
-           window.localStorage.setItem("user_name",user_data[0]);
-           alert(window.localStorage.getItem("user_name"));
-           window.localStorage.setItem("user_id",user_data[1]);
-           window.localStorage.setItem("auth_token",user_data[2]);
-           location.href = "index.html";
-      }
-      else
-           alert(response);
-    },
+   		type : 'POST',
+   		url  : '/Accounting/rest/login/verify?' + $.param({'email': email, 'password': password, 'type':1}),
+    	dataType :'text',
+    	
+    		success: function(response, text, xhr) {
+    			
+    			var data = xhr.responseText.split('*');
+    			var name = data[0];
+    			var id = data[1];
+    			var token = data[2];
+    			
+    			setCookie('NID',name,1);
+    			setCookie('SID',id,1);
+    			setCookie('TTID',token,1);
+    			
+     
+    		},
     
 	  
-	error: function (a,b,c)
-	{ 
-	
-	  
-		alert(a.status+b+c);
-	
-	
-	}  
+			error: function (xhr, statusText)
+			{ 
+				var errorCode = xhr.status;
+				if(errorCode == 404  )
+					{
+					 setCookie('errormsg',"Invalid email or password. Please try again!",1);
+				   	 window.location.replace("login.html");
+					}
+				if(errorCode == 512  || errorCode == 513 || errorCode == 514  || errorCode == 515 || errorCode == 500)
+					{
+						setCookie('errormsg',"Oops! Something went wrong. Please try again!",1);
+				   	 	window.location.replace("login.html");
+					}
+			
+			}  
 	  });
-          
-       
-  
 }
                               
                               </script>
@@ -335,76 +316,141 @@ else return true;
                              <p>-------------or-------------</p>
                             <div class="form-group">
                              <div  id="google-signin-button"></div>
-                              <script>
-    function onSignIn(googleUser) {
-     
-      alert('Logged in as: ' + googleUser.getBasicProfile().getName());
-      $.ajax({
-   type : 'GET',
-   url  : '/rest/login/verify_user',
-   dataType : 'text',
-   data: {'name':googleUser.getBasicProfile().getName(),'email':googleUser.getBasicProfile().getEmail()},
-   success :  function(response)
-      {
-		if(response!="Not valid guser")
-      {
-           
-           var user_data = response.split(":");
-           window.localStorage.setItem("user_name",user_data[0]);
-           alert(window.localStorage.getItem("user_name"));
-           window.localStorage.setItem("user_id",user_data[1]);
-           window.localStorage.setItem("auth_token",user_data[2]);
-           location.href = "index.html";
-      }
+                             
+                             
+ <script>
+ 
+ var count=0; 
+ var state;
+function onSignIn(googleUser) 
+{
+	// state = 1,  not signedin earlier  & state = 2 signed in earlier
+	count= count+1;
+	
+	if( state ==2 && count!=1 || state == 1)  //count is 2
+	{
 		
-	  },
-	  error: function (textStatus, errorThrown) {
-               alert("error" + errorThrown);
-            }
+		alert('Logged in as: ' + googleUser.getBasicProfile().getName());
+		var name = googleUser.getBasicProfile().getName();
+   		var email = googleUser.getBasicProfile().getEmail();
+		
+   		$.ajax({
+			type : 'POST',
+			url  : '/Accounting/rest/login/verify?' + $.param({'email': email, 'password': null, 'type':2}),
+ 			dataType : "text",
+
+		success: function(response, text, xhr) {
+        
+
+			var data = xhr.responseText.split('*');
+			var name = data[0];
+			var id = data[1];
+			var token = data[2];
+			
+			setCookie('NID',name,1);
+			setCookie('SID',id,1);
+			setCookie('TTID',token,1);   
+			
+			window.location.replace("business_details.html");
+			
+ },
+ 
+ error: function (xhr, statusText) {
 	 
+	 var errorCode = xhr.status;
+		if(errorCode == 404  )
+			{
+			 setCookie('errormsg',"Invalid login. Please try again!",1);
+		   	 window.location.replace("login.html");
+			}
+		if(errorCode == 512  || errorCode == 513 || errorCode == 514  || errorCode == 515 || errorCode == 500)
+			{
+				setCookie('errormsg',"Oops! Something went wrong. Please try again!",1);
+		   	 	window.location.replace("login.html");
+			}
+
+	   return false;
+	  }
+ 
 	  });
-      
-    }
-    function onFailure(error) {
-      console.log(error);
-    }
-    function renderButton() {
-    	
-    	var error = getCookie('conferror');
-    	if(error == 'exists')
-    		$("#content").append("User exists. Please login to continue.");
-    	
-    	setCookie('conferror',"",-1);
-    	
-   
-      gapi.load('auth2,signin2', function() {
-        var auth2 = gapi.auth2.init();
-        auth2.then(function() {
-          // Current values
-          var isSignedIn = auth2.isSignedIn.get();
-          var currentUser = auth2.currentUser.get();
+		
+	  }
+}
 
-          if (!isSignedIn) {
-            // Rendering g-signin2 button.
-            gapi.signin2.render('google-signin-button', {
-              'onsuccess': 'onSignIn'  
-            });
-          }
-          else
-          {
-         // alert("signed in");
-          }
-        });
-      });
-    }
 
-    function signOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-      });
-    }
-    
+
+function onFailure(error) {
+ console.log(error);
+}
+function renderButton() {
+	
+	//clear all other cookies
+	
+	setCookie('email',"",-1);
+	setCookie('newemail',"",-1);
+	setCookie('mobile',"",-1);
+	setCookie('identifier',"",-1);
+	setCookie('mailCode',"",-1);
+	setCookie('mobCode',"",-1);
+	setCookie('newphone',"",-1);
+	setCookie('NID',"",-1);
+	setCookie('SID',"",-1);
+	setCookie('TTID',"",-1);   
+	
+	
+	//errors coming up from confirmation failures
+
+	var error = getCookie('conferror');
+	if(error == 'notfound')
+		$("#errormsg").append("Invalid Email Verification");
+	
+	if(error == 'session')
+		$("#errormsg").append("Session timed out. Try Again!");
+	
+	setCookie('conferror',"",-1);
+	
+	
+
+	//in case of op on google signup fail, reload register and show error msg
+	var errormsg = getCookie('errormsg');
+	$("#errormsg").append(errormsg);
+	setCookie('errormsg',"",-1);
+	
+	
+
+	 gapi.load('auth2,signin2', function() {
+   var auth2 = gapi.auth2.init();
+   auth2.then(function() {
+     // Current values
+     var isSignedIn = auth2.isSignedIn.get();
+     var currentUser = auth2.currentUser.get();
+
+     if (!isSignedIn) {
+   	  state = 1;  //not signed in
+       gapi.signin2.render('google-signin-button', {
+         'onsuccess': 'onSignIn'  
+       });
+     }
+     else
+     {
+   	  signOut();
+   	  state =2; //sign him out
+   	  gapi.signin2.render('google-signin-button', {
+             'onsuccess': 'onSignIn'  
+           });
+     }
+   });
+ });
+}
+
+function signOut() {
+ var auth2 = gapi.auth2.getAuthInstance();
+ auth2.signOut().then(function () {
+	  alert("user logged out");
+   console.log('User signed out.');
+ });
+}
+
  
     
     

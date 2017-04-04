@@ -196,15 +196,15 @@ function loadName()
     		}
     	
     	if( code == 433)
-		{
-			setCookie('conferror',"exists",1);
-		   	window.location.replace("login.html");
-		}
+			{
+				setCookie('conferror',"exists",1);
+		   		window.location.replace("login.html");
+			}
     	
     	if(code == 439 || code == 516 || code == 500)   //error from our side, couldnt get to confirmMobile    
-    	{
-    	 alert("Oops, something went wrong! Please try again");
-    	}
+    		{
+    	 		alert("Oops, something went wrong! Please try again");
+    		}
     	 
 	   return false;
 	  }

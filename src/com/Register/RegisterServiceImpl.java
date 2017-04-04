@@ -142,6 +142,7 @@ public class RegisterServiceImpl {
 	public Response confirmOtpMail(@QueryParam("id") String id)throws  EntityException, JsonMappingException , JsonParseException, IOException, AppException, Exception, Throwable
 	{
 		User user;
+		System.out.println(id);
 		RegisterDaoImplementation regdao = new RegisterDaoImplementation();
 		user = regdao.confirmOtpMail(id);
 		return Response.status(Response.Status.OK)

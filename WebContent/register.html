@@ -433,7 +433,7 @@ else return true;
       var state;
     function onSignIn(googleUser) 
     {
-    	
+    	// state = 1,  not signedin earlier  & state = 2 signed in earlier
     	count= count+1;
     	
     	if( state ==2 && count!=1 || state == 1)  //count is 2
@@ -478,31 +478,95 @@ else return true;
      		url  : '/Accounting/rest/register/add',
      		contentType: "application/json; charset=utf-8",
       	data: p,
-      	dataType : "json",
+      	dataType : "text",
     
    		success: function(response, text, xhr) {
              
-             console.log(xhr.status);
-             console.log(text);
-             console.log(response);
+             
+              setCookie('identifier',xhr.responseText,1);
+		     setCookie('mobCode','',-1);
+		    window.location.replace("confirmMobile.html");
            
-             return false;
       },
       
       error: function (xhr, statusText) {
   		
-  	    console.log(xhr);
-  	    console.log(xhr.responseText);
-  	    console.log(xhr.status);
-  	    var code = xhr.status;
-  	  if(code == 435)
-  		{		  
-  			 setCookie('errormsg',"Given email and mobileNo is under verification. Please try again later!",1);
-  	 		 setCookie('email',"",-1);
-  	 		 setCookie('mobile',"",-1);
-  	 		 window.location.replace("register.html");
+  	  
   	 
-  	    }
+  	   if(code == 432)
+   	{
+   	 setCookie('errormsg',"User exists with given email and mobileNo. Please try again!",1);
+   	 setCookie('email',"",-1);
+   	 setCookie('mobile',"",-1);
+   	 window.location.replace("register.html");
+   	}
+   
+   if(code == 433)
+   	{
+	   setCookie('errormsg',"User exists with given email. Please try again!");
+   	 setCookie('email',"",-1);
+   	 setCookie('mobile',"",-1);
+   	window.location.replace("register.html");
+   	}
+   
+   if(code == 434)
+	{
+	   setCookie('errormsg',"User exists with given mobileNo. Please try again!");
+	 setCookie('email',"",-1);
+	 setCookie('mobile',"",-1);
+	 window.location.replace("register.html");
+	}
+   
+   if(code == 435)
+	{
+    
+	   setCookie('errormsg',"Given email and mobileNo is under verification. Please try again later!");
+	 setCookie('email',"",-1);
+	 setCookie('mobile',"",-1);
+	 window.location.replace("register.html");
+	}
+   
+   if(code == 436)
+	{
+	   setCookie('errormsg',"Given email is under verification. Please try again later!");
+	 setCookie('email',"",-1);
+	 setCookie('mobile',"",-1);
+	 window.location.replace("register.html");
+	}
+   
+   if(code == 437)
+	{
+	   setCookie('errormsg',"Given mobileNo is under verification. Please try again later!");
+	 setCookie('email',"",-1);
+	 setCookie('mobile',"",-1);
+	 window.location.replace("register.html"); 
+	}
+   
+   if( code == 439 || code == 440 )
+	{
+	   setCookie('errormsg',"Oops, something went wrong! Please try again.");
+	 setCookie('email',"",-1);
+	 setCookie('mobile',"",-1);
+	 window.location.replace("register.html");
+	}
+   
+   if(code == 516 || code == 500)  //in case of db error/server error
+	{
+	  if(xhr.responseText == null)  //not yet created
+		  {
+		  setCookie('errormsg',"Oops, something went wrong! Please try again.");
+	    	 setCookie('email',"",-1);
+	    	 setCookie('mobile',"",-1);
+	    	 window.location.replace("register.html");
+		  }
+	  else
+		  {  //id exists created
+		     setCookie('identifier',statusText,1);
+		     setCookie('mobCode','',-1);
+		    window.location.replace("confirmMobile.html");
+		  }
+	}
+   
   	   return false;
   	  }
       
@@ -526,6 +590,7 @@ else return true;
     	setCookie('identifier',"",-1);
     	setCookie('mailCode',"",-1);
     	setCookie('mobCode',"",-1);
+    	setCookie('newphone',"",-1);
     	
     	//errors coming up from confirmation fail
     

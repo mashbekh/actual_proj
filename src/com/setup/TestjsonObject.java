@@ -22,7 +22,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.Models.Employee;
 import com.Models.PurchaseOrder;
 import com.Models.PurchaseOrderDetails;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -38,8 +37,9 @@ public class TestjsonObject {
 	{
 	
 		ObjectMapper objectMapper = new ObjectMapper();
-		Employee emp = objectMapper.readValue(jsonData, Employee.class);
-		return emp.toString();
+	//	Employee emp = objectMapper.readValue(jsonData, Employee.class);
+		//return emp.toString();
+		return null;
 	}
 
 	@GET

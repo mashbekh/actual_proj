@@ -64,9 +64,6 @@
 	zoom: 1;
 }
 </style>
-
-
-
 <head>
 
 <meta charset="utf-8">
@@ -125,14 +122,26 @@
 
 <script>
 
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
 
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
+/*
 function submit1()
 
 {
 
 //clear local storage
 // clear later leave it for now
-/*
+
 localStorage.removeItem("bname");
 localStorage.removeItem("cname");
 localStorage.removeItem("btype");
@@ -154,7 +163,7 @@ localStorage.removeItem("acc_num");
 localStorage.removeItem("type_acc");
 localStorage.removeItem("bank");
 localStorage.removeItem("ifsc_code");
-*/
+
 //location.replace("index.html");
 
 //collect all values, make ajax call
@@ -162,10 +171,10 @@ localStorage.removeItem("ifsc_code");
 
 
 	$.ajax({
-		   type : 'GET',
-		   url  : '/Accounting/rest/file/upload',
-		  
-		    data:	$("#business_details").serialize(),
+		   type : 'POST',
+		   url  : '/Accounting/rest/company/add',
+		   contentType: 'multipart/form-data',
+		   data:	$("#companyProfile").serialize(),
 		    success: function(response) {
 		    	
 		    	alert(response);
@@ -181,36 +190,75 @@ localStorage.removeItem("ifsc_code");
 
 
 }
+*/
+
+$(document).ready(function () {
+
+    $("#formSubmit").click(function (event) {
+
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+
+        // Get form
+        var form = $('#companyProfile')[0];
+        var data = new FormData(form);
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/Accounting/rest/company/add?" + $.param({"id": getCookie("SID")}),
+            data: data,
+            dataType : "text",
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+
+                console.log("SUCCESS : "  + data);
+
+            },
+            error: function (e) {
+
+            
+                console.log("ERROR : ", e);
+            }
+        });
+
+    });
+
+});
+
+
 
 function form_values()
 {
-             $('#business_name1').val(localStorage.getItem("bname"));
-             $('#contact_name1').val(localStorage.getItem("cname"));
-            $('#type_business1').val(localStorage.getItem("btype"));
-            $('#business_sector1').val(localStorage.getItem("bsector"));
-            $('#addr_line11').val(localStorage.getItem("addr1"));
-            $('#addr_line21').val(localStorage.getItem("addr2"));
-            $('#state1').val(localStorage.getItem("state"));
-            $('#city1').val(localStorage.getItem("city"));
-            $('#locality1').val(localStorage.getItem("locality"));
-            $('#email1').val(localStorage.getItem("email"));
-            $('#website1').val(localStorage.getItem("website"));
-            $('#mobile1').val(localStorage.getItem("mobile"));
-            $('#code1').val(localStorage.getItem("code"));
-            $('#landline1').val(localStorage.getItem("landline"));
-            $('#pan_no1').val(localStorage.getItem("pan_no"));
-            $('#tin_no1').val(localStorage.getItem("tin_no"));
+            $('#business_name').val(localStorage.getItem("bname"));
+            $('#contact_name').val(localStorage.getItem("cname"));
+            $('#type_business').val(localStorage.getItem("btype"));
+            $('#business_sector').val(localStorage.getItem("bsector"));
             
-            $('#strn_no1').val(localStorage.getItem("tin_no"));
+            $('#addr_line1').val(localStorage.getItem("addr1"));
+            $('#addr_line2').val(localStorage.getItem("addr2"));
+            $('#state').val(localStorage.getItem("state"));
+            $('#city').val(localStorage.getItem("city"));
+            $('#locality').val(localStorage.getItem("locality"));
+            $('#email').val(localStorage.getItem("email"));
+            $('#website').val(localStorage.getItem("website"));
+            $('#mobile').val(localStorage.getItem("mobile"));
+            $('#code').val(localStorage.getItem("code"));
+            $('#landline').val(localStorage.getItem("landline"));
             
-            $('#tan_no1').val(localStorage.getItem("tin_no"));
-            $('#gst_no1').val(localStorage.getItem("tin_no"));
+            $('#pan_no').val(localStorage.getItem("pan_no"));
+            $('#tin_no').val(localStorage.getItem("tin_no"));
+            $('#strn_no').val(localStorage.getItem("strn_no"));
+            $('#tan_no').val(localStorage.getItem("tan_no"));
+            $('#gst_no').val(localStorage.getItem("gst_no"));
+            $('#cin_no').val(localStorage.getItem("cin_no"));
             
-            $('#cin_no1').val(localStorage.getItem("cin_no"));
-            $('#acc_num1').val(localStorage.getItem("acc_num"));
-            $('#type_acc1').val(localStorage.getItem("type_acc"));
-            $('#bank1').val(localStorage.getItem("bank"));
-            $('#ifsc_code1').val(localStorage.getItem("ifsc_code"));
+            $('#acc_num').val(localStorage.getItem("acc_num"));
+            $('#type_acc').val(localStorage.getItem("type_acc"));
+            $('#bank').val(localStorage.getItem("bank"));
+            $('#ifsc_code').val(localStorage.getItem("ifsc_code"));
             
             }
 
@@ -344,36 +392,7 @@ function loadName()
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="abc">
 
-					<li class="active"><a href=".html"><i
-							class="fa fa-fw fa-dashboard"></i> Home</a></li>
-					<li><a href="dashboard.html"><i
-							class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
-
-					<li><a href="accounting.html"><i
-							class="fa fa-fw fa-dashboard"></i> Accounting</a></li>
-
-					<li><a href="charts.html"><i
-							class="fa fa-fw fa-bar-chart-o"></i> Charts</a></li>
-
-					<li><a href="tables.html"><i class="fa fa-fw fa-table"></i>
-							Tables</a></li>
-					<li><a href="forms.html"><i class="fa fa-fw fa-edit"></i>
-							Forms</a></li>
-					<li><a href="bootstrap-elements.html"><i
-							class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a></li>
-					<li><a href="bootstrap-grid.html"><i
-							class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a></li>
-					<li><a href="javascript:;" data-toggle="collapse"
-						data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i>
-							Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
-						<ul id="demo" class="collapse">
-							<li><a href="#">Dropdown Item</a></li>
-							<li><a href="#">Dropdown Item</a></li>
-						</ul></li>
-					<li><a href="blank-page.html"><i class="fa fa-fw fa-file"></i>
-							Blank Page</a></li>
-					<li><a href="index-rtl.html"><i
-							class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a></li>
+				
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -394,34 +413,40 @@ function loadName()
 						<div id="form-panel">
 							<div class="row">
 								<div class="col-lg-12">
-									<form  id="business_details" enctype="multipart/form-data" action="/Accounting/rest/file/upload"  method="POST">
+								
+								
+									<form id="companyProfile" enctype="multipart/form-data"  method="POST">
 
-  <!--  
 										<div class="form-group">
 											<label class="col-md-3 control-label">Business Name</label>
 											<div class="col-md-6">
-												<input class="form-control" id="business_name1" type="text"
+												<input class="form-control" name="business_name"  id="business_name"  type="text"
 													value="" />
 											</div>
 										</div>
-										
-										-->
 
-										<br> <br><br>
-										
+
+
+										<br> <br>
+										<br>
+
 										<div class="form-group">
-						<label  class="col-sm-3 control-label">Upload Logo</label>
-                         <div class="col-md-6"><input type="file" class="form-control" id="logo1" name="logo" accept="image/*"></div>
-					</div>
-					
-					<br><br>
+											<label class="col-sm-3 control-label">Upload Logo</label>
+											<div class="col-md-6">
+												<input type="file" class="form-control"  
+													name="logo" accept="image/*">
+											</div>
+										</div>
 
-<!--  
+										<br>
+										<br>
+
+
 										<div class="form-group ">
 											<label class="col-md-3 control-label">Contact Person
 												Name</label>
 											<div class="col-md-6">
-												<input class="form-control" id="contact_name1" type="text"
+												<input class="form-control" name="contact_name"  id="contact_name" type="text"
 													value="" />
 											</div>
 										</div>
@@ -429,28 +454,30 @@ function loadName()
 										<br> <br>
 
 										<div class="form-group required">
-					<label class="col-md-3 control-label">Type of Business</label>
-					<div class="col-md-6">
-						<select class="form-control" id="type_business1" required>
-							<option value=''>Select</option>
-							<option value="Propreitorship">Propreitorship</option>
-							<option value="Partnership">Partnership</option>
-							<option value="Limited Liability Partnership">Limited
-								Liability Partnership</option>
-							<option value="One Person Company">One Person Company</option>
-							<option value="Private Limited Company">Private Limited
-								Company</option>
-							<option value="Limited Company">Limited Company</option>
-						</select>
-					</div>
-				</div>
+											<label class="col-md-3 control-label">Type of
+												Business</label>
+											<div class="col-md-6">
+												<select class="form-control" id="type_business" name="type_business" required>
+													<option value=''>Select</option>
+													<option value="Propreitorship">Propreitorship</option>
+													<option value="Partnership">Partnership</option>
+													<option value="Limited Liability Partnership">Limited
+														Liability Partnership</option>
+													<option value="One Person Company">One Person
+														Company</option>
+													<option value="Private Limited Company">Private
+														Limited Company</option>
+													<option value="Limited Company">Limited Company</option>
+												</select>
+											</div>
+										</div>
 
 										<br> <br>
 
 										<div class="form-group ">
 											<label class="col-md-3 control-label">Business Sector</label>
 											<div class="col-md-6">
-												<input class="form-control" id="business_sector1"
+												<input class="form-control" id="business_sector" name="business_sector"   
 													type="text" value="" />
 											</div>
 										</div>
@@ -461,7 +488,7 @@ function loadName()
 										<div class="form-group ">
 											<label class="col-md-3 control-label">Address Line 1</label>
 											<div class="col-md-6">
-												<input class="form-control" id="addr_line11" type="text"
+												<input class="form-control" id="addr_line1" name="addr_line1" type="text"
 													value="" />
 											</div>
 										</div>
@@ -471,7 +498,7 @@ function loadName()
 										<div class="form-group ">
 											<label class="col-md-3 control-label">Address Line 2</label>
 											<div class="col-md-6">
-												<input class="form-control" id="addr_line21" value="" />
+												<input class="form-control" id="addr_line2" name="addr_line2" value="" />
 											</div>
 										</div>
 
@@ -480,7 +507,7 @@ function loadName()
 										<div class="form-group">
 											<label class="col-md-3 control-label">State</label>
 											<div class="col-md-6">
-												<input class="form-control" id="state1" value="" />
+												<input class="form-control" id="state" name="state" value="" />
 											</div>
 										</div>
 										<br> <br>
@@ -488,7 +515,7 @@ function loadName()
 										<div class="form-group ">
 											<label class="col-md-3 control-label">City</label>
 											<div class="col-md-6">
-												<input class="form-control" id="city1" value="" />
+												<input class="form-control" id="city" name="city" value="" />
 											</div>
 										</div>
 
@@ -497,7 +524,7 @@ function loadName()
 										<div class="form-group ">
 											<label class="col-md-3 control-label">Locality</label>
 											<div class="col-md-6">
-												<input class="form-control" id="locality1" value="" />
+												<input class="form-control" id="locality" name="locality" value="" />
 											</div>
 										</div>
 
@@ -506,7 +533,7 @@ function loadName()
 										<div class="form-group ">
 											<label class="col-md-3 control-label">Email</label>
 											<div class="col-md-6">
-												<input class="form-control" id="email1" name="email"
+												<input class="form-control" id="email" name="email" 
 													maxlength="30" value="" title="" type="email" />
 											</div>
 										</div>
@@ -516,7 +543,7 @@ function loadName()
 										<div class="form-group">
 											<label class="col-md-3 control-label">Website</label>
 											<div class="col-md-6">
-												<input class="form-control" id="website1" name="website"
+												<input class="form-control" id="website" name="website"
 													value="" maxlength="30" title="" type="email" />
 											</div>
 										</div>
@@ -527,7 +554,7 @@ function loadName()
 											<label class="col-md-3 control-label">Mobile No</label>
 											<div class="col-md-1">+91</div>
 											<div class="col-md-5">
-												<input class="form-control" id="mobile1" name="mobile"
+												<input class="form-control" id="mobile" name="mobile"
 													value="" />
 											</div>
 										</div>
@@ -539,10 +566,10 @@ function loadName()
 											<label class="col-md-3 control-label">Landline No</label>
 											<div class="col-md-1">+91</div>
 											<div class="col-md-2">
-												<input class="form-control" id="code1" name="code" value="" />&nbsp;
+												<input class="form-control" id="code" name="code" value="" />&nbsp;
 											</div>
 											<div class="col-md-3">
-												<input class="form-control" id="landline1" name="landline"
+												<input class="form-control" id="landline" name="landline"
 													value="" />
 
 											</div>
@@ -552,120 +579,111 @@ function loadName()
 										<br> <br>
 
 										<div class="row">
-            <div class="form-group col-xs-4">
-                <label class="col-md-3 control-label" >PAN No</label>
-                <input id="pan_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
-                      
-                       />
-            </div>
+											<div class="form-group col-xs-4">
+												<label class="col-md-3 control-label">PAN No</label> <input
+													id="pan_no" name="pan_no" 
+													class="form-control input-group-lg reg_name col-md-4"
+													type="text" />
+											</div>
 
-            <div class="form-group  col-xs-4">
-                <label >Upload PAN</label>
-                <input id="upload_pan" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
-                       
-                       placeholder="Upload PAN"/>
-            </div>
-        </div>
+											<div class="form-group  col-xs-4">
+												<label>Upload PAN</label> <input name="upload_pan"
+													class="form-control input-group-lg reg_name " type="file"
+													accept="image/*" placeholder="Upload PAN" />
+											</div>
+										</div>
 
 
-										<br>
-										<br>
+										<br> <br>
 
 										<div class="row">
-            <div class="form-group col-xs-4">
-                <label class="col-md-3 control-label" >TIN No</label>
-                <input id="tin_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
-                      
-                       />
-            </div>
+											<div class="form-group col-xs-4">
+												<label class="col-md-3 control-label">TIN No</label> <input
+													id="tin_no" name="tin_no" 
+													class="form-control input-group-lg reg_name col-md-4"
+													type="text" />
+											</div>
 
-            <div class="form-group  col-xs-4">
-                <label >Upload TIN</label>
-                <input id="upload_tin" class="form-control input-group-lg reg_name " type="file" accept="image/*" 
-                       
-                       placeholder="Upload TIN"/>
-            </div>
-        </div>
+											<div class="form-group  col-xs-4">
+												<label>Upload TIN</label> <input name="upload_tin"
+													class="form-control input-group-lg reg_name " type="file"
+													accept="image/*" placeholder="Upload TIN" />
+											</div>
+										</div>
 
 
-										<br>
-										<br>
-										
+										<br> <br>
+
 										<div class="row">
-            <div class="form-group col-xs-4">
-                <label class="col-md-3 control-label" >STRN No</label>
-                <input id="strn_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
-                      
-                       />
-            </div>
+											<div class="form-group col-xs-4">
+												<label class="col-md-3 control-label">STRN No</label> <input
+													id="strn_no" name="strn_no" 
+													class="form-control input-group-lg reg_name col-md-4"
+													type="text" />
+											</div>
 
-            <div class="form-group  col-xs-4">
-                <label >Upload STRN</label>
-                <input id="upload_strn" class="form-control input-group-lg reg_name " type="file" accept="image/*"   
-                       
-                       placeholder="Upload STRN"/>
-            </div>
-        </div>
+											<div class="form-group  col-xs-4">
+												<label>Upload STRN</label> <input name="upload_strn"
+													class="form-control input-group-lg reg_name " type="file"
+													accept="image/*" placeholder="Upload STRN" />
+											</div>
+										</div>
 
 
-										<br>
-										<br>
-										 <div class="row">
-            <div class="form-group col-xs-4">
-                <label class="col-md-3 control-label" >TAN No</label>
-                <input id="tan_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
-                      
-                       />
-            </div>
+										<br> <br>
+										<div class="row">
+											<div class="form-group col-xs-4">
+												<label class="col-md-3 control-label">TAN No</label> <input
+													id="tan_no" name="tan_no" 
+													class="form-control input-group-lg reg_name col-md-4"
+													type="text" />
+											</div>
 
-            <div class="form-group  col-xs-4">
-                <label >Upload TAN</label>
-                <input id="upload_tan" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
-                       
-                       placeholder="Upload TAN"/>
-            </div>
-        </div>
+											<div class="form-group  col-xs-4">
+												<label>Upload TAN</label> <input name="upload_tan"
+													class="form-control input-group-lg reg_name " type="file"
+													accept="image/*" placeholder="Upload TAN" />
+											</div>
+										</div>
 
-										<br>
-										<br>
-										
-										
-										
-										 <div class="row">
-            <div class="form-group col-xs-4">
-                <label class="col-md-3 control-label" >GST No</label>
-                <input id="gst_no1" class="form-control input-group-lg reg_name col-md-4" type="text" 
-                      
-                       />
-            </div>
+										<br> <br>
 
-            <div class="form-group col-xs-4">
-                <label >Upload GSTN</label>
-                <input id="upload_gstn" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
-                       
-                       placeholder="Upload GSTN"/>
-            </div>
-        </div>
 
-				
-										<br>
-										<br>
-										
-										   <div class="row">
-            <div class="form-group col-xs-4">
-                <label class="col-md-3 control-label" >CIN No</label>
-                <input id="cin_no1" class="form-control input-group-lg reg_name col-md-4" type="text"  />
-            </div>
 
-            <div class="form-group col-xs-4">
-                <label >Upload CIN</label>
-                <input id="upload_cin" class="form-control input-group-lg reg_name " type="file" accept="image/*"  
-                       
-                       placeholder="Upload CIN"/>
-            </div>
-        </div>
+										<div class="row">
+											<div class="form-group col-xs-4">
+												<label class="col-md-3 control-label">GST No</label> <input
+													id="gst_no" name="gst_no" 
+													class="form-control input-group-lg reg_name col-md-4"
+													type="text" />
+											</div>
 
-				
+											<div class="form-group col-xs-4">
+												<label>Upload GSTN</label> <input name="upload_gstn"
+													class="form-control input-group-lg reg_name " type="file"
+													accept="image/*" placeholder="Upload GSTN" />
+											</div>
+										</div>
+
+
+										<br> <br>
+
+										<div class="row">
+											<div class="form-group col-xs-4">
+												<label class="col-md-3 control-label">CIN No</label> <input
+													id="cin_no" name="cin_no" 
+													class="form-control input-group-lg reg_name col-md-4"
+													type="text" />
+											</div>
+
+											<div class="form-group col-xs-4">
+												<label>Upload CIN</label> <input name="upload_cin"
+													class="form-control input-group-lg reg_name " type="file"
+													accept="image/*" placeholder="Upload CIN" />
+											</div>
+										</div>
+
+
 
 
 										<br> <br>
@@ -673,22 +691,22 @@ function loadName()
 										<div class="form-group required">
 											<label class="col-md-3 control-label">Account Number</label>
 											<div class="col-md-6">
-												<input class="form-control" id="acc_num1" value="" />
+												<input class="form-control" id="acc_num" name="acc_num" value="" />
 											</div>
 										</div>
 
 										<br> <br>
 
 										<div class="form-group required">
-					<label class="col-md-3 control-label">Type of Account</label>
-					<div class="col-md-6">
-						<select class="form-control" id="type_account1">
-							<option value="Savings">Savings</option>
-							<option value="Overdraft">Overdraft</option>
-							<option value="Current Account">Current Account</option>
-						</select>
-					</div>
-				</div>
+											<label class="col-md-3 control-label">Type of Account</label>
+											<div class="col-md-6">
+												<select class="form-control" id="type_account" name="type_account">
+													<option value="Savings">Savings</option>
+													<option value="Overdraft">Overdraft</option>
+													<option value="Current Account">Current Account</option>
+												</select>
+											</div>
+										</div>
 
 										<br> <br>
 
@@ -696,38 +714,36 @@ function loadName()
 
 
 										<div class="form-group required">
-					<label class="col-md-3 control-label">Bank</label>
-					<div class="col-md-6">
-						<select class="form-control" id="bank1">
-							<option value="Propreitorship">Propreitorship</option>
-							<option value="Partnership">Partnership</option>
-							<option value="Limited Liability Partnership">Limited
-								Liability Partnership</option>
-							<option value="One Person Company">One Person Company</option>
-							<option value="Private Limited Company">Private Limited
-								Company</option>
-							<option value="Limited Company">Limited Company</option>
-						</select>
-					</div>
-				</div>
+											<label class="col-md-3 control-label">Bank</label>
+											<div class="col-md-6">
+												<select class="form-control" id="bank" name="bank">
+													<option value="HDFC">HDFC</option>
+													<option value="ICICI">ICICI</option>
+													<option value="SBI">SBI</option>
+
+												</select>
+											</div>
+										</div>
 
 										<br> <br>
 
 										<div class="form-group required">
 											<label class="col-md-3 control-label">IFSC Code</label>
 											<div class="col-md-6">
-												<input class="form-control" id="ifsc_code1" value=""
+												<input class="form-control" id="ifsc_code" name="ifsc_code" value=""
 													maxlength="30" />
 											</div>
 										</div>
 
 										<br> <br>
-										-->
-										<input  type="submit"
-											value="Submit" class="btn btn-blue" onclick="submit1()"><!-- can put inside form if ajax jquery used -->
+
+											<input type="submit" value="Submit" class="btn btn-blue" id="formSubmit">
 
 									</form>
-									 
+
+								
+									<!-- can put inside form if ajax jquery used -->
+
 									<div></div>
 								</div>
 
