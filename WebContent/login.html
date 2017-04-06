@@ -214,6 +214,8 @@ $(document).ready(function () {
                         <h1 class="page-header">
                             Login <small>&nbsp; &nbsp;&nbsp;&nbsp;Need an account? <a href="register.html">Sign up now!</a></small>
                         </h1>
+                        
+                        
                         <p id="content">
                         
                         </p>
@@ -280,14 +282,28 @@ function getCookie(key) {
     	
     		success: function(response, text, xhr) {
     			
+    			console.log(xhr.responseText);
     			var data = xhr.responseText.split('*');
     			var name = data[0];
     			var id = data[1];
     			var token = data[2];
-    			
+    			var cname = data[3];
     			setCookie('NID',name,1);
     			setCookie('SID',id,1);
     			setCookie('TTID',token,1);
+    			setCookie('CNID',cname,1);
+    			
+    			var cid = data[3];
+    			
+    			if(cid == "null") //no companies associated yet
+    				window.location.replace("business_details.html");
+    			
+    			else
+    				{
+    				setCookie('CCID',cid,1);
+    				window.location.replace("index.html");
+    			    
+    				}
     			
      
     		},
@@ -301,7 +317,7 @@ function getCookie(key) {
 					 setCookie('errormsg',"Invalid email or password. Please try again!",1);
 				   	 window.location.replace("login.html");
 					}
-				if(errorCode == 512  || errorCode == 513 || errorCode == 514  || errorCode == 515 || errorCode == 500)
+				if(errorCode == 512  || errorCode == 513 || errorCode == 514  || errorCode == 515 || errorCode == 500 || errorCode == 516)
 					{
 						setCookie('errormsg',"Oops! Something went wrong. Please try again!",1);
 				   	 	window.location.replace("login.html");
@@ -341,17 +357,27 @@ function onSignIn(googleUser)
 
 		success: function(response, text, xhr) {
         
-
+			console.log(xhr.responseText);
 			var data = xhr.responseText.split('*');
 			var name = data[0];
 			var id = data[1];
 			var token = data[2];
-			
 			setCookie('NID',name,1);
 			setCookie('SID',id,1);
-			setCookie('TTID',token,1);   
+			setCookie('TTID',token,1);
 			
-			window.location.replace("business_details.html");
+			var cid = data[3];
+			
+			if(cid == "null") //no companies associated yet
+				window.location.replace("business_details.html");
+			
+			else
+				{
+				setCookie('CCID',cid,1);
+				window.location.replace("index.html");
+			    
+				}
+			
 			
  },
  
@@ -395,17 +421,17 @@ function renderButton() {
 	setCookie('newphone',"",-1);
 	setCookie('NID',"",-1);
 	setCookie('SID',"",-1);
-	setCookie('TTID',"",-1);   
-	
+	setCookie('TTID',"",-1);  
+	setCookie('CCID',"",-1);  
 	
 	//errors coming up from confirmation failures
 
 	var error = getCookie('conferror');
 	if(error == 'notfound')
-		$("#errormsg").append("Invalid Email Verification");
+		$("#content").append("Invalid Email Verification");
 	
 	if(error == 'session')
-		$("#errormsg").append("Session timed out. Try Again!");
+		$("#content").append("Session timed out. Try Again!");
 	
 	setCookie('conferror',"",-1);
 	
@@ -413,7 +439,7 @@ function renderButton() {
 
 	//in case of op on google signup fail, reload register and show error msg
 	var errormsg = getCookie('errormsg');
-	$("#errormsg").append(errormsg);
+	$("#content").append(errormsg);
 	setCookie('errormsg',"",-1);
 	
 	

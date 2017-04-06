@@ -4,7 +4,7 @@ import org.mongodb.morphia.annotations.Embedded;
 
 @Embedded
 public class ContactDetails {
-	
+
 	private String addrLine1;
 	private String addrLine2;
 	private String state;
@@ -17,11 +17,11 @@ public class ContactDetails {
 	private String mobileNo;
 	private boolean mobileVStatus;
 	private String landlineNo;
-	
+
 	public ContactDetails(String addrLine1, String addrLine2, String state, String city,
 			String locality, boolean addrVStatus, String businessEmail, boolean mailVStatus, String website,
 			String mobileNo, boolean mobileVStatus, String landlineNo) {
-		
+
 		this.addrLine1 = addrLine1;
 		this.addrLine2 = addrLine2;
 		this.state = state;
@@ -34,6 +34,10 @@ public class ContactDetails {
 		this.mobileNo = mobileNo;
 		this.mobileVStatus = mobileVStatus;
 		this.landlineNo = landlineNo;
+	}
+
+	public ContactDetails() {
+
 	}
 
 	public String getAddrLine1() {
@@ -132,8 +136,8 @@ public class ContactDetails {
 	public void setLandlineNo(String landlineNo) {
 		this.landlineNo = landlineNo;
 	}
-	
-	
-	
+
+
+
 
 }

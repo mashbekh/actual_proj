@@ -212,15 +212,53 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             timeout: 600000,
-            success: function (data) {
+            success: function (response, text, xhr) {
 
-                console.log("SUCCESS : "  + data);
+                var data = xhr.responseText.split("*");
+                setCookie("CCID",data[0],1);
+                setCookie("CNID",data[1],1);
+                window.location.replace("index.html");
 
             },
-            error: function (e) {
-
+            error: function (xhr, statusText) {
+				
+            	var code = xhr.status;
+            	if(code == 404 || code == 514) //invalid user id/user not found
+            		{
+            			setCookie('errormsg',"Oops! Something went wrong.",1);
+            			window.location.replace('login.html');
+            		}
+            	if( code == 513 )
+            		{
+            			setCookie('errormsg',"Oops! Something went wrong. Please login again.",1);
+        				window.location.replace('login.html');
+            		}
+            	
+            	if(code == 512)
+            		{
+            			setCookie('PRMSD',"Oops! Something went wrong. Please try again.",1);
+    					window.location.replace('business_details.html');
+            		}
+            	
+            	if(code == 500)
+            		{
+            		  var response = xhr.responseText;
+            		 
+            		  if(response.indexOf("create") >= 0)
+        			  {
+            			  setCookie('PRMSD',"Oops! Something went wrong. Please try again.",1);
+      					  window.location.replace('business_details.html');
+        			  }
+            		  
+            		  else  //response.indexOf("get") >= 0
+            		  {
+            			  setCookie('errormsg',"Oops! Something went wrong. Please login again.",1);
+        				  window.location.replace('login.html');
+            	       }
+            		  
+            		  
+            		}
             
-                console.log("ERROR : ", e);
             }
         });
 

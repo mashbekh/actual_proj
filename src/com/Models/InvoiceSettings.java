@@ -21,6 +21,11 @@ public class InvoiceSettings {
 		this.invoiceFooter = invoiceFooter;
 		this.invoiceNotes = invoiceNotes;
 	}
+	
+	public InvoiceSettings()
+	{
+		
+	}
 
 
 	public String getInvoiceSuffix() {

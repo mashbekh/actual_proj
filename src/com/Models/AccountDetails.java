@@ -19,6 +19,10 @@ public class AccountDetails {
 		this.ifscCode = ifscCode;
 	}
 
+	public AccountDetails()
+	{
+		
+	}
 
 	public String getAccountNo() {
 		return accountNo;

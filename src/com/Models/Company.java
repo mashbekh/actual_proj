@@ -3,6 +3,7 @@ package com.Models;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.setup.NoObjectIdSerializer;
@@ -20,6 +21,8 @@ public class Company {
 	private EstimateSettings estimateSettings;
 	private InvoiceSettings invoiceSettings;
 	private ColumnSettings colSettings;
+	
+	@Reference
 	private List<User> users;
 	
 	
@@ -42,6 +45,13 @@ public class Company {
 		this.colSettings = colSettings;
 		this.users = users;
 	}
+
+	
+
+	public Company() {
+		
+	}
+
 
 
 	public BusinessDetails getBusinessDetails() {

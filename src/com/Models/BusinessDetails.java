@@ -29,6 +29,14 @@ public class BusinessDetails {
 		this.logo = logo;
 	}
 
+	
+	
+	public BusinessDetails() {
+		
+	}
+
+
+
 	public String getBusinessName() {
 		return businessName;
 	}

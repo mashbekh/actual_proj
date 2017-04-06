@@ -68,6 +68,11 @@ public class TaxDetails {
 		this.cinDocVStatus = cinDocVStatus;
 	}
 
+	
+	public TaxDetails()
+	{
+		
+	}
 
 	public String getPanNo() {
 		return panNo;

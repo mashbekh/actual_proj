@@ -129,134 +129,132 @@ input[readonly] {
 
 <script>
 
-function load()
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
+function load()                      //onload get existing config
 {
 	
-$('.dropdown-toggle').dropdown();
-
-
-var product_list = [
+	$('.dropdown-toggle').dropdown();
 	
-	{
-		"product_id" : 213,
-		"product_name" : "Paper",
-		"product_desc" : "200 gsm",
-		"category":"P",
-		"cp":40,
-		"tax":{
-			"tax_id" : "CMP123TAX1",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 5.5
-			
-		},
-		"type" : 0  //inventory product
+	if(getCookie('FSMSD') != null)
+		{
+			$("#content").html('');
+			$("#content").append(getCookie('FSMSD'));
+		}
+	
+	setCookie('FSMSD',"",-1);
+	
+	var ccid  = getCookie("CCID");
+	var sid  = getCookie("SID");
+	var token  = getCookie("TTID");
+	
+	
+	$.ajax({
+   		type : 'POST',
+   		url  : '/Accounting/rest/company/get?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+    	dataType : "json",
+  
+ 		success: function(response, text, xhr) {
+          
+ 		   var company = xhr.responseText;
+ 		   var cmp = JSON.parse(company);
+ 		   console.log(cmp);
+ 		   
+ 		 $("#po_prefix").val(cmp.poSettings.poprefix);
+ 		 $("#po_suffix").val(cmp.poSettings.posuffix);
+ 		 $("#po_footer").val(cmp.poSettings.pofooter);
+ 		 $("#po_notes").val(cmp.poSettings.ponotes);
+ 		 
+ 		 $("#estimate_prefix").val(cmp.estimateSettings.estimatePrefix);
+		 $("#estimate_suffix").val(cmp.estimateSettings.estimateSuffix);
+		 $("#estimate_footer").val(cmp.estimateSettings.estimateFooter);
+		 $("#estimate_notes").val(cmp.estimateSettings.estimateNotes);
+		 
+		 $("#invoice_prefix").val(cmp.invoiceSettings.invoicePrefix);
+ 		 $("#invoice_suffix").val(cmp.invoiceSettings.invoiceSuffix);
+ 		 $("#invoice_footer").val(cmp.invoiceSettings.invoiceFooter);
+ 		 $("#invoice_notes").val(cmp.invoiceSettings.invoiceNotes);
+ 		 
+ 		 var prodCol = cmp.colSettings.productCol;
+ 		 if(prodCol == "Products")
+ 			$("#products").prop("checked", true);
+ 		 
+ 		if(prodCol == "Services")
+ 			$("#services").prop("checked", true);
  		
-		
-	},
-	
-	
-	{
-		"product_id" : 125,
-		"product_name" : "Toner",
-		"product_desc" : "ink",
-		"category":"P",
-		"cp":5000,
-		"tax":{
-			"tax_id" : "CMP123TAX2",
-			"tax_abbreviation" : "VAT",
-			"tax_rate": 14.5
-			
-		},
-		"type" : 0  //inventory product
+ 		if(prodCol == "Products & Services")
+ 			$("#ps").prop("checked", true);
  		
+ 		if(prodCol == "Items")
+ 			$("#items").prop("checked", true);
+ 		
+ 		if(prodCol == "Other")
+ 			{
+ 				$("#otherprod").prop("checked", true);
+ 				$("#other_item").val(cmp.colSettings.otherproCol);
+ 			}
+ 		
+ 		
+ 		 var qtyCol = cmp.colSettings.unitsCol;
+ 		 if(qtyCol == "Quantity")
+ 			$("#qty").prop("checked", true);
+ 		 
+ 		if(qtyCol == "Hours")
+ 			$("#hours").prop("checked", true);
+ 		
+ 		
+ 		
+ 		if(qtyCol == "Other")
+ 			{
+ 				$("#otherunit").prop("checked", true);
+ 				$("#other_unit").val(cmp.colSettings.otherunitCol);
+ 			}
+ 		
+ 		
+ 		 var priceCol = cmp.colSettings.priceCol;
+ 		 if(priceCol == "Price")
+ 			$("#price").prop("checked", true);
+ 		 
+ 		if(priceCol == "Rate")
+ 			$("#rate").prop("checked", true);
+ 		
+ 		if(priceCol == "Other")
+ 			{
+ 				$("#otherprice").prop("checked", true);
+ 				$("#other_price").val(cmp.colSettings.otherpriceCol);
+ 			}
+ 		 
+    },
+    
+    error: function (xhr, statusText) {
 		
-	}
-	
-	];                                 //list of products from backend
-	
-	
-	//SHOW ONLY INV PRODUCTS
-	
-	for(var i=0;i<product_list.length;i++)
-	 {
-	
+	  
+	    console.log(xhr.status);
+	    var code = xhr.status;
+	    if(code == 404 || code == 513 || code == 512 || code == 500)  //cmp not found, invalid id, get failed
+	  		{
+	    		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+	    		window.location.replace("login.html");
+	  		}
 	 
-	
-     $('#productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
-	 
-	 }
-	
-
-	$('#expiry_date').datetimepicker({
-	    	
-	    	format:'DD/MM/YYYY'
-	    	
-	    	
-	    });
-	    
-	$('#packing_date').datetimepicker({
-		
-		format:'DD/MM/YYYY'
-		
-		
-	});
+	  }
+    
+	  });
 	
 }
 
 
-function add_stock()
-{
-	
-	var pdate = $("#packingdate").val();
-	var qty = $("#qty").val();
-	var cp = $("#cp").val();
-	var discount = $("#discount").val();
-	var batch_no = $("#batch_no").val();
-	var sp = $("#sp").val();
-	var edate = $("#expirydate").val();
-	
-	var productName= $('#product_name').val();
-	var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
-	
-	var vendor= $('#vendor').val();
-	var vendor_id = $('datalist option[value='+ vendor +']').attr('vendorid');
-	
-	var stock ={
-			
-			"packing_date": pdate,
-			"qty":qty,
-			"cp":cp,
-			"discount": discount,
-			"batch_no" :batch_no,
-			"sp":sp,
-			"expiry_date" : edate,
-			"product":{
-				"product_id": prod_id,
-				"product_name" : null,
-				"product_desc" : null,
-				"category":null,
-				"cp":0,
-				"tax": null
-				
-			},
-			"stock_id":null,
-			"id":0 ,//increment per company,
-			"company":{
-				"company_id":"CMP445"
-				
-			},
-			"vendor":
-				{
-				"vendor_id":vendor_id
-				}
-	};
-	
-	
-	console.log(stock);
-	
-	//make ajax call, add stock
-	//refresh page
-	}
+
 
 </script>
 
@@ -387,6 +385,8 @@ function add_stock()
 				<div class="row" id="row">
 					<div class="col-lg-10">
 					
+					<p id="content"></p>
+					
 					<!-- PO Panel -->
 					
 								<div class="panel panel-default">
@@ -416,14 +416,7 @@ function add_stock()
                              
                               <br><br>
                              
-                             
-                             <div class="form-group">
-                                <label class="col-md-3 control-label">PO Starting No</label>
-                                <div class="col-md-6"><input class="form-control" id="po_startno"  maxlength="30"   required="required" title="" type="text" />
-                                </div>
-                             </div>
-                             
-                              <br><br>
+                           
                              
                              
                              <div class="form-group">
@@ -484,13 +477,7 @@ function add_stock()
                               <br><br>
                              
                              
-                             <div class="form-group">
-                                <label class="col-md-3 control-label">Estimate Starting No</label>
-                                <div class="col-md-6"><input class="form-control" id="estimate_startno"  maxlength="30"   required="required" title="" type="text" />
-                                </div>
-                             </div>
-										   
-<br><br>
+                         
 <div class="form-group">
                                 <label class="col-md-3 control-label">Estimate Footer</label>
                                 <div class="col-md-6"><input class="form-control" id="estimate_footer"  maxlength="30"   required="required" title="" type="text" />
@@ -551,13 +538,7 @@ function add_stock()
                               <br><br>
                              
                              
-                             <div class="form-group">
-                                <label class="col-md-3 control-label">Invoice Starting No</label>
-                                <div class="col-md-6"><input class="form-control" id="invoice_startno"  maxlength="30"   required="required" title="" type="text" />
-                                </div>
-                             </div>
-										   
-<br><br>
+                           
 <div class="form-group">
                                 <label class="col-md-3 control-label">Invoice Footer</label>
                                 <div class="col-md-6"><input class="form-control" id="invoice_footer"  maxlength="30"   required="required" title="" type="text" />
@@ -609,7 +590,7 @@ function add_stock()
                                            
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio"  id="products" name="item_radio" value="products" checked>Products
+                                                    <input type="radio"  id="products" name="item_radio" value="Products" checked>Products
                                                 </label>
                                             </div>
                                             <div class="radio" >
@@ -620,17 +601,17 @@ function add_stock()
                                             
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio"  id="ps" name="item_radio" value="ps">Products & Services
+                                                    <input type="radio"  id="ps" name="item_radio" value="Products & Services">Products & Services
                                                 </label>
                                             </div>
                                              <div class="radio">
                                                 <label>
-                                                    <input type="radio"  id="items" name="item_radio" value="items" >Items
+                                                    <input type="radio"  id="items" name="item_radio" value="Items" >Items
                                                 </label>
                                             </div>
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio"  name="item_radio" value="others">Other
+                                                    <input type="radio"  id="otherprod" name="item_radio" value="Other">Other
                                                      <input type="text"  id="other_item" class="form-control">
                                                 </label>
                                             </div>
@@ -655,18 +636,18 @@ function add_stock()
                                            
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio"  id="products"  name= "units_radio"  value="qty" checked>Quantity
+                                                    <input type="radio"  id="qty"  name= "units_radio"  value="Quantity" checked>Quantity
                                                 </label>
                                             </div>
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio" id="services" name= "units_radio" value="hours">Hours
+                                                    <input type="radio" id="hours" name= "units_radio" value="Hours">Hours
                                                 </label>
                                             </div>
                                             
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio"   name= "units_radio"  value="others">Other
+                                                    <input type="radio" id="otherunit"  name= "units_radio"  value="Other">Other
                                                      <input type="text"  id="other_unit" class="form-control">
                                                 </label>
                                             </div>
@@ -689,18 +670,18 @@ function add_stock()
                                            
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio"  id="products" name="price_radio" value="price" checked>Price
+                                                    <input type="radio"  id="price" name="price_radio" value="Price" checked>Price
                                                 </label>
                                             </div>
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio" id="services" name="price_radio" value="rate">Rate
+                                                    <input type="radio" id="rate" name="price_radio" value="Rate">Rate
                                                 </label>
                                             </div>
                                             
                                             <div class="radio" >
                                                 <label>
-                                                    <input type="radio"  name="price_radio" value="others">Other
+                                                    <input type="radio"  id="otherprice" name="price_radio" value="Other">Other
                                                     <input type="text"  id="other_price" class="form-control" >
                                                 </label>
                                             </div>
@@ -746,70 +727,195 @@ function add_stock()
 						var item = $("input[name='item_radio']:checked").val();
 						var price = $("input[name='price_radio']:checked").val();
 						var units = $("input[name='units_radio']:checked").val();
-						if(item=="others")
+						var otheritem = null;
+						var otherunit = null;
+						var otherprice = null;
+						
+						if(item=="Other")
 							{
-							item=$("#other_item").val();
+								otheritem = $("#other_item").val();
 							}
-						if(price=="others")
+						if(price=="Other")
 							{
-							price=$("#other_price").val();
+								otherprice = $("#other_price").val();
 							}
-						if(units=="others")
+						if(units=="Other")
 							{
-							units=$("#other_unit").val();
+								otherunit = $("#other_unit").val();
 							}
 						
 						var po_prefix = $("#po_prefix").val();
 						var po_suffix = $("#po_suffix").val();
-						var po_startno = $("#po_startno").val();
 						var po_footer= $("#po_footer").val();
 						var po_notes = $("#po_notes").val();
 						
 						var estimate_prefix = $("#estimate_prefix").val();
 						var estimate_suffix = $("#estimate_suffix").val();
-						var estimate_startno = $("#estimate_startno").val();
 						var estimate_footer= $("#estimate_footer").val();
 						var estimate_notes = $("#estimate_notes").val();
 						
 						var invoice_prefix = $("#invoice_prefix").val();
 						var invoice_suffix = $("#invoice_suffix").val();
-						var invoice_startno = $("#invoice_startno").val();
 						var invoice_footer= $("#invoice_footer").val();
 						var invoice_notes = $("#invoice_notes").val();
 						
 						
-						var settings = {
+						var poSettings = {
 								
-								"po_prefix": po_prefix,
-								"po_suffix": po_suffix,
-								"po_startno": po_startno,
-								"po_footer": po_footer,
-								"po_notes": po_notes,
-								
-								
-								"estimate_prefix": estimate_prefix,
-								"estimate_suffix": estimate_suffix,
-								"estimate_startno": estimate_startno,
-								"estimate_footer": estimate_footer,
-								"estimate_notes": estimate_notes,
-								
-								
-								
-								"invoice_prefix": invoice_prefix,
-								"invoice_suffix": invoice_suffix,
-								"invoice_startno": invoice_startno,
-								"invoice_footer": invoice_footer,
-								"invoice_notes": invoice_notes,
-								
-								
-								"item":item,
-								"price":price,
-								"unit":units
-								
+								"poprefix": po_prefix,
+								"posuffix": po_suffix,
+								"pofooter": po_footer,
+								"ponotes": po_notes,
+								"poseqNo":0
 								
 						};
 						
-				   console.log(settings);		
+						poSettings = JSON.stringify(poSettings);
+						
+						
+						var estimateSettings = {
+								"estimatePrefix": estimate_prefix,
+								"estimateSuffix": estimate_suffix,
+								"estimateFooter": estimate_footer,
+								"estimateNotes": estimate_notes,
+								"estimateSeqNo" : 0
+						};
+						
+						estimateSettings = JSON.stringify(estimateSettings);
+						
+						var invoiceSettings  = {
+								
+								
+								"invoicePrefix": invoice_prefix,
+								"invoiceSuffix": invoice_suffix,								
+								"invoiceFooter": invoice_footer,
+								"invoiceNotes": invoice_notes,
+								"invoiceSeqNo":0
+						};
+								
+						invoiceSettings = JSON.stringify(invoiceSettings);
+						
+							var colSettings  = {
+									"productCol": item,
+									"otherprodCol": otheritem,
+									"unitsCol": units,
+									"otherunitCol": otherunit,
+									"priceCol": price,
+									"otherpriceCol": otherprice
+								
+								
+							};	
+						
+							colSettings = JSON.stringify(colSettings);
+						
+				  		 
+							var ccid  = getCookie("CCID");
+							var sid  = getCookie("SID");
+							var token  = getCookie("TTID");
+							
+				  		 
+				  		$.ajax({
+				  	   		type : 'POST',
+				  	   		url  : '/Accounting/rest/company/updateFormat?' + $.param({"po" : poSettings, "estimate": estimateSettings,"invoice": invoiceSettings,"column": colSettings,"cid" : ccid ,"id": sid,"token": token}) ,
+				  	    	dataType : "json",
+				  	  
+				  	 		success: function(response, text, xhr) {
+				  	 			
+				  	 		 var company = xhr.responseText;
+				   		   var cmp = JSON.parse(company);
+				   		   console.log(cmp);
+				   		 $("#po_prefix").val(cmp.poSettings.poprefix);
+				   		 $("#po_suffix").val(cmp.poSettings.posuffix);
+				   		 $("#po_footer").val(cmp.poSettings.pofooter);
+				   		 $("#po_notes").val(cmp.poSettings.ponotes);
+				   		 
+				   		 $("#estimate_prefix").val(cmp.estimateSettings.estimatePrefix);
+				  		 $("#estimate_suffix").val(cmp.estimateSettings.estimateSuffix);
+				  		 $("#estimate_footer").val(cmp.estimateSettings.estimateFooter);
+				  		 $("#estimate_notes").val(cmp.estimateSettings.estimateNotes);
+				  		 
+				  		 $("#invoice_prefix").val(cmp.invoiceSettings.invoicePrefix);
+				   		 $("#invoice_suffix").val(cmp.invoiceSettings.invoiceSuffix);
+				   		 $("#invoice_footer").val(cmp.invoiceSettings.invoiceFooter);
+				   		 $("#invoice_notes").val(cmp.invoiceSettings.invoiceNotes);
+				   		 
+				   		 var prodCol = cmp.colSettings.productCol;
+				   		 if(prodCol == "Products")
+				   			$("#products").prop("checked", true);
+				   		 
+				   		if(prodCol == "Services")
+				   			$("#services").prop("checked", true);
+				   		
+				   		if(prodCol == "Products & Services")
+				   			$("#ps").prop("checked", true);
+				   		
+				   		if(prodCol == "Items")
+				   			$("#items").prop("checked", true);
+				   		
+				   		if(prodCol == "Other")
+				   			{
+				   				$("#otherprod").prop("checked", true);
+				   				$("#other_item").val(cmp.colSettings.otherproCol);
+				   			}
+				   		
+				   		
+				   		 var qtyCol = cmp.colSettings.unitsCol;
+				   		 if(qtyCol == "Quantity")
+				   			$("#qty").prop("checked", true);
+				   		 
+				   		if(qtyCol == "Hours")
+				   			$("#hours").prop("checked", true);
+				   		
+				   		
+				   		
+				   		if(qtyCol == "Other")
+				   			{
+				   				$("#otherunit").prop("checked", true);
+				   				$("#other_unit").val(cmp.colSettings.otherunitCol);
+				   			}
+				   		
+				   		
+				   		 var priceCol = cmp.colSettings.priceCol;
+				   		 if(priceCol == "Price")
+				   			$("#price").prop("checked", true);
+				   		 
+				   		if(priceCol == "Rate")
+				   			$("#rate").prop("checked", true);
+				   		
+				   		if(priceCol == "Other")
+				   			{
+				   				$("#otherprice").prop("checked", true);
+				   				$("#other_price").val(cmp.colSettings.otherpriceCol);
+				   			}
+				  	 			
+				  
+				  	 		 
+				  	    },
+				  	    
+				  	    error: function (xhr, statusText) {
+				  			
+				  		  
+				  		    console.log(xhr.status);
+				  		    var code = xhr.status;
+				  		    var response =xhr.responseText.split('*');
+				  		    
+				  		    if(code == 404 || code == 514 || (code == 512 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+				  		  		{
+				  		    		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+				  		    		window.location.replace("login.html");
+				  		  		}
+				  		    
+				  		    if(code == 513 || (code == 512 && response.indexOf("update") >=0 ))   //update failed
+				  		    {
+				  		    	setCookie('FSMSD',"Oops, something went wrong! Try again.",1);
+			  		    		window.location.replace("FormatSettings.html");
+				  		    }
+				  		  
+				  		  }
+				  	    
+				  		  });
+				  		 
+				  		 
 					}
 					
 					

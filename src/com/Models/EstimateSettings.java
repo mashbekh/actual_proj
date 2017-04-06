@@ -22,7 +22,10 @@ public class EstimateSettings {
 		this.estimateNotes = estimateNotes;
 	}
 
-
+	public EstimateSettings()
+	{
+		
+	}
 	public String getEstimateSuffix() {
 		return estimateSuffix;
 	}

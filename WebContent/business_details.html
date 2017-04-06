@@ -363,10 +363,30 @@
 </style>
 
 <script>
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
 function loadName()
 {
-   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-   alert("Hi ! Please fill in company details.")
+   document.getElementById("name").innerHTML =  getCookie("NID");
+   var errmsg = getCookie('PRMSD');
+   
+   if( errmsg != null)
+	   {
+	     $("#errmsg").html('');
+	     $("#errmsg").append(errmsg);	   
+	    }
+   
+   setCookie('PRMSD',"",-1);
    load_dialog();
 
    
@@ -882,7 +902,9 @@ function loadName()
 
 
 				<h1 class="page-header">Company Profile</h1>
-
+				
+				<br>
+				<p id="errmsg"></p>
 
 				<div id="row" style="background-color: white"></div>
 				<!-- /.row -->

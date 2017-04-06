@@ -45,33 +45,51 @@ public class TestMorphia {
 		
 		datastore1 = Morphiacxn.getInstance().getMORPHIADB("test");
 		
-		
-		System.out.println(datastore1);
 		Query<Taxes> userQueryDS = datastore1.createQuery(Taxes.class);
 		userQueryDS.field("rate").equal(30);
 		Taxes a = userQueryDS.get();
+		
 		Addr a1  =  new Addr("pflayout", "bengaluru", "312",a);
 		
-		Morphiatry m = new Morphiatry("heyy",a1, null);
+		Morphiatry m = new Morphiatry("heyy",a1, a);
 		datastore1.save(m);
 		
-		Query<Morphiatry> userQueryDS1 = datastore1.createQuery(Morphiatry.class);
-		userQueryDS1.field("name").equal("heyy");
-		Morphiatry b = userQueryDS1.get();
+		Query<Morphiatry> userQueryDS1 = datastore1.createQuery(Morphiatry.class).disableValidation().field("t.d.name").equal("sumukh");
 		
+		Morphiatry b = userQueryDS1.get();
+		System.out.println(b.toString());
 		return b;
+		
 	}
 	
 	@GET
-	@Path("/ref")
-	public String createtax()
+	@Path("/check")
+	public void p()
+	{
+		
+	}
+	
+	@GET
+	@Path("/tax")
+	public void createtax()
 	{
 		
 		 datastore1 = Morphiacxn.getInstance().getMORPHIADB("test");
-		 System.out.println(datastore1);
-		Taxes t = new Taxes("gst", 30);
+		 Query<Details> q = datastore1.createQuery(Details.class);
+		 q.field("name").equal("sumukh");
+		 Details d = q.get();
+		Taxes t = new Taxes("vat", 40,d);
 		datastore1.save(t);
-		return null;
+		
+	}
+	
+	@GET
+	@Path("/detail")
+	public void createdetails()
+	{
+		datastore1 = Morphiacxn.getInstance().getMORPHIADB("test");
+		Details d = new Details("sumukh",23);
+		datastore1.save(d);
 	}
 
 	//update a kind of tax

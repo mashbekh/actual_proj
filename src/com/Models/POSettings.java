@@ -20,6 +20,11 @@ public class POSettings {
 		POSeqNo = pOSeqNo;
 	}
 
+	public POSettings()
+	{
+		
+	}
+	
 	public String getPOSuffix() {
 		return POSuffix;
 	}

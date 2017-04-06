@@ -1,5 +1,6 @@
 package com.ErrorHandling;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -12,7 +13,7 @@ public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingEx
 	@Override
 	public Response toResponse(JsonMappingException arg0) {
 		return Response.status(400)
-			       .entity("json parse exception")
+			       .entity("json parse exception"  + arg0.getMessage())
 			       .build();
 	}
 	
