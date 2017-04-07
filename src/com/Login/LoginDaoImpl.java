@@ -57,7 +57,7 @@ public class LoginDaoImpl {
 			}
 			
 			JwtToken jwt = new JwtToken();
-			token = jwt.generateToken(user.getId().toString(), user.getUserEmail(), user.getPassword());
+			token = jwt.generateToken(user.getId().toString(), user.getUserEmail(), user.getPassword(), user.getType());
 			
 			if(token  == null)
 				throw new EntityException(512,"could not generate token",null,null);
@@ -84,7 +84,7 @@ public class LoginDaoImpl {
 			}
 			else if(companies.size() == 0)
 			{
-				data = user.getUserName() + "*" + user.getId().toString() + "*" + token +  "*" + "null";
+				data = user.getUserName() + "*" + user.getId().toString() + "*" + token +  "*" + "null" + "*null";
 			}
 		    //handle multiple companies later
 			

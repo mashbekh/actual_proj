@@ -287,12 +287,13 @@ function getCookie(key) {
     			var name = data[0];
     			var id = data[1];
     			var token = data[2];
-    			var cname = data[3];
+    			
+    			var cname = data[4];
     			setCookie('NID',name,1);
     			setCookie('SID',id,1);
     			setCookie('TTID',token,1);
-    			setCookie('CNID',cname,1);
     			
+    		
     			var cid = data[3];
     			
     			if(cid == "null") //no companies associated yet
@@ -301,6 +302,7 @@ function getCookie(key) {
     			else
     				{
     				setCookie('CCID',cid,1);
+    				setCookie('CNID',data[4],1);
     				window.location.replace("index.html");
     			    
     				}

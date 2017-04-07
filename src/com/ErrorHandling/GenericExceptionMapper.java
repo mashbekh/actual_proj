@@ -11,9 +11,9 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable>{
 	@Override
 	public Response toResponse(Throwable e) {
 		
+		System.out.println("hi" + e.getMessage());
 		return Response.status(500)
 				.entity(e.getMessage())
-				.type(MediaType.APPLICATION_JSON)
 				.build();
 		
 	}

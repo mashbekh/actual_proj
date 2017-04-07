@@ -240,10 +240,12 @@ function load()                      //onload get existing config
 		
 	  
 	    console.log(xhr.status);
+	    console.log(xhr.responseText);
 	    var code = xhr.status;
 	    if(code == 404 || code == 513 || code == 512 || code == 500)  //cmp not found, invalid id, get failed
 	  		{
 	    		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+	    		
 	    		window.location.replace("login.html");
 	  		}
 	 
@@ -824,6 +826,11 @@ function load()                      //onload get existing config
 				  	 		 var company = xhr.responseText;
 				   		   var cmp = JSON.parse(company);
 				   		   console.log(cmp);
+				   		   
+				   		   $("#content").html('');
+				   		   $("#content").append('Successfully Updated!!');
+				   		   
+				   		   
 				   		 $("#po_prefix").val(cmp.poSettings.poprefix);
 				   		 $("#po_suffix").val(cmp.poSettings.posuffix);
 				   		 $("#po_footer").val(cmp.poSettings.pofooter);
@@ -899,13 +906,13 @@ function load()                      //onload get existing config
 				  		    var code = xhr.status;
 				  		    var response =xhr.responseText.split('*');
 				  		    
-				  		    if(code == 404 || code == 514 || (code == 512 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+				  		    if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
 				  		  		{
 				  		    		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
 				  		    		window.location.replace("login.html");
 				  		  		}
 				  		    
-				  		    if(code == 513 || (code == 512 && response.indexOf("update") >=0 ))   //update failed
+				  		    if(code == 513 || (code == 500 && response.indexOf("update") >=0 ) || code == 512)   //update failed
 				  		    {
 				  		    	setCookie('FSMSD',"Oops, something went wrong! Try again.",1);
 			  		    		window.location.replace("FormatSettings.html");

@@ -3,8 +3,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Response;
-
 import org.bson.types.ObjectId;
 import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.PublicJsonWebKey;
@@ -19,21 +17,18 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
 import org.jose4j.lang.JoseException;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
 
 import com.ErrorHandling.AppException;
 import com.Models.JWTConfig;
-import com.Models.User;
 import com.mongodb.MongoException;
 import com.setup.Morphiacxn;
 
 public class JwtToken {
 
-	public String generateToken(String userId, String email, String password) throws JoseException{
+	public String generateToken(String userId, String email, String password, int type) throws JoseException{
 
 		
-		Key<JWTConfig> key = null;
 		String jwt = null;
 		RsaJsonWebKey rsaJsonWebKey = null;
 
@@ -50,6 +45,7 @@ public class JwtToken {
 			claims.setIssuedAtToNow(); 
 			claims.setClaim("email",email); 
 			claims.setClaim("password", password); 
+			claims.setClaim("type", type); 
 			claims.setSubject("user"); 
 
 			JsonWebSignature jws = new JsonWebSignature();

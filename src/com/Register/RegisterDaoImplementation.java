@@ -650,7 +650,7 @@ public class RegisterDaoImplementation {
 				
 				//send token
 				JwtToken jwt = new JwtToken();
-				token = jwt.generateToken(user.getId().toString(), user.getUserEmail(), user.getPassword());
+				token = jwt.generateToken(user.getId().toString(), user.getUserEmail(), user.getPassword(), user.getType());
 				
 				if(token  == null)
 					throw new EntityException(512,"could not generate token",null,null);  //verified user, login for token

@@ -1,11 +1,4 @@
 <!DOCTYPE HTML >
-<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-<!-- above set at the top of the file will set     -->
-<!-- the browser's rendering engine into           -->
-<!-- "Quirks Mode". Replacing this declaration     -->
-<!-- with a "Standards Mode" doctype is supported, -->
-<!-- but may lead to some differences in layout.   -->
-
 <html lang="en">
 
 <head>
@@ -18,24 +11,22 @@
 
     <title>Tax System</title>
   
-   
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">      </script>  
 
-  <script src="jarvis/js/bootstrap.min.js"></script>
-
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js" type="text/javascript"></script>
-<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
-    rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
-   
- 
-  
-    
- <link rel="stylesheet"
-	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
-
+<script src="jarvis/js/bootstrap.min.js"></script>
 <!-- Bootstrap Core CSS -->
-<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/jquery-ui.js" type="text/javascript"></script>
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/themes/blitzer/jquery-ui.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
+
+
+
+
+<link rel="stylesheet" href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+
 <!-- Custom CSS -->
 <link href="jarvis/css1/sb-admin.css" rel="stylesheet">
 
@@ -50,32 +41,34 @@
 
 
 
-    <script src="jarvis/js/jquery.dataTables.min.js"></script>
-	<script src="jarvis/js/datatables/TableTools.min.js"></script>
-	<script src="jarvis/js/dataTables.bootstrap.js"></script>
-	<script src="jarvis/js/datatables/jquery.dataTables.columnFilter.js"></script>
-	<script src="jarvis/js/datatables/lodash.min.js"></script>
-	<script src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
-	 <link rel="stylesheet" href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
-	 
-	
-	  
-	   <script src="jarvis/js/bootstrap.js"></script>
-	   
-	   <script src="jarvis/js/select2/select2.min.js"></script>
-    <script src="jarvis/js/selectboxit/jquery.selectBoxIt.min.js"></script>
-    <link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
-	<link rel="stylesheet" href="jarvis/js/select2/select2.css">
-	<link rel="stylesheet" href="jarvis/js/selectboxit/jquery.selectBoxIt.css">
+<script src="jarvis/js/jquery.dataTables.min.js"></script>
+<script src="jarvis/js/datatables/TableTools.min.js"></script>
+<script src="jarvis/js/dataTables.bootstrap.js"></script>
+<script src="jarvis/js/datatables/jquery.dataTables.columnFilter.js"></script>
+<script src="jarvis/js/datatables/lodash.min.js"></script>
+<script
+	src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
 
+
+
+<script src="jarvis/js/bootstrap.js"></script>
+
+<script src="jarvis/js/select2/select2.min.js"></script>
+<script src="jarvis/js/selectboxit/jquery.selectBoxIt.min.js"></script>
+<link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
+<link rel="stylesheet" href="jarvis/js/select2/select2.css">
+<link rel="stylesheet"
+	href="jarvis/js/selectboxit/jquery.selectBoxIt.css">
 
 </head>
 
 <script>
 
- function edit_tax()
+ function edit_tax(taxid)
  {
-	 
+	
 	 $("#edittax_dialog").dialog({
          
          modal: true,
@@ -85,40 +78,102 @@
          height: 500
      });
        
+	 for(var i=0;i<taxlist.length;i++)
+		 {
+		 	if(taxlist[i].id == taxid)
+		 		{
+		 			$("#dtax_type").val(taxlist[i].taxType);
+		 			$("#dtaxrate").val(taxlist[i].taxRate);
+		 			$("#ddesc").val(taxlist[i].taxDescription);
+		 			$("#dabbreviation").val(taxlist[i].taxAbbreviation);
+		 			dgetTaxname();
+		 			$("#dtax_name").val(taxlist[i].taxName);
+		 			break;
+		 		}
+		 }
+	 
+	 	 editId = taxid;
          $('#edittax_dialog').dialog('open');
-         
-         //populate with values from that type of tax
-         return false;
+         return true;
 	 
 	 
  }
  
+ var editId;
  
- function submit_edit_tax() //receive TAX ID, to know which tax to delete
+ function submit_editTax() //receive TAX ID, to know which tax to delete
  {
-	 var tax_name = $('#new_tax_name').val();
-	 var tax_abbr = $('#new_abbreviation').val();
-	 var tax_rate = $('#new_tax_rate').val();
-	 var tax_desc = $('#new_desc').val();
-	 var tax_regno = $('#new_tax_reg_no').val();
-	 //var tax_recovery  = $('#tax_recovery').prop("checked");
+	 var tax_type = $("#dtax_type").val();
+	 var tax_name = $('#dtax_name').val();
+	 var tax_abbr = $('#dabbreviation').val();
+	 var tax_rate = $('#dtaxrate').val();
+	 var tax_desc = $('#ddesc').val();
 
-	 if(tax_name==''||tax_abbr==''||tax_rate==''||tax_desc==''||tax_regno=='')
+	 if(tax_name==''||tax_abbr==''||tax_rate==''||tax_desc==''||tax_type=='')
 	 {
 	 return true;
 	 }
 
-	 //alert("all fine");
-	 //
+	
 	 $('#edittax_dialog').dialog('close');
-	 return false;
-	 // make an ajax call to edit type of tax
+	 
+	 
+	 var tax = {
+				
+				"taxType": tax_type,
+				"taxName" : tax_name,
+				"taxAbbreviation" : tax_abbr,
+				"taxRate" : tax_rate,
+				"taxDescription" : tax_desc,
+				"isDeleted" : false,
+				"id" : editId,
+				"company":null
+					
+			};
+
+			var ccid  = getCookie("CCID");
+			var sid  = getCookie("SID");
+			var token  = getCookie("TTID");
+
+			tax = JSON.stringify(tax);
+			console.log(tax);
+			$.ajax({
+					type : 'POST',
+					url  : '/Accounting/rest/tax/updateTax?' + $.param({"tax" : tax ,"cid" : ccid ,"id": sid,"token": token}) ,
+				    dataType : "json",
+
+					success: function(response, text, xhr) {
+						
+						window.location.replace("tax_settings.html");
+						
+			},
+
+			error: function (xhr, statusText) {
+				
+			  
+			    console.log(xhr.status);
+			    console.log(xhr.responseText);
+			    var code = xhr.status;
+			    
+			    if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+					{
+			  		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+			  		window.location.replace("login.html");
+					}
+			 
+			  }
+			
+
+			  });
+			return false;
+	 
+	 
  }
 
  function cancel()
  {
 	 $('#edittax_dialog').dialog('close');
-	 //return false;
+	
  }
 
 
@@ -175,22 +230,106 @@
 </style>
 
 <script>
+
+
+var taxlist;
 function loadName()
 {
-   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-   $('.dropdown-toggle').dropdown();
+	
+	 $(".dropdown-toggle").dropdown();
+   var ccid  = getCookie("CCID");
+   var sid  = getCookie("SID");
+   var token  = getCookie("TTID");
+
+   
+   $.ajax({
+		type : 'POST',
+		url  : '/Accounting/rest/tax/getTaxlist?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+	    dataType : "json",
+
+		success: function(response, text, xhr) {
+			console.log(JSON.parse(xhr.responseText));
+			taxlist = JSON.parse(xhr.responseText);
+			getTaxlist();
+			
+},
+
+error: function (xhr, statusText) {
+	
+ 
+   console.log(xhr.status);
+   console.log(xhr.responseText);
+   var code = xhr.status;
+   
+   if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+		{
+ 		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+ 		window.location.replace("login.html");
+		}
+
+ }
+
+ });
+   
 
 }
 
 
-
+function getTaxlist()
+{
+	
+	
+	for(var i=0;i<taxlist.length;i++)
+		{
+		  
+		   $("#tab").append('<tr>'+
+				   					 '<td>' + taxlist[i].taxType + '</td>' +
+				   					 '<td>' + taxlist[i].taxName+ '</td>' +
+				   					 '<td>' + taxlist[i].taxAbbreviation + '</td>' +
+				   					 '<td>' + taxlist[i].taxDescription + '</td>' +
+				   					 '<td>' + taxlist[i].taxRate + '</td>' +
+				   					 '<td>' +   
+				   					 
+				   					 '<div class="btn-group">' + 
+				                      '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
+				                                    'Action <span class="caret"></span>' + 
+				                                '</button>' + 
+				                                
+				                                
+				                               '<ul class="dropdown-menu dropdown-default pull-right" role="menu">' +
+				                               
+				                               
+			                                    '<li>' + 
+			                                        '<a  onClick = edit_tax("' +  taxlist[i].id  + '")>' +     
+			                                        
+			                                            '<i class="entypo-pencil"></i>' +
+			                                             '   Edit Tax' + 
+			                                            '</a>' + 
+			                                    '</li>' + 
+				                               
+			                                    '<li class="divider"></li>' + 
+				                               
+			                                    '<li>'  + 
+			                                    '<a  onClick = delete_tax("' +  taxlist[i].id  + '")>' +  
+			                                            '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
+			                                                 'Delete Tax' + 
+			                                            '</a>' +
+			                                    '</li>'  + 
+		                                  
+		                                 
+		                                '</ul>' + 
+		                            '</div>' + 
+				   					 
+				   					 
+				   					'</td>' + 
+				   					 '</tr>');
+		}
+	
+	
+	}
 </script>
 
-<script>
-    $(document).ready(function () {
-        $('.dropdown-toggle').dropdown();
-    });
-</script>
+
 
 <body onload="loadName()">
 
@@ -216,83 +355,14 @@ function loadName()
                    
                     <ul class="dropdown-menu message-dropdown">
                         <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="message-preview">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                                    <div class="media-body">
-                                        <h5 class="media-heading"><strong>John Smith</strong>
-                                        </h5>
-                                        <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                          
+                              
                         <li class="message-footer">
                             <a href="#">Read All New Messages</a>
                         </li>
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
-                    <ul class="dropdown-menu alert-dropdown">
-                        <li>
-                            <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">View All</a>
-                        </li>
-                    </ul>
-                </li>
-                
+             
                 	
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
@@ -363,34 +433,51 @@ function loadName()
 	<div id="edittax_dialog" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
 			<form action="" method="post">
+			
+			    <div class="form-group required">
+                                <label class="col-md-3 control-label">Tax Type</label>
+                               <div class="col-md-6">
+								<select class="form-control" id="dtax_type" required onchange="dgetTaxname()">
+									<option value=''>Select</option>
+									<option value="Sales Tax">Sales Tax</option>
+									<option value="Service Tax">Service Tax</option>
+									<option value="GST">GST</option>
+								
+								</select>
+					           </div>
+                                </div>
+                                
+                                 <br><br>
 
-				<div class="form-group required">
+				 <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Name</label>
-                                <div class="col-md-6"><input class="form-control" id="new_tax_name"  name="new_tax_name" maxlength="30"  placeholder="Tax Name" required="required" title="" type="text" />
+                               
+                                 <div class="col-md-6">
+                                  <input list="dtaxnames" class="form-control"
+																			id="dtax_name" placeholder="Tax Name"
+																			onchange= "dgetTaxabbr()"> 	
+                                	
+                                <datalist id="dtaxnames">
+																			
+																			
+								</datalist>
                                 </div>
                              </div>
                              
-                             <br><br><br>
+                             <br><br>
                              
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Abbreviation</label>
-                                <div class="col-md-6"><input class="form-control" id="new_abbreviation" name="new_abbreviation" maxlength="100" required="required" title="" type="text" />
+                                <div class="col-md-6"><input class="form-control" id="dabbreviation" name="dabbreviation" maxlength="100" required="required" title="" type="text" />
                                 </div>
                              </div>
                              
                              <br><br>
-                             
-                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Tax Registration No</label>
-                                <div class="col-md-6"><input class="form-control" id="new_tax_reg_no"  required="required" name="new_tax_reg_no" maxlength="100"  title="" type="number" />
-                                </div>
-                             </div>
-                             
-                             <br><br>
+                         
                              
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Description</label>
-                                <div class="col-md-6"><input class="form-control" id="new_desc"  name="new_desc" title=""  type="text" required="required" />
+                                <div class="col-md-6"><input class="form-control" id="ddesc"  name="ddesc" title=""  type="text" required="required" />
                                 </div>
                              </div>
                            
@@ -398,33 +485,17 @@ function loadName()
                              
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Rate</label>
-                                <div class="col-md-6"><input class="form-control" id="new_tax_rate" step="any"  name="new_tax_rate" required="required" title="" type="number" />
+                                <div class="col-md-6"><input class="form-control" id="dtaxrate" step="any"  name="dtaxrate" required="required" title="" type="number" />
                                 </div>
                              </div>
-                             
                             
-                             
-                             <br><br>
-                             
-                             
-                             <div class="form-group">
-                                 <label class="col-md-3 control-label">Is this Tax recoverable? </label>
-                                
-                                <div class="col-md-1">
-                               
-                                        <input type="checkbox" value="" class="form-control" id="new_tax_recovery" name="new_tax_recovery">
-                                       
-                                   
-                                </div>
-                             </div>
-                             
-
+                         
 				<br> <br> <input id="submit" type="submit"
-					value="Save" class="btn btn-default" onclick="return submit_edit_tax()">
+					value="Save" class="btn btn-primary" onclick="return submit_editTax()">
 				
 
 					<input id="cancel" type="submit"
-					value="Cancel" class="btn btn-default" onclick="return cancel()" formnovalidate>
+					value="Cancel" class="btn btn-primary" onclick="return cancel()" formnovalidate>
 					
 			</form>
 			
@@ -484,23 +555,40 @@ function loadName()
                             
                             
                             -->
+                           <p id="content"></p> 
+                           
                             <div class="form-group required">
-                                <label class="col-md-3 control-label">Tax Name</label>
+                                <label class="col-md-3 control-label">Tax Type</label>
                                <div class="col-md-6">
-								<select class="form-control" id="tax_name" required>
+								<select class="form-control" id="tax_type" required onchange="getTaxname()">
 									<option value=''>Select</option>
 									<option value="Sales Tax">Sales Tax</option>
 									<option value="Service Tax">Service Tax</option>
-									<option value="CST">CST</option>
-									<option value="CGST">CGST</option>
-									<option value="SGST">SGST</option>
-									<option value="IGST">IGST</option>
+									<option value="GST">GST</option>
+								
 								</select>
 					           </div>
                                 </div>
                             
                              
                              <br><br><br>
+                             
+                               <div class="form-group required">
+                                <label class="col-md-3 control-label">Tax Name</label>
+                               
+                                 <div class="col-md-6">
+                                  <input list="taxnames" class="form-control"
+																			id="tax_name" placeholder="Tax Name"
+																			onchange= "getTaxabbr()"> 	
+                                	
+                                <datalist id="taxnames">
+																			
+																			
+								</datalist>
+                                </div>
+                             </div>
+                             
+                             <br><br>
                              
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Abbreviation</label>
@@ -528,15 +616,13 @@ function loadName()
                              
                              <div class="form-group required">
                                 <label class="col-md-3 control-label">Tax Rate</label>
-                                <div class="col-md-6"><input class="form-control" id="taxrate" step="any"  name="tax_rate" required="required" title="" type="number" />
+                                <div class="col-md-6"><input class="form-control" id="taxrate" step="any"  name="taxrate" required="required" title="" type="number" />
                                 </div>
                              </div>
                              
-                            
+                         
                              
-                             <br><br>
-                             
-                             
+                             <!-- 
                              <div class="form-group">
                                  <label class="col-md-3 control-label">Is this Tax recoverable? </label>
                                 
@@ -547,12 +633,12 @@ function loadName()
                                    
                                 </div>
                              </div>
-                             
+                             -->
                              <br><br>
                               
                          </form>
                           
-                           <input type="submit" class="btn btn-primary" id="submit_add_tax" onclick="return update()">  
+                           <input type="submit" value="Add Tax" class="btn btn-primary" id="submit_add_tax" onclick="return add_tax()">  
                            
                         
                          </div>
@@ -570,79 +656,34 @@ function loadName()
 							<div class="row">
                         <div class="col-lg-12">
                         <br><br>
-							<table class="table table-bordered datatable" id="table_export">
+							<table class="table table-bordered datatable" id="tab">
 												<thead>
 													<tr>
-
-														<th><div>Tax Name</div></th>
-
-														<th><div>Tax Abbreviation</div></th>
-														<th><div>Tax Description</div></th>
-														<th><div>Tax Rate</div></th>
-														<th><div>Tax Recoverable?</div></th>
-														<th><div>Options</div></th>
+														<th>Tax Type</th>
+														<th>Tax Name</th>
+														<th>Tax Abbreviation</th>
+														<th>Tax Description</th>
+														<th>Tax Rate</th>
+														 <th><div>Options</div></th>
 														
 													</tr>
 												</thead>
-												<tbody>
+											<tbody>
+											</tbody>
 													<tr>
-														<td>
-														<!--  ADD CODE TO POPULATE VALUES FROM JSON FOR EACH TD -->
-															
-
-														</td>
-
-														<td>
-															
-
-														</td>
-														<td>
-															
-
-														</td>
-														<td>
-															
-
-														</td>
-														<td>
-															
-
-														</td>
-													
-														
-														
-														<td> <!-- ACTIONS -->
-                                 <div class="btn-group">
-                                 
-                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    Action <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-                                    
-                                    <!-- EDITING LINK -->
-                                    <li>
-                                        <a href="" onClick="return edit_tax()">    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
-                                            <i class="entypo-pencil"></i>
-                                                Edit Tax
-                                            </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    
-                                    <!-- DELETION LINK -->   <!-- DELETE FROM DATABASE -->
-                                    <li>
-                                        <a href="" onClick="return confirm('Are you sure to delete?')">
-                                            <i class="entypo-trash"></i>
-                                                Delete Tax
-                                            </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            </td>
-														
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
 													</tr>
+													  
+                              
 
-												</tbody>
+                        
+														
+											
 											</table>
 											</div>
 											</div>
@@ -675,33 +716,199 @@ function loadName()
 </body>
 
 <script>
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
+function getTaxname()
+{
+	
+	var type = $("#tax_type").val();
+	
+	if(type == "Sales Tax" )
+		{
+			$("#taxnames").html('');
+			$("#tax_name").val('');
+			$("#abbreviation").val('');
+			
+		}
+	
+	if(type == "Service Tax" )
+	{
+		
+		$("#taxnames").html('');
+		$("#tax_name").val('');
+		$("#abbreviation").val('');
+	}
+	
+	if(type == "GST")
+	{
+		$("#taxnames").html('');
+		$("#taxnames").append('<option value="State Goods and Service Tax">State Goods and Service Tax</option>');
+		$("#taxnames").append('<option value="Central Goods and Service Tax">Central Goods and Service Tax</option>');
+		$("#taxnames").append('<option value="Integrated Goods and Service Tax">Integrated Goods and Service Tax</option>');
+		
+	}
+}
+
+function getTaxabbr()
+{
+	
+	var name = $('#tax_name').val();
+
+	if(name == 'State Goods and Service Tax')
+		$("#abbreviation").val("SGST");
+	
+	if(name == 'Central Goods and Service Tax')
+		$("#abbreviation").val("CGST");
+	
+	if(name == 'Integrated Goods and Service Tax')
+		$("#abbreviation").val("IGST");
+	
+	else
+		$("#abbreviation").html('');
+}
+
+
  function confirm_delete() {
+	 
   return confirm('Are you sure to delete?');
   //add ajax code to delete the same
   //receive internal tax_id as parameter
 }
   
+ 
+ function dgetTaxname()
+ {
+ 	
+ 	var type = $("#dtax_type").val();
+ 	
+ 	if(type == "Sales Tax" )
+ 		{
+ 			$("#dtaxnames").html('');
+ 			$("#dtax_name").val('');
+ 			$("#dabbreviation").val('');
+ 			
+ 		}
+ 	
+ 	if(type == "Service Tax" )
+ 	{
+ 		
+ 		$("#dtaxnames").html('');
+ 		$("#dtax_name").val('');
+ 		$("#dabbreviation").val('');
+ 	}
+ 	
+ 	if(type == "GST")
+ 	{
+ 		$("#dtaxnames").html('');
+ 		$("#dtaxnames").append('<option value="State Goods and Service Tax">State Goods and Service Tax</option>');
+ 		$("#dtaxnames").append('<option value="Central Goods and Service Tax">Central Goods and Service Tax</option>');
+ 		$("#dtaxnames").append('<option value="Integrated Goods and Service Tax">Integrated Goods and Service Tax</option>');
+ 		
+ 	}
+ }
+
+ function dgetTaxabbr()
+ {
+ 	
+ 	var name = $('#dtax_name').val();
+
+ 	if(name == 'State Goods and Service Tax')
+ 		$("#dabbreviation").val("SGST");
+ 	
+ 	if(name == 'Central Goods and Service Tax')
+ 		$("#dabbreviation").val("CGST");
+ 	
+ 	if(name == 'Integrated Goods and Service Tax')
+ 		$("#dabbreviation").val("IGST");
+ 	
+ 	else
+ 		$("#dabbreviation").html('');
+ }
+
+
+  function confirm_delete() {
+ 	 
+   return confirm('Are you sure to delete?');
+   //add ajax code to delete the same
+   //receive internal tax_id as parameter
+ }
+   
+ 
 function add_tax()
 {
-
+var tax_type  = $("#tax_type").val();
 var tax_name = $('#tax_name').val();
 var tax_abbr = $('#abbreviation').val();
-var tax_rate = $('#tax_rate').val();
+var tax_rate = $('#taxrate').val();
 var tax_desc = $('#desc').val();
-var tax_regno = $('#tax_reg_no').val();
+
+
 //var tax_recovery  = $('#tax_recovery').prop("checked");
 
-if(tax_name==''||tax_abbr==''||tax_rate==''||tax_desc==''||tax_regno=='')
+if(tax_name==''||tax_abbr==''||tax_rate==''||tax_desc=='')
 {
 return true;
 }
 
-//alert("all fine");
-//add code to add tax into table
-//upon success return false else return message
+var tax = {
+		
+	"taxType": tax_type,
+	"taxName" : tax_name,
+	"taxAbbreviation" : tax_abbr,
+	"taxRate" : tax_rate,
+	"taxDescription" : tax_desc,
+	"isDeleted" : false,
+	"id" : null,
+	"company":null
+		
+};
+
+var ccid  = getCookie("CCID");
+var sid  = getCookie("SID");
+var token  = getCookie("TTID");
+
+tax = JSON.stringify(tax);
+console.log(tax);
+$.ajax({
+		type : 'POST',
+		url  : '/Accounting/rest/tax/add?' + $.param({"tax" : tax ,"cid" : ccid ,"id": sid,"token": token}) ,
+	    dataType : "json",
+
+		success: function(response, text, xhr) {
+			console.log(JSON.parse(xhr.responseText));
+			
+},
+
+error: function (xhr, statusText) {
+	
+  
+    console.log(xhr.status);
+    console.log(xhr.responseText);
+    var code = xhr.status;
+    
+    if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+		{
+  		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+  		window.location.replace("login.html");
+		}
+ 
+  }
+
+  });
 
 
-update();
+
 
 
 }
@@ -711,37 +918,41 @@ update();
 <script>
 
 
-function update()
+function delete_tax(taxid)
 {
-	var tax ={}; 
-	tax.tax_name = $("#tax_name").val();
-	tax.tax_abbreviation = $("#abbreviation").val();
-	tax.tax_desc = $("#desc").val();
-	tax.tax_rate = Number($("#taxrate").val());
-	tax.tax_recoverable = $('#tax_recovery').prop("checked");
-	tax.tax_id= null;
-	tax.company_id = "CMP100";
-	var p = JSON.stringify(tax);
-	//alert(p);
-	console.log(p);
+	 var ccid  = getCookie("CCID");
+	   var sid  = getCookie("SID");
+	   var token  = getCookie("TTID");
 
+	   
+	   $.ajax({
+			type : 'POST',
+			url  : '/Accounting/rest/tax/deleteTax?' + $.param({"tid" : taxid,"cid" : ccid ,"id": sid,"token": token}) ,
+		    dataType : "json",
 
-	$.ajax({
-		   type : 'GET',
-		   url  : '/Accounting/settings/tax/create_tax',
-		    dataType :'json',
-		    data:{'json' : p},
-		    success: function(response) {
-		     alert(response);
-		     console.log( response);
-		     return true;  //stay in same page
-		    },
-			error: function (a,b,c)
-			{ 
-				alert(a.status+b+c);
-				return true;
-			}  
-			  });
+			success: function(response, text, xhr) {
+				console.log(JSON.parse(xhr.responseText));
+				window.location.replace("tax_settings.html");
+				
+	},
+
+	error: function (xhr, statusText) {
+		
+	 
+	   console.log(xhr.status);
+	   console.log(xhr.responseText);
+	   var code = xhr.status;
+	   
+	   if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+			{
+	 		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+	 		window.location.replace("login.html");
+			}
+
+	 }
+
+	 });
+	   
 	
 	}
 
@@ -773,8 +984,7 @@ if two tables needed in same page for export this code is needed ---->
 	return false;
 });
 
-
-		var datatable = $("#table_export").dataTable({
+		var datatable = $("#tab").dataTable({
 			"sPaginationType": "bootstrap",
 			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
 			
@@ -822,6 +1032,8 @@ if two tables needed in same page for export this code is needed ---->
 			minimumResultsForSearch: -1
 		});
 	});
+	
+
 		
 </script>
 

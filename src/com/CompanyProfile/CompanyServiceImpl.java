@@ -93,8 +93,9 @@ public class CompanyServiceImpl {
 	public Response updateFormatSettings(@QueryParam("po") String poSettings, @QueryParam("estimate") String estimateSettings, @QueryParam("invoice") String invoiceSettings, @QueryParam("column") String colSettings ,@QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token) throws JsonMappingException , JsonParseException, IOException, AppException, Exception, Throwable, EntityException, AppException
 	{
 		
-		System.out.println("hi");
+	
 		ObjectMapper objectMapper = new ObjectMapper();
+		
 		POSettings po = objectMapper.readValue(poSettings,POSettings.class);
 		
 		EstimateSettings es = objectMapper.readValue(estimateSettings, EstimateSettings.class);

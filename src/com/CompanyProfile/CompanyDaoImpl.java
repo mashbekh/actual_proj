@@ -104,7 +104,7 @@ public class CompanyDaoImpl {
 		catch(Throwable e)
 		{
 			if(oid == null)
-				throw new EntityException(500,"invalid id",e.getMessage(),null);
+				throw new EntityException(500,"invalid id","invalid" + e.getMessage(),null);
 
 			if(oid!=null && cmp == null)
 				throw new EntityException(500,"get failed",e.getMessage(),null); //string is an object
@@ -144,6 +144,7 @@ public class CompanyDaoImpl {
 		}
 		catch(MongoException e)
 		{
+			
 			if(oid == null)
 				throw new EntityException(514,"invalid id",null,null);
 
@@ -159,6 +160,7 @@ public class CompanyDaoImpl {
 		}
 		catch(Throwable e)
 		{
+			
 			if(oid == null)
 				throw new EntityException(500,"invalid id", "invalid" + e.getMessage(),null);
 
