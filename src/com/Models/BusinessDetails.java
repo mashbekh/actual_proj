@@ -13,7 +13,7 @@ public class BusinessDetails {
 	private boolean bsectorVStatus;
 	private String businessType;
 	private boolean btypeVStatus;
-	private byte[] logo;
+	private byte[] logo; //string path
 	
 	public BusinessDetails(String businessName, boolean bnameVStatus, String contactPerson, boolean contactVStatus,
 			String businessSector, boolean bsectorVStatus, String businessType, boolean btypeVStatus, byte[] logo) {

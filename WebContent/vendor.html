@@ -368,7 +368,7 @@
 
 
 
-				<h1 class="page-header"> VENDORS </h1>
+				<h1 class="page-header">PRODUCTS</h1>
 
 
 				<!------CONTROL TABS START------>
@@ -1028,7 +1028,102 @@
 						});
 					});
 
+	//tax rate not compulsion
 
+	function add_product() {
+
+		var name = $("#product_name").val();
+		var tax = $("#tax_rate").val();
+		var tid = $('datalist option[value="' + tax + '"]').attr('taxid');
+		var desc = $("#product_desc").val();
+
+		var category = $("#category").val();
+		var expen = $("#expenditure").val(); //let value be ID
+		var income = $("#income").val();
+
+		var cp = $("#cp").val();
+		var sp = $("#sp").val();
+
+		if (cp == '')
+			cp = 0;
+		if (sp == '')
+			sp = 0;
+
+		if (tax == '')
+			tid = null;
+
+		if (name == '') {
+			alert("Fill in all required fields");
+			return true;
+
+		}
+
+		var product = {
+
+			"productName" : name,
+			"productDescription" : desc,
+			"productTax" : //backend - search for tax obect from table with this id
+			{
+				"taxType" : null,
+				"taxName" : null,
+				"taxAbbreviation" : null,
+				"taxDescription" : null,
+				"taxRate" : null,
+				"company" : null,//company object
+				"id" : tid,
+				"isDeleted" : false
+			},
+			"productCategory" : category,
+			"costPrice" : cp,
+			"productHOE" : expen,
+			"sellingPrice" : sp,
+			"productHOI" : income,
+			"company" : null,
+			"id" : null
+
+		};
+
+		var ccid = getCookie("CCID");
+		var sid = getCookie("SID");
+		var token = getCookie("TTID");
+
+		$.ajax({
+			type : 'POST',
+			url : '/Accounting/rest/products/add?' + $.param({
+				"product" : JSON.stringify(product),
+				"cid" : ccid,
+				"id" : sid,
+				"token" : token
+			}),
+			dataType : "json",
+
+			success : function(response, text, xhr) {
+
+				console.log(JSON.parse(xhr.responseText));
+
+			},
+
+			error : function(xhr, statusText) {
+
+				console.log(xhr.status);
+				console.log(xhr.responseText);
+				var code = xhr.status;
+
+			}
+
+		});
+
+		$("#product_name").val('');
+		$("#tax_rate").val('');
+		$("#product_desc").val('');
+		$("#category").val('');
+		$("#expenditure").val(''); //let value be ID
+		$("#income").val('');
+		$("#cp").val('');
+		$("#sp").val('');
+
+		return true;
+	}
 
 	function setCookie(key, value, days) {
 		var expires = new Date();
@@ -1042,7 +1137,38 @@
 		return keyValue ? keyValue[2] : null;
 	}
 
-	
+	function edit_product(productid) {
+
+		$("#editproduct_dialog").dialog({
+
+			modal : true,
+			autoOpen : false,
+			title : "Edit Tax",
+			width : 700,
+			height : 700
+		});
+
+		for (var i = 0; i < productList.length; i++) {
+			if (productList[i].id == productid) {
+				$("#dproduct_name").val(productList[i].productName);
+				$("#dtax_rate").val(
+						productList[i].productTax.taxAbbreviation + " "
+								+ productList[i].productTax.taxRate);
+				$("#dproduct_desc").val(productList[i].productDescription);
+				$("#dcategory").val(productList[i].productCategory);
+				$("#dexpenditure").val(productList[i].productHOE);
+				$("#dincome").val(productList[i].productHOI);
+				$("#dcp").val(productList[i].costPrice);
+				$("#dsp").val(productList[i].sellingPrice);
+				break;
+			}
+		}
+
+		edit_counter = productid;
+		$('#editproduct_dialog').dialog('open');
+		return true;
+
+	}
 </script>
 
 

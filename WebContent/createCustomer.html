@@ -19,27 +19,24 @@
 <title>Tax System</title>
 
 
-
- <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
-    <link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
-
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script
-	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+	
+</script>
+
+<script src="jarvis/js/bootstrap.min.js"></script>
+<!-- Bootstrap Core CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/jquery-ui.js"
 	type="text/javascript"></script>
-
-
-
-<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
-
 <link
-	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
+	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/themes/blitzer/jquery-ui.css"
 	rel="stylesheet" type="text/css" />
-
-<script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
-			<script src="jarvis/js/moment_locale.js"></script>
-			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 
 
 
@@ -47,8 +44,8 @@
 <link rel="stylesheet"
 	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
 
-
-
+<!-- Bootstrap Core CSS -->
+<link href="jarvis/css1/bootstrap.min.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link href="jarvis/css1/sb-admin.css" rel="stylesheet">
 
@@ -58,36 +55,42 @@
 <link href="jarvis/css/font-icons/font-awesome/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
 
-
-
 <link rel="stylesheet"
 	href="jarvis/css/font-icons/entypo/css/entypo.css">
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
+
+<script src="jarvis/js/jquery.dataTables.min.js"></script>
+<script src="jarvis/js/datatables/TableTools.min.js"></script>
+<script src="jarvis/js/dataTables.bootstrap.js"></script>
+<script src="jarvis/js/datatables/jquery.dataTables.columnFilter.js"></script>
+<script src="jarvis/js/datatables/lodash.min.js"></script>
+<script
+	src="jarvis/js/datatables/responsive/js/datatables.responsive.js"></script>
+<link rel="stylesheet"
+	href="jarvis/js/datatables/responsive/css/datatables.responsive.css">
+
+
+
+<script src="jarvis/js/bootstrap.js"></script>
+
+<script src="jarvis/js/select2/select2.min.js"></script>
+<script src="jarvis/js/selectboxit/jquery.selectBoxIt.min.js"></script>
+<link rel="stylesheet" href="jarvis/js/select2/select2-bootstrap.css">
+<link rel="stylesheet" href="jarvis/js/select2/select2.css">
+<link rel="stylesheet"
+	href="jarvis/js/selectboxit/jquery.selectBoxIt.css">
 
 
 </head>
 
 
 <style>
-.panel {
-	width: 75%;
-}
-
-#inner_panel {
-	width: 100%;
-}
-
-.no-border {
-	border: 0;
-	box-shadow: none;
-	/* You may want to include this as bootstrap applies these styles too */
+.dataTables_filter {
+	width: 50%;
+	float: right;
+	top-margin: 100px;
+	text-align: right;
 }
 
 .form-group.required .control-label:after {
@@ -100,10 +103,6 @@
 	margin-top: 15px;
 }
 
-input[readonly] {
-	background-color: red;
-}
-
 #xyz {
 	height: 65px;
 	text-align: center;
@@ -114,30 +113,138 @@ input[readonly] {
 	background-color: #152F37;
 }
 
-#date, #customer_detail, #grandtotal, #taxtotal, #subtotal {
-	background-color: white;
-}
-
 .ui-dialog-titlebar {
 	border: 0;
 	padding: .5em 1em;
-	background: black;
+	background: #009999;
 	overflow: auto;
 	zoom: 1;
+}
+
+.ui-dialog-titlebar-close {
+	display: none;
 }
 </style>
 
 <script>
+	var customerList;
+	var totaldue = 0.00;
 
-function load()
-{
-	
-$('.dropdown-toggle').dropdown();
-}
+	function loadName() {
 
+		$('.dropdown-toggle').dropdown();
+
+		var ccid = getCookie("CCID");
+		var sid = getCookie("SID");
+		var token = getCookie("TTID");
+
+		$
+				.ajax({
+					type : 'POST',
+					url : '/Accounting/rest/customer/getList?' + $.param({
+						"cid" : ccid,
+						"id" : sid,
+						"token" : token
+					}),
+					dataType : "json",
+
+					success : function(response, text, xhr) {
+
+						customerList = JSON.parse(xhr.responseText);
+						console.log(customerList);
+
+						for (var i = 0; i < customerList.length; i++) {
+							totaldue += customerList[i].customerDueAmt;
+
+							$("#table_export")
+									.append(
+											'<tr>' +
+
+											'<td>'
+													+ customerList[i].businessDetails.businessName
+													+ '</td>'
+													+ '<td>'
+													+ customerList[i].businessDetails.contactPerson
+													+ '</td>'
+													+ '<td>'
+													+ (customerList[i].customerDueAmt).toFixed(2)
+													+ '</td>'
+													+
+
+													'<td>'
+													+
+
+													'<div class="btn-group">'
+													+ '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">'
+													+ 'Action <span class="caret"></span>'
+													+ '</button>'
+													+
+
+													'<ul class="dropdown-menu dropdown-default pull-right" role="menu">'
+													+
+
+													'<li>'
+													+ '<a  onClick = edit_customer("'
+													+ customerList[i].id
+													+ '")>'
+													+
+
+													'<i class="entypo-pencil"></i>'
+													+ '   Edit Customer'
+													+ '</a>'
+													+ '</li>'
+													+
+
+													'<li class="divider"></li>'
+													+
+
+													'<li>'
+													+ '<a  onClick = delete_customer("'
+													+ customerList[i].id
+													+ '")>'
+													+ '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;'
+													+ 'Delete Customer' + '</a>'
+													+ '</li>' +
+
+													'</ul>' + '</div>' +
+
+													'</td>' + '</tr>');
+						}
+
+						$("#due").append(
+								" Total Due Amount : Rs. " + totaldue.toFixed(2));
+
+					},
+
+					error : function(xhr, statusText) {
+
+						console.log(xhr.status);
+						console.log(xhr.responseText);
+						var code = xhr.status;
+
+					}
+				});
+
+	}
+
+	function delete_customer(customerId) {
+		alert(customerId);
+
+	}
+
+	function edit_customer(customerId) {
+		alert(customerId);
+
+	}
+
+	$(document).ready(function() {
+		$('.dropdown-toggle').dropdown();
+	});
 </script>
 
-<body onload="load()">
+<body onload="loadName()">
+
+
 
 	<div id="wrapper">
 
@@ -153,19 +260,18 @@ $('.dropdown-toggle').dropdown();
 						class="icon-bar"></span>
 				</button>
 
-				<a class="navbar-brand" href="index.html" id="xyz" style="color:white;font-size:30px">SIMPLIFY TAX</a>
-				<a class="navbar-brand" id="xyz" class="company_name"
-					style="font-size: 30px"></a>
-
-
+				<a class="navbar-brand" href="index.html" id="xyz">SIMPLIFY TAX</a>
 			</div>
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav" id="pqr">
-				
-				<li><a href="#" style="color:white"><i class="entypo-plus"></i></a></li>
-				
+				<li class="dropdown">
+
+					<ul class="dropdown-menu message-dropdown">
+
+					</ul>
+				</li>
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-bell"></i> <b
+					data-toggle="dropdown"><i class="fa fa-bell"></i> <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu alert-dropdown">
 						<li><a href="#">Alert Name <span
@@ -183,29 +289,31 @@ $('.dropdown-toggle').dropdown();
 						<li class="divider"></li>
 						<li><a href="#">View All</a></li>
 					</ul></li>
-					
+
+
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
-					   
+
 						<li><a href="business_details.html">Company Profile</a></li>
-						 <li class="divider"></li>
-						<li><a href="tax_settings.html" > Tax Settings</a></li>
 						<li class="divider"></li>
-						<li><a href="financial_settings.html">Financial Settings </a></li>
+						<li><a href="tax_settings.html"> Tax Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="financial_settings.html">Financial Settings
+						</a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
 						<li class="divider"></li>
 						<li><a href="FormatSettings.html">Format Settings </a></li>
-					</ul>
-				</li>
+					</ul></li>
 
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
-						<b class="caret"></b></a>
+					data-toggle="dropdown" style="color: white">&nbsp;<i
+						class="fa fa-user" id="name"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						
+
 						<li class="divider"></li>
 						<li><a href="logout.html"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
@@ -216,38 +324,42 @@ $('.dropdown-toggle').dropdown();
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="abc">
 
-					<li ><a href="index.html"><i
+					<li class="active"><a href="index.html"><i
 							class="fa fa-fw fa-dashboard"></i> Home</a></li>
-							
-					<li ><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
-							Purchase Orders</a></li>
-							
-					<li><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
-							Bills</a></li>
-							
+
+					<li><a href="PurchaseOrders.html"><i
+							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
+
+					<li><a href="createBill.html"><i
+							class="fa fa-fw fa-dashboard"></i> Bills</a></li>
+
 					<li><a href="createEstimate.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
-					
+
 					<li><a href="createInvoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
-					
+
 					<li><a href="Receipts.html"><i
 							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
-							
+
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
-							
-					<li class="active"><a href="createCustomer.html"><i
+
+					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
-							
+
 					<li><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
-					
-					
+
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
 		</nav>
+
+
+
+
+
 
 
 		<div id="page-wrapper">
@@ -256,542 +368,692 @@ $('.dropdown-toggle').dropdown();
 
 
 
-				<h1 class="page-header">Create Customer</h1>
-				<!-- Row beginning -->
-				<div class="row" id="row">
-					<div class="col-lg-12">
+				<h1 class="page-header"> CUSTOMERS </h1>
 
-						<!------CONTROL TABS START------>
-						<ul class="nav nav-tabs bordered">
-							<li class="active"><a href="#business" data-toggle="tab"><i
-									class="entypo-menu"></i> Business Details </a></li>
-							<li><a href="#contact" data-toggle="tab"><i
-									class="entypo-menu"></i> Contact Details </a></li>
-							<li><a href="#tax" data-toggle="tab"><i
-									class="entypo-menu"></i>  Tax Details </a></li>
-							<li><a href="#account" data-toggle="tab"><i
-									class="entypo-menu"></i> Account Details </a></li>
 
-						</ul>
-						<!------CONTROL TABS END------>
-						
-						
-						<!--  Control tab features -->
+				<!------CONTROL TABS START------>
+				<ul class="nav nav-tabs bordered">
 
-						<div class="tab-content">
-							<!----    BUSINESS-->
-							<div class="tab-pane box active" id="business">
-								<br>
-								<div class="panel panel-default">
+					<li class="active"><a href="#view_products" data-toggle="tab"><i
+							class="entypo-menu"></i> View Customers</a></li>
+
+					<li><a href="#add_product" data-toggle="tab"><i
+							class="entypo-menu"></i> Add Customer</a></li>
+
+
+
+
+				</ul>
+				<!------CONTROL TABS END------>
+
+
+				<div class="tab-content">
+
+
+
+					<div class="tab-pane box" id="add_product">
+
+						<br>
+
+
+
+						<div id="form-panel">
+							<div class="row">
+								<div class="col-lg-8">
+
+									<br>
+
+									<form id="customerProfile" enctype="multipart/form-data"
+										method="POST">
+										<br>
+
+										<div class="panel panel-default">
+										
+										<br> <br>
+										
+
+											<div class="form-group required">
+												<label class="col-md-3 control-label">Customer 
+													Business Name</label>
+												<div class="col-md-6">
+													<input class="form-control" id="business_name"
+														name="business_name" type="text" required value="" />
+												</div>
+											</div>
+
+											<br> <br>
+
+											<div class="form-group required">
+												<label class="col-md-3 control-label">Contact Person
+													Name</label>
+												<div class="col-md-6">
+													<input class="form-control" id="contact_name"
+														name="contact_name" type="text" required value="" />
+												</div>
+											</div>
+
+											<br> <br>
+											
+										</div>
+										
 								
-								
-								
-			<form action="" method="post">
+							<div class="panel panel-default">
+										
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Business Name</label>
-					<div class="col-md-6">
-						<input class="form-control" id="business_name" type="text"
-							required value="" />
-					</div>
-				</div>
+										<h3>Contact Details</h3>
+										<br> <br>
 
-				<br> <br><br>
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Address Line 1</label>
+											<div class="col-md-6">
+												<input class="form-control" id="addr_line1"
+													name="addr_line1" type="text" required="required" />
+											</div>
+										</div>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Contact Person Name</label>
-					<div class="col-md-6">
-						<input class="form-control" id="contact_name" type="text" required
-							value="" />
-					</div>
-				</div>
+										<br> <br> <br>
 
-				<br> <br>
+										<div class="form-group ">
+											<label class="col-md-3 control-label">Address Line 2</label>
+											<div class="col-md-6">
+												<input class="form-control" id="addr_line2"
+													name="addr_line2" type="text" />
+											</div>
+										</div>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Type of Business</label>
-					<div class="col-md-6">
-						<select class="form-control" id="type_business" required>
-							<option value=''>Select</option>
-							<option value="Propreitorship">Propreitorship</option>
-							<option value="Partnership">Partnership</option>
-							<option value="Limited Liability Partnership">Limited
-								Liability Partnership</option>
-							<option value="One Person Company">One Person Company</option>
-							<option value="Private Limited Company">Private Limited
-								Company</option>
-							<option value="Limited Company">Limited Company</option>
-						</select>
-					</div>
-				</div>
+										<br> <br>
 
-				<br> <br>
+										<div class="form-group required">
+											<label class="col-md-3 control-label">State</label>
+											<div class="col-md-6">
+												<select class="form-control" id="state" name="state"
+													required="required">
+													<option value="New Delhi">New Delhi</option>
+													<option value="Andaman/Nicobar Islands">Andaman/Nicobar
+														Islands</option>
+													<option value="Andhra Pradesh">Andhra Pradesh</option>
+													<option value="Arunachal Pradesh">Arunachal
+														Pradesh</option>
+													<option value="Assam">Assam</option>
+													<option value="Bihar">Bihar</option>
+													<option value="Chandigarh">Chandigarh</option>
+													<option value="Dadra/Nagar Haveli">Dadra/Nagar
+														Haveli</option>
+													<option value="Daman/Diu">Daman/Diu</option>
+													<option value="Goa">Bihar</option>
+													<option value="Gujarat">Gujarat</option>
+													<option value="Haryana">Haryana</option>
+													<option value="Himachal Pradesh">Himachal Pradesh</option>
+													<option value="Jammu/Kashmir">Jammu/Kashmir</option>
+													<option value="Jharkhand">Jharkhand</option>
+													<option value="Karnataka">Karnataka</option>
+													<option value="Kerala">Kerala</option>
+													<option value="Lakshadweep">Lakshadweep</option>
+													<option value="Madhya Pradesh">Madhya Pradesh</option>
+													<option value="Maharashtra">Maharashtra</option>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Business Sector</label>
-					<div class="col-md-6">
-						<input class="form-control" id="business_sector" type="text"
-							required value="" />
-					</div>
-				</div>
-				
-				<br><br>
-				<div class="form-group required">
-				<div class="col-md-6">
-				<input id="business" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_business()"> 
-					</div>
-					</div>
-				</form>
-				
-								<br><br><br>
-								
-								
+													<option value="Manipur">Manipur</option>
+													<option value="Meghalaya">Meghalaya</option>
+													<option value="Mizoram">Mizoram</option>
+													<option value="Nagaland">Nagaland</option>
+													<option value="Orissa">Orissa</option>
+													<option value="Pondicherry">Pondicherry</option>
+													<option value="Punjab">Punjab</option>
+													<option value="Rajasthan">Rajasthan</option>
+													<option value="Sikkim">Sikkim</option>
+													<option value="Tamil Nadu">Tamil Nadu</option>
+													<option value="Telangana">Telangana</option>
+													<option value="Tripura">Tripura</option>
+													<option value="Uttaranchal">Uttaranchal</option>
+													<option value="Uttar Pradesh">Uttar Pradesh</option>
+													<option value="West Bengal">West Bengal</option>
+												</select>
+											</div>
+										</div>
+
+										<br> <br>
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">City</label>
+											<div class="col-md-6">
+												<input class="form-control" id="city" name="city"
+													type="text" required="required" />
+
+											</div>
+										</div>
+
+										<br> <br>
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Locality</label>
+											<div class="col-md-6">
+												<input class="form-control" id="locality" name="locality"
+													type="text" placeholder="Prominent Landmark"
+													required="required" />
+											</div>
+										</div>
+
+										<br> <br>
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Email</label>
+											<div class="col-md-6">
+												<input class="form-control" id="email" name="email"
+													maxlength="30" required="required" title="" type="email" />
+											</div>
+										</div>
+
+										<br> <br>
+
+										<div class="form-group">
+											<label class="col-md-3 control-label">Website</label>
+											<div class="col-md-6">
+												<input class="form-control" id="website" name="website"
+													maxlength="30" title="" type="email" />
+											</div>
+										</div>
+
+										<br> <br>
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Mobile No</label>
+											<div class="col-md-1">+91</div>
+											<div class="col-md-5">
+												<input class="form-control" id="mobile" name="mobile"
+													required="required" title="" type="number"
+													oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+													type="number" maxlength="10" />
+											</div>
+										</div>
+
+
+
+										<br> <br>
+										<div class="form-group ">
+											<label class="col-md-3 control-label">Landline No</label>
+											<div class="col-md-1">+91</div>
+											<div class="col-md-2">
+												<input class="form-control" id="code" name="code"
+													placeholder="STD Code" title="" type="number"
+													oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+													maxlength="3" />&nbsp;
+											</div>
+											<div class="col-md-3">
+												<input class="form-control" id="landline" name="landline"
+													placeholder="Landline number" title="" type="number"
+													oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+													maxlength="8" />
+
+											</div>
+										</div>
+										
+										<br> <br>
+										
+
 								</div>
-								</div> <!-- end of business -->
 								
-								
-								
-								
-								
-							<div class="tab-pane box " id="contact">
-								<br>
-								<div class="panel panel-default">
-								
-								
-			<form action="" method="post">
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Address Line 1</label>
-					<div class="col-md-6">
-						<input class="form-control" id="addr_line1" type="text"
-							required="required" />
-					</div>
-				</div>
-
-				<br> <br><br>
-
-				<div class="form-group ">
-					<label class="col-md-3 control-label">Address Line 2</label>
-					<div class="col-md-6">
-						<input class="form-control" id="addr_line2" type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">State</label>
-					<div class="col-md-6">
-						<select class="form-control" id="state" required="required">
-									<option value="New Delhi">New Delhi</option>
-							<option value="Andaman/Nicobar Islands">Andaman/Nicobar Islands</option>
-							<option value="Andhra Pradesh">Andhra Pradesh</option>
-							<option value="Arunachal Pradesh">Arunachal Pradesh</option>
-							<option value="Assam">Assam</option>
-							<option value="Bihar">Bihar</option>
-							<option value="Chandigarh">Chandigarh</option>
-							<option value="Dadra/Nagar Haveli">Dadra/Nagar Haveli</option>
-							<option value="Daman/Diu">Daman/Diu</option>
-							<option value="Goa">Bihar</option>
-							<option value="Gujarat">Gujarat</option>
-							<option value="Haryana">Haryana</option>
-							<option value="Himachal Pradesh">Himachal Pradesh</option>
-							<option value="Jammu/Kashmir">Jammu/Kashmir</option>
-							<option value="Jharkhand">Jharkhand</option>
-							<option value="Karnataka">Karnataka</option>
-							<option value="Kerala">Kerala</option>
-							<option value="Lakshadweep">Lakshadweep</option>
-							<option value="Madhya Pradesh">Madhya Pradesh</option>
-							<option value="Maharashtra">Maharashtra</option>
 							
-							<option value="Manipur">Manipur</option>
-							<option value="Meghalaya">Meghalaya</option>
-							<option value="Mizoram">Mizoram</option>
-							<option value="Nagaland">Nagaland</option>
-							<option value="Orissa">Orissa</option>
-							<option value="Pondicherry">Pondicherry</option>
-							<option value="Punjab">Punjab</option>
-							<option value="Rajasthan">Rajasthan</option>
-							<option value="Sikkim">Sikkim</option>
-							<option value="Tamil Nadu">Tamil Nadu</option>
-							<option value="Telangana">Telangana</option>
-							<option value="Tripura">Tripura</option>
-							<option value="Uttaranchal">Uttaranchal</option>
-							<option value="Uttar Pradesh">Uttar Pradesh</option>
-							<option value="West Bengal">West Bengal</option>
-						</select>
-					</div>
-				</div>
+							
+							<div class="panel panel-default">
 
-				<br> <br>
+										<h3>Tax Details</h3>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">City</label>
-					<div class="col-md-6">
-						<input class="form-control" id="city" type="text"
-						 required="required" />
-						
-					</div>
-				</div>
+										<br> <br>
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Vendor PAN No</label>
+											<div class="col-md-6">
+												<input class="form-control" id="pan_no" name="pan_no"
+													maxlength="10" required="required" title="" type="text" />
+											</div>
+										</div>
 
-				<br> <br>
+										<br> <br>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Locality</label>
-					<div class="col-md-6">
-						<input class="form-control" id="locality" type="text"
-							placeholder="Prominent Landmark" required="required" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Email</label>
-					<div class="col-md-6">
-						<input class="form-control" id="email" name="email" maxlength="30"
-							required="required" title="" type="email" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group">
-					<label class="col-md-3 control-label">Website</label>
-					<div class="col-md-6">
-						<input class="form-control" id="website" name="website"
-							maxlength="30" title="" type="email" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Mobile No</label>
-					<div class="col-md-1">+91</div>
-					<div class="col-md-5">
-						<input class="form-control" id="mobile" name="mobile"
-							required="required" title="" type="number"
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							type="number" maxlength="10" />
-					</div>
-				</div>
+										<div class="form-group ">
+											<label class="col-md-3 control-label"> TIN No</label>
+											<div class="col-md-6">
+												<input class="form-control" id="tin_no" name="tin_no"
+													title=""
+													oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+													type="number" maxlength="11" />
+											</div>
+										</div>
 
 
+										<br> <br>
 
-				<br> <br>
-				<div class="form-group ">
-					<label class="col-md-3 control-label">Landline No</label>
-					<div class="col-md-1">+91</div>
-					<div class="col-md-2">
-						<input class="form-control" id="code" name="code"
-							placeholder="STD Code" title="" type="number"
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							maxlength="3" />&nbsp;
-					</div>
-					<div class="col-md-3">
-						<input class="form-control" id="landline" name="landline"
-							placeholder="Landline number" title="" type="number"
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							maxlength="8" />
-
-					</div>
-
-				</div>
-
-				<br> <br>
-				
-				<div class="form-group required">
-				<div class="col-md-6">
-				 <input id="contact" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_contact()"> 
-
-					</div>
-					</div>
-				
-				
+										<div class="form-group">
+											<label class="col-md-3 control-label">Service Tax
+												Registration No</label>
+											<div class="col-md-6">
+												<input class="form-control" id="strn_no" name="strn_no"
+													maxlength="21" title="" type="text" />
+											</div>
+										</div>
 
 
-			</form>
-				
-								<br><br><br>
-								
-								
+										<br> <br>
+
+
+										<div class="form-group">
+											<label class="col-md-3 control-label">GST No</label>
+											<div class="col-md-6">
+												<input class="form-control" id="gst_no" name="gst_no"
+													maxlength="21" title="" type="text" />
+											</div>
+										</div>
+										<br> <br>
+										
+										<div class="form-group">
+											<label class="col-md-3 control-label">Aadhar No</label>
+											<div class="col-md-6">
+												<input class="form-control" id="aadhar_no" name="aadhar_no"
+													maxlength="21" title="" type="text" />
+											</div>
+										</div>
+										<br> <br>
+										
+
+</div>
+
+
+							
+							<div class="panel panel-default">
+
+										<h3>Account Details</h3>
+
+										<br> <br>
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Account Number</label>
+											<div class="col-md-6">
+												<input class="form-control" id="account_num" type="number" />
+											</div>
+										</div>
+
+										<br> <br> <br>
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Type of Account</label>
+											<div class="col-md-6">
+												<select class="form-control" id="type_account">
+													<option value="Savings">Savings</option>
+													<option value="Overdraft">Overdraft</option>
+													<option value="Current Account">Current Account</option>
+												</select>
+											</div>
+										</div>
+
+										<br> <br>
+
+
+
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">Bank</label>
+											<div class="col-md-6">
+												<select class="form-control" id="bank">
+													<option value="Proprietorship">Proprietorship</option>
+													<option value="Partnership">Partnership</option>
+													<option value="Limited Liability Partnership">Limited
+														Liability Partnership</option>
+													<option value="One Person Company">One Person
+														Company</option>
+													<option value="Private Limited Company">Private
+														Limited Company</option>
+													<option value="Limited Company">Limited Company</option>
+												</select>
+											</div>
+										</div>
+
+										<br> <br>
+
+										<div class="form-group required">
+											<label class="col-md-3 control-label">IFSC Code</label>
+											<div class="col-md-6">
+												<input class="form-control" id="ifsc_code" type="text"
+													maxlength="30" />
+											</div>
+										</div>
+										<br> <br>
+										
+										</div>
+									</form>
+									<input type="submit" class="btn btn-primary"
+										onclick="return save()"> <br> <br>
 								</div>
-								</div> <!-- end of contact -->
-								
-								
-								
-								
-								<!-- tax details -->
-								
-								<div class="tab-pane box " id="tax">
+							</div>
+						</div>
+					</div>
+
+					<!-- close desc of create prod -->
+
+
+
+					<!-- NEW NAV BAR CONTENT -->
+					<!--  ASSOCIATION ACTION BUTTON WITH ID SUCH THAT FOR EVERY ROW IT HOLDS TAX_ID, PASS THIS
+                        TO DELETE AND EDIT FUNCTION, SO INTERNAL TAX_ID IS KNOWN -->
+
+					<div class="tab-pane box active " id="view_products">
+						<div class="row">
+							<div class="col-lg-12">
 								<br>
-								<div class="panel panel-default">
-								
-								<form action="" method="post">
+
+								<div id="due"></div>
+
+								<br> <br>
+								<table class="table table-bordered datatable" id="table_export">
+									<thead>
+										<tr>
+											<th><div>Customer Name</div></th>
+
+											<th><div>Contact Person</div></th>
+
+											<th><div>Due Amount (Rs) </div></th>
 
 
+											<th><div>Options</div></th>
+
+										</tr>
+									</thead>
 
 
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Company PAN No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="pan_no" name="pan_no"
-							maxlength="10" required="required" title="" type="text" />
-					</div>
-				</div>
-
-				<br>
-				<br><br>
-
-				<div class="form-group ">
-					<label class="col-md-3 control-label"> TIN No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="tin_no" name="tin_no" title=""
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							type="number" maxlength="11" />
-					</div>
-				</div>
-				
-				
-					<br>
-				<br>
-
-				<div class="form-group">
-					<label class="col-md-3 control-label">Service Tax Registration No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="strn_no" name="cin_no"
-							maxlength="21" title="" type="text" />
-					</div>
-				</div>
-				
-
-				<br>
-				<br>
-				
-				
-				<div class="form-group">
-					<label class="col-md-3 control-label">GST No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="gst_no" name="cin_no"
-							maxlength="21" title="" type="text" />
-					</div>
-				</div>
-				
-
-					<br>
-				<br>
+									<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
 
 
-				<div class="form-group">
-					<label class="col-md-3 control-label">Company CIN No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="cin_no" name="cin_no"
-							maxlength="21" title="" type="text" />
-					</div>
-				</div>
-				
-			
+											<td>
+												<!-- ACTIONS -->
+												<div class="btn-group">
 
-				<br> <br> 
-				
-				<div class="form-group required">
-				<div class="col-md-6">
-				 <input id="taxdetails" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_tax()"> 
-					</div>
-					</div>
-				
-				
-			</form>
-								<br><br><br>
-								
-								</div>
-								</div>
-								
-					<!-- end of tax -->			
-								
-								
-								
-								<div class="tab-pane box " id="account">
-								<br>
-								<div class="panel panel-default">
-								
-								<form action="" method="post">
+													<button type="button"
+														class="btn btn-default btn-sm dropdown-toggle"
+														data-toggle="dropdown">
+														Action <span class="caret"></span>
+													</button>
+													<ul class="dropdown-menu dropdown-default pull-right"
+														role="menu">
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Account Number</label>
-					<div class="col-md-6">
-						<input class="form-control" id="account_num" type="number" />
-					</div>
-				</div>
-
-				<br> <br><br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Type of Account</label>
-					<div class="col-md-6">
-						<select class="form-control" id="type_account">
-							<option value="Savings">Savings</option>
-							<option value="Overdraft">Overdraft</option>
-							<option value="Current Account">Current Account</option>
-						</select>
-					</div>
-				</div>
-
-				<br> <br>
+														<!-- view -->
+														<li><a href="" onClick="return view_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
+																<i class="entypo-pencil"></i> View Product
+														</a></li>
+														<li class="divider"></li>
 
 
+														<!-- EDITING LINK -->
+														<li><a href="" onClick="return edit_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
+																<i class="entypo-pencil"></i> Edit Product
+														</a></li>
+														<li class="divider"></li>
 
+														<!-- DELETION LINK -->
+														<!-- DELETE FROM DATABASE -->
+														<li><a href=""
+															onClick="return confirm('Are you sure to delete?')">
+																<!--  pass product id along --> <i class="entypo-trash"></i>
+																Delete Product
+														</a></li>
+													</ul>
+												</div>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Bank</label>
-					<div class="col-md-6">
-						<select class="form-control" id="bank">
-							<option value="Proprietorship">Proprietorship</option>
-							<option value="Partnership">Partnership</option>
-							<option value="Limited Liability Partnership">Limited
-								Liability Partnership</option>
-							<option value="One Person Company">One Person Company</option>
-							<option value="Private Limited Company">Private Limited
-								Company</option>
-							<option value="Limited Company">Limited Company</option>
-						</select>
-					</div>
-				</div>
+											</td>
 
-				<br> <br>
+										</tr>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">IFSC Code</label>
-					<div class="col-md-6">
-						<input class="form-control" id="ifsc_code" type="text"
-							maxlength="30" />
-					</div>
-				</div>
-
-				<br> <br> 
-				
-				<div class="form-group required">
-				<div class="col-md-6">
-				 <input id="account" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_account()"> 
-					</div>
-					</div>
-					
-			</form>
-								<br><br><br>
-								
-								</div>
-								</div>
-								<!-- end of account -->
-								
-								
-								
-								</div> <!-- end of tab content -->
-						
-						
-						
+									</tbody>
+								</table>
+							</div>
+						</div>
 
 
 					</div>
-					<!--  wrapper -->
+
 
 
 
 				</div>
-				<!-- /.container-fluid -->
+				<!-- end of nav bar content -->
 
+
+				<!--   </div>
+                </div> -->
+				<!-- /.row -->
 			</div>
-			<!-- /#page-wrapper -->
+			<!--  wrapper -->
+
+
 
 		</div>
-		<!-- /#wrapper -->
+		<!-- /.container-fluid -->
+
+	</div>
+	<!-- /#page-wrapper -->
+
+	</div>
+	<!-- /#wrapper -->
+
+
+
+
+
+
+
 </body>
 
 <script>
-
-function save_business()
-{
-	
-	var bname = $('#business_name').val();
-    //alert(bname);
-    var cname = $('#contact_name').val();
-    var btype = $('#type_business').val();
-    var bsector = $('#business_sector').val();
-    
-    localStorage.setItem("bname", bname);
-    localStorage.setItem("cname", cname);
-    localStorage.setItem("btype", btype);
-    localStorage.setItem("bsector", bsector);
-	
-	
-	
+	function setCookie(key, value, days) {
+		var expires = new Date();
+		expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+		document.cookie = key + '=' + value + ';expires='
+				+ expires.toUTCString();
 	}
 
-
-function save_contact()
-{
-	
-	var addr1  = $('#addr_line1').val();
-    var state  = $('#state').val();
-    var city  = $('#city').val();
-    var locality  = $('#locality').val();
-    var email  = $('#email').val();
-     var mobile  = $('#mobile').val();
-     
-     localStorage.setItem("addr1", addr1);
-     localStorage.setItem("addr2", $('#addr_line2').val());
-     localStorage.setItem("city", city);
-     localStorage.setItem("state", state);
-     localStorage.setItem("locality", locality);
-     localStorage.setItem("email", email);
-     localStorage.setItem("mobile", mobile);
-     localStorage.setItem("website", $('#website').val());
-     localStorage.setItem("code", $('#code').val());
-     localStorage.setItem("landline", $('#landline').val());
+	function getCookie(key) {
+		var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+		return keyValue ? keyValue[2] : null;
 	}
 
-function save_tax()
-{
-	
-	localStorage.setItem("pan_no", pan_no);
-    localStorage.setItem("tin_no", $('#tin_no').val());
-    localStorage.setItem("cin_no", $('#cin_no').val());
-    localStorage.setItem("strn_no", $('#strn_no').val());
-    localStorage.setItem("gst_no", $('#gst_no').val());
-	
-	}
-	
-	
-	function save_account()
-	{
-		
-		var acc_num = $('#account_num').val();
-	      var type_account = $('#type_account').val();
-	      var ifsc_code = $('#ifsc_code').val();   
-	      var bank = $('#bank').val(); 
-	      
-	      localStorage.setItem("acc_num", acc_num);
-	      localStorage.setItem("type_acc", type_account);
-	      localStorage.setItem("ifsc_code", ifsc_code);
-	      localStorage.setItem("bank", bank);
-	     
-	}
+	function save() {
 
+		var ccid = getCookie("CCID");
+		var sid = getCookie("SID");
+		var token = getCookie("TTID");
+
+		alert("hi");
+
+		event.preventDefault();
+		var form = $('#customerProfile')[0];
+		var data = new FormData(form);
+		$.ajax({
+			type : "POST",
+			url : "/Accounting/rest/customer/add?" + $.param({
+				"cid" : ccid,
+				"id" : sid,
+				"token" : token
+			}),
+			enctype : 'multipart/form-data',
+			data : data,
+			dataType : "json",
+			processData : false,
+			contentType : false,
+			cache : false,
+			success : function(response, text, xhr) {
+
+				console.log(xhr.status);
+				console.log(xhr.responseText);
+				alert("Customer created");
+				$("#customerProfile").trigger('reset');
+
+			},
+			error : function(xhr, statusText) {
+
+				var code = xhr.status;
+				console.log(xhr.responseText);
+
+			}
+		});
+
+	}
 </script>
 
 
-<!-- jQuery 
-    <script src="js/jquery.js"></script>-->
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 
-<!-- Bootstrap Core JavaScript -->
-<script src="jarvis/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+	function cancel() {
+		$('#editproduct_dialog').dialog('close');
+
+	}
+
+	function delete_product(productId) {
+
+		var ccid = getCookie("CCID");
+		var sid = getCookie("SID");
+		var token = getCookie("TTID");
+
+		$.ajax({
+			type : 'POST',
+			url : '/Accounting/rest/products/delete?' + $.param({
+				"productId" : productId,
+				"cid" : ccid,
+				"id" : sid,
+				"token" : token
+			}),
+			dataType : "json",
+
+			success : function(response, text, xhr) {
+
+				console.log(JSON.parse(xhr.responseText));
+				window.location.replace("products.html");
+
+			},
+
+			error : function(xhr, statusText) {
+
+				console.log(xhr.status);
+				console.log(xhr.responseText);
+				var code = xhr.status;
+
+			}
+
+		});
+
+	}
+
+	jQuery(document)
+			.ready(
+					function($) {
+
+						$('.nav-tabs a[data-toggle="tab"]').on(
+								'shown.bs.tab',
+								function(e) {
+
+									var jqTable = $('table.datatable', $(
+											e.target).attr("href"));
+									if (jqTable.length > 0) {
+										var oTableTools = TableTools
+												.fnGetInstance(jqTable[0]);
+										if (oTableTools != null
+												&& oTableTools
+														.fnResizeRequired()) {
+											jqTable.dataTable()
+													.fnAdjustColumnSizing();
+											oTableTools.fnResizeButtons();
+										}
+									}
+
+									return false;
+								});
+
+						var datatable = $("#table_export")
+								.dataTable(
+										{
+											"sPaginationType" : "bootstrap",
+											"sDom" : "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
+
+											"oTableTools" : {
+
+												"aButtons" : [
+
+														{
+															"sExtends" : "xls",
+
+														},
+														{
+															"sExtends" : "pdf",
+
+														},
+														{
+															"sExtends" : "print",
+															"fnSetText" : "Press 'esc' to return",
+															"fnClick" : function(
+																	nButton,
+																	oConfig) {
+																datatable
+																		.fnSetColumnVis(
+																				0,
+																				false);
+																datatable
+																		.fnSetColumnVis(
+																				3,
+																				false);
+
+																this
+																		.fnPrint(
+																				true,
+																				oConfig);
+
+																window.print();
+
+																$(window)
+																		.keyup(
+																				function(
+																						e) {
+																					if (e.which == 27) {
+																						datatable
+																								.fnSetColumnVis(
+																										0,
+																										true);
+																						datatable
+																								.fnSetColumnVis(
+																										3,
+																										true);
+																					}
+																				});
+															},
+
+														}, ]
+											},
+
+										});
+
+						$(".dataTables_wrapper select").select2({
+							minimumResultsForSearch : -1
+						});
+					});
+
+
+
+	function setCookie(key, value, days) {
+		var expires = new Date();
+		expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+		document.cookie = key + '=' + value + ';expires='
+				+ expires.toUTCString();
+	}
+
+	function getCookie(key) {
+		var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+		return keyValue ? keyValue[2] : null;
+	}
+
+	
+</script>
+
+
+
+</html>

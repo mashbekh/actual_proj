@@ -37,12 +37,13 @@ public class ProductsDaoImpl {
 			if(cmp == null)
 				throw new EntityException(404,"cmp not found",null,null);
 
+			//no product with same name
 			Query<Products> prodquery = ds.createQuery(Products.class).field("company").equal(cmp).field("productName").equal(prod.getProductName()).field("isDeleted").equal(false);
 			product = prodquery.get();
 			if(product != null)
 				throw new EntityException(515,"product found",null,null);
 
-			//no product with same name
+			
 			Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp).field("id").equal(prod.getProductTax().getId()).field("isDeleted").equal(false);
 			tx = taxquery.get();
 			if(tx == null)

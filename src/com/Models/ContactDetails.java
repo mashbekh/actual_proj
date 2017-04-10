@@ -17,10 +17,11 @@ public class ContactDetails {
 	private String mobileNo;
 	private boolean mobileVStatus;
 	private String landlineNo;
+	private String aadharNo;
 
 	public ContactDetails(String addrLine1, String addrLine2, String state, String city,
 			String locality, boolean addrVStatus, String businessEmail, boolean mailVStatus, String website,
-			String mobileNo, boolean mobileVStatus, String landlineNo) {
+			String mobileNo, boolean mobileVStatus, String landlineNo, String aadharNo) {
 
 		this.addrLine1 = addrLine1;
 		this.addrLine2 = addrLine2;
@@ -34,10 +35,19 @@ public class ContactDetails {
 		this.mobileNo = mobileNo;
 		this.mobileVStatus = mobileVStatus;
 		this.landlineNo = landlineNo;
+		this.aadharNo = aadharNo;
 	}
 
 	public ContactDetails() {
 
+	}
+	
+	public String getAadharNo() {
+		return aadharNo;
+	}
+
+	public void setAadharNo(String aadharNo) {
+		this.aadharNo = aadharNo;
 	}
 
 	public String getAddrLine1() {

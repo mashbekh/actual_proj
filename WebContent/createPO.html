@@ -20,8 +20,8 @@
 
 
 
- <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
-    <link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
+<link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -38,8 +38,8 @@
 	rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
-			<script src="jarvis/js/moment_locale.js"></script>
-			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
+<script src="jarvis/js/moment_locale.js"></script>
+<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
 
 
 
@@ -76,122 +76,12 @@
 
 <script>
 
-
-
-var product_list = [
-	
-	{      
-		
-		"product_name": "eraser",
-		"product_desc": "stationary",
-		"tax":                     //backend - search for tax obect from table with this id
-			{
-			 "tax_name":null,
-			 "tax_abbreviation": "VAT",
-			 "tax_desc":null,
-			 "tax_rate": 5.5,
-			 "company": null,  
-			 "tax_id": "CMP123TAX1",
-			 "tax_recoverable":true
-			 
-			},
-		"category":"XYZ",
-		"cp": 40,
-		"head_expenditure": "Purchases",
-			
-		"sp": 45,
-		"head_income": "Sales",
-		
-		"company":
-			{
-			"company_id" :"CMP445"
-			},
-		"discount":0,	
-		"product_id": "PROD66",
-		"id": 66
-		
-		
-},
-
-
-{      
-	
-	"product_name": "pens",
-	"product_desc": "stationary",
-	"tax":                     //backend - search for tax obect from table with this id
-		{
-		 "tax_name":null,
-		 "tax_abbreviation": "VAT",
-		 "tax_desc":null,
-		 "tax_rate": 5.5,
-		 "company": null,  
-		 "tax_id": "CMP123TAX1",
-		 "tax_recoverable":true
-		 
-		},
-	"category":"XYZ",
-	"cp": 75,
-	"head_expenditure": "Purchases",
-		
-	"sp": 75,
-	"head_income": "Sales",
-	
-	"company":
-		{
-		"company_id" :"CMP445"
-		},
-	"discount" :0,
-	"product_id": "PROD90",
-	"id": 90
-	
-	
-}
-	];                                 //list of products from backend
-	
-
-var tax_list = [
-	{
-		"tax_id" : "CMP123TAX1",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 5.5
-		
-	},
-	{
-		"tax_id" : "CMP123TAX2",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 14.5
-		
-		
-	}
-];
-
-	
-var vendor_list = [
-	{
-		"vendor_name" : "Suraj Papers",
-		"vendor_id" : "VEN1234",
-		"addr": "kguyfutef bjhgff jhfuutfuyt"
-	},
-	{
-		"vendor_name" : "Prints",
-		"vendor_id" : "VEN789",
-		"addr": "jhge htydteyfhbvs"
-		
-	}
-	
-	
-];
-	
-	
 $(function () {
     $('#dtpicker').datetimepicker({
     	
     	format:'DD/MM/YYYY'
-    	
-    	
     })
 
-    
 });
 
 
@@ -201,12 +91,9 @@ $(function () {
 
 
 <style>
-
-#add
-{
-  background-color:gray
+#add {
+	background-color: gray
 }
-
 
 .panel {
 	width: 75%;
@@ -260,14 +147,30 @@ input[readonly] {
 </style>
 
 <script>
+
+var vendorList;
+var productList;
+var taxList;
+var prefix;
+var suffix;
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
+var poserialNo;
+
 function loadName()
 {
 	 $('.dropdown-toggle').dropdown();
-	
-   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-   //get purchase order number and append it to box, also with today's date
-   
- 
    
    var today = new Date();
 	var dd = today.getDate();
@@ -285,42 +188,196 @@ function loadName()
  
  var first_count=0;
  
- for(var i=0;i<product_list.length;i++)
- {
+ var ccid = getCookie("CCID");
+ var sid = getCookie("SID");
+ var token = getCookie("TTID");
 
- //show only inventory, noninv and service input type products
-
-  $('#0productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
  
+ 
+ 
+ 
+ //get company details
+ 
+ 	$.ajax({
+					type : 'POST',
+					url : '/Accounting/rest/company/get?' + $.param({
+						"cid" : ccid,
+						"id" : sid,
+						"token" : token
+					}),
+					dataType : "json",
+
+					success : function(response, text, xhr) {
+
+						//console.log(JSON.parse(xhr.responseText));
+								var company = JSON.parse(xhr.responseText);
+								$("textarea#notes").val(company.poSettings.ponotes); //add footer later,col names
+								prefix = company.poSettings.poprefix;
+								suffix = company.poSettings.posuffix;
+								$("#businessDetails").append("<h2>" + company.businessDetails.businessName   +  "</h2>");
+								$("#businessDetails").append("<h4>" + company.contactDetails.addrLine1 + "  " +  company.contactDetails.addrLine2 + "  " + 
+										company.contactDetails.locality + ", " +  company.contactDetails.state + ", "  +  company.contactDetails.city  + "</h4>");
+					
+					
+					 /*get PO serial number
+				 	 
+			 	 	$.ajax({
+			 						type : 'POST',
+			 						url : '/Accounting/rest/po/getNo?' + $.param({
+			 							"cid" : ccid,
+			 							"id" : sid,
+			 							"token" : token
+			 						}),
+			 						dataType : "text",
+
+			 						success : function(response, text, xhr) {
+
+			 						$("po_number").val(prefix + xhr.responseText + suffix);
+			 							
+			 						},
+
+			 						error : function(xhr, statusText) {
+
+			 							console.log(xhr.status);
+			 							console.log(xhr.responseText);
+			 							var code = xhr.status;
+
+			 						}
+			 					});*/
+			 					
+								$("#po_number").val(prefix + "00001" + suffix);
+			 					poserialNo = 1;
+			 
+					},
+
+					error : function(xhr, statusText) {
+
+						console.log(xhr.status);
+						console.log(xhr.responseText);
+						var code = xhr.status;
+
+					}
+				});
+					
+ 
+ 	 
+ 	
+//get vendor list
+
+		$.ajax({
+					type : 'POST',
+					url : '/Accounting/rest/vendor/getList?' + $.param({
+						"cid" : ccid,
+						"id" : sid,
+						"token" : token
+					}),
+					dataType : "json",
+
+					success : function(response, text, xhr) {
+
+						//console.log("vendor");    
+						//console.log(JSON.parse(xhr.responseText));
+						vendorList = JSON.parse(xhr.responseText);
+						console.log(vendorList);
+
+						for (var i = 0; i < vendorList.length; i++) {
+							
+							$('#vendor_names').append("<option vendorid='" +  vendorList[i].id   + "' value='" + vendorList[i].businessDetails.businessName +  "'>"  + "" + "</option>");
+						}
+
+						 
+						 $('#vendor_names').append("<option value='+ Create Vendor' id='add'>+ Create Vendor</option>");
+
+					},
+
+					error : function(xhr, statusText) {
+
+						console.log(xhr.status);
+						console.log(xhr.responseText);
+						var code = xhr.status;
+
+					}
+				});
+
+ 
+ //get product list
+ 
+ $.ajax({
+		   		type : 'POST',
+		   		url  : '/Accounting/rest/products/getList?' + $.param({"cid" : ccid ,"id": sid,"token": token}),
+		    	dataType :'json',
+		    	success: function(response, text, xhr)
+		    	{
+		     		//console.log("products"    + JSON.parse(xhr.responseText));
+		     		productList = JSON.parse(xhr.responseText);
+		     		for(var i=0; i < productList.length; i++)
+		     			{
+		     			 $('#0productlist').append("<option prodid='" +  productList[i].id   + "' value='" +productList[i].productName +  "'>" + "" +  productList[i].productDescription + "" + "</option>");
+		     			 
+		     			 }
+		     			 
+		     			 $('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
+		     			
+		     		
+		        },
+				error: function (a,b,c)
+				{ 
+					
+				 	console.log(a.status);
+				}  
+		  });
+   
+  
+ 
+ 
+ 
+ 
+ //get tax list
+ 
+ 
+  $.ajax({
+		type : 'POST',
+		url  : '/Accounting/rest/tax/getTaxlist?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+	    dataType : "json",
+
+		success: function(response, text, xhr) {
+			
+			//console.log("tax"    + JSON.parse(xhr.responseText));
+			taxList = JSON.parse(xhr.responseText);
+			 for(var i=0;i<taxList.length;i++)
+			 {
+			 
+			 	$('#0taxlist').append("<option taxid='" +  taxList[i].id   + "' value='" + taxList[i].taxAbbreviation + " "  +  taxList[i].taxRate + "'>" + "</option>");
+			 	$('#prodtaxlist').append("<option taxid='" +  taxList[i].id   + "' value='" + taxList[i].taxAbbreviation + " "  +  taxList[i].taxRate + "'>" + "</option>");
+			 }
+		     
+			
+},
+
+error: function (xhr, statusText) {
+	
+ 
+   console.log(xhr.status);
+   console.log(xhr.responseText);
+   var code = xhr.status;
+   
+   if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+		{
+ 		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+ 		window.location.replace("login.html");
+		}
+
  }
- 
- $('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
 
- //append another option dd to create product
+ });
+   
  
- //TAXES
- 
- for(var i=0;i<tax_list.length;i++)
-	 {
-	 	$('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-	 	$('#prodtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-	 
-	 }
  
  //check if TAN No activated, fetch settings and then only show TDS
  
-              //create VENDOR
- 
- for(var i=0;i<vendor_list.length;i++)
- {
 
- //show only inventory, noninv and service input type products
 
-  $('#vendor_names').append("<option vendorid='" +  vendor_list[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
- 
- }
- 
- $('#vendor_names').append("<option value='+ Create Vendor' id='add'>+ Create Vendor</option>");
+
  
 
 }
@@ -354,10 +411,12 @@ var vdr = $("#vendor").val();
 
 			var vendr_id = $('datalist option[value="' + vdr + '"]').attr('vendorid');
 			alert(vendr_id);
-			for (var i = 0; i < vendor_list.length; i++) {
-				if (vendor_list[i].vendor_id == vendr_id) {
+			for (var i = 0; i < vendorList.length; i++) {
+				
+				if (vendorList[i].id == vendr_id) {
 					
-					$("#vendor_detail").val(vendor_list[i].addr);
+					$("#vendor_detail").val(vendorList[i].contactDetails.addrLine1 + "  " +  vendorList[i].contactDetails.addrLine2 + "  " + 
+							vendorList[i].contactDetails.locality + ", " +  vendorList[i].contactDetails.state + ", "  +  vendorList[i].contactDetails.city );
 
 				}
 			}
@@ -370,11 +429,13 @@ var vdr = $("#vendor").val();
 			$("#vendor_detail").val('');
 		
 		}
-	
-	
 	}
 
 	var add_product_counter;
+	
+	
+	
+	
 
 	function update_prod_details(counter) {
 
@@ -406,19 +467,24 @@ var vdr = $("#vendor").val();
 
 			var prod_id = $('datalist option[value="' + prod + '"]').attr(
 					'prodid');
+			
 			alert(prod_id);
-			for (var i = 0; i < product_list.length; i++) {
-				if (product_list[i].product_id == prod_id) {
+			
+			for (var i = 0; i < productList.length; i++) {
+				
+				if (productList[i].id == prod_id) {
+					
 					//get cost price
-					if (product_list[i].tax != null) {
-						var taxval = product_list[i].tax.tax_abbreviation + " "
-								+ product_list[i].tax.tax_rate;
+					if (productList[i].productTax != null) {
+						
+						var taxval = productList[i].productTax.taxAbbreviation + " "
+								+ productList[i].productTax.taxRate;
 						$("#" + counter + "tax_rate").val(taxval);
 					}
 
-					$("#" + counter + "price").val(product_list[i].cp);
+					$("#" + counter + "price").val(productList[i].costPrice);
 					$("#" + counter + "prod_desc").val(
-							product_list[i].product_desc);
+							productList[i].productDescription);
 					update_amount(counter);
 
 				}
@@ -474,7 +540,7 @@ function create_vendor()
 	
 	//AJAX CALL
 	
-   vendor_list.push(new_vendor);
+   vendorList.push(new_vendor);
 	
    $('#vendor_names').append("<option vendorid='" +  new_vendor[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
    	
@@ -486,585 +552,575 @@ function create_vendor()
 
 <body onload="loadName()">
 
-							<!-- create product dialog-->
-							
-							
+	<!-- create product dialog-->
+
+
 	<div id="product_dialog" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
 			<form action="" method="post">
-			
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Product Name</label>
-													<div class="col-md-6">
-														<input class="form-control" id="product_name"
-															name="product_name" maxlength="30"
-															placeholder="Product Name" required="required" title=""
-															type="text" />
-													</div>
-												</div>
 
-												<br> <br> <br>
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Product Name</label>
+					<div class="col-md-6">
+						<input class="form-control" id="product_name" name="product_name"
+							maxlength="30" placeholder="Product Name" required="required"
+							title="" type="text" />
+					</div>
+				</div>
 
-												<div class="form-group ">
-													<label class="col-md-3 control-label">Product
-														Description</label>
-													<div class="col-md-6">
-														<input class="form-control" id="product_desc"
-															name="product_desc" maxlength="" title="" type="text" />
-													</div>
-												</div>
+				<br> <br> <br>
 
-												<br> <br>
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Product Description</label>
+					<div class="col-md-6">
+						<input class="form-control" id="product_desc" name="product_desc"
+							maxlength="" title="" type="text" />
+					</div>
+				</div>
 
-												
-
-												<div class="form-group ">
-													<label class="col-md-3 control-label">Category</label>
-													<div class="col-md-6">
-														<input class="form-control" id="category"
-															name="category" maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br> <br>
-
-												<div class="form-group ">
-													<label class="col-md-3 control-label">Cost Price</label>
-													<div class="col-md-6">
-														<input class="form-control" id="cp" name="cp"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br>
-												<br>
+				<br> <br>
 
 
 
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Head of
-														Expenditure</label>
-													<div class="col-md-6">
-														<select name="expenditure"
-															class="form-control selectboxit" id="expenditure">
-															<option value="None">Select</option>
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Category</label>
+					<div class="col-md-6">
+						<input class="form-control" id="category" name="category"
+							maxlength="" title="" type="text" />
+					</div>
+				</div>
 
-															<option value="purchase">Purchases</option>
+				<br> <br>
 
-														</select>
-													</div>
-												</div>
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Cost Price</label>
+					<div class="col-md-6">
+						<input class="form-control" id="cp" name="cp" maxlength=""
+							title="" type="text" />
+					</div>
+				</div>
 
-												<br> <br>
-
-												<div class="form-group ">
-													<label class="col-md-3 control-label">Selling Price</label>
-													<div class="col-md-6">
-														<input class="form-control" id="sp" name="sp"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-
-												<br>
-												<br>
+				<br> <br>
 
 
-												<div class="form-group required">
-													<label class="col-md-3 control-label">Head of
-														Income</label>
-													<div class="col-md-6">
-														<select name="income" class="form-control selectboxit"
-															id="income">
-															<option value="None">Select</option>
 
-															<option value="Sales">Sales</option>
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Head of Expenditure</label>
+					<div class="col-md-6">
+						<select name="expenditure" class="form-control selectboxit"
+							id="expenditure">
+							<option value="None">Select</option>
 
-														</select>
-													</div>
-												</div>
+							<option value="purchase">Purchases</option>
 
-												<br> <br>
-												
-												<div class="form-group">
-													<label class="col-md-3 control-label">Discount</label>
-													<div class="col-md-6">
-														<input class="form-control" id="discount" name="discount"
-															maxlength="" title="" type="text" />
-													</div>
-												</div>
-												
-												<br><br>
+						</select>
+					</div>
+				</div>
 
-												
+				<br> <br>
 
-												<div class="form-group required">
-											<label class="col-md-3 control-label">Tax Rate</label>
-											<div class="col-md-6">
+				<div class="form-group ">
+					<label class="col-md-3 control-label">Selling Price</label>
+					<div class="col-md-6">
+						<input class="form-control" id="sp" name="sp" maxlength=""
+							title="" type="text" />
+					</div>
+				</div>
 
-												<input list="prodtaxlist" class="form-control"
-													id="prodtax_rate" placeholder="Tax Rate">
-
-												<datalist id="prodtaxlist">
+				<br> <br>
 
 
-												</datalist>
-											</div>
-										</div>
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Head of Income</label>
+					<div class="col-md-6">
+						<select name="income" class="form-control selectboxit" id="income">
+							<option value="None">Select</option>
 
-												<br> <br>
+							<option value="Sales">Sales</option>
+
+						</select>
+					</div>
+				</div>
+
+				<br> <br>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">Discount</label>
+					<div class="col-md-6">
+						<input class="form-control" id="discount" name="discount"
+							maxlength="" title="" type="text" />
+					</div>
+				</div>
+
+				<br> <br>
 
 
-											</form>
-											<input type="submit" class="btn btn-primary"
-												 onclick="return add_product()">
+
+				<div class="form-group required">
+					<label class="col-md-3 control-label">Tax Rate</label>
+					<div class="col-md-6">
+
+						<input list="prodtaxlist" class="form-control" id="prodtax_rate"
+							placeholder="Tax Rate">
+
+						<datalist id="prodtaxlist">
+
+
+						</datalist>
+					</div>
+				</div>
+
+				<br> <br>
+
+
+			</form>
+			<input type="submit" class="btn btn-primary"
+				onclick="return add_product()">
 
 
 
 
-										</div>
-									</div>
-			<!-- end of create product dialog -->
+		</div>
+	</div>
+	<!-- end of create product dialog -->
 
 
-<!-- CREATE VENDOR DIALOG -->
+	<!-- CREATE VENDOR DIALOG -->
 
-<div id="vendor_dialog" title="Dialog Form" style="display: none;">
+	<div id="vendor_dialog" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
-		
-		
-		<!------CONTROL TABS START------>
-						<ul class="nav nav-tabs bordered">
-							<li class="active"><a href="#business" data-toggle="tab"><i
-									class="entypo-menu"></i> Business Details </a></li>
-							<li><a href="#contact" data-toggle="tab"><i
-									class="entypo-menu"></i> Contact Details </a></li>
-							<li><a href="#tax" data-toggle="tab"><i
-									class="entypo-menu"></i>  Tax Details </a></li>
-							<li><a href="#account" data-toggle="tab"><i
-									class="entypo-menu"></i> Account Details </a></li>
 
-						</ul>
-						<!------CONTROL TABS END------>
-						
-						
-							
-						<!--  Control tab features -->
 
-						<div class="tab-content">
-							<!----    BUSINESS-->
-							<div class="tab-pane box active" id="business">
-								<br>
-								
-								
-			<form action="" method="post">
+			<!------CONTROL TABS START------>
+			<ul class="nav nav-tabs bordered">
+				<li class="active"><a href="#business" data-toggle="tab"><i
+						class="entypo-menu"></i> Business Details </a></li>
+				<li><a href="#contact" data-toggle="tab"><i
+						class="entypo-menu"></i> Contact Details </a></li>
+				<li><a href="#tax" data-toggle="tab"><i class="entypo-menu"></i>
+						Tax Details </a></li>
+				<li><a href="#account" data-toggle="tab"><i
+						class="entypo-menu"></i> Account Details </a></li>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Business Name</label>
-					<div class="col-md-6">
-						<input class="form-control" id="business_name" type="text"
-							required value="" />
-					</div>
-				</div>
-
-				<br> <br><br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Contact Person Name</label>
-					<div class="col-md-6">
-						<input class="form-control" id="contact_name" type="text" required
-							value="" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Type of Business</label>
-					<div class="col-md-6">
-						<select class="form-control" id="type_business" required>
-							<option value=''>Select</option>
-							<option value="Propreitorship">Propreitorship</option>
-							<option value="Partnership">Partnership</option>
-							<option value="Limited Liability Partnership">Limited
-								Liability Partnership</option>
-							<option value="One Person Company">One Person Company</option>
-							<option value="Private Limited Company">Private Limited
-								Company</option>
-							<option value="Limited Company">Limited Company</option>
-						</select>
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Business Sector</label>
-					<div class="col-md-6">
-						<input class="form-control" id="business_sector" type="text"
-							required value="" />
-					</div>
-				</div>
-				
-				<br><br>
-				<div class="form-group required">
-				<div class="col-md-6">
-				<input id="business" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_business()"> 
-					</div>
-					</div>
-				</form>
-				
-								<br><br><br>
-								
-								
-								
-								</div> <!-- end of vendor dialog -->
-								
-								
-								
-								
-								
-							<div class="tab-pane box " id="contact">
-								<br>
-								
-								
-			<form action="" method="post">
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Address Line 1</label>
-					<div class="col-md-6">
-						<input class="form-control" id="addr_line1" type="text"
-							required="required" />
-					</div>
-				</div>
-
-				<br> <br><br>
-
-				<div class="form-group ">
-					<label class="col-md-3 control-label">Address Line 2</label>
-					<div class="col-md-6">
-						<input class="form-control" id="addr_line2" type="text" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">State</label>
-					<div class="col-md-6">
-						<select class="form-control" id="state" required="required">
-								<option value="New Delhi">New Delhi</option>
-							<option value="Andaman/Nicobar Islands">Andaman/Nicobar Islands</option>
-							<option value="Andhra Pradesh">Andhra Pradesh</option>
-							<option value="Arunachal Pradesh">Arunachal Pradesh</option>
-							<option value="Assam">Assam</option>
-							<option value="Bihar">Bihar</option>
-							<option value="Chandigarh">Chandigarh</option>
-							<option value="Dadra/Nagar Haveli">Dadra/Nagar Haveli</option>
-							<option value="Daman/Diu">Daman/Diu</option>
-							<option value="Goa">Bihar</option>
-							<option value="Gujarat">Gujarat</option>
-							<option value="Haryana">Haryana</option>
-							<option value="Himachal Pradesh">Himachal Pradesh</option>
-							<option value="Jammu/Kashmir">Jammu/Kashmir</option>
-							<option value="Jharkhand">Jharkhand</option>
-							<option value="Karnataka">Karnataka</option>
-							<option value="Kerala">Kerala</option>
-							<option value="Lakshadweep">Lakshadweep</option>
-							<option value="Madhya Pradesh">Madhya Pradesh</option>
-							<option value="Maharashtra">Maharashtra</option>
-							
-							<option value="Manipur">Manipur</option>
-							<option value="Meghalaya">Meghalaya</option>
-							<option value="Mizoram">Mizoram</option>
-							<option value="Nagaland">Nagaland</option>
-							<option value="Orissa">Orissa</option>
-							<option value="Pondicherry">Pondicherry</option>
-							<option value="Punjab">Punjab</option>
-							<option value="Rajasthan">Rajasthan</option>
-							<option value="Sikkim">Sikkim</option>
-							<option value="Tamil Nadu">Tamil Nadu</option>
-							<option value="Telangana">Telangana</option>
-							<option value="Tripura">Tripura</option>
-							<option value="Uttaranchal">Uttaranchal</option>
-							<option value="Uttar Pradesh">Uttar Pradesh</option>
-							<option value="West Bengal">West Bengal</option>
-						</select>
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">City</label>
-					<div class="col-md-6">
-						<input class="form-control" id="city" type="text"
-						 required="required" />
-							
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Locality</label>
-					<div class="col-md-6">
-						<input class="form-control" id="locality" type="text"
-							placeholder="Prominent Landmark" required="required" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Email</label>
-					<div class="col-md-6">
-						<input class="form-control" id="email" name="email" maxlength="30"
-							required="required" title="" type="email" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group">
-					<label class="col-md-3 control-label">Website</label>
-					<div class="col-md-6">
-						<input class="form-control" id="website" name="website"
-							maxlength="30" title="" type="email" />
-					</div>
-				</div>
-
-				<br> <br>
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Mobile No</label>
-					<div class="col-md-1">+91</div>
-					<div class="col-md-5">
-						<input class="form-control" id="mobile" name="mobile"
-							required="required" title="" type="number"
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							type="number" maxlength="10" />
-					</div>
-				</div>
+			</ul>
+			<!------CONTROL TABS END------>
 
 
 
-				<br> <br>
-				<div class="form-group ">
-					<label class="col-md-3 control-label">Landline No</label>
-					<div class="col-md-1">+91</div>
-					<div class="col-md-2">
-						<input class="form-control" id="code" name="code"
-							placeholder="STD Code" title="" type="number"
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							maxlength="3" />&nbsp;
-					</div>
-					<div class="col-md-3">
-						<input class="form-control" id="landline" name="landline"
-							placeholder="Landline number" title="" type="number"
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							maxlength="8" />
+			<!--  Control tab features -->
 
-					</div>
-
-				</div>
-
-				<br> <br>
-				
-				<div class="form-group required">
-				<div class="col-md-6">
-				 <input id="contact" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_contact()"> 
-
-					</div>
-					</div>
-
-			</form>
-				
-								<br><br><br>
-								
-								
-								</div> <!-- end of contact -->
-								
-								
-								
-								
-								<!-- tax details -->
-								
-								<div class="tab-pane box " id="tax">
-								<br>
-								
-								
-								<form action="" method="post">
-
-
-
-
-
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Company PAN No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="pan_no" name="pan_no"
-							maxlength="10" required="required" title="" type="text" />
-					</div>
-				</div>
-
-				<br>
-				<br><br>
-
-				<div class="form-group ">
-					<label class="col-md-3 control-label"> TIN No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="tin_no" name="tin_no" title=""
-							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-							type="number" maxlength="11" />
-					</div>
-				</div>
-				
-				
+			<div class="tab-content">
+				<!----    BUSINESS-->
+				<div class="tab-pane box active" id="business">
 					<br>
-				<br>
 
-				<div class="form-group">
-					<label class="col-md-3 control-label">Service Tax Registration No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="strn_no" name="cin_no"
-							maxlength="21" title="" type="text" />
-					</div>
+
+					<form action="" method="post">
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Business Name</label>
+							<div class="col-md-6">
+								<input class="form-control" id="business_name" type="text"
+									required value="" />
+							</div>
+						</div>
+
+						<br> <br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Contact Person Name</label>
+							<div class="col-md-6">
+								<input class="form-control" id="contact_name" type="text"
+									required value="" />
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Type of Business</label>
+							<div class="col-md-6">
+								<select class="form-control" id="type_business" required>
+									<option value=''>Select</option>
+									<option value="Propreitorship">Propreitorship</option>
+									<option value="Partnership">Partnership</option>
+									<option value="Limited Liability Partnership">Limited
+										Liability Partnership</option>
+									<option value="One Person Company">One Person Company</option>
+									<option value="Private Limited Company">Private
+										Limited Company</option>
+									<option value="Limited Company">Limited Company</option>
+								</select>
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Business Sector</label>
+							<div class="col-md-6">
+								<input class="form-control" id="business_sector" type="text"
+									required value="" />
+							</div>
+						</div>
+
+						<br> <br>
+						<div class="form-group required">
+							<div class="col-md-6">
+								<input id="business" type="submit" value="Save"
+									class="btn btn-blue" onclick="return save_business()">
+							</div>
+						</div>
+					</form>
+
+					<br> <br> <br>
+
+
+
 				</div>
-				
+				<!-- end of vendor dialog -->
 
-				<br>
-				<br>
-				
-				
-				<div class="form-group">
-					<label class="col-md-3 control-label">GST No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="gst_no" name="cin_no"
-							maxlength="21" title="" type="text" />
-					</div>
-				</div>
-				
 
+
+
+
+				<div class="tab-pane box " id="contact">
 					<br>
-				<br>
 
 
-				<div class="form-group">
-					<label class="col-md-3 control-label">Company CIN No</label>
-					<div class="col-md-6">
-						<input class="form-control" id="cin_no" name="cin_no"
-							maxlength="21" title="" type="text" />
-					</div>
+					<form action="" method="post">
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Address Line 1</label>
+							<div class="col-md-6">
+								<input class="form-control" id="addr_line1" type="text"
+									required="required" />
+							</div>
+						</div>
+
+						<br> <br> <br>
+
+						<div class="form-group ">
+							<label class="col-md-3 control-label">Address Line 2</label>
+							<div class="col-md-6">
+								<input class="form-control" id="addr_line2" type="text" />
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">State</label>
+							<div class="col-md-6">
+								<select class="form-control" id="state" required="required">
+									<option value="New Delhi">New Delhi</option>
+									<option value="Andaman/Nicobar Islands">Andaman/Nicobar
+										Islands</option>
+									<option value="Andhra Pradesh">Andhra Pradesh</option>
+									<option value="Arunachal Pradesh">Arunachal Pradesh</option>
+									<option value="Assam">Assam</option>
+									<option value="Bihar">Bihar</option>
+									<option value="Chandigarh">Chandigarh</option>
+									<option value="Dadra/Nagar Haveli">Dadra/Nagar Haveli</option>
+									<option value="Daman/Diu">Daman/Diu</option>
+									<option value="Goa">Bihar</option>
+									<option value="Gujarat">Gujarat</option>
+									<option value="Haryana">Haryana</option>
+									<option value="Himachal Pradesh">Himachal Pradesh</option>
+									<option value="Jammu/Kashmir">Jammu/Kashmir</option>
+									<option value="Jharkhand">Jharkhand</option>
+									<option value="Karnataka">Karnataka</option>
+									<option value="Kerala">Kerala</option>
+									<option value="Lakshadweep">Lakshadweep</option>
+									<option value="Madhya Pradesh">Madhya Pradesh</option>
+									<option value="Maharashtra">Maharashtra</option>
+
+									<option value="Manipur">Manipur</option>
+									<option value="Meghalaya">Meghalaya</option>
+									<option value="Mizoram">Mizoram</option>
+									<option value="Nagaland">Nagaland</option>
+									<option value="Orissa">Orissa</option>
+									<option value="Pondicherry">Pondicherry</option>
+									<option value="Punjab">Punjab</option>
+									<option value="Rajasthan">Rajasthan</option>
+									<option value="Sikkim">Sikkim</option>
+									<option value="Tamil Nadu">Tamil Nadu</option>
+									<option value="Telangana">Telangana</option>
+									<option value="Tripura">Tripura</option>
+									<option value="Uttaranchal">Uttaranchal</option>
+									<option value="Uttar Pradesh">Uttar Pradesh</option>
+									<option value="West Bengal">West Bengal</option>
+								</select>
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">City</label>
+							<div class="col-md-6">
+								<input class="form-control" id="city" type="text"
+									required="required" />
+
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Locality</label>
+							<div class="col-md-6">
+								<input class="form-control" id="locality" type="text"
+									placeholder="Prominent Landmark" required="required" />
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Email</label>
+							<div class="col-md-6">
+								<input class="form-control" id="email" name="email"
+									maxlength="30" required="required" title="" type="email" />
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group">
+							<label class="col-md-3 control-label">Website</label>
+							<div class="col-md-6">
+								<input class="form-control" id="website" name="website"
+									maxlength="30" title="" type="email" />
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Mobile No</label>
+							<div class="col-md-1">+91</div>
+							<div class="col-md-5">
+								<input class="form-control" id="mobile" name="mobile"
+									required="required" title="" type="number"
+									oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+									type="number" maxlength="10" />
+							</div>
+						</div>
+
+
+
+						<br> <br>
+						<div class="form-group ">
+							<label class="col-md-3 control-label">Landline No</label>
+							<div class="col-md-1">+91</div>
+							<div class="col-md-2">
+								<input class="form-control" id="code" name="code"
+									placeholder="STD Code" title="" type="number"
+									oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+									maxlength="3" />&nbsp;
+							</div>
+							<div class="col-md-3">
+								<input class="form-control" id="landline" name="landline"
+									placeholder="Landline number" title="" type="number"
+									oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+									maxlength="8" />
+
+							</div>
+
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<div class="col-md-6">
+								<input id="contact" type="submit" value="Save"
+									class="btn btn-blue" onclick="return save_contact()">
+
+							</div>
+						</div>
+
+					</form>
+
+					<br> <br> <br>
+
+
 				</div>
-				
-			
+				<!-- end of contact -->
 
-				<br> <br> 
-				
-				<div class="form-group required">
-				<div class="col-md-6">
-				 <input id="taxdetails" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_tax()"> 
-					</div>
-					</div>
-				
-				
-			</form>
-								<br><br><br>
-								
-								
-								</div>
-								
-					<!-- end of tax -->			
-								
-								
-								
-								<div class="tab-pane box " id="account">
-								<br>
-								
-								
-								<form action="" method="post">
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Account Number</label>
-					<div class="col-md-6">
-						<input class="form-control" id="account_num" type="number" />
-					</div>
+
+
+				<!-- tax details -->
+
+				<div class="tab-pane box " id="tax">
+					<br>
+
+
+					<form action="" method="post">
+
+
+
+
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Company PAN No</label>
+							<div class="col-md-6">
+								<input class="form-control" id="pan_no" name="pan_no"
+									maxlength="10" required="required" title="" type="text" />
+							</div>
+						</div>
+
+						<br> <br> <br>
+
+						<div class="form-group ">
+							<label class="col-md-3 control-label"> TIN No</label>
+							<div class="col-md-6">
+								<input class="form-control" id="tin_no" name="tin_no" title=""
+									oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+									type="number" maxlength="11" />
+							</div>
+						</div>
+
+
+						<br> <br>
+
+						<div class="form-group">
+							<label class="col-md-3 control-label">Service Tax
+								Registration No</label>
+							<div class="col-md-6">
+								<input class="form-control" id="strn_no" name="cin_no"
+									maxlength="21" title="" type="text" />
+							</div>
+						</div>
+
+
+						<br> <br>
+
+
+						<div class="form-group">
+							<label class="col-md-3 control-label">GST No</label>
+							<div class="col-md-6">
+								<input class="form-control" id="gst_no" name="cin_no"
+									maxlength="21" title="" type="text" />
+							</div>
+						</div>
+
+
+						<br> <br>
+
+
+						<div class="form-group">
+							<label class="col-md-3 control-label">Company CIN No</label>
+							<div class="col-md-6">
+								<input class="form-control" id="cin_no" name="cin_no"
+									maxlength="21" title="" type="text" />
+							</div>
+						</div>
+
+
+
+						<br> <br>
+
+						<div class="form-group required">
+							<div class="col-md-6">
+								<input id="taxdetails" type="submit" value="Save"
+									class="btn btn-blue" onclick="return save_tax()">
+							</div>
+						</div>
+
+
+					</form>
+					<br> <br> <br>
+
+
 				</div>
 
-				<br> <br><br>
+				<!-- end of tax -->
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Type of Account</label>
-					<div class="col-md-6">
-						<select class="form-control" id="type_account">
-							<option value="Savings">Savings</option>
-							<option value="Overdraft">Overdraft</option>
-							<option value="Current Account">Current Account</option>
-						</select>
-					</div>
+
+
+				<div class="tab-pane box " id="account">
+					<br>
+
+
+					<form action="" method="post">
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Account Number</label>
+							<div class="col-md-6">
+								<input class="form-control" id="account_num" type="number" />
+							</div>
+						</div>
+
+						<br> <br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Type of Account</label>
+							<div class="col-md-6">
+								<select class="form-control" id="type_account">
+									<option value="Savings">Savings</option>
+									<option value="Overdraft">Overdraft</option>
+									<option value="Current Account">Current Account</option>
+								</select>
+							</div>
+						</div>
+
+						<br> <br>
+
+
+
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">Bank</label>
+							<div class="col-md-6">
+								<select class="form-control" id="bank">
+									<option value="Proprietorship">Proprietorship</option>
+									<option value="Partnership">Partnership</option>
+									<option value="Limited Liability Partnership">Limited
+										Liability Partnership</option>
+									<option value="One Person Company">One Person Company</option>
+									<option value="Private Limited Company">Private
+										Limited Company</option>
+									<option value="Limited Company">Limited Company</option>
+								</select>
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<label class="col-md-3 control-label">IFSC Code</label>
+							<div class="col-md-6">
+								<input class="form-control" id="ifsc_code" type="text"
+									maxlength="30" />
+							</div>
+						</div>
+
+						<br> <br>
+
+						<div class="form-group required">
+							<div class="col-md-6">
+								<input id="account" type="submit" value="Save"
+									class="btn btn-blue" onclick="return save_account()">
+							</div>
+						</div>
+
+					</form>
+					<br> <br> <br>
+
+
 				</div>
-
-				<br> <br>
-
+				<!-- end of account -->
 
 
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">Bank</label>
-					<div class="col-md-6">
-						<select class="form-control" id="bank">
-							<option value="Proprietorship">Proprietorship</option>
-							<option value="Partnership">Partnership</option>
-							<option value="Limited Liability Partnership">Limited
-								Liability Partnership</option>
-							<option value="One Person Company">One Person Company</option>
-							<option value="Private Limited Company">Private Limited
-								Company</option>
-							<option value="Limited Company">Limited Company</option>
-						</select>
-					</div>
-				</div>
+			</div>
+			<!-- end of tab content -->
 
-				<br> <br>
 
-				<div class="form-group required">
-					<label class="col-md-3 control-label">IFSC Code</label>
-					<div class="col-md-6">
-						<input class="form-control" id="ifsc_code" type="text"
-							maxlength="30" />
-					</div>
-				</div>
-
-				<br> <br> 
-				
-				<div class="form-group required">
-				<div class="col-md-6">
-				 <input id="account" type="submit"
-					value="Save" class="btn btn-blue" 
-					onclick="return save_account()"> 
-					</div>
-					</div>
-					
-			</form>
-								<br><br><br>
-								
-								
-								</div>
-								<!-- end of account -->
-								
-								
-								
-								</div> <!-- end of tab content -->
-		
-		
 		</div>
-		</div>
+	</div>
 
 
 
@@ -1084,20 +1140,21 @@ function create_vendor()
 						class="icon-bar"></span>
 				</button>
 
-				<a class="navbar-brand" href="index.html" id="xyz" style="color:white;font-size:30px">SIMPLIFY TAX</a>
-				<a class="navbar-brand" id="xyz" class="company_name"
+				<a class="navbar-brand" href="index.html" id="xyz"
+					style="color: white; font-size: 30px">SIMPLIFY TAX</a> <a
+					class="navbar-brand" id="xyz" class="company_name"
 					style="font-size: 30px"></a>
 
 
 			</div>
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav" id="pqr">
-				
-				<li><a href="#" style="color:white"><i class="entypo-plus"></i></a></li>
-				
+
+				<li><a href="#" style="color: white"><i class="entypo-plus"></i></a></li>
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-bell"></i> <b
-						class="caret"></b></a>
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-bell"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu alert-dropdown">
 						<li><a href="#">Alert Name <span
 								class="label label-default">Alert Badge</span></a></li>
@@ -1114,29 +1171,30 @@ function create_vendor()
 						<li class="divider"></li>
 						<li><a href="#">View All</a></li>
 					</ul></li>
-					
+
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-fw fa-gear"></i>Settings</a>
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
-					   
+
 						<li><a href="business_details.html">Company Profile</a></li>
-						 <li class="divider"></li>
-						<li><a href="tax_settings.html" > Tax Settings</a></li>
 						<li class="divider"></li>
-						<li><a href="financial_settings.html">Financial Settings </a></li>
+						<li><a href="tax_settings.html"> Tax Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="financial_settings.html">Financial Settings
+						</a></li>
 						<li class="divider"></li>
 						<li><a href="products.html">Products </a></li>
 						<li class="divider"></li>
 						<li><a href="FormatSettings.html">Format Settings </a></li>
-					</ul>
-				</li>
+					</ul></li>
 
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white">&nbsp;<i class="fa fa-user" id="name"></i>
-						<b class="caret"></b></a>
+					data-toggle="dropdown" style="color: white">&nbsp;<i
+						class="fa fa-user" id="name"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						
+
 						<li class="divider"></li>
 						<li><a href="logout.html"><i
 								class="fa fa-fw fa-power-off"></i> Log Out</a></li>
@@ -1147,34 +1205,34 @@ function create_vendor()
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav" id="abc">
 
-					<li ><a href="index.html"><i
-							class="fa fa-fw fa-dashboard"></i> Home</a></li>
-							
-					<li class="active"><a href="PurchaseOrders.html"><i class="fa fa-fw fa-dashboard"></i>
-							Purchase Orders</a></li>
-							
-					<li><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
-							Bills</a></li>
-							
+					<li><a href="index.html"><i class="fa fa-fw fa-dashboard"></i>
+							Home</a></li>
+
+					<li class="active"><a href="PurchaseOrders.html"><i
+							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
+
+					<li><a href="createBill.html"><i
+							class="fa fa-fw fa-dashboard"></i> Bills</a></li>
+
 					<li><a href="createEstimate.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
-					
+
 					<li><a href="createInvoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
-					
+
 					<li><a href="Receipts.html"><i
 							class="fa fa-fw fa-dashboard"></i> Receipts</a></li>
-							
+
 					<li><a href="Reports.html"><i
 							class="fa fa-fw fa-dashboard"></i> Reports</a></li>
-							
+
 					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
-							
+
 					<li><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
-					
-					
+
+
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -1196,7 +1254,7 @@ function create_vendor()
 						<ul class="nav nav-tabs bordered">
 							<li class="active"><a href="#po" data-toggle="tab"><i
 									class="entypo-menu"></i> Create Purchase Order </a></li>
-					<!-- 		<li><a href="#bill" data-toggle="tab"><i
+							<!-- 		<li><a href="#bill" data-toggle="tab"><i
 									class="entypo-menu"></i> Create Bill </a></li>
 							<li><a href="#payments" data-toggle="tab"><i
 									class="entypo-menu"></i> Payments </a></li>
@@ -1222,15 +1280,9 @@ function create_vendor()
 										<div class="col-lg-12">
 
 
-											<div id="portionOne" class="panel-collapse collapse in">
-											
-											<br>
-											VISTAR PRINTSOL PRIVATE LIMITED<br>
-											B.D.A Layout, Nagarbhavi, <br>
-											Bangalore.
-												<br><br>
+											<div id="businessDetails" class="panel-collapse collapse in">
 
-												<!-- ADD YOUR BUSINESS DETAILS -->
+
 
 											</div>
 											<!-- end of portion one -->
@@ -1268,19 +1320,19 @@ function create_vendor()
 														<div id="form-panel">
 															<form role="form" id="customer_profile">
 
-							<div class="form-group required">
+																<div class="form-group required">
 																	<label class="col-md-2 control-label">Vendor</label>
 																	<div class="col-md-4">
 																		<input list="vendor_names" class="form-control"
 																			id="vendor" placeholder="Vendor Name"
-																			onchange= "update_vendor()">
+																			onchange="update_vendor()">
 
 																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
                                   store customer id save this -->
 
 																		<datalist id="vendor_names">
-																			
-																			
+
+
 																		</datalist>
 
 
@@ -1300,18 +1352,31 @@ function create_vendor()
 																	</div>
 																</div>
 
-																
+
 
 																<br> <br>
 
-																
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">PO Number</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="po_number"
+																			maxlength="100" required="required" title=""
+																			type="text" />
+																	</div>
+																</div>
+
+																<br>
+																<br>
+
+
 																<div class="form-group required">
 																	<label class="col-md-2 control-label">Date</label>
 																	<div class="col-md-4">
 																		<div class="input-group date" id="dtpicker">
 
-																			<input type="text" class="form-control" id="date" onchange="get_duedate()">
-																			<span class="input-group-addon"> <span
+																			<input type="text" class="form-control" id="date"
+																				onchange="get_duedate()"> <span
+																				class="input-group-addon"> <span
 																				class="glyphicon glyphicon-calendar"> </span>
 																			</span>
 																		</div>
@@ -1364,31 +1429,31 @@ function create_vendor()
 
 																<div class="col-md-12">
 																	<input list="0productlist" class="form-control"
-																			id="0product_name" placeholder="Chose Product" onchange="update_prod_details(0)" ></input>
-																			
+																		id="0product_name" placeholder="Chose Product"
+																		onchange="update_prod_details(0)"></input>
 
-																		<datalist id="0productlist">
-																		
-																			
-																			
-																		</datalist>
+
+																	<datalist id="0productlist">
+
+
+
+																	</datalist>
 																</div>
 															</div>
 
 														</td>
-														
-															<td>
-														
-														<div class="form-group required">
+
+														<td>
+
+															<div class="form-group required">
 
 																<div class="col-md-12">
-																	<input type="text"  class="form-control"
-																		id="0prod_desc" maxlength="30" 
-																		placeholder="Description" required="required" title=""
-																		 />
+																	<input type="text" class="form-control" id="0prod_desc"
+																		maxlength="30" placeholder="Description"
+																		required="required" title="" />
 																</div>
 															</div>
-														
+
 														</td>
 
 														<td>
@@ -1421,7 +1486,7 @@ function create_vendor()
 																	<input list="0taxlist" class="form-control"
 																		id="0tax_rate" placeholder="Tax Rate"
 																		onchange="update_tax(first_count)">
-																		
+
 																	<datalist id="0taxlist">
 
 
@@ -1439,8 +1504,7 @@ function create_vendor()
 																		value="0" readonly style="background-color: white"
 																		title="" type="text" />
 																</div>
-															</div> <br>
-														<br>
+															</div> <br> <br>
 															<div class="form-group required">
 
 																<div class="col-md-12">
@@ -1575,7 +1639,7 @@ function create_vendor()
 
 		</div>
 		<!-- /#wrapper -->
-		</div>
+	</div>
 </body>
 
 <script>
@@ -1585,142 +1649,149 @@ function create_vendor()
 $('#submit').click(function(){
 
   var purchaseOrder = {};
-  var pod= [];   //purchase order details
+  var poDetails = [];   //purchase order details
   
-  purchaseOrder.pod = pod;
+  purchaseOrder.poDetails = poDetails;
   
   
+  //iterate through list of items
 	for(var i=0;i<box_counter.length;i++)
 	{
 	  var index = box_counter[i];
 	  var product_identifier = index + "product_name";
 	  var tax_identifier = index + "tax_rate";
+	  
 	  if($('#' + product_identifier).val()=='')
 	     	 alert("Please select a product ");
 	     	 
-	  //add checks for customer being selected, date and PO number(read only)
+	                                                          //add checks for customer being selected, date and PO number(read only)
 	  
 	  else 
-	  {   //collect all product details
-	    
-		  var productName= $('#' + index + 'product_name').val();
-	  	  var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
-	  		
-	  		var desc= $('#' + index + 'prod_desc').val();
+	  { 
+		  	var productName= $('#' + index + 'product_name').val();
+	  	  	var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
+	  	  	var desc= $('#' + index + 'prod_desc').val();
 			var quantity = $('#' + index + 'quantity').val();
 			var price = $('#' + index + 'price').val();
 			var amount = $('#' + index + 'amt').val();
 			var tax = $('#' + index + 'tax_rate').val();
-			
-			
 			var tax_id = $('datalist option[value="'+ tax +'"]').attr('taxid');
 			var taxAmount = $('#' + index + 'tax_amt').val();
 		
-			//tax associated with product may change in PO
-			//set only Prod ID to identify product
-			var product = {
-  				"product":
-  					{
-
-  					"product_name":null,
-  					"product_desc": null,
-  					"tax":null,
-  					"category":null,
-  					"cp": null,
-  					"head_expenditure": null,
-  					"sp": null,
-  					"head_income": null,
-  					"discount" :null ,
-  					
-  					"company":null,
-  					"product_id": prod_id,
-  					"id":null
+		
+			var details = {
+  				"product": {
+  							"productName":null,
+  							"productDescription": null,
+  							"productTax":null,
+  							"productCategory":null,
+  							"costPrice": null,
+  							"productHOE": null,
+  							"sellingPrice": null,
+  							"productHOI": null,
+  							"company":null,
+  							"isDeleted":false,
+  							"id": prod_id
 						
-  					},
-  					 //these parameters can change apart from whats set in product creation
-  				"desc":desc,
+  						   },
+  				"description":desc,
   				"quantity": quantity,
-  				"cost": price,
-  				"amount": amount,
+  				"price": price,
+  				"subTotal": amount,
+  				"taxTotal": taxAmount,
   				"tax": {
-  					"tax_id": tax_id,                             //tax need  not be same as mentioned with product
-  					"tax_abbreviation":null,
-  					"tax_name":null                               //make other associated tax fields null
+  					      "taxType": null,
+  					      "taxName":null,
+  					      "taxAbbreviation" :null,
+  					      "taxDescription" :null,
+  					      "taxRate":null,
+  					      "isDeleted":false,
+  					      "company":null,
+  					      "id" :tax_id
+  					
   					},
-  				"tax_amount": taxAmount,
-  				"po":null,      //POrder No to which this POD belongs to
-  				"id":null       //id of POD
-						  };
-					  
-			purchaseOrder.pod.push(product);
+  			   "id" : null
 			
-			
-	 	 
-	    //write rest of code here
-	}
-	
-	}
-	var vendor = $("#vendor").val();
-	var vendor_id = $('datalist option[value='+ vendor +']').attr('vendorid');
-	purchaseOrder.vendor = {
-			"vendor_id" : vendor_id   //json of vendor object, set other fields null
-			
-	};
-	
-	purchaseOrder.company = {
-			
-			"company_id" : "CMP445"
 			};
+					  
+			purchaseOrder.poDetails.push(details);
+		
+	}
 	
-	// add customerid, add companyid - get it from local storage, other details of PO
+}
+  
+	var vendor = $("#vendor").val();
+	var vendor_id = $('datalist option[value="'+ vendor +'"]').attr('vendorid');
+	var date = $("#date").val();
 	
-    var date = $("#date").val();
+	purchaseOrder.vendor = null;
+	purchaseOrder.company = null;
+	purchaseOrder.isPurchaseOrder = true;
+	purchaseOrder.poSerialId = poserialNo;
+	purchaseOrder.poDate = date;
+	purchaseOrder.poNumber = $("#po_number").val();
+	purchaseOrder.poNotes = $("textarea#notes").val();
 	
-	purchaseOrder.order_date = date;
-	purchaseOrder.po_number = null;
-	purchaseOrder.po_id = null;
+	purchaseOrder.poSubtotal = $("#subtotal").val();
+	purchaseOrder.poTaxtotal = $("#taxtotal").val();
+	purchaseOrder.poGrandtotal = $("#grandtotal").val();
+	purchaseOrder.poAdvancetotal = null;
+	purchaseOrder.poBalance = $("#grandtotal").val();
+	purchaseOrder.isPodeleted  = false;
 	
-	purchaseOrder.amount = $("#subtotal").val();
-	purchaseOrder.tax_amount = $("#taxtotal").val();
-	purchaseOrder.grand_total = $("#grandtotal").val();
-	purchaseOrder.adv_payment = null;
 	
-	purchaseOrder.note = $("textarea#notes").val();
-	purchaseOrder.advance_amount =0;
-	purchaseOrder.balance = $("#grandtotal").val();
-	purchaseOrder.bill_status=0;
+	purchaseOrder.isBill = false;
+	purchaseOrder.billNumber = null;
+	purchaseOrder.billDate  = null;
+	purchaseOrder.billDueinterval = 0;
+	purchaseOrder.billDuedate = null;
+	purchaseOrder.billSubtotal = null;
+	purchaseOrder.billTaxtotal = null;
+	purchaseOrder.billGrandtotal = null;
+	purchaseOrder.billAdvancetotal = null;
+	purchaseOrder.billBalance = null;
+	purchaseOrder.isBilldeleted  = false;
+	
+	purchaseOrder.billDetails = null;
+	purchaseOrder.advancePayments = null;
+	purchaseOrder.billPayments = null;
+	purchaseOrder.id = null;
 	
 	
 	console.log(JSON.stringify(purchaseOrder));
 	var p = JSON.stringify(purchaseOrder);
+	console.log(vendor_id);
 
 	
 	//ajax call
+	var ccid = getCookie("CCID");
+ var sid = getCookie("SID");
+ var token = getCookie("TTID");
+
+					
 	
-	/*
 	$.ajax({
-		   type : 'GET',
-		   url  : '/Accounting/po/purchase/createpo',
-		    dataType :'text',
-		    data:{'jsondata' : p},
-		    success: function(response) {
-		     alert(response);
-		     //console.log(response);
-		     //pass PO number of the created PO
-		     //redirect to URL to view purchase order and pass response to next page
-		     //store db json in local storage
-		     var po_json = response;
-		     //window.localStorage.setItem("identifier",po_json);
-		     window.location.replace("edit_purchaseOrder.html?PONo=" + po_json); //pass in an encrypted form 
+		   type : 'POST',
+		   url  : '/Accounting/rest/po/create?' + $.param({	
+			   	"po" :p,
+			   	"cid" : ccid,
+			   	"id" : sid,
+			   	"token" : token, "vendorId" : vendor_id}),
+		    dataType :'json',
+		    success: function(response, text, xhr) {
+		               
+		    	var po = JSON.parse(xhr.responseText);
+		    	window.location.replace("view_po.html?id=" + po.id);
+		    	
 		    },
 			error: function (a,b,c)
 			{ 
-				alert(a.status+b+c);
-				 console.log(a.status+b+c);
+				
+				 console.log(c.responseText);
 			}  
 			  });
 	
-	*/
+	
 });
 
 
@@ -1844,21 +1915,21 @@ $('#submit').click(function(){
 											+'</tr>').insertBefore('#last_row');
 							
 							
-							for(var i=0;i<product_list.length;i++)
+							for(var i=0;i<productList.length;i++)
 							 {
 							
 							 //show only inventory, noninv and service input type products
 							
-						      $('#' + count +'productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
+						      $('#' + count +'productlist').append("<option prodid='" +  productList[i].id   + "' value='" +productList[i].productName +  "'>" + "" +  productList[i].productDescription + "" + "</option>");
 							 
 							 }
 						 
 							$('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
 						  
-						     for(var i=0;i<tax_list.length;i++)
+						     for(var i=0;i<taxList.length;i++)
 						    	 {
 						    	 
-						    	 	$('#' + count + 'taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+						    	 	$('#' + count + 'taxlist').append("<option taxid='" +  taxList[i].id   + "' value='" + taxList[i].taxAbbreviation + " "  +  taxList[i].taxRate + "'>" + "</option>");
 						    	 }
 
 						});
@@ -2411,7 +2482,7 @@ function add_product()
 	 
 	 //add this product to all existing box counters and to main product list
 	 
-	 product_list.push(product1);
+	 productList.push(product1);
 	 
 	 for(var i=0;i<box_counter.length;i++)
 		 {
@@ -2449,4 +2520,3 @@ function add_product()
 
 <!-- Bootstrap Core JavaScript -->
 <script src="jarvis/js/bootstrap.min.js"></script>
-

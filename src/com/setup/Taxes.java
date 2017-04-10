@@ -5,6 +5,8 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity("taxes")
 public class Taxes {
 	
@@ -15,6 +17,7 @@ public class Taxes {
 	Details d;
 	
 	@Id
+	@JsonIgnore
 	private ObjectId taxid;
 
 	public Taxes(String name, double rate, Details d) {

@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Path("/products")
-
 public class ProductsServiceImpl {
 
 	@POST

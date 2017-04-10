@@ -7,7 +7,7 @@ public class TaxDetails {
 
 	private String panNo;
 	private boolean panVStatus;
-	private byte[] panDoc;
+	private byte[] panDoc; //make it string path to file location
 	private boolean panDocVStatus;
 	
 	private String tinNo;

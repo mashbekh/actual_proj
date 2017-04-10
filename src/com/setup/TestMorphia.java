@@ -1,14 +1,20 @@
 package com.setup;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 
+import com.Models.Products;
 import com.Models.ttlTry;
 
 
@@ -29,7 +35,7 @@ public class TestMorphia {
 	@GET
 	@Path("/embed")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Morphiatry test()
+	public int test()
 	{
 		/*
 		Morphia morphia = new Morphia(); 
@@ -45,20 +51,25 @@ public class TestMorphia {
 		
 		datastore1 = Morphiacxn.getInstance().getMORPHIADB("test");
 		
+		/*
 		Query<Taxes> userQueryDS = datastore1.createQuery(Taxes.class);
 		userQueryDS.field("rate").equal(30);
 		Taxes a = userQueryDS.get();
+		List<Addr> adrlist = new ArrayList<>();
+		Addr a1  =  new Addr("pflayout", "bengaluru", "312",new ObjectId(), a);
+		Addr a2  =  new Addr("pflayojhghg", "hybd", "676",new ObjectId(),a);
+		adrlist.add(a1);
+		adrlist.add(a2);
 		
-		Addr a1  =  new Addr("pflayout", "bengaluru", "312",a);
-		
-		Morphiatry m = new Morphiatry("heyy",a1, a);
+		Morphiatry m = new Morphiatry("heyy",adrlist);
 		datastore1.save(m);
+		*/
+		//"58eb28f54c3e9d38ec176406"
+		Query<Morphiatry> userQueryDS1 = datastore1.createQuery(Morphiatry.class).disableValidation().filter("id", new ObjectId("58eb28f54c3e9d38ec176406")).filter("adrlist.id", new ObjectId("58eb28f54c3e9d38ec176404"));
+		UpdateOperations<Morphiatry> ops =  datastore1.createUpdateOperations(Morphiatry.class).set("adrlist.$.num", "444");
+		UpdateResults result = datastore1.update(userQueryDS1, ops, false);
 		
-		Query<Morphiatry> userQueryDS1 = datastore1.createQuery(Morphiatry.class).disableValidation().field("t.d.name").equal("sumukh");
-		
-		Morphiatry b = userQueryDS1.get();
-		System.out.println(b.toString());
-		return b;
+		return result.getUpdatedCount();
 		
 	}
 	
