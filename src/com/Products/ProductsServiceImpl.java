@@ -46,6 +46,18 @@ public class ProductsServiceImpl {
 				   .entity(prodList).build();
 	}
 	
+	@POST
+	@Path("/getAll")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProducts( @QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token) throws IOException, AppException, Exception, Throwable, EntityException, AppException
+	{
+		
+		ProductsDaoImpl prodDao = new ProductsDaoImpl();
+		List<Products> prodList = prodDao.getAllProduct(companyId);
+		return Response.status(Response.Status.OK)
+				   .entity(prodList).build();
+	}
+	
 	
 	@POST
 	@Path("/update")

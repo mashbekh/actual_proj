@@ -1,0 +1,227 @@
+
+
+function delete_payment(payment_id)
+{
+	var divid;
+	
+		divid = "adv" + payment_id;
+ 	
+	$("#" + divid).remove();
+
+//adj bal and adv total
+//remove entry from json adv
+
+	
+	var advamt;
+	
+	for(var i=0;i<adv.length;i++)
+	{
+		if(id == adv[i].id)
+			{
+			 advamt = adv[i].payment_amount;
+			  adv.splice(i,1);
+			}
+
+	}
+	
+var oldadv = $("#advtotal").val();
+	
+	var oldbal = $("#balanceamt").val();
+	
+	$("#advtotal").val(Number(oldadv) -  Number(advamt));
+	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
+	
+	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+	$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+	console.log(adv);
+}
+
+function tds_change()
+{
+	
+
+	//when amount and tds rate changes
+		var amt = $("#adv_amount").val();
+		if ($("#tds_rate").val() != '') {
+			var tdsrate = $("#tds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#tds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#tds_amount").val('');
+		}
+		
+		
+		
+		var amt = $("#eadv_amount").val();
+		if ($("#etds_rate").val() != '') {
+			var tdsrate = $("#etds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#etds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#etds_amount").val('');
+		}
+
+	}
+	
+
+	
+function edittds_change()
+{
+	
+
+	//when amount and tds rate changes
+		var amt = $("#newadv_amount").val();
+		if ($("#newtds_rate").val() != '') {
+			var tdsrate = $("#newtds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#newtds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#newtds_amount").val('');
+		}
+
+	}
+	
+
+	
+	function update_due()
+	{
+		if(adv_counter.length>0)
+			{
+			  var due = $("#grandtotal").val() - $("#advtotal").val();
+			  $("#balanceamt").val(due.toFixed(2));
+			}
+		
+	}
+	
+	
+
+	function edit_pay() {
+		
+		alert(adv_counter);   //the payment id which just got editted
+		
+		var date = $("#epayment_date").val();
+		var amt = $("#eadv_amount").val();
+		var title  = $("#epurpose_title").val();
+		var acc = $("#epayment_acc").val();
+		var mode = $("#emode_payment").val();
+		
+		if( date==''|| amt=='' || title=='' || acc=='' || mode=='')
+			{
+			return true;
+			}
+
+		
+		
+		var tds = $("#etds_rate").val();
+		var desc = $("#epurpose_desc").val();
+		var tdsamt = $("#etds_amount").val();
+		
+		//find this entry in adv array to update
+	
+		
+		//AJX CALL TO EDIT, PASS ID OF IT ALONG WITH PO#
+		//on success edit in json, and update fields
+		
+		var prev_adv ;
+		
+		for(var k=0;k<adv.length;k++)
+			{
+				if(adv_counter==adv[k].id)
+					{
+					
+					prev_adv = adv[k].payment_amount;
+					
+					  alert(k);
+					  adv[k].payment_date = date;
+					  adv[k].payment_amount = amt;
+					  adv[k].purpose_title = title;
+					  adv[k].purpose_desc = desc;
+					  adv[k].payment_mode  = mode;
+					  adv[k].payment_account = acc;
+					  adv[k].tdsrate = tds;
+					  adv[k].tdsamount = tdsamt;
+					
+					break;
+					}
+			
+			}
+		
+		
+		
+		console.log(adv);
+		
+		$("#edit_payment").dialog('close');
+		
+		//update adv and balance of po
+		
+		var oldadv = $("#advtotal").val();
+		//alert(oldadv);
+		var oldbal = $("#balanceamt").val();
+		//alert(oldbal);
+		$("#advtotal").val(Number(oldadv) - Number(prev_adv)  +  Number(amt));
+		$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
+		
+		//show the chngs in payments section
+		
+		$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+		$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+		
+		
+		
+		var divid;
+		
+			
+		 divid = "adv" + adv_counter;
+		
+		$("#" + divid).remove();
+		
+		$("#payments").append('<div id="'+  divid + '">' + 
+					'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
+					'&nbsp;&nbsp;<a onclick="edit_payment(\'' +  adv_counter + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+					'<a onclick="delete_payment(\'' +  adv_counter + '\')">Remove payment</a></div>');
+		
+		
+		return false;
+
+	}
+	*/

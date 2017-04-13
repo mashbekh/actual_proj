@@ -163,798 +163,11 @@ $(function () {
     
 });
 
-var product_list = [
-	
-	{      
-		
-		"product_name": "eraser",
-		"product_desc": "stationary",
-		"tax":                     //backend - search for tax obect from table with this id
-			{
-			 "tax_name":null,
-			 "tax_abbreviation": "VAT",
-			 "tax_desc":null,
-			 "tax_rate": 5.5,
-			 "company": null,  
-			 "tax_id": "CMP123TAX1",
-			 "tax_recoverable":true
-			 
-			},
-		"category":"XYZ",
-		"cp": 40,
-		"head_expenditure": "Purchases",
-			
-		"sp": 45,
-		"head_income": "Sales",
-		
-		"company":
-			{
-			"company_id" :"CMP445"
-			},
-		"discount":0,	
-		"product_id": "PROD66",
-		"id": 66
-		
-		
-},
 
 
-{      
-	
-	"product_name": "pens",
-	"product_desc": "stationary",
-	"tax":                     //backend - search for tax obect from table with this id
-		{
-		 "tax_name":null,
-		 "tax_abbreviation": "VAT",
-		 "tax_desc":null,
-		 "tax_rate": 5.5,
-		 "company": null,  
-		 "tax_id": "CMP123TAX1",
-		 "tax_recoverable":true
-		 
-		},
-	"category":"XYZ",
-	"cp": 75,
-	"head_expenditure": "Purchases",
-		
-	"sp": 75,
-	"head_income": "Sales",
-	
-	"company":
-		{
-		"company_id" :"CMP445"
-		},
-	"discount" :0,
-	"product_id": "PROD90",
-	"id": 90
-	
-	
-}
-	];                                 //list of products from backend
-	
-
-var tax_list = [
-	{
-		"tax_id" : "CMP123TAX1",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 5.5
-		
-	},
-	{
-		"tax_id" : "CMP123TAX2",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 14.5
-		
-		
-	}
-];
-
-
-/*
-function add_advpay() {
-    
-    $("#advance_payment").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "Advance Payment",
-        width: 900,
-        height: 670
-        });
-         // use same date 
-        
-        var date = $("#date").val();
-        $('#payment_date').val(date);
-        $("#vendor_name").val($("#vendor").val());
-        $("#purpose_title").val("Advance Payment towards Purchase Order");
-        $('#advance_payment').dialog('open');
-    };
-    
-    
-    
-
-	
-	// edit already existing ones
-function open_advdialog(counter)
-{
-	alert(counter);
-	//$('#advance_payment').dialog('open');
-	console.log(advid_counter);
-	
-	//get advidcounter for id of this adv payment
-	var id = advid_counter[counter];
-	
-	
-	//search for this adv pay detail in oldadv array
-	
-	for(var i=0;i<oldadv.length;i++)
-		{
-		if(oldadv[i].id==id)
-			break;
-		}
-	
-	alert(i);
-	alert(id);
-	
-	$("#editold_payment").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "Edit Advance Payment",
-        width: 600,
-        height: 620
-        });
-         // use same date 
-        
-        $("#oldvendor_name").val($("#vendor").val());
-        $("#oldpurpose_title").val(oldadv[i].purpose_title);
-        $("#oldpurpose_desc").val(oldadv[i].purpose_desc);
-        $("#oldmode_payment").val(oldadv[i].payment_mode);
-        $("#oldpayment_acc").val(oldadv[i].payment_account);
-        $("#oldadv_amount").val(oldadv[i].payment_amount);
-        $("#oldtds_rate").val(oldadv[i].tdsrate);
-        $("#oldtds_amount").val(oldadv[i].tdsamount);
-        $("#oldpayment_date").val(oldadv[i].payment_date);
-
-        editable_old_counter=counter;
-        
-        $('#editold_payment').dialog('open');
-	
-	
-	
-}
-	
-	//submit editted old payment
-	function edit_oldpay()
-	{
-		
-		alert(editable_old_counter);
-		
-	
-		var id = advid_counter[editable_old_counter];
-		
-		
-	
-	
-	//search for this adv pay detail in oldadv array
-	
-	for(var i=0;i<oldadv.length;i++)
-		{
-		if(oldadv[i].id==id)
-			break;
-		}
-	
-	
-	var adv = $("#advtotal").val();
-	$("#advtotal").val(adv - oldadv[i].payment_amount );
-	
-	//alert($("#advtotal").val());
-	
-	var bal = $("#balanceamt").val();
-	$("#balanceamt").val(Number(bal) + Number(oldadv[i].payment_amount) );
-	
-	//alert($("#balanceamt").val());
-	
-	    //collect all values and re-assign
-		
-		
-	    var date = $("#oldpayment_date").val();
-	var amt = $("#oldadv_amount").val();
-	var title = $("#oldpurpose_title").val();
-	var desc = $("#oldpurpose_desc").val();
-	var mode = $("#oldmode_payment").val();
-	var acc = $("#oldpayment_acc").val();
-	var tds = $("#oldtds_rate").val();
-	var tdsamt = $("#oldtds_amount").val();
-	
-	
-			oldadv[i].payment_date= date;
-			oldadv[i].payment_amount=amt;
-			oldadv[i].purpose_title=title;
-			oldadv[i].purpose_desc= desc;
-			oldadv[i].payment_mode=mode;
-			oldadv[i].payment_account=acc;
-			oldadv[i].tdsrate=tds;
-			oldadv[i].tdsamount=tdsamt;
-			//ID remains the same
-			
-    //update new balance and new adv amount
-    
-    var adv = $("#advtotal").val();
-	$("#advtotal").val(Number(adv) +  Number(oldadv[i].payment_amount) );
-	
-	alert($("#advtotal").val());
-	
-	var bal = $("#balanceamt").val();
-	$("#balanceamt").val(Number(bal) - Number(oldadv[i].payment_amount) );
-	
-	alert($("#balanceamt").val());
-    
-			
-	//now remove that row and create new one, insert at end
-	
-	         //insert after gtotal
-	   		$("#" + oldadv[i].id ).remove();
-	
-	
-	   		if(oldadv[i].tdsrate==0)
-			{
-			
-						$(
-						'<tr id="'+ oldadv[i].id  + '"><td colspan="3">'
-								+
-
-								"Advance Payment by "
-								+  oldadv[i].payment_mode
-								+ " "
-								+ " made on "
-								+ " "
-								+  oldadv[i].payment_date
-								+ "<b>"
-								+ ": Rs."
-								+  oldadv[i].payment_amount
-								+ "</b><br>"
-								+
-
-								'</td><td><i class="entypo-pencil" onclick="open_advdialog('
-								+ editable_old_counter
-								+ ')"></i></td>'
-								+ '<td><i class="entypo-trash" onclick="delete_adv('
-								+ editable_old_counter + ')"></i></td></tr>').insertBefore("#totaladv");;
-			}
-
-			else {
-			
-		
-								$(
-								'<tr id="'+ oldadv[i].id  + '">' 
-								+'<td colspan="3">'
-								+ 'Advance Payment by' 
-								+ " "
-								+ oldadv[i].payment_mode
-								+ " "
-								+ "made on"
-								+ " "
-								+ oldadv[i].payment_date
-								+ ":"
-								+ "<b>"
-								+ " Rs."
-								
-								+ oldadv[i].payment_amount
-								+ "</b><br>"
-								+ "TDS Rate : "
-								+ oldadv[i].tdsrate
-								+ "% "
-								+ "<br>"
-								+ "TDS Amount : Rs."
-								+ oldadv[i].tdsamount
-								+ "<br>"
-								+ '</td>'
-								+ '<td>'
-								+ '<i class="entypo-pencil" onclick="open_advdialog('
-								+ editable_old_counter
-								+ ')"></i></td>'
-								+ '<td><i class="entypo-trash" onclick="delete_adv('
-								+ editable_old_counter + ')"></i></td></tr>').insertBefore("#totaladv");
-
-	}
-
-
-	
-		
-		$('#editold_payment').dialog('close');
-		
-	}
-
-	//submit editted new payment
-function edit_advpay()
-
-{
-		//can edit only if adv amt<=balance
-		
-		
-	//UPDATE ADV and balance
-	alert("edit");
-	
-	var adv = $("#advtotal").val();
-	$("#advtotal").val(adv - newadv[0].payment_amount );
-	
-	alert($("#advtotal").val());
-	
-	var bal = $("#balanceamt").val();
-	$("#balanceamt").val(Number(bal) + Number(newadv[0].payment_amount) );
-	
-	alert($("#balanceamt").val());
-	
-	
-	
-	
-	newadv.pop();
-	//show it in table row and in newadv array
-	
-	alert("length is" + newadv.length);
-	
-	var date = $("#newpayment_date").val();
-	var amt = $("#newadv_amount").val();
-	var title = $("#newpurpose_title").val();
-	var desc = $("#newpurpose_desc").val();
-	var mode = $("#newmode_payment").val();
-	var acc = $("#newpayment_acc").val();
-	var tds = $("#newtds_rate").val();
-	var tdsamt = $("#newtds_amount").val();
-	
-	
-	var a = {
-			"payment_date": date,
-			"payment_amount":amt,
-			"purpose_title":title,
-			"purpose_desc": desc,
-			"payment_mode":mode,
-			"payment_account":acc,
-			"tdsrate":tds,
-			"tdsamount":tdsamt,
-			
-	};
-	
-	newadv.push(a);
-	alert(a);
-	console.log(newadv);
-	
-	
-	
-	$("#apay").remove(); //remove table row and insert again
-	
-	//we know that adv total and bal exists, update them too
-	
-	//so insert before advtotal, 2 cases with tds and without tds
-	
-	$("#editnew_payment").dialog('close');
-	
-	
-	var td = newadv[0].tdsrate;
-	
-	var advtotal =  Number($("#advtotal").val()) + Number(newadv[0].payment_amount);
-	$("#advtotal").val(advtotal);
-
-	var bal =  ($("#balanceamt").val() - Number(newadv[0].payment_amount )).toFixed(2);
-	$("#balanceamt").val(bal);
-
-	
-	
-	
-
-	
-	if (td == '')
-	{
-		alert("no tds");
-		$(
-		'<tr id="apay"><td colspan="3">' + 
-
-		"Advance Payment by " 
-		+ mode 
-		+ " "
-				
-		+ " made on " 
-		+ date 
-		+ "<b>"
-		+ ": Rs."
-		+ amt 
-		+ "</b><br>" 
-		+'</td><td><i class="entypo-pencil" onclick="edit_adv('+ editable_counter  +')"></i></td>'
-		+'<td><i class="entypo-trash" onclick="delete_newadv(' +  editable_counter + ')"></i></td></tr>').insertBefore('#totaladv');
-		//$("#adv_pay").hide();
-
-	}
-
-	else 
-	{
-		$(
-		'<tr id="apay"><td colspan="3">' + 
-
-		"Advance Payment by "
-	+ mode
-	+ " " 
-	+ "made on "
-    + date
-    + ":" 
-    + "<b>"
-    +" Rs."
-	+ amt
-	+ "<br>" 
-	+"TDS Rate : " 
-	+ tds 
-	+ "% "
-	+ "<br>" 
-	+"TDS Amount : Rs." 
-	+ tdsamt
-	+ "</b><br>" 
-	+'</td><td><i class="entypo-pencil" onclick="edit_adv('+ editable_counter +')"></i></td>'
-    +'<td><i class="entypo-trash" onclick="delete_newadv(' +  editable_counter + ')"></i></td></tr>').insertBefore('#totaladv');
-	}
-	
-	
-	
-	alert(adv_counter);
-	
-	
-	
-	return false;	
-}
-
-	//edit new adv
-function edit_adv(counter)
-	
-{
-	 $("#editnew_payment").dialog({
-	        
-	        modal: true,
-	        autoOpen: false,
-	        title: "Edit Advance Payment",
-	        width: 600,
-	        height: 620
-	        });
-	         // use same date 
-	        
-	        $("#newvendor_name").val($("#vendor").val());
-	        $("#newpurpose_title").val(newadv[0].purpose_title);
-	        $("#newpurpose_desc").val(newadv[0].purpose_desc);
-	        $("#newmode_payment").val(newadv[0].payment_mode);
-	        $("#newpayment_acc").val(newadv[0].payment_account);
-	        $("#newadv_amount").val(newadv[0].payment_amount);
-	        $("#newtds_rate").val(newadv[0].tdsrate);
-	        $("#newtds_amount").val(newadv[0].tdsamount);
-	        $("#newpayment_date").val(newadv[0].payment_date);
-
-	        editable_counter=counter;
-	        
-	        $('#editnew_payment').dialog('open');
-}
-
-
-
-
-
-function tds_change()
-{
-	
-
-	//when amount and tds rate changes
-		var amt = $("#adv_amount").val();
-		if ($("#tds_rate").val() != '') {
-			var tdsrate = $("#tds_rate").val();
-			var tdsamt = (tdsrate / 100) * amt;
-			$("#tds_amount").val(tdsamt);
-		}
-
-		else {
-			$("#tds_amount").val('');
-		}
-
-	}
-	
-	
-	function a()
-	{
-		
-		alert("hi");
-	}
-	
-function edittds_change()
-{
-	
-
-	//when amount and tds rate changes
-		var amt = $("#newadv_amount").val();
-		if ($("#newtds_rate").val() != '') {
-			var tdsrate = $("#newtds_rate").val();
-			var tdsamt = (tdsrate / 100) * amt;
-			$("#newtds_amount").val(tdsamt);
-		}
-
-		else {
-			$("#newtds_amount").val('');
-		}
-
-	}
-	
-	
-function oldtds_change()
-{
-	
-
-	//when amount and tds rate changes
-		var amt = $("#oldadv_amount").val();
-		if ($("#oldtds_rate").val() != '') {
-			var tdsrate = $("#oldtds_rate").val();
-			var tdsamt = (tdsrate / 100) * amt;
-			$("#oldtds_amount").val(tdsamt);
-		}
-
-		else {
-			$("#oldtds_amount").val('');
-		}
-
-	}
-	
-	
-	
-	
-	function update_due()
-	{
-		if(adv_counter.length>0)
-			{
-			  var due = $("#grandtotal").val() - $("#advtotal").val();
-			  $("#balanceamt").val(due.toFixed(2));
-			}
-		
-	}
-	
-	
-
-	function make_advpay() {
-		
-		//alert(adv_counter);
-		
-		var date = $("#payment_date").val();
-		var amt = $("#adv_amount").val();
-		var title  = $("#purpose_title").val();
-		var acc = $("#payment_acc").val();
-		var mode = $("#mode_payment").val();
-		
-		if( date==''|| amt=='' || title=='' || acc=='' || mode=='')
-			{
-			return true;
-			}
-
-		
-		
-		var tds = $("#tds_rate").val();
-		var tdsamt = $("#tds_amount").val();
-		
-		//update advtotal and balance
-		//2cases when adv payment exists and it doesnt
-		
-		//case 1 - adv payment exists
-		
-		if(adv_counter.length>0)
-			{
-			
-			   acount=acount+1;
-			   alert(acount);
-			   adv_counter.push(acount);
-			   advid_counter[acount] = null;
-			   
-				var advtotal =  Number($("#advtotal").val()) + Number(amt);
-				$("#advtotal").val(advtotal);
-		
-				var bal =  ($("#balanceamt").val() - amt).toFixed(2);
-				$("#balanceamt").val(bal);
-		
-				if (tds == '')
-				{
-					alert("no tds");
-					$(
-					'<tr id="apay"><td colspan="3">' + 
-
-					"Advance Payment by " 
-					+ mode 
-					+ " "
-							
-					+ " made on " 
-					+ date 
-					+ "<b>"
-					+ ": Rs."
-					+ amt 
-					+ "</b><br>" 
-					+'</td><td><i class="entypo-pencil" onclick="edit_adv('+ acount  +')"></i></td>'
-					+'<td><i class="entypo-trash" onclick="delete_newadv(' +  acount + ')"></i></td></tr>').insertBefore('#totaladv');
-					//$("#adv_pay").hide();
-			
-				}
-
-				else 
-				{
-					$(
-					'<tr id="apay"><td colspan="3">' + 
-
-					"Advance Payment by "
-				+ mode
-				+ " " 
-				+ "made on "
-			    + date
-			    + ":" 
-			    + "<b>"
-			    +" Rs."
-				+ amt
-				+ "<br>" 
-				+"TDS Rate : " 
-				+ tds 
-				+ "% "
-				+ "<br>" 
-				+"TDS Amount : Rs." 
-				+ tdsamt
-				+ "</b><br>" 
-				+'</td><td><i class="entypo-pencil" onclick="edit_adv('+ acount  +')"></i></td>'
-			    +'<td><i class="entypo-trash" onclick="delete_newadv(' +  acount + ')"></i></td></tr>').insertBefore('#totaladv');
-				}
-				//$("#adv_pay").hide();
-		
-		}
-		
-		//case 2 - doesnt exist
-		
-		else
-			{
-				acount=acount+1;
-			   adv_counter.push(acount);
-			   advid_counter[acount] = null;
-			   
-			   if(tds=='')
-				   {
-			   $("#table_export")
-				.append(
-						'<tr id="apay"><td colspan="3">'
-								+
-
-								"Advance Payment by "
-								+ mode
-								+ " "
-								+ " made on "
-								+ " "
-								+ date
-								+ "<b>"
-								+ ": Rs."
-								+ amt
-								+ "</b><br>"
-								+
-
-								'</td><td><i class="entypo-pencil" onclick="edit_adv('
-								+ acount
-								+ ')"></i></td>'
-								+ '<td><i class="entypo-trash" onclick="delete_newadv('
-								+ acount + ')"></i></td></tr>');
-			   //$("#adv_pay").hide();
-			   
-				   }
-			   else
-				   {
-				   alert(tds);
-				   alert(tdsamt);
-				   $("#table_export").append(
-							'<tr id="apay"><td colspan="3">'
-							+ 'Advance Payment by' 
-							+ " "
-							+ mode
-							+ " "
-							+ "made on"
-							+ " "
-							+ date
-							
-							+ "<b>"
-							+ ": Rs."
-							
-							+ amt
-							+ "</b><br>TDS Rate : "
-							+ tds
-							+ "% "
-							+ "<br>"
-							+ "TDS Amount : Rs."
-							+ tdsamt
-							+ "<br>"
-							+ '</td>'
-							+ '<td>'
-							+ '<i class="entypo-pencil" onclick="edit_adv('
-							+ acount
-							+ ')"></i></td>'
-							+ '<td><i class="entypo-trash" onclick="delete_newadv('
-							+ acount + ')"></i></td></tr>');
-
-				   
-				   
-				   }
-			
-			 //create divs
-				$("#table_export")
-				.append(
-
-						'<tr id="totaladv">'
-								+ '<td colspan="5" class="right">'
-								+ '<div class="form-group ">'
-								+ '<label class="col-md-2 control-label">Total Advance Amount</label>'
-								+ '<div class="col-md-3">'
-								+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="advtotal"/>'
-								+ '</div>' + '</div>' +
-
-								'</td></tr>');
-
-		$("#table_export")
-				.append(
-
-						'<tr id="bal">'
-								+ '<td colspan="5" class="right">'
-								+ '<div class="form-group ">'
-								+ '<label class="col-md-2 control-label">Balance Amount</label>'
-								+ '<div class="col-md-3">'
-								+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="balanceamt"/>'
-								+ '</div>' + '</div>' +
-
-								'</td></tr>');
-
-		$("#advtotal").val(amt);
-		$("#balanceamt").val(($("#grandtotal").val() - amt).toFixed(2));
-		
-			
-			}
-		
-		
-		
-		$("#adv_pay").hide();
-		$('#advance_payment').dialog('close');
-		
-		$("#vendor_name").prop("readonly", true);
-		
-		
-		//copy to newadv
-		
-		var a = {
-							"payment_date": date,
-							"payment_amount":amt,
-							"purpose_title":title,
-							"purpose_desc": $("#purpose_desc").val(),
-							"payment_mode":mode,
-							"payment_account":acc,
-							"tdsrate":tds,
-							"tdsamount":tdsamt,
-							
-					};
-					
-					newadv.push(a);
-		
-		console.log(newadv);
-		
-		return false;
-
-	}
-	
-	*/
 </script>
 <script>
-var vendor_list = [
-	{
-		"vendor_name" : "Suraj Papers",
-		"vendor_id" : "VEN1234",
-		"addr": "kguyfutef bjhgff jhfuutfuyt"
-	},
-	{
-		"vendor_name" : "Prints",
-		"vendor_id" : "VEN789",
-		"addr": "jhge htydteyfhbvs"
-		
-	}
-	
-	
-];
+
 	
 var count=0;
 var first_count=0;
@@ -969,51 +182,162 @@ var tax_counter = [];
 var tax_amount=[];
 var tax_div=[];
 var porder = null;
-var productid_counter= {};
 var x=null;
-var oldadv=[];
-var newadv=[];
-var editable_counter;
-var editable_old_counter;
-//individual po edit, on load
+var productList ;
+var vendorList;
+var taxList;
+var myParam;
+
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
 
 function loadName()
 {
-	
-	//just after creating, when this PO gets loaded, adv pay = null  [check for this and show this too]
-	
-	 var myParam = location.search.split('PONo=')[1];
-	// alert(myParam);
-	
-	for(var i=0;i<tax_list.length;i++)
-	 {
+	var ccid = getCookie("CCID");
+ 	var sid = getCookie("SID");
+ 	var token = getCookie("TTID");
+ 	
+ 	
+ 	
+ 	//get vendor list
+
+ 			$.ajax({
+ 						type : 'POST',
+ 						url : '/Accounting/rest/vendor/getList?' + $.param({
+ 							"cid" : ccid,
+ 							"id" : sid,
+ 							"token" : token
+ 						}),
+ 						dataType : "json",
+
+ 						success : function(response, text, xhr) {
+
+ 						
+ 							vendorList = JSON.parse(xhr.responseText);
+ 							console.log(vendorList);
+
+ 							for (var i = 0; i < vendorList.length; i++) {
+ 								
+ 								$('#vendor_names').append("<option vendorid='" +  vendorList[i].id   + "' value='" + vendorList[i].businessDetails.businessName +  "'>"  + "" + "</option>");
+ 							}
+
+ 							 $('#vendor_names').append("<option value='+ Create Vendor' id='add'>+ Create Vendor</option>");
+
+ 						},
+
+ 						error : function(xhr, statusText) {
+
+ 							console.log(xhr.status);
+ 							console.log(xhr.responseText);
+ 							var code = xhr.status;
+
+ 						}
+ 					});
+
+ 	 
+ 	 //get product list - all
+ 	 
+ 	 $.ajax({
+ 			   		type : 'POST',
+ 			   		url  : '/Accounting/rest/products/getAll?' + $.param({"cid" : ccid ,"id": sid,"token": token}),
+ 			    	dataType :'json',
+ 			    	success: function(response, text, xhr)
+ 			    	{
+ 			     		//console.log("products"    + JSON.parse(xhr.responseText));
+ 			     		productList = JSON.parse(xhr.responseText);
+ 			    
+ 			     		
+ 			        },
+ 					error: function (a,b,c)
+ 					{ 
+ 						
+ 					 	console.log(a.status);
+ 					}  
+ 			  });
+ 	   
+ 	  
+ 	 
+ 	 
+ 	 
+ 	 
+ 	 //get tax list
+ 	 
+ 	 
+ 	  $.ajax({
+ 			type : 'POST',
+ 			url  : '/Accounting/rest/tax/getAll?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+ 		    dataType : "json",
+
+ 			success: function(response, text, xhr) {
+ 				
+ 				
+ 				taxList = JSON.parse(xhr.responseText);
+ 			   console.log(taxList);
+ 				
+ 	},
+
+ 	error: function (xhr, statusText) {
+ 		
+ 	 
+ 	   console.log(xhr.status);
+ 	   console.log(xhr.responseText);
+ 	   var code = xhr.status;
+ 	   
+ 	   if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+ 			{
+ 	 		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+ 	 		window.location.replace("login.html");
+ 			}
+
+ 	 }
+
+ 	 });
+ 	 
+ 	 
+ 	 getPO();
+ 	   
+}
+ 	
+ 	function getPO()
+	{
+ 		
+ 		
+ 		console.log(productList);
+ 		console.log(taxList);
+ 		
+ 		var ccid = getCookie("CCID");
+ 	 	var sid = getCookie("SID");
+ 	 	var token = getCookie("TTID");
+ 		
+	if(location.search == '')
+    	alert("Invalid");
+    else
+   	{
+		  myParam = location.search.split('POId=')[1];
+	 
 	 	
-	 	$('#prodtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
 	 
-	 }
-	
-	
-	 for(var i=0;i<vendor_list.length;i++)
- {
-
- //show only inventory, noninv and service input type products
-
-  $('#vendor_names').append("<option vendorid='" +  vendor_list[i].vendor_id   + "' value='" + vendor_list[i].vendor_name +  "'>"  + "" + "</option>");
- 
- }
- 
- $('#vendor_names').append("<option value='+ Create Vendor' id='add'>+ Create Vendor</option>");
-	 
-	$.ajax({
-		   type : 'GET',
-		   url  : '/Accounting/po/purchase/viewpo',
-		    dataType :'text',
-		    data:{'po_num' : myParam},
-		    success: function(response) {
+		$.ajax({
+		   		type : 'POST',
+		   		url  : '/Accounting/rest/po/getPO?' + $.param({ "pno" : myParam , "cid" : ccid,
+					"id" : sid,
+					"token" : token }),
+					
+		    	dataType :'json',
+		    	success: function(response, text , xhr) {
 		     
-		    	alert(response);
-		     //JSON.parse(response);
-		     porder = response;
+		     porder = JSON.parse(xhr.responseText);
+		     console.log(porder);
 		     fetchpo();
 		     
 		    },
@@ -1023,141 +347,219 @@ function loadName()
 				 console.log(a.status+b+c);
 			}  
 			  });
-	
-	$("#status").css("height","25px");
-	$("#status").css( "color", "white");
-	$("#status").css( "fontWeight", "bold");
+   }
 	
 	
-	
-	var diff = 200;
-	
-	if(diff>0)
-		{
-	$("#status").css( "background-color", "#B00000");
-	$("#status").text("UNPAID");
-		}
-	
-	else if(diff==0)
-	{
-		$("#status").css( "background-color", "#336600");
-		$("#status").text("PAID");
-	}
-	
-	 $('.dropdown-toggle').dropdown();
 }	
 
 
 	
 	
-	
+	/*populate contents of purchase order in form
+	  if product/ tax deleted  -> show read only
+	*/
 	function fetchpo() {
-		x = JSON.parse(porder);
-		count = x.pod.length - 1;
+		x = porder;
+		count = x.poDetails.length - 1;
 
-		for (var i = 0; i < x.pod.length; i++) {
+		for (var i = 0; i < x.poDetails.length; i++) {
 			
 			box_counter.push(i);
-			productid_counter[i] = x.pod[i].id;
+			
+			var prodString = '';
+			var taxString = '';
+			var prodDel = false;
+			var taxDel = false;
+			
+			//if deleted, make input box readonly
+			
+			if(x.poDetails[i].product.deleted == true)
+				{
+					prodDel = true;
+					prodString =  '<input class="form-control" list="' +  i  + 'productlist" id="' + i + 'product_name"  readonly   placeholder="Chose Product"  onchange="update_prod_details(' +  i+ ')"  required="required" title="" type="text" />';
+				}
+			else
+				
+					prodString =  '<input class="form-control" list="' +  i  + 'productlist" id="' + i + 'product_name"   placeholder="Chose Product"  onchange="update_prod_details(' +  i+ ')"  required="required" title="" type="text" />';
+				
+			if( x.poDetails[i].tax != null && x.poDetails[i].tax.deleted == true)
+				{
+					taxDel = true;
+					taxString ='<input list="' + i + 'taxlist"  class="form-control" id="' +  i + 'tax_rate" readonly placeholder="Tax Rate" onchange="update_tax('+ i + ')">';
+				}
+		
+			else
+				taxString ='<input list="' + i + 'taxlist"  class="form-control" id="' +  i + 'tax_rate" placeholder="Tax Rate" onchange="update_tax('+ i + ')">';
+								
+				// add row with these input boxes to table
+				
+				$(
+									'<tr >'
+											+
 
-			$(
-					'<tr >'
-							+
+											'<td>'
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+											+ prodString
+											+ '<datalist id="' +  i + 'productlist">' 
+											+ '</datalist>' 
+											+'</div>'
+											+ '</div>'
+											+ '</td>'
+											+
+											
+											'<td>' 
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+										    + '<input type="text"  class="form-control"' 
+										    + 'id="' +  i + 'prod_desc" maxlength="30" name="proddesc"'
+											+ 'placeholder="Description" required="required" title=""'
+											+ '/>' 
+											+'</div>' 
+											+'</div>' 
+											+'</td>' 
+											+ 
+											
 
-							'<td>'
-							+ '<div class="form-group required">'
-							+ '<div class="col-md-12">'
-							+ '<input class="form-control" id="' + i + 'product_name" value="' +  x.pod[i].product_id +'"  name="company_name" readonly  placeholder="Product Name" required="required" title="" type="text" />'
-							+ '</div>' + '</div>' + '</td>' +
+											'<td>'
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+											+ '<input type="number" value="1" class="form-control" id="'
+											+ i
+											+ 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount('
+											+ i
+											+ ')"  />'
+											+ '</div>'
+											+ '</div>'
+											+ '</td>'
+											+
 
-							'<td>' + '<div class="form-group required">'
-							+ '<div class="col-md-12">'
-							+ '<input type="number" value="'
-							+ x.pod[i].quantity
-							+ '" class="form-control" id="'
-							+ i
-							+ 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount('
-							+ i
-							+ ')"  />'
-							+ '</div>'
-							+ '</div>'
-							+ '</td>'
-							+
+											'<td>'
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+											+ '<input type="number" value="0" class="form-control" id="'
+											+ i
+											+ 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount('
+											+ i
+											+ ')" />'
+											+ '</div>'
+											+ '</div>'
+											+ '<br><br>'
+											+ '<div class="form-group required">'
+											+ '<label class="col-md-3 control-label">Tax Rate</label>'
+											+ '<div class="col-md-9">'
+											+ taxString
+											+ '<datalist id="'  +   i + 'taxlist">'
+											
+											+'</datalist>'
+											+ '</div>'
+											+ '</div>'
+											+ '</td>'
+											+ '<td>' 
+											+ '<div class="form-group required">'
+											+'<div class="col-md-12">'
+											+ '<input class="form-control no-border" id="' +  i  +'amt" value="0"' + 
+																 ' readonly style="background-color:white"' + 
+																' title="" type="text" />'
+											+ '</div>'
+											+ '</div>'
+											+
 
-							'<td>'
-							+ '<div class="form-group required">'
-							+ '<div class="col-md-12">'
-							+ '<input type="number" value="'
-							+ x.pod[i].cost
-							+ '" class="form-control" id="'
-							+ i
-							+ 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount('
-							+ i
-							+ ')" />'
-							+ '</div>'
-							+ '</div>'
-							+ '<br><br>'
-							+
+											'<br><br>'
+											+ '<div class="form-group required">'
+											+
 
-							'<div class="form-group required">'
-							+ '<label class="col-md-3 control-label">Tax Rate</label>'
-							+ '<div class="col-md-9">'
-							+ '<input list="browser"  class="form-control" id="'
-							+ i
-							+ 'tax_rate" placeholder="Tax Rate" onchange="update_tax('
-							+ i
-							+ ')">'
-							+ '<datalist id="browser">'
-							+ '<option data-customvalue="VAT 5.5" value="VAT 5.5">VAT 5.5</option>'
-							+ '<option data-customvalue="VAT 14.5" value="VAT 14.5">VAT 14.5</option>'
-							+ '<option data-customvalue="SERVICE 15" value="SERVICE 15">SERVICE 15</option>'
-							+
+											'<div class="col-md-12">'
+											+ '<input class="form-control no-border" id="' + i + 'tax_amt" value="0"' + 
+																   ' readonly style="background-color:white"' + 
+																' title="" type="text" />'
+											+ '</div>'
+											+ '</div>'
+											+'</td>'
+											+'<td>'
+											+ '<br>'
+											+ '<i class="entypo-trash"'
+											+ ' onClick="delete1(this,'
+											+ i
+											+ ')"></i>' 
+											+ '</td>'
+											+'</tr>').insertBefore('#last_row');
+							
+								
+				//in corresponding dropdown, if product deleted  - populate with entire list else only with non deleted ones
+							if(prodDel == false) 
+								{
+									for(var k=0;k<productList.length;k++)
+							 		{
+								
+										if(productList[k].deleted == false)
+											{
+										    
+											$('#' + i +'productlist').append("<option prodid='" +  productList[k].id   + "' value='" + productList[k].productName +  "'>" + "" +  productList[k].productDescription + "" + "</option>");
+							 		}
+								}
+							}
+								
+							else
+								{
+									for(var k=0;k<productList.length;k++)
+							 		{
+										$('#' + i +'productlist').append("<option prodid='" +  productList[k].id   + "' value='" + productList[k].productName +  "'>" + "" +  productList[k].productDescription + "" + "</option>");
+										$('#' + i + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
+							 		}
+								}
+							 
+				//in corresponding dropdown, if tax deleted  - populate with entire list else only with non deleted ones	 
+							if(taxDel == false)
+						  	{
+						     for(var n=0;n<taxList.length;n++)
+						    	 {
+						    	 	if(taxList[n].deleted == false)
+						    	 		$('#' + i + 'taxlist').append("<option taxid='" +  taxList[n].id   + "' value='" + taxList[n].taxAbbreviation + " "  +  taxList[n].taxRate + "'>" + "</option>");
+						    	 }
+						  	}
+							
+							else
+							{
+								for(var n=0;n<taxList.length;n++)
+						    	 {
+									
+						    	 		$('#' + i + 'taxlist').append("<option taxid='" +  taxList[n].id   + "' value='" + taxList[n].taxAbbreviation + " "  +  taxList[n].taxRate + "'>" + "</option>");
+						    	 }
+								
+							}
 
-							'</datalist>'
-							+ '</div>'
-							+ '</div>'
-							+
-
-							'</td>'
-							+ '<td>'
-							+ '<div class="form-group required">'
-							+ '<div class="col-md-12">'
-							+ '<input class="form-control no-border" id="' +  i  +'amt" value="0"' + 
-										 ' readonly style="background-color:white"' + 
-										' title="" type="text" />'
-							+ '</div>'
-							+ '</div>'
-							+ '<br><br>'
-							+ '<div class="form-group required">'
-							+
-
-							'<div class="col-md-12">'
-							+ '<input class="form-control no-border" id="' + i + 'tax_amt" value="0"' + 
-										   ' readonly style="background-color:white"' + 
-										' title="" type="text" />'
-							+ '</div>'
-							+ '</div>'
-							+ '</td>'
-							+ '<td>'
-							+ '<br>'
-							+ '<i class="entypo-trash"'
-							+ ' onClick="delete1(this,'
-							+ i
-							+ ')"></i>'
-							+ '</td>' + '</tr>').insertBefore('#last_row');
-
-			$("#" + i + "tax_rate").val(x.pod[i].tax_id);
-		//	alert(i);
+			//now set values of tax and product
+			
+			$("#" + i + "product_name").val(x.poDetails[i].product.productName);
+			
+			//if item has no tax when created
+			
+			if(x.poDetails[i].tax !=null)
+				$("#" + i + "tax_rate").val(x.poDetails[i].tax.taxAbbreviation + " " + x.poDetails[i].tax.taxRate);
+			
+			$("#" + i + "prod_desc").val(x.poDetails[i].description);
+			$("#" + i + "quantity").val(x.poDetails[i].quantity);
+			$("#" + i + "price").val(x.poDetails[i].price);
 			update_amount(i);
+			
+			var tax = $('#' + i + 'tax_rate').val();
+			var tax_id = $('#' +  i + 'taxlist option[value="'+ tax +'"]').attr('taxid');
 			
 		}
 
-	
-		$("#vendor").val(x.vendor_id);
-		$("#po_number").val(x.po_number);
-		$("#po_number").prop("readonly", true);
-		$('textarea#notes').val(x.note);
-		var d = new Date(x.order_date);
+		//$('#vendor_names option').find('id="58eb988c70587d44e415c913"').attr('selected','selected');
+		//$("#vendor_names option[id='58eb988c70587d44e415c913']").attr( "selected","selected");
+		$("#vendor").val(x.vendor.businessDetails.businessName);
+		
+		update_vendor();
+		
+		$("#businessDetail").append("<h2>" + x.company.businessDetails.businessName   +  "</h2>");
+		$("#businessDetail").append("<h4>" + x.company.contactDetails.addrLine1 + "  " +  x.company.contactDetails.addrLine2 + "  " + 
+				x.company.contactDetails.locality + ", " +  x.company.contactDetails.state + ", "  +  x.company.contactDetails.city  + "</h4>");
+		$("#po_number").val(x.poNumber);
+		$('textarea#notes').val(x.poNotes);
+		var d = new Date(x.poDate);
 		var v = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 		$("#date").val(v);
 
@@ -1190,12 +592,14 @@ function loadName()
 
 			else if(vdr != ''){
 
-				var vendr_id = $('datalist option[value="' + vdr + '"]').attr('vendorid');
+				var vendr_id = $('#vendor_names option[value="' + vdr + '"]').attr('vendorid');
 				alert(vendr_id);
-				for (var i = 0; i < vendor_list.length; i++) {
-					if (vendor_list[i].vendor_id == vendr_id) {
+				for (var i = 0; i < vendorList.length; i++) {
+					
+					if (vendorList[i].id == vendr_id) {
 						
-						$("#vendor_detail").val(vendor_list[i].addr);
+						$("#vendor_detail").val(vendorList[i].contactDetails.addrLine1 + "  " +  vendorList[i].contactDetails.addrLine2 + "  " + 
+								vendorList[i].contactDetails.locality + ", " +  vendorList[i].contactDetails.state + ", "  +  vendorList[i].contactDetails.city );
 
 					}
 				}
@@ -1258,6 +662,14 @@ function loadName()
 	
 	var add_product_counter;
 
+	
+
+	/*when product chosen (means that product wasnt deleted), get its ID from dropdown -search ID in productList, 
+	  populate price , desc from product, for tax : show only if tax associated with it isn't deleted
+	  if product had no tax or if tax was deleted then make tax box  ''
+	  if at all tax box was readonly earlier  - make it false and populate DD with non deleted taxes only
+	
+	*/
 	function update_prod_details(counter) {
 
 		var prod = $("#" + counter + "product_name").val();
@@ -1285,31 +697,74 @@ function loadName()
 		}
 
 		if (prod != '' && prod != '+ Add Product') {
+			
+		//collect product id from same dropdown - mention DD id
 
-			var prod_id = $('datalist option[value="' + prod + '"]').attr(
+			var prod_id = $('#' + counter + 'productlist option[value="' + prod + '"]').attr(
 					'prodid');
-			alert(prod_id);
-			for (var i = 0; i < product_list.length; i++) {
-				if (product_list[i].product_id == prod_id) {
+			
+		
+			
+			for (var i = 0; i < productList.length; i++) {
+				
+				if (productList[i].id == prod_id) {
+					
+					
+					/* 3 possibilities- (product has no tax or has tax which is deleted) - both cases tax = '' or has tax which is not deleted
+					*  in any case, clear dropdown and load non deleted taxes
+					* make read only as false
+					*/
+					
+					$('#' + counter + 'taxlist').html('');
+					$('#' + counter + 'tax_rate').attr('readonly',false);
+					
+					for(var n=0;n<taxList.length;n++)
+			    	 {
+			    	 	if(taxList[n].deleted == false)
+			    	 		$('#' + counter + 'taxlist').append("<option taxid='" +  taxList[n].id   + "' value='" + taxList[n].taxAbbreviation + " "  +  taxList[n].taxRate + "'>" + "</option>");
+			    	 }
+					
+					console.log(productList[i].productTax);
 					//get cost price
-					if (product_list[i].tax != null) {
-						var taxval = product_list[i].tax.tax_abbreviation + " "
-								+ product_list[i].tax.tax_rate;
+					if (productList[i].productTax != null && productList[i].productTax.deleted == false) {
+						
+						
+						var taxval = productList[i].productTax.taxAbbreviation + " "
+								+ productList[i].productTax.taxRate;
+					
 						$("#" + counter + "tax_rate").val(taxval);
 					}
+					
+					else if(productList[i].productTax != null && productList[i].productTax.deleted == true)
+					{
+						$("#" + counter + "tax_rate").val('');
+					}
+					
+					else if(productList[i].productTax == null)
+					{
+						$("#" + counter + "tax_rate").val('');
+					}
 
-					$("#" + counter + "price").val(product_list[i].cp);
+					$("#" + counter + "price").val(productList[i].costPrice);
 					$("#" + counter + "prod_desc").val(
-							product_list[i].product_desc);
-					update_amount(counter);
+							productList[i].productDescription);
+					update_amount(counter);   //this handles case when product has no tax
 
 				}
 			}
 
 		} else {
-			//no product chosen
+			//no product chosen, make tax rate read only = false, load non deleted products
 
 			$("#" + counter + "price").val(0);
+			$('#' + counter + 'taxlist').html('');
+			$('#' + counter + 'tax_rate').attr('readonly',false);
+			
+			for(var n=0;n<taxList.length;n++)
+	    	 {
+	    	 	if(taxList[n].deleted == false)
+	    	 		$('#' + counter + 'taxlist').append("<option taxid='" +  taxList[n].id   + "' value='" + taxList[n].taxAbbreviation + " "  +  taxList[n].taxRate + "'>" + "</option>");
+	    	 }
 
 			update_noproduct(counter);
 
@@ -2295,15 +1750,8 @@ function loadName()
 												
 												data-target="#portionOne">Business Details</button>
 												
-											<div id="portionOne" class="panel-collapse collapse in">
-											<br>
-												VISTAR PRINTSOL PRIVATE LIMITED<br>
-											B.D.A Layout, Nagarbhavi, <br>
-											Bangalore.
-											<br><br>
-
-												<!-- ADD YOUR BUSINESS DETAILS -->
-
+											<div id="businessDetail" class="panel-collapse collapse in">
+											
 											</div>
 											<!-- end of portion one -->
 
@@ -2340,16 +1788,18 @@ function loadName()
 														<div id="form-panel">
 															<form role="form" id="customer_profile">
 
-																<div class="form-group required">
+																	<div class="form-group required">
 																	<label class="col-md-2 control-label">Vendor</label>
 																	<div class="col-md-4">
-																		<input list="vendor_names" class="form-control" id="vendor" placeholder="Vendor Name" onchange="update_vendor()">
+																		<input list="vendor_names" class="form-control"  
+																			id="vendor" placeholder="Vendor Name"
+																			onchange="update_vendor()">
 
 																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
                                   store customer id save this -->
 
 																		<datalist id="vendor_names">
-																	
+
 
 																		</datalist>
 
@@ -2365,7 +1815,7 @@ function loadName()
 																<div class="form-group ">
 
 																	<div class="col-md-6">
-																		<textarea class="form-control" id="customer_detail"
+																		<textarea class="form-control" id="vendor_detail"
 																			rows="5" cols="80" readonly></textarea>
 																	</div>
 																</div>
@@ -2414,7 +1864,7 @@ function loadName()
 													<tr>
 
 														<th><div>Product</div></th>
-
+														<th><div>Description</div></th>
 														<th><div>Quantity</div></th>
 														<th><div>Price</div></th>
 
@@ -2530,18 +1980,17 @@ function loadName()
 
 								<br><br>
 
+								
 								<!-- Another row -->
 								<div class="row">
 									<div class="col-lg-6">
-										<input type="submit" class="btn btn-blue" name="submit" id="adv_pay" value="Add Advance Payment" onclick="return add_advpay()">
+										<input type="submit" class="btn btn-blue" name="submit"
+											id="submit" value="Save and Continue">
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										
-										<input type="submit" class="btn btn-blue" name="submit" id="send" value="Send Purchase Order" onclick="return send()">
 
 										<!-- create another row -->
 									</div>
 								</div>
-
 
 <br><br>
 							</div>
@@ -2592,100 +2041,121 @@ function loadName()
                            count=count+1;
                            
                             box_counter.push(count);
-                            productid_counter[count] = null;
+                         //   productid_counter[count] = null;
                             
-                            
-                            
-                           $( '<tr >' + 
-                          
-                        		   '<td>'
-									+ '<div class="form-group required">'
-									+ '<div class="col-md-12">'
-									+ '<input class="form-control" list="' +  count  + 'productlist" id="' + count + 'product_name"  name="company_name"   placeholder="Chose Product"  onchange="update_prod_details(' +   count + ')"  required="required" title="" type="text" />'
-									+ '<datalist id="' +  count + 'productlist">' 
-									+ '</datalist>' 
-									+'</div>'
-									+ '</div>'
-									+ '</td>' + 
-                              
-                              '<td>'+
-                              	'<div class="form-group required">'+
-                              	'<div class="col-md-12">'+
-                              	'<input type="number" value="1" class="form-control" id="' + count + 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount(' + count + ')"  />' + 
-                              	'</div>'+
-                              	'</div>'+
-                              '</td>' + 
-                              
-                              '<td>'
-								+ '<div class="form-group required">'
-								+ '<div class="col-md-12">'
-								+ '<input type="number" value="0" class="form-control" id="'
-								+ count
-								+ 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount('
-								+ count
-								+ ')" />'
-								+ '</div>'
-								+ '</div>'
-								+ '<br><br>'
-								+ '<div class="form-group required">'
-								+ '<label class="col-md-3 control-label">Tax Rate</label>'
-								+ '<div class="col-md-9">'
-								+ '<input list="' + count + 'taxlist"  class="form-control" id="'
-								+ count
-								+ 'tax_rate" placeholder="Tax Rate" onchange="update_tax('
-								+ count
-								+ ')">'
-								+ '<datalist id="'  +    count + 'taxlist">'
-								
-								+'</datalist>'
-								+ '</div>'
-								+ '</div>'
-								+ '</td>' + 
- 							 '<td>' 
-							+ '<div class="form-group required">'
-							+'<div class="col-md-12">'
-							+ '<input class="form-control no-border" id="' +  count  +'amt" value="0"' + 
-												 ' readonly style="background-color:white"' + 
-												' title="" type="text" />'
-							+ '</div>'
-							+ '</div>'
-							+
+                         $(
+									'<tr >'
+											+
 
-							'<br><br>'
-							+ '<div class="form-group required">'
-							+
+											'<td>'
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+											+ '<input class="form-control" list="' +  count  + 'productlist" id="' + count + 'product_name"  name="company_name"   placeholder="Chose Product"  onchange="update_prod_details(' +   count + ')"  required="required" title="" type="text" />'
+											+ '<datalist id="' +  count + 'productlist">' 
+											+ '</datalist>' 
+											+'</div>'
+											+ '</div>'
+											+ '</td>'
+											+
+											
+											'<td>' 
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+										    + '<input type="text"  class="form-control"' 
+										    + 'id="' +  count + 'prod_desc" maxlength="30" name="proddesc"'
+											+ 'placeholder="Description" required="required" title=""'
+											+ '/>' 
+											+'</div>' 
+											+'</div>' 
+											+'</td>' 
+											+ 
+											
 
-							'<div class="col-md-12">'
-							+ '<input class="form-control no-border" id="' + count + 'tax_amt" value="0"' + 
-												   ' readonly style="background-color:white"' + 
-												' title="" type="text" />'
-							+ '</div>'
-							+ '</div>'
-							+'</td>'
-							+'<td>'
-							+ '<br>'
-							+ '<i class="entypo-trash"'
-							+ ' onClick="delete1(this,'
-							+ count
-							+ ')"></i>' 
-							+ '</td>'
-							+'</tr>').insertBefore('#last_row');
-                           
-                       	for(var i=0;i<product_list.length;i++)
-						 {
-						
-					      $('#' + count +'productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
+											'<td>'
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+											+ '<input type="number" value="1" class="form-control" id="'
+											+ count
+											+ 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount('
+											+ count
+											+ ')"  />'
+											+ '</div>'
+											+ '</div>'
+											+ '</td>'
+											+
+
+											'<td>'
+											+ '<div class="form-group required">'
+											+ '<div class="col-md-12">'
+											+ '<input type="number" value="0" class="form-control" id="'
+											+ count
+											+ 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount('
+											+ count
+											+ ')" />'
+											+ '</div>'
+											+ '</div>'
+											+ '<br><br>'
+											+ '<div class="form-group required">'
+											+ '<label class="col-md-3 control-label">Tax Rate</label>'
+											+ '<div class="col-md-9">'
+											+ '<input list="' + count + 'taxlist"  class="form-control" id="'
+											+ count
+											+ 'tax_rate" placeholder="Tax Rate" onchange="update_tax('
+											+ count
+											+ ')">'
+											+ '<datalist id="'  +    count + 'taxlist">'
+											
+											+'</datalist>'
+											+ '</div>'
+											+ '</div>'
+											+ '</td>'
+											+ '<td>' 
+											+ '<div class="form-group required">'
+											+'<div class="col-md-12">'
+											+ '<input class="form-control no-border" id="' +  count  +'amt" value="0"' + 
+																 ' readonly style="background-color:white"' + 
+																' title="" type="text" />'
+											+ '</div>'
+											+ '</div>'
+											+
+
+											'<br><br>'
+											+ '<div class="form-group required">'
+											+
+
+											'<div class="col-md-12">'
+											+ '<input class="form-control no-border" id="' + count + 'tax_amt" value="0"' + 
+																   ' readonly style="background-color:white"' + 
+																' title="" type="text" />'
+											+ '</div>'
+											+ '</div>'
+											+'</td>'
+											+'<td>'
+											+ '<br>'
+											+ '<i class="entypo-trash"'
+											+ ' onClick="delete1(this,'
+											+ count
+											+ ')"></i>' 
+											+ '</td>'
+											+'</tr>').insertBefore('#last_row');
+							
+							
+							for(var i=0;i<productList.length;i++)
+							 {
+							
+							 //show only inventory, noninv and service input type products
+							  if(productList[i].deleted == false)
+						        		$('#' + count +'productlist').append("<option prodid='" +  productList[i].id   + "' value='" +productList[i].productName +  "'>" + "" +  productList[i].productDescription + "" + "</option>");
+							 
+							 }
 						 
-						 }
-					 
-						$('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
-					  
-					     for(var i=0;i<tax_list.length;i++)
-					    	 {
-					    	 
-					    	 	$('#' + count + 'taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-					    	 }
-                           
+							$('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
+						  
+						     for(var i=0;i<taxList.length;i++)
+						    	 {
+						    	   if(taxList[i].deleted == false)
+						    	 		$('#' + count + 'taxlist').append("<option taxid='" +  taxList[i].id   + "' value='" + taxList[i].taxAbbreviation + " "  +  taxList[i].taxRate + "'>" + "</option>");
+						    	 }
                             
                             });
                             
@@ -2737,6 +2207,10 @@ function loadName()
                    				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
 
                    		}
+                   			else    //if product changes, and it has no tax but had tax earlier - handle it to remove earlier chngs
+            				{
+            				update_tax(value_counter);
+            				}
                    	}
 
                    	
@@ -2805,14 +2279,14 @@ function loadName()
 
                           var counter_index = tax_counter.indexOf(number_count);
                          
-                                    alert("entry for this box exists at index" + counter_index);
+                                  //  alert("entry for this box exists at index" + counter_index);
                                     var divid  = tax_div[counter_index];
-                                    alert("div id is " + divid);
+                                    //alert("div id is " + divid);
                                     var amt   = tax_amount[counter_index];  //old amt
-                                    alert("old amount is " + amt);
-                                    alert("b4 subtraction amt is" + $('#' + divid).val());
+                                    //alert("old amount is " + amt);
+                                    //alert("b4 subtraction amt is" + $('#' + divid).val());
                                     var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
-                                    alert("after subtraction amt is"  + subtract_amt);
+                                    //alert("after subtraction amt is"  + subtract_amt);
 
                    			     if(subtract_amt==0)
                    			     {
@@ -2927,14 +2401,14 @@ function loadName()
                           var counter_index = tax_counter.indexOf(number_count);
                           if(counter_index!=-1)                                           //if earlier entry exists
                                 {
-                                    alert("entry for this box exists at index" + counter_index);
+                                    //alert("entry for this box exists at index" + counter_index);
                                     var divid  = tax_div[counter_index];
-                                    alert("div id is " + divid);
+                                    //alert("div id is " + divid);
                                     var amt   = tax_amount[counter_index];  //old amt
-                                    alert("old amount is " + amt);
-                                    alert("b4 subtraction amt is" + $('#' + divid).val());
+                                    //alert("old amount is " + amt);
+                                    //alert("b4 subtraction amt is" + $('#' + divid).val());
                                     var subtract_amt = Number($('#' + divid).val()) - Number(amt);  //now that its changing, take amt subtract from div
-                                    alert("after subtraction amt is"  + subtract_amt);
+                                    //alert("after subtraction amt is"  + subtract_amt);
 
                    			     if(subtract_amt==0)
                    			     {
@@ -2953,20 +2427,20 @@ function loadName()
                                      
 
                    	            var new_tax_index = tax_rate.indexOf(tax_val);
-                   			    alert("index of new tax entry" + tax_val + "is"  + new_tax_index);
+                   			   // alert("index of new tax entry" + tax_val + "is"  + new_tax_index);
                    			    
                    			    if(new_tax_index!=-1)                      //its present so add to its value , may be at same place/other box
                    							     {  
                    							       
                    							        var new_tax_value = $('#' + tax_div[new_tax_index]).val();
-                   							        alert("value at div" + tax_val + "is" + new_tax_value);
+                   				//			        alert("value at div" + tax_val + "is" + new_tax_value);
                    							        var updated_val = Number(new_tax_value) + Number(tax_amt) ;
                    							        $('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
-                   							        alert("new value at div" + tax_val + "is" + updated_val);
+                   					//		        alert("new value at div" + tax_val + "is" + updated_val);
                    									tax_rate[counter_index]  = tax_val;
                    									tax_div[counter_index]  = intval + 'check';
                    									tax_amount[counter_index]  = tax_amt;
-                   									alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
+                   						//			alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
                    							     
                    							     }
                    							     
@@ -2974,11 +2448,11 @@ function loadName()
                                   else
                    				  {                                               // new tax entry doesnt exists
                    									     
-                   					alert("create div for"   + tax_val);
+                   			//		alert("create div for"   + tax_val);
                    					tax_rate[counter_index] = (tax_val);
                    				    tax_div[counter_index] = intval + 'check';  //div id of input box
                    				    tax_amount[counter_index] =(tax_amt);
-                   					alert("doesnt have" + tax_val + "entry");
+                   				//	alert("doesnt have" + tax_val + "entry");
                    									
                    				    $( '<tr >' + 
                    						'<td colspan="5" >'+
@@ -2992,7 +2466,7 @@ function loadName()
                    						'</div>'+ 
                    						'</td>'+
                    						'</tr>').insertBefore('#taxfinalamt');
-                   					 	alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[counter_index] + "is " + $('#' + tax_div[counter_index]).val());
+                   					// 	alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[counter_index] + "is " + $('#' + tax_div[counter_index]).val());
                    									     
                    									     
                    				}    
@@ -3002,29 +2476,29 @@ function loadName()
                             
                    		else{                                                            //no entry as of now corresponding to the box , but if tax value is present elsewhere                      
                    		      
-                   			alert("no entry of the box");
+                 //  			alert("no entry of the box");
                    			var new_tax_index = tax_rate.indexOf(tax_val);
-                   		    alert("tax rate entry found at" + new_tax_index);
+                   //		    alert("tax rate entry found at" + new_tax_index);
                    			
                    		    if(new_tax_index!=-1) //its present so add to its value
                    			{  
 
-                   				alert("tax rate found at " + new_tax_index);
-                   				alert("div id is" + tax_div[new_tax_index]);
+                   	//			alert("tax rate found at " + new_tax_index);
+                   		//		alert("div id is" + tax_div[new_tax_index]);
                    				var new_tax_value = $('#' + tax_div[new_tax_index]).val();
-                   				alert($('#' + tax_div[new_tax_index]).val());
-                   				alert("existing amount at" + tax_val + "is" + new_tax_value);
+                   	//			alert($('#' + tax_div[new_tax_index]).val());
+                   		//		alert("existing amount at" + tax_val + "is" + new_tax_value);
                    				var updated_val = Number(new_tax_value) + Number(tax_amt) ;
-                   				alert("now value is" + updated_val);
-                   				alert("div to update is " + '#' + tax_div[new_tax_index]);
+                   			//	alert("now value is" + updated_val);
+                   		//		alert("div to update is " + '#' + tax_div[new_tax_index]);
                    				$('#' + tax_div[new_tax_index]).val(updated_val.toFixed(2));
-                   				alert("after updating at " + tax_div[new_tax_index] + " " + $('#' + tax_div[new_tax_index]).val());
+                   			//	alert("after updating at " + tax_div[new_tax_index] + " " + $('#' + tax_div[new_tax_index]).val());
                    				tax_rate.push(tax_val);
                    				tax_div.push(intval + 'check');  //div id of input box
                    				tax_counter.push(number_count);
                    				tax_amount.push(tax_amt);
 
-                   				alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
+                   			//	alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt  + "div value at" + tax_div[new_tax_index] + "is " + $('#' + tax_div[new_tax_index]).val());
 
 
                                }
@@ -3032,7 +2506,7 @@ function loadName()
                    		   else
                    			{
 
-                   				alert("tax entry for "   + tax_val + "not found");
+                   				//alert("tax entry for "   + tax_val + "not found");
                    				tax_rate.push(tax_val);
                    				tax_div.push(intval + 'check');  //div id of input box
                    				tax_counter.push(number_count);
@@ -3052,7 +2526,7 @@ function loadName()
                    					'</td>'+
                    					'</tr>').insertBefore('#taxfinalamt');
 
-                   					alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt)  ;
+                   					//alert("array values are" + tax_val + " " + intval + 'check' + " " + number_count + " " + tax_amt)  ;
 
                    			}
 
@@ -3068,30 +2542,30 @@ function loadName()
                    		var index = box_counter.indexOf(number);
                            box_counter.splice(index, 1);
                          	var deleted_amt = $('#' + number + 'amt').val();
-                         	alert("deleted amt is " + deleted_amt);
+                         //	alert("deleted amt is " + deleted_amt);
                          	var deleted_tax_amt = $('#' + number + 'tax_amt').val();
-                         	alert("deleted tax amt is " + deleted_tax_amt);
+                         //	alert("deleted tax amt is " + deleted_tax_amt);
                          	var sub_amount =  Number($('#subtotal').val())  - deleted_amt;
                          	$('#subtotal').val(sub_amount.toFixed(2));
-                         	alert("sub total is after subtraction" + sub_amount);
+                        // 	alert("sub total is after subtraction" + sub_amount);
                          	var taxfinal_amount =  Number($('#taxtotal').val())  - Number(deleted_tax_amt);
                          	$('#taxtotal').val(taxfinal_amount.toFixed(2));
-                         	alert("tax total is after subtraction" + taxfinal_amount.toFixed(2));
-                         	alert("gtotal now is "  + Number($('#grandtotal').val()));
+                //         	alert("tax total is after subtraction" + taxfinal_amount.toFixed(2));
+                  //       	alert("gtotal now is "  + Number($('#grandtotal').val()));
                          	
                          	var final_amount =  Number($('#grandtotal').val())  - (Number(deleted_amt) + Number(deleted_tax_amt));
-                         	alert("final amt is" + final_amount.toFixed(2)); 
+                    //     	alert("final amt is" + final_amount.toFixed(2)); 
                          	$('#grandtotal').val(final_amount.toFixed(2));
-                         	alert("grand total is after subtraction" + final_amount.toFixed(2));
+                      //   	alert("grand total is after subtraction" + final_amount.toFixed(2));
                          	
                          	//get the index of this box
                          	
                          	var counter_index = tax_counter.indexOf(number);
-                         	alert("found at index" + counter_index);
+                 //        	alert("found at index" + counter_index);
                          	if(counter_index!=-1)
                          	{
                          	 	 var tax_val = tax_rate[counter_index];  //VAT 5.5
-                         	  	alert("tax rate in this box is " + tax_val);
+                   //      	  	alert("tax rate in this box is " + tax_val);
                          	  
                    		
                          		var nd = tax_val.toString().split(" ");
@@ -3099,16 +2573,16 @@ function loadName()
                        		var n = nd[0] + x[0] + x[1];             //VAT55
                          	  
                          	  	var divid = n  + 'check';    //use diff ID of div
-                         	  	alert("div corresp to tax rate is"  + divid);
+               //          	  	alert("div corresp to tax rate is"  + divid);
                          	  
                          	  	var div_value = $('#' + divid).val();
-                         	  	alert("value in this tax rate div is" + div_value);
+                 //        	  	alert("value in this tax rate div is" + div_value);
                          	  
                          	  	var old_amt = tax_amount[counter_index];
-                         	  	alert("amt to be subtracted is" + old_amt);
+                   //      	  	alert("amt to be subtracted is" + old_amt);
                          	  
                          	  	var new_value = Number(div_value) - Number(old_amt);
-                         	  	alert("new value in this tax rate div is " + new_value);
+                     //    	  	alert("new value in this tax rate div is " + new_value);
                          	  
                          	  	if(new_value==0)
                          	  	{
@@ -3137,211 +2611,161 @@ function loadName()
 </script>
 
 <script>
-function send()
-{
-	
-	
-	//[CHECK THAT NO MANDATORY FIELDS ARE EMPTY]
-	//similar to previous test.html submit
-	//onky diff is here NOW WE HAVE PO NUMBER TO SEND ALONG
-	
-	console.log(" p array is");
-	console.log(productid_counter);
-	
-	console.log(" a array is");
-	console.log(advid_counter);
-	
-	
-	var purchaseOrder = {};
-	  var pod= [];
-	  var advpay=[];
-	  //var customer;
-	  purchaseOrder.pod = pod;
-	  purchaseOrder.adv_payment = advpay;
-	  //purchaseOrder.customer = customer;
-		
+
+
+// on submit, for evry item , check read only property of product and tax so as to ensure right checks are done at the back end
+$('#submit').click(function(){
+
+	  var purchaseOrder = {};
+	  var poDetails = [];   //purchase order details
+	  
+	  purchaseOrder.poDetails = poDetails;
+	  
+	  
+	  //iterate through list of items
 		for(var i=0;i<box_counter.length;i++)
 		{
 		  var index = box_counter[i];
 		  var product_identifier = index + "product_name";
 		  var tax_identifier = index + "tax_rate";
+		  
 		  if($('#' + product_identifier).val()=='')
 		     	 alert("Please select a product ");
 		     	 
-		  //add checks for customer being selected, date and PO number(read only)
-		  //each product must have name, amt, tax _amt etc
-		  //do validations
-		  
+		                                                          //add checks for customer being selected, date and PO number(read only)
+		  //send status if product / tax deleted or not to check in back end properly
 		  else 
-		  {
-		       
-			  //search for product ID of each and use it (may have a value/ or is null)
-		  		var productName= $('#' + index + 'product_name').val();
+		  { 
+			  	var productName= $('#' + index + 'product_name').val();
+		  	  	var prod_id = $('#' + index + 'productlist option[value='+ productName +']').attr('prodid');
+		  	  	var prodDel = $('#' + index + 'product_name').prop('readonly');
+		  	  	var desc= $('#' + index + 'prod_desc').val();
 				var quantity = $('#' + index + 'quantity').val();
 				var price = $('#' + index + 'price').val();
 				var amount = $('#' + index + 'amt').val();
-				var tax = $('#' + index + 'tax_rate').val();
-				var taxAmount = $('#' + index + 'tax_amt').val();
-				var product_id = productid_counter[index];
-				var po_number = $("#po_number").val();
-			
-				var product = {
-	  				"product_id": productName,
-	  				"quantity": quantity,
-	  				"cost": price,
-	  				"amount": amount,
-	  				"tax_id": tax,
-	  				"tax_amount": taxAmount,
-	  				"po":null,    //Po Object (take it from main object later)
-	  				"id":product_id     //backend id
-							  };
-						  
-				purchaseOrder.pod.push(product);
 				
-		}
-		
-		}
-	
-	
-		
-		
-		var vendor = $("#vendor").val(); //$("#vendpor").val(); - value has vendorID
-		purchaseOrder.vendor_id = vendor;
-		
-		
-		var a = JSON.parse(porder);
-	    var date = $("#date").val();
-		//alert(date);
-		purchaseOrder.order_date = date;
-		//var po_number = $("#po_number").val();
-		purchaseOrder.po_number =  $("#po_number").val();
-		purchaseOrder.po_id = x.po_id;
-		alert(x.po_id);
-		purchaseOrder.company_id = "CMP445";
-		purchaseOrder.amount = $("#subtotal").val();
-		purchaseOrder.tax_amount = $("#taxtotal").val();
-		purchaseOrder.grand_total = $("#grandtotal").val();
-		
-		
-		/*analyse existing adv payment
-		
-		
-		purchaseOrder.advance_amount = $("#adv_amount").val(); // - $("#advancetotal").val();           
-		purchaseOrder.balance = ($("#grandtotal").val() -  $("#adv_amount").val()).toFixed(2);
-		purchaseOrder.bill_status = 0;
-		*/
-		
-		
-		
-		purchaseOrder.note = $("textarea#notes").val();
-		
-		//list of ADVANCE PAYMENT is to added here
-		
-		for(var i=0;i<adv_counter.length;i++)
-		{
-		alert(advid_counter[adv_counter[i]]);
-		var h = advid_counter[adv_counter[i]];
-		if(h!=null)
-			{
-				for(var j=0;j< oldadv.length;j++)
-				{
-				if(oldadv[j].id==h)
-					{
-					
-						var tdsrate = oldadv[j].tdsrate;
-						if(tdsrate=='')
-							{
-								tdsrate= 0;
-								tdsamt=0;
-							}
-						else
-							tdsamt = oldadv[j].tdsamount
-					
-						var advance={
-							"payment_date":		oldadv[j].payment_date,
-							"payment_amount" :	oldadv[j].payment_amount,
-					        "purpose_title" :	oldadv[j].purpose_title,
-					 		"purpose_desc" :    oldadv[j].purpose_desc,
-							"payment_mode" :	oldadv[j].payment_mode,
-							"payment_account" : oldadv[j].payment_account,
-							"tdsrate" : 		tdsrate,
-							"tdsamount":		tdsamt,
-							"id":				oldadv[j].id
-					
-							};
-						purchaseOrder.adv_payment.push(advance);
-					}
-					//console.log(oldadv[j]);
-				}
-			}
-		else
-			{
-			//console.log(newadv[0]);
-				var tdsrate = newadv[0].tdsrate;
-				if(tdsrate=='')
-					{
-						tdsrate= 0;
-						tdsamt=0;
-					}
-				else
-					tdsamt = newadv[0].tdsamount
-		
-				var advance={
-					"payment_date":		newadv[0].payment_date,
-					"payment_amount" :	newadv[0].payment_amount,
-		        	"purpose_title" :	newadv[0].purpose_title,
-		 			"purpose_desc" :    newadv[0].purpose_desc,
-					"payment_mode" :	newadv[0].payment_mode,
-					"payment_account" : newadv[0].payment_account,
-					"tdsrate" : 		tdsrate,
-					"tdsamount":		tdsamt,
-					"id" :null
-					
-		
+				var tax = $('#' + index + 'tax_rate').val();
+				var tax_id = $('#' + index + 'taxlist option[value="'+ tax +'"]').attr('taxid');
+				var taxDel = $('#' + index + 'tax_rate').prop('readonly');
+				
+				var taxAmount = $('#' + index + 'tax_amt').val();
+			
+				//if read only attribute is true for product -> check against entire list no condition for product id
+			
+				var details = {
+	  				"product": {
+	  							"productName":null,
+	  							"productDescription": null,
+	  							"productTax":null,
+	  							"productCategory":null,
+	  							"costPrice": null,
+	  							"productHOE": null,
+	  							"sellingPrice": null,
+	  							"productHOI": null,
+	  							"company":null,
+	  							"isDeleted": prodDel,
+	  							"id": prod_id
+							
+	  						   },
+	  				"description":desc,
+	  				"quantity": quantity,
+	  				"price": price,
+	  				"subTotal": amount,
+	  				"taxTotal": taxAmount,
+	  				"tax": {
+	  					      "taxType": null,
+	  					      "taxName":null,
+	  					      "taxAbbreviation" :null,
+	  					      "taxDescription" :null,
+	  					      "taxRate":null,
+	  					      "isDeleted": taxDel,
+	  					      "company":null,
+	  					      "id" :tax_id
+	  					
+	  					},
+	  			   "id" : null
+				
 				};
-				purchaseOrder.adv_payment.push(advance);
-			}
-		
+						  
+				purchaseOrder.poDetails.push(details);
+			
+		}
 		
 	}
+	  
+		var vendor = $("#vendor").val();
+		var vendor_id = $('datalist option[value="'+ vendor +'"]').attr('vendorid');
+		var date = $("#date").val();
+		
+		purchaseOrder.vendor = null;
+		purchaseOrder.company = null;
+		purchaseOrder.isPurchaseOrder = true;
+		purchaseOrder.poSerialId = 0; // no need
+		purchaseOrder.poDate = date;
+		purchaseOrder.poNumber = $("#po_number").val();   
+		purchaseOrder.poNotes = $("textarea#notes").val();
+		
+		purchaseOrder.poSubtotal = $("#subtotal").val();
+		purchaseOrder.poTaxtotal = $("#taxtotal").val();
+		purchaseOrder.poGrandtotal = $("#grandtotal").val();
+		purchaseOrder.poAdvancetotal = 0;  
+		purchaseOrder.poBalance = 0;  //chng at back end (gtotal - advance)
+		purchaseOrder.isPodeleted  = false;
+		
+		
+		purchaseOrder.isBill = false;
+		purchaseOrder.billNumber = null;
+		purchaseOrder.billDate  = null;
+		purchaseOrder.billDueinterval = 0;
+		purchaseOrder.billDuedate = null;
+		purchaseOrder.billSubtotal = null;
+		purchaseOrder.billTaxtotal = null;
+		purchaseOrder.billGrandtotal = null;
+		purchaseOrder.billAdvancetotal = null;
+		purchaseOrder.billBalance = null;
+		purchaseOrder.isBilldeleted  = false;
+		
+		purchaseOrder.billDetails = null;
+		purchaseOrder.advancePayments = null;  //send null anyway
+		purchaseOrder.billPayments = null;
+		purchaseOrder.id = null;
 		
 		
 		
-		
-		
-		
-	
-		console.log(JSON.stringify(purchaseOrder));
 		var p = JSON.stringify(purchaseOrder);
 	
 		
-		
-		//ajax call TO BE MADE TO UPDATE A PO
-		
-		
-		/*
-		$.ajax({
-			   type : 'GET',
-			   url  : '/Accounting/po/purchase/editpo',
-			    dataType :'text',
-			    data:{'jsondata' : p},
-			    success: function(response) {
-			     alert(response);
-			     console.log(response);
-			  
-			    },
-			    error: function (xhr) {
-					alert(xhr.responseText);
-				    var jsonResponse = JSON.parse(xhr.responseText);
-				    alert(jsonResponse.message);
-				   
-				  } 
-				  });
-		*/
-		
+		//ajax call
+		var ccid = getCookie("CCID");
+	 var sid = getCookie("SID");
+	 var token = getCookie("TTID");
 
-	
-}
+						
+		
+		$.ajax({
+			   type : 'POST',
+			   url  : '/Accounting/rest/po/update?' + $.param({	
+				  
+				   	"po" :p,
+				   	"cid" : ccid,
+				   	"id" : sid,
+				   	"token" : token, "vendorId" : vendor_id}),
+			    dataType :'json',
+			    success: function(response, text, xhr) {
+			               
+			    	var po = JSON.parse(xhr.responseText);
+			    	window.location.replace("view_po.html?POId=" + purchaseOrder.poNumber);
+			    	
+			    },
+				error: function (a,b,c)
+				{ 
+					
+					 console.log(c.responseText);
+				}  
+				  });
+		
+		
+	});
 
 function add_product()
 {

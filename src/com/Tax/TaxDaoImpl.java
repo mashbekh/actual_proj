@@ -128,6 +128,57 @@ public class TaxDaoImpl {
 
 	}
 
+	
+	public List<Tax> getAllTaxes(String companyId) throws EntityException
+	{
+		Datastore ds = null;
+		Company cmp = null;
+		ObjectId oid = null;
+
+		List<Tax> taxList = new ArrayList<>();
+
+		try{
+			ds = Morphiacxn.getInstance().getMORPHIADB("test");
+			oid  = new ObjectId(companyId);
+			Query<Company> query = ds.createQuery(Company.class).field("id").equal(oid);
+			cmp = query.get();
+			if(cmp == null)
+				throw new EntityException(404,"cmp not found",null,null);
+
+			Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp);
+			taxList = taxquery.asList();
+
+
+		}
+		catch(EntityException e)
+		{
+			throw e;
+		}
+		catch(MongoException e)
+		{
+			if(cmp == null)
+				throw new EntityException(512, "get failed", null, null);
+
+			if(cmp != null && taxList.isEmpty() == true)
+				throw new EntityException(513, "get list failed", null, null);
+
+		}
+		catch(Throwable e)
+		{
+			if(oid == null)
+				throw new EntityException(500, "invalid", "invalid" + e.getMessage(), null);
+
+			if(oid != null && cmp == null)
+				throw new EntityException(500, "get failed", "get" + e.getMessage(), null);
+
+			if(cmp != null && taxList.isEmpty() == true)
+				throw new EntityException(500, "get list failed", "getlist" + e.getMessage(), null);
+
+		}
+		return taxList;
+
+	}
+
 
 	public Tax updateTax(Tax tax, String companyId) throws EntityException
 	{

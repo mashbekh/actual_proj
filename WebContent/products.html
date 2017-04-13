@@ -187,8 +187,17 @@ error: function (xhr, statusText) {
 		    	{
 		     		console.log(JSON.parse(xhr.responseText));
 		     		productList = JSON.parse(xhr.responseText);
+		     		
 		     		for(var i=0; i < productList.length; i++)
 		     			{
+		     			    var tax = ''; 
+		     			    
+		     			    if(productList[i].productTax == null)
+		     			    	tax = '<td>' +    " - " + '</td>';
+		     			    	
+		     			    else
+		     			    	tax = 	'<td>' +   productList[i].productTax.taxAbbreviation + " - "  +   productList[i].productTax.taxRate   + '</td>' ;
+		     			    		
 		     				$("#table_export").append('<tr>'+
 		     						
 				   					 '<td>' +  productList[i].productName + '</td>' +
@@ -196,10 +205,10 @@ error: function (xhr, statusText) {
 				   					 '<td>' +  productList[i].productCategory + '</td>' +
 				   					 '<td>' +  productList[i].costPrice + '</td>' +
 				   					 '<td>' +  productList[i].sellingPrice + '</td>' +
-				   					'<td>' +   productList[i].productTax.taxAbbreviation + " - "  +   productList[i].productTax.taxRate   + '</td>' +
-				   					 '<td>' +   
+				   					  tax   + 
+				   					 '<td>' +  
 				   					 
-				   					 '<div class="btn-group">' + 
+				   					   '<div class="btn-group">' + 
 				                      '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
 				                                    'Action <span class="caret"></span>' + 
 				                                '</button>' + 
@@ -1193,7 +1202,8 @@ error: function (xhr, statusText) {
 			 	if(productList[i].id == productid)
 			 		{
 			 			$("#dproduct_name").val(productList[i].productName);
-						$("#dtax_rate").val(productList[i].productTax.taxAbbreviation + " "  + productList[i].productTax.taxRate);
+			 			if(productList[i].productTax != null)
+							$("#dtax_rate").val(productList[i].productTax.taxAbbreviation + " "  + productList[i].productTax.taxRate);
 						$("#dproduct_desc").val(productList[i].productDescription);
 						$("#dcategory").val(productList[i].productCategory);
 						$("#dexpenditure").val(productList[i].productHOE); 

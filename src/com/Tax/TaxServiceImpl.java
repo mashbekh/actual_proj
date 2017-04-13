@@ -50,6 +50,20 @@ public class TaxServiceImpl {
 		
 	}
 	
+	@POST
+	@Path("/getAll")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAlltaxes( @QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token) throws IOException, AppException, Exception, Throwable, EntityException, AppException
+	{
+		
+		TaxDaoImpl taxdao = new TaxDaoImpl();
+		List<Tax> taxlist = taxdao.getAllTaxes(companyId);
+		return Response.status(Response.Status.OK)
+				   .entity(taxlist).build();
+		
+		
+	}
+	
 	
 	
 

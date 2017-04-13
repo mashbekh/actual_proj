@@ -219,7 +219,7 @@ function loadName()
 										company.contactDetails.locality + ", " +  company.contactDetails.state + ", "  +  company.contactDetails.city  + "</h4>");
 					
 					
-					 /*get PO serial number
+				
 				 	 
 			 	 	$.ajax({
 			 						type : 'POST',
@@ -232,8 +232,21 @@ function loadName()
 
 			 						success : function(response, text, xhr) {
 
-			 						$("po_number").val(prefix + xhr.responseText + suffix);
+			 							poserialNo = xhr.responseText;
+			 							var digits = poserialNo.toString().length;
+			 							var append = '';
 			 							
+			 							if(digits == 1)
+			 								append = "000";
+			 							else if(digits == 2)
+			 								append  = "00";
+			 							else if(digits == 3)
+			 								append = "0";
+			 							
+				 						
+			 						$("#po_number").val(prefix + append +  xhr.responseText + suffix);
+			 						
+			 						
 			 						},
 
 			 						error : function(xhr, statusText) {
@@ -243,10 +256,9 @@ function loadName()
 			 							var code = xhr.status;
 
 			 						}
-			 					});*/
+			 					});
 			 					
-								$("#po_number").val(prefix + "00001" + suffix);
-			 					poserialNo = 1;
+								
 			 
 					},
 
@@ -377,10 +389,11 @@ error: function (xhr, statusText) {
  
 
 
-
  
 
 }
+
+var poList;
 
 
 function update_vendor()
@@ -435,7 +448,7 @@ var vdr = $("#vendor").val();
 	
 	
 	
-	
+	// if tax associated with product is deleted - show nothing
 
 	function update_prod_details(counter) {
 
@@ -474,12 +487,25 @@ var vdr = $("#vendor").val();
 				
 				if (productList[i].id == prod_id) {
 					
-					//get cost price
-					if (productList[i].productTax != null) {
+					// it has tax which is not deleted 
+					if (productList[i].productTax != null && productList[i].productTax.deleted == false) {
 						
 						var taxval = productList[i].productTax.taxAbbreviation + " "
 								+ productList[i].productTax.taxRate;
 						$("#" + counter + "tax_rate").val(taxval);
+					}
+					
+					else if(productList[i].productTax != null && productList[i].productTax.deleted == true)
+					{
+						$("#" + counter + "tax_rate").val('');
+						//call update tax amount
+						//update_tax(counter);
+					}
+					
+					else if(productList[i].productTax == null)
+					{
+						$("#" + counter + "tax_rate").val('');
+						//update_tax(counter);
 					}
 
 					$("#" + counter + "price").val(productList[i].costPrice);
@@ -1365,8 +1391,7 @@ function create_vendor()
 																	</div>
 																</div>
 
-																<br>
-																<br>
+																<br> <br>
 
 
 																<div class="form-group required">
@@ -1669,13 +1694,13 @@ $('#submit').click(function(){
 	  else 
 	  { 
 		  	var productName= $('#' + index + 'product_name').val();
-	  	  	var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
+	  	  	var prod_id = $('#' +  index + 'productlist option[value='+ productName +']').attr('prodid');
 	  	  	var desc= $('#' + index + 'prod_desc').val();
 			var quantity = $('#' + index + 'quantity').val();
 			var price = $('#' + index + 'price').val();
 			var amount = $('#' + index + 'amt').val();
 			var tax = $('#' + index + 'tax_rate').val();
-			var tax_id = $('datalist option[value="'+ tax +'"]').attr('taxid');
+			var tax_id = $('#' +  index + 'taxlist option[value="'+ tax +'"]').attr('taxid');
 			var taxAmount = $('#' + index + 'tax_amt').val();
 		
 		
@@ -1721,7 +1746,7 @@ $('#submit').click(function(){
 }
   
 	var vendor = $("#vendor").val();
-	var vendor_id = $('datalist option[value="'+ vendor +'"]').attr('vendorid');
+	var vendor_id = $('#vendor_names option[value="'+ vendor +'"]').attr('vendorid');
 	var date = $("#date").val();
 	
 	purchaseOrder.vendor = null;
@@ -1735,7 +1760,7 @@ $('#submit').click(function(){
 	purchaseOrder.poSubtotal = $("#subtotal").val();
 	purchaseOrder.poTaxtotal = $("#taxtotal").val();
 	purchaseOrder.poGrandtotal = $("#grandtotal").val();
-	purchaseOrder.poAdvancetotal = null;
+	purchaseOrder.poAdvancetotal = 0;
 	purchaseOrder.poBalance = $("#grandtotal").val();
 	purchaseOrder.isPodeleted  = false;
 	
@@ -1758,7 +1783,7 @@ $('#submit').click(function(){
 	purchaseOrder.id = null;
 	
 	
-	console.log(JSON.stringify(purchaseOrder));
+	console.log(purchaseOrder);
 	var p = JSON.stringify(purchaseOrder);
 	console.log(vendor_id);
 
@@ -1781,7 +1806,7 @@ $('#submit').click(function(){
 		    success: function(response, text, xhr) {
 		               
 		    	var po = JSON.parse(xhr.responseText);
-		    	window.location.replace("view_po.html?id=" + po.id);
+		    	window.location.replace("view_po.html?POId=" + po.poNumber);
 		    	
 		    },
 			error: function (a,b,c)
@@ -1790,7 +1815,8 @@ $('#submit').click(function(){
 				 console.log(c.responseText);
 			}  
 			  });
-	
+			
+ 	
 	
 });
 
@@ -1981,6 +2007,10 @@ $('#submit').click(function(){
 				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
 
 		}
+			else    //if product changes, and it has no tax but had tax earlier - handle it to remove earlier chngs
+				{
+				update_tax(value_counter);
+				}
 	}
 
 	

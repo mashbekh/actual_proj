@@ -858,10 +858,6 @@ var tax_desc = $('#desc').val();
 
 //var tax_recovery  = $('#tax_recovery').prop("checked");
 
-if(tax_name==''||tax_abbr==''||tax_rate==''||tax_desc=='')
-{
-return true;
-}
 
 var tax = {
 		
@@ -879,6 +875,8 @@ var tax = {
 var ccid  = getCookie("CCID");
 var sid  = getCookie("SID");
 var token  = getCookie("TTID");
+
+alert("yes");
 
 tax = JSON.stringify(tax);
 console.log(tax);

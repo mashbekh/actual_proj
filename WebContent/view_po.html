@@ -26,8 +26,8 @@
 <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
 
 <script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
-			<script src="jarvis/js/moment_locale.js"></script>
-			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
+<script src="jarvis/js/moment_locale.js"></script>
+<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
 
 
 <script type="text/javascript">
@@ -72,31 +72,29 @@
 
 
 <style>
-
-#table_export th,td{
-padding:5px;
-
+#table_export th, td {
+	padding: 5px;
 }
 
 #container {
-    width:100%;
-    text-align:center;
+	width: 100%;
+	text-align: center;
 }
 
 #left {
-    float:left;
-    width:100px;
+	float: left;
+	width: 100px;
 }
 
 #center {
-    display: inline-block;
-    margin:0 auto;
-    width:100px;
+	display: inline-block;
+	margin: 0 auto;
+	width: 100px;
 }
 
 #right {
-    float:right;
-    width:100px;
+	float: right;
+	width: 100px;
 }
 
 .panel {
@@ -137,8 +135,6 @@ input[readonly] {
 	background-color: #152F37;
 }
 
-
-
 #date, #customer_detail, #grandtotal, #taxtotal, #subtotal {
 	background-color: white;
 }
@@ -176,418 +172,7 @@ $(function () {
     
 });
 
-function add_advpay() {
-    
-    $("#advance_payment").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "Advance Payment",
-        width: 900,
-        height: 670
-        });
-         // use same date 
-        
-        var date = $("#date").val();
-       // $('#payment_date').val(date);
-        $("#vendor_name").val($("#vendor").val());
-        $("#purpose_title").val("Advance Payment towards Purchase Order " + $("#po_number").val() );
-        $('#advance_payment').dialog('open');
-    }
-    
-  
-function make_advpay() //new payment
-{
-	
-	$("#advance_payment").dialog('close');
-	
-	
-	 
-	
-	var date = $('#payment_date').val();
-    var vendor = $("#vendor_name").val();
-    var title=  $("#purpose_title").val();
-    var desc = $("#purpose_desc").val();
-    var amt = $("#adv_amount").val();
-    var tds = $("#tds_rate").val();
-    var tdsamt = $("#tds_amount").val();
-    var mode = $("#mode_payment").val();
-    var acc = $("#payment_acc").val();
-    
-    
-    /*make an ajax call , save the payment,
-    On success, save it in adv array
-    update amounts in PO
-    
-    id will be ID of just inserted adv payment
-    
-	*/
-    
-    var id =  (newpayment+1);
-    newpayment+= 1;
-    
-    var a = {
-			"payment_date": date,
-			"payment_amount":amt,
-			"purpose_title":title,
-			"purpose_desc":desc,
-			"payment_mode":mode,
-			"payment_account":acc,
-			"tdsrate":tds,
-			"tdsamount":tdsamt,
-			"id" : id
-	};
-    
-    
-   
-	adv.push(a);
-	console.log(adv);
-	
-	 $('#payment_date').val('');
-     $("#vendor_name").val('');
-     $("#purpose_title").val('');
-     $("#purpose_desc").val('');
-     $("#adv_amount").val('');
-     $("#tds_rate").val('');
-     $("#tds_amount").val('');
-     $("#mode_payment").val('');
-     $("#payment_acc").val('');
-	
-	//change adv and balance, add it to list of payments
-	
-	var oldadv = $("#advtotal").val();
-	//alert(oldadv);
-	var oldbal = $("#balanceamt").val();
-	//alert(oldbal);
-	$("#advtotal").val(Number(oldadv) +  Number(amt));
-	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
-	
-	
-	
-	
-	//show the chngs in payments section
-	
-	var divid = "adv" + id;
-	
-	
-	
-	$("#payments").append('<div id="'+  divid + '">' + 
-				'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
-				'&nbsp;&nbsp;<a onclick="edit_payment(\'' + id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
-				'<a onclick="delete_payment(\'' +  id + '\')">Remove payment</a></div>');
-	
-	//check if balance is 0 , if yes, then remove make payment button
-	
-	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
-	$("#dueamt").text($("#balanceamt").val());
-	
-	if($("#balanceamt").val()==0.00)
-	{
-		$("#pay_button").hide();
-		$("#status").css( "background-color", "#336600");
-		$("#status").text("PAID");
-		$("#payment_status").text("Status : PO paid in full");
-	}
-	else
-	{
-		$("#pay_button").show();
-		$("#payment_status").text("Status : PO payment is due");
-		$("#status").css( "background-color", "#B00000");
-		$("#status").text("UNPAID");
-		
-	}
-	
-	return false;
-	
-	
-	}
 
-
-
-function edit_payment(payment_id)
-{
-	alert(payment_id);
-	var date;
-	var vendor; //anyway its part of po , not detail, show currently selected or old?
-	var amt;
-	var title;
-	var desc;
-	var mode;
-	var acc;
-	var tdsrate;
-	var tdsamt;
-	//chk conditions for adv payments
-	
-	adv_counter = payment_id;
-	
-	for(var i=0;i<adv.length;i++)
-		{
-			if(payment_id == adv[i].id)
-				{
-			      date = adv[i].payment_date;
-			      vendor  = adv[i].vendor_name;
-			      amt = adv[i].payment_amount;
-			      title = adv[i].purpose_title;
-			      desc = adv[i].purpose_desc;
-			      tdsrate = adv[i].tdsrate;
-			      tdsamt = adv[i].tdsamount;
-			      mode = adv[i].payment_mode;
-			      acc = adv[i].payment_account;
-				
-				}
-		
-		
-		}
-	 $("#edit_payment").dialog({
-	        
-	        modal: true,
-	        autoOpen: false,
-	        title: "Edit Payment",
-	        width: 900,
-	        height: 670
-	        });
-	         // use same date 
-	        
-	       
-	        $('#epayment_date').val(date);
-	        $("#evendor_name").val($("#vendor").val());
-	        $("#epurpose_title").val(title);
-	        $("#epurpose_desc").val(desc);
-	        $("#eadv_amount").val(amt);
-	        $("#etds_rate").val(tdsrate);
-	        $("#etds_amount").val(tdsamt);
-	        $("#emode_payment").val(mode);
-	        $("#epayment_acc").val(acc);
-	        
-	        $('#edit_payment').dialog('open');
-	
-}
-
-
-function delete_payment(payment_id)
-{
-	var divid;
-	
-		divid = "adv" + payment_id;
- 	
-	$("#" + divid).remove();
-
-//adj bal and adv total
-//remove entry from json adv
-
-	
-	var advamt;
-	
-	for(var i=0;i<adv.length;i++)
-	{
-		if(id == adv[i].id)
-			{
-			 advamt = adv[i].payment_amount;
-			  adv.splice(i,1);
-			}
-
-	}
-	
-var oldadv = $("#advtotal").val();
-	
-	var oldbal = $("#balanceamt").val();
-	
-	$("#advtotal").val(Number(oldadv) -  Number(advamt));
-	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
-	
-	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
-	$("#dueamt").text($("#balanceamt").val());
-	
-	if($("#balanceamt").val()==0.00)
-	{
-		$("#pay_button").hide();
-		$("#status").css( "background-color", "#336600");
-		$("#status").text("PAID");
-		$("#payment_status").text("Status : PO paid in full");
-	}
-	else
-	{
-		$("#pay_button").show();
-		$("#payment_status").text("Status : PO payment is due");
-		$("#status").css( "background-color", "#B00000");
-		$("#status").text("UNPAID");
-		
-	}
-	
-	console.log(adv);
-}
-
-function tds_change()
-{
-	
-
-	//when amount and tds rate changes
-		var amt = $("#adv_amount").val();
-		if ($("#tds_rate").val() != '') {
-			var tdsrate = $("#tds_rate").val();
-			var tdsamt = (tdsrate / 100) * amt;
-			$("#tds_amount").val(tdsamt);
-		}
-
-		else {
-			$("#tds_amount").val('');
-		}
-		
-		
-		
-		var amt = $("#eadv_amount").val();
-		if ($("#etds_rate").val() != '') {
-			var tdsrate = $("#etds_rate").val();
-			var tdsamt = (tdsrate / 100) * amt;
-			$("#etds_amount").val(tdsamt);
-		}
-
-		else {
-			$("#etds_amount").val('');
-		}
-
-	}
-	
-
-	
-function edittds_change()
-{
-	
-
-	//when amount and tds rate changes
-		var amt = $("#newadv_amount").val();
-		if ($("#newtds_rate").val() != '') {
-			var tdsrate = $("#newtds_rate").val();
-			var tdsamt = (tdsrate / 100) * amt;
-			$("#newtds_amount").val(tdsamt);
-		}
-
-		else {
-			$("#newtds_amount").val('');
-		}
-
-	}
-	
-
-	
-	function update_due()
-	{
-		if(adv_counter.length>0)
-			{
-			  var due = $("#grandtotal").val() - $("#advtotal").val();
-			  $("#balanceamt").val(due.toFixed(2));
-			}
-		
-	}
-	
-	
-
-	function edit_pay() {
-		
-		alert(adv_counter);   //the payment id which just got editted
-		
-		var date = $("#epayment_date").val();
-		var amt = $("#eadv_amount").val();
-		var title  = $("#epurpose_title").val();
-		var acc = $("#epayment_acc").val();
-		var mode = $("#emode_payment").val();
-		
-		if( date==''|| amt=='' || title=='' || acc=='' || mode=='')
-			{
-			return true;
-			}
-
-		
-		
-		var tds = $("#etds_rate").val();
-		var desc = $("#epurpose_desc").val();
-		var tdsamt = $("#etds_amount").val();
-		
-		//find this entry in adv array to update
-	
-		
-		//AJX CALL TO EDIT, PASS ID OF IT ALONG WITH PO#
-		//on success edit in json, and update fields
-		
-		var prev_adv ;
-		
-		for(var k=0;k<adv.length;k++)
-			{
-				if(adv_counter==adv[k].id)
-					{
-					
-					prev_adv = adv[k].payment_amount;
-					
-					  alert(k);
-					  adv[k].payment_date = date;
-					  adv[k].payment_amount = amt;
-					  adv[k].purpose_title = title;
-					  adv[k].purpose_desc = desc;
-					  adv[k].payment_mode  = mode;
-					  adv[k].payment_account = acc;
-					  adv[k].tdsrate = tds;
-					  adv[k].tdsamount = tdsamt;
-					
-					break;
-					}
-			
-			}
-		
-		
-		
-		console.log(adv);
-		
-		$("#edit_payment").dialog('close');
-		
-		//update adv and balance of po
-		
-		var oldadv = $("#advtotal").val();
-		//alert(oldadv);
-		var oldbal = $("#balanceamt").val();
-		//alert(oldbal);
-		$("#advtotal").val(Number(oldadv) - Number(prev_adv)  +  Number(amt));
-		$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
-		
-		//show the chngs in payments section
-		
-		$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
-		$("#dueamt").text($("#balanceamt").val());
-	
-	if($("#balanceamt").val()==0.00)
-	{
-		$("#pay_button").hide();
-		$("#status").css( "background-color", "#336600");
-		$("#status").text("PAID");
-		$("#payment_status").text("Status : PO paid in full");
-	}
-	else
-	{
-		$("#pay_button").show();
-		$("#payment_status").text("Status : PO payment is due");
-		$("#status").css( "background-color", "#B00000");
-		$("#status").text("UNPAID");
-		
-	}
-	
-		
-		
-		
-		var divid;
-		
-			
-		 divid = "adv" + adv_counter;
-		
-		$("#" + divid).remove();
-		
-		$("#payments").append('<div id="'+  divid + '">' + 
-					'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
-					'&nbsp;&nbsp;<a onclick="edit_payment(\'' +  adv_counter + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
-					'<a onclick="delete_payment(\'' +  adv_counter + '\')">Remove payment</a></div>');
-		
-		
-		return false;
-
-	}
 </script>
 <script>
 var count=0;
@@ -609,27 +194,50 @@ var newpayment=0 ;
 var adv = [];
 var editable_counter;
 var editable_old_counter;
-//individual po edit, on load
+
+var poNo;
+
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
+
+
 
 function loadName()
 {
 	
-	//just after creating, when this PO gets loaded, adv pay = null  [check for this and show this too]
-	
-	 var myParam = location.search.split('PONo=')[1];
-	// alert(myParam);
-	
+    if(location.search == '')
+    	alert("Invalid");
+    else
+   {
+	 var myParam = location.search.split('POId=')[1];
+	 
+	 var ccid = getCookie("CCID");
+	 var sid = getCookie("SID");
+	 var token = getCookie("TTID");
 	 
 	$.ajax({
-		   type : 'GET',
-		   url  : '/Accounting/po/purchase/viewpo',
-		    dataType :'text',
-		    data:{'po_num' : myParam},
-		    success: function(response) {
+		   		type : 'POST',
+		   		url  : '/Accounting/rest/po/getPO?' + $.param({ "pno" : myParam , "cid" : ccid,
+					"id" : sid,
+					"token" : token }),
+					
+		    	dataType :'json',
+		    	success: function(response, text , xhr) {
 		     
-		    	alert(response);
-		     //JSON.parse(response);
-		     porder = response;
+		    	
+		  
+		     porder = JSON.parse(xhr.responseText);
 		     fetchpo();
 		     
 		    },
@@ -644,46 +252,66 @@ function loadName()
 	$("#status").css( "color", "white");
 	$("#status").css( "fontWeight", "bold");
 	
-	
+   }
 }	
 
 
 	
 	
+//two ways to handle if convtd to bill/ not
+function fetchpo() {
 	
-	function fetchpo() {
-		x = JSON.parse(porder);
-		//console.log(x);
-		count = x.pod.length - 1;
-
-		var taxid_array = {};
-		var taxbox_array = {};
-		var pqr = [];
+	
+	x = porder;
+	poNo = x.poNumber;
+	
+		//if not converted to bill
+	if(x.bill == false)
+			{
+		
+				count = x.poDetails.length - 1;
+				var taxid_array = {};
+				var taxbox_array = {};
+				var pqr = [];
+				
 		
 		
-		for (var i = 0; i < x.pod.length; i++) {
-			
-			//var index = taxid_array.indexOf(x.pod[i].tax_id);
-			
-			if(!(x.pod[i].tax_id in taxid_array))
+				for (var i = 0; i < x.poDetails.length; i++) 
 				{
+					if(x.poDetails[i].tax != null)  //tax associated with product can be null, if tax exists deleted / not doesnt matter
+					{
+					var a = (x.poDetails[i].tax.taxAbbreviation + " " +  x.poDetails[i].tax.taxRate).toString();
+					
+					if(!(a in taxid_array))
+					{
+						taxid_array[a] = x.poDetails[i].taxTotal;
+						taxbox_array[a] = [];
+						var num = Number(Number(i)   + Number(1));
+						taxbox_array[a].push(num);
 				
-				taxid_array[x.pod[i].tax_id] = x.pod[i].tax_amount;
-				
-				taxbox_array[x.pod[i].tax_id] = [];
-				var num = Number(Number(i)   + Number(1));
-				taxbox_array[x.pod[i].tax_id].push(num);
-				
-				}
-			else
-				{
-				taxid_array[x.pod[i].tax_id] += x.pod[i].tax_amount;
-				var num = Number(Number(i)   + Number(1));
-				taxbox_array[x.pod[i].tax_id].push(num);
-				}
+					}
+					
+					else
+					{
+						taxid_array[a] += x.poDetails[i].taxTotal;
+						var num = Number(Number(i)   + Number(1));
+						taxbox_array[a].push(num);
+					}
+					}
 			
-			box_counter.push(i);
-			productid_counter[i] = x.pod[i].id;
+					box_counter.push(i);
+					//productid_counter[i] = x.pod[i].id;   // unique id of each pod
+					
+					var productString = '';
+					
+				
+					
+					if(x.poDetails[i].product.productDescription != '')
+						productString = x.poDetails[i].product.productName  + " " + x.poDetails[i].product.productDescription ;
+						
+					else
+						productString = x.poDetails[i].product.productName  + " " ;
+							
 
 			$(
 					'<tr >'
@@ -697,13 +325,13 @@ function loadName()
 							'<td>'
 							+ '<div class="form-group required">'
 							+ '<div class="col-lg-6">'
-							+  x.pod[i].product_id 
+							+  productString  
 							+ '</div>' + '</div>' + '</td>' +
 
 							'<td>' + '<div class="form-group required">'
 							+ '<div class="col-lg-3">'
 							
-							+ x.pod[i].quantity
+							+ x.poDetails[i].quantity
 							
 							+ '</div>'
 							+ '</div>'
@@ -714,7 +342,7 @@ function loadName()
 							+ '<div class="form-group required">'
 							+ '<div class="col-md-8"><i class="fa fa-inr"></i> '
 							
-							+ x.pod[i].cost
+							+ x.poDetails[i].price
 							
 							+ '</div>'
 							+ '</div>'
@@ -726,7 +354,7 @@ function loadName()
 							+ '<td>'
 							+ '<div class="form-group required">'
 							+ '<div class="col-lg-5"><i class="fa fa-inr"></i> '
-							+ x.pod[i].amount
+							+ x.poDetails[i].subTotal
 							+ '</div>'
 							+ '</div>'
 							+ '<br><br>'
@@ -734,75 +362,79 @@ function loadName()
 							+ '</td>'
 							+ '</tr>').insertBefore('#last_row');
 
-			//$("#" + i + "tax_rate").val(x.pod[i].tax_id);
-			//alert(i);
-			//update_amount(i);
-			//update_ta
-//(i);
-			
-			//create sep div for individual tax amounts
-			
-			
-			
-			
 		}
 
 	
-		$("#subtotal").val( x.amount);
-		$("#taxtotal").val(x.tax_amount);
-		$("#grandtotal").val(x.grand_total);
+		$("#subtotal").val( x.poSubtotal);
+		$("#taxtotal").val(x.poTaxtotal);
+		$("#grandtotal").val(x.poGrandtotal);
 		
-		$("#vendor").val("Suraj Papers");
-		$("#po_number").val(x.po_number);
+		$("#vendor").val(x.vendor.businessDetails.businessName);
+		$("#vendor").prop("readonly", true);
+		$("#vendr").append(x.vendor.businessDetails.businessName);
+		
+		$("#po_number").val(x.poNumber);
 		$("#po_number").prop("readonly", true);
-		$('textarea#notes').val(x.note);
-		$('textarea#vendor_detail').val("ytghh hgfrtt hjfytrtf");
-		var d = new Date(x.order_date);
+		
+		$("#pono").append("<h2>" + "Purchase Order #" + x.poNumber + "</h2>");
+		
+		$('textarea#notes').val(x.poNotes);
+		
+		$('textarea#vendor_detail').val(x.vendor.contactDetails.addrLine1 + " " +x.vendor.contactDetails.addrLine2  + " "  + 
+				x.vendor.contactDetails.city + ","  +  x.vendor.contactDetails.state);
+		
+		$("#businessDetail").append("<h3>" +x.company.businessDetails.businessName + "</h3>"  + "<h4>" +  x.company.contactDetails.addrLine1 + " " +x.company.contactDetails.addrLine2  + " "  + 
+				x.company.contactDetails.city + ","  +  x.company.contactDetails.state)
+		
+		var d = new Date(x.poDate);
 		var v = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 		$("#date").val(v);
+		
+		var bal  = x.poBalance;
+	 	
 
-		var bal;
-		if(x.adv_payment.length>0)  
+		if(x.advancePayments != null)  
 			{
 			
-				var advance_total = x.advance_amount;
-				 bal = x.balance;
-			
-				for (var j = 0; j < x.adv_payment.length; j++) {
+				var advance_total = x.poAdvancetotal;
+		
+				for (var j = 0; j < x.advancePayments.length; j++) {
 					
-					var date = new Date(x.adv_payment[j].payment_date);
+			
+					
+					var date = new Date(x.advancePayments[j].paymentDate);
 					var dt = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 					
-					var divid = "adv" + x.adv_payment[j].id;
-					var id =  x.adv_payment[j].id;
+					var divid = "adv" + x.advancePayments[j].id;
+					var id =  x.advancePayments[j].id;
 					
 					
 					$("#payments").append('<div id="'+  divid + '">' + 
-					'&nbsp;&nbsp;' + dt +' : A payment for Rs.' + x.adv_payment[j].payment_amount  + ' was made using ' +  x.adv_payment[j].payment_mode + '<br>' + 
+					'&nbsp;&nbsp;' + dt +' : A payment for Rs.' + x.advancePayments[j].paymentAmount  + ' was made using ' +  x.advancePayments[j].paymentMode + '<br>' + 
 					'&nbsp;&nbsp;<a onclick="edit_payment(\'' +  id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
 					'<a onclick="delete_payment(\'' +  id + '\')">Remove payment</a></div>');
 					
 					
 					
 					
-					var a = {
-							"payment_date": dt,
-							"payment_amount":x.adv_payment[j].payment_amount,
-							"purpose_title":x.adv_payment[j].purpose_title,
-							"purpose_desc":x.adv_payment[j].purpose_desc,
-							"payment_mode":x.adv_payment[j].payment_mode,
-							"payment_account":x.adv_payment[j].payment_account,
-							"tdsrate":x.adv_payment[j].tdsrate,
-							"tdsamount":x.adv_payment[j].tdsamount,
-							"id" : x.adv_payment[j].id
+					var payment = {
+							"paymentDate": dt,
+							"paymentAmount":	x.advancePayments[j].paymentAmount,
+							"purposeTitle":	x.advancePayments[j].purposeTitle,
+							"purposeDescription":	x.advancePayments[j].purposeDescription	,
+							"paymentMode":	x.advancePayments[j].paymentMode,
+							"paymentAccount":	x.advancePayments[j].paymentAccount,
+							"tdsRate":	x.advancePayments[j].tdsRate,
+							"tdsAmount":	x.advancePayments[j].tdsAmount,
+							"id" :	x.advancePayments[j].id
 					};
 					
-					adv.push(a);
+					adv.push(payment);
 					
 					
 				}
 				
-				//console.log(adv);
+				
 
 				$("#table_export")
 				.append(
@@ -821,24 +453,51 @@ function loadName()
 
 				
 			$("#advtotal").val(advance_total);
-			$("#show_due").text("Amount Due : Rs " + $("#advtotal").val());
+			$("#show_due").text("Amount Due : Rs " + bal);
+			
 			if(bal==0.00 || bal==0)
 				$("#payment_status").text("Status : PO paid in full");
 			else
 				$("#payment_status").text("Status : PO payment is due");
 			
-			$("#dueamt").text($("#advtotal").val());
+			$("#dueamt").text(bal);
 			$("#balanceamt").val(bal);
-			console.log(adv);
+			
 			
 			}
 		
+		else
+			{
+			$("#table_export")
+			.append(
+
+					'<tr id="totaladv"><td></td><td></td><td></td><td><b>Advance Amount</b><br><br><b>Balance Amount</b></td>'
+							+ '<td >'
+							+ '<div class="form-group ">'
+							
+							
+							+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="advtotal"/>'
+						  
+							+ '<input type="number" class="form-control no-border" style="background-color:white" readonly id="balanceamt"/>'
+							 + '</div>' +
+
+							'</td></tr>');
+			
+				$("#advtotal").val(0.00);
+				$("#balanceamt").val(bal);
+				$("#dueamt").append("Rs " +  bal);
+				$("#show_due").append("<h3>" + "Amount Due : Rs. " + bal );
+				
+			}
+		
+	
+			 
 			
 		
 			for(var k in taxid_array)
 				{
 				  var str = "";
-				  for(var g=0;g<taxbox_array[k].length;g++)
+				  for(var g=0 ; g < taxbox_array[k].length; g++)
 					  {
 					    if(g!=taxbox_array[k].length-1)
 					    	str+= taxbox_array[k][g] + ',';
@@ -872,53 +531,48 @@ function loadName()
 
 			
 	}
+		
+	}
 </script>
 
 <body onload="loadName()">
 
 
-<!-- ADVANCE PAYMENT DIALOG -->
+	<!-- ADVANCE PAYMENT DIALOG -->
 
 
 	<div id="advance_payment" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
 			<form action="" method="post">
 
+
+				<!-- DATEPICKER TYPE -->
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Vendor Name</label>
+					<label class="col-md-3 control-label">Date</label>
 					<div class="col-md-6">
-						<input class="form-control" id="vendor_name" type="text"
-							required value="" readonly/>
+						<div class="input-group date" id="dtpicker">
+
+							<input type="text" class="form-control" id="payment_date"
+								onchange="get_duedate()"> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"> </span>
+							</span>
+						</div>
 					</div>
 				</div>
 
-				<br> <br><br>
 
-<!-- DATEPICKER TYPE -->
-				<div class="form-group required">
-																	<label class="col-md-3 control-label">Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="dtpicker">
-
-																			<input type="text" class="form-control" id="payment_date" onchange="get_duedate()">
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-
-			
 				<br> <br>
+				<br>
 
 				<div class="form-group required">
 					<label class="col-md-3 control-label">Amount</label>
 					<div class="col-md-6">
-						<input class="form-control" id="adv_amount" type="number" step="any"
-							required value="" onchange="tds_change()"/>
+						<input class="form-control" id="adv_amount" type="number"
+							step="any" required value="" onchange="tds_change()" />
 					</div>
 				</div>
-				
+
 				<br> <br>
 
 				<div class="form-group required">
@@ -928,19 +582,19 @@ function loadName()
 							required value="" />
 					</div>
 				</div>
-				
+
 				<br> <br>
 
 				<div class="form-group ">
 					<label class="col-md-3 control-label">Purpose Description</label>
 					<div class="col-md-9">
-						<input class="form-control" id="purpose_desc" type="text"
-							value="" />
+						<input class="form-control" id="purpose_desc" type="text" value="" />
 					</div>
 				</div>
-				
-				<br><br>
-				
+
+				<br>
+				<br>
+
 				<div class="form-group required">
 					<label class="col-md-3 control-label">Mode of Payment</label>
 					<div class="col-md-6">
@@ -950,13 +604,14 @@ function loadName()
 							<option value="card">Card</option>
 							<option value="online">Online transfer</option>
 							<option value="cheque">Cheque</option>
-							
+
 						</select>
 					</div>
 				</div>
 
-				<br><br>
-				
+				<br>
+				<br>
+
 				<div class="form-group required">
 					<label class="col-md-3 control-label">Payment Account</label>
 					<div class="col-md-6">
@@ -966,49 +621,50 @@ function loadName()
 							<option value="card">Card</option>
 							<option value="online">Online transfer</option>
 							<option value="cheque">Cheque</option>
-							
+
 						</select>
 					</div>
 				</div>
-				
-				<br><br>
-				
+
+				<br>
+				<br>
+
 				<!-- To deduct TDS., company TAN is required, check if TAN number given then show this -->
-				
-				
+
+
 				<div class="form-group">
 					<label class="col-md-3 control-label">TDS Rate(%)</label>
 					<div class="col-md-6">
 						<input class="form-control" id="tds_rate" type="number" step="any"
-							 value=""  onchange="tds_change()"/>
+							value="" onchange="tds_change()" />
 					</div>
 				</div>
-				
+
 				<br> <br>
-				
-				
+
+
 				<div class="form-group ">
 					<label class="col-md-3 control-label">TDS Amount</label>
 					<div class="col-md-6">
-						<input class="form-control" id="tds_amount" type="number" step="any"
-							 value="" />
+						<input class="form-control" id="tds_amount" type="number"
+							step="any" value="" />
 					</div>
 				</div>
-				
-				
+
+
 
 				<br> <br>
 			</form>
-			 <input id="advpay_submit" type="submit"
-					value="Add Payment" class="btn btn-blue" onclick="return make_advpay()">
+			<input id="advpay_submit" type="submit" value="Add Payment"
+				class="btn btn-blue" onclick="return make_advpay()">
 		</div>
 	</div>
 
 
 	<!-- END OF ADVANCE PAYMENT DIALOG -->
-	
-	
-	
+
+
+
 	<!-- EDIT PAYMENT DIALOG -->
 
 
@@ -1016,41 +672,35 @@ function loadName()
 		<div id="form-panel">
 			<form action="" method="post">
 
+
+
+				<!-- DATEPICKER TYPE -->
 				<div class="form-group required">
-					<label class="col-md-3 control-label">Vendor Name</label>
+					<label class="col-md-3 control-label">Date</label>
 					<div class="col-md-6">
-						<input class="form-control" id="evendor_name" type="text"
-							required value="" readonly/>
+						<div class="input-group date" id="dtpicker">
+
+							<input type="text" class="form-control" id="epayment_date"
+								onchange="get_duedate()"> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"> </span>
+							</span>
+						</div>
 					</div>
 				</div>
 
-				<br> <br><br>
 
-<!-- DATEPICKER TYPE -->
-				<div class="form-group required">
-																	<label class="col-md-3 control-label">Date</label>
-																	<div class="col-md-6">
-																		<div class="input-group date" id="dtpicker">
-
-																			<input type="text" class="form-control" id="epayment_date" onchange="get_duedate()">
-																			<span class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-
-			
 				<br> <br>
+				<br>
 
 				<div class="form-group required">
 					<label class="col-md-3 control-label">Amount</label>
 					<div class="col-md-6">
-						<input class="form-control" id="eadv_amount" type="number" step="any"
-							required value="" onchange="tds_change()"/>
+						<input class="form-control" id="eadv_amount" type="number"
+							step="any" required value="" onchange="tds_change()" />
 					</div>
 				</div>
-				
+
 				<br> <br>
 
 				<div class="form-group required">
@@ -1060,7 +710,7 @@ function loadName()
 							required value="" />
 					</div>
 				</div>
-				
+
 				<br> <br>
 
 				<div class="form-group ">
@@ -1070,9 +720,10 @@ function loadName()
 							value="" />
 					</div>
 				</div>
-				
-				<br><br>
-				
+
+				<br>
+				<br>
+
 				<div class="form-group required">
 					<label class="col-md-3 control-label">Mode of Payment</label>
 					<div class="col-md-6">
@@ -1082,13 +733,14 @@ function loadName()
 							<option value="card">Card</option>
 							<option value="online">Online transfer</option>
 							<option value="cheque">Cheque</option>
-							
+
 						</select>
 					</div>
 				</div>
 
-				<br><br>
-				
+				<br>
+				<br>
+
 				<div class="form-group required">
 					<label class="col-md-3 control-label">Payment Account</label>
 					<div class="col-md-6">
@@ -1098,50 +750,51 @@ function loadName()
 							<option value="card">Card</option>
 							<option value="online">Online transfer</option>
 							<option value="cheque">Cheque</option>
-							
+
 						</select>
 					</div>
 				</div>
-				
-				<br><br>
-				
+
+				<br>
+				<br>
+
 				<!-- To deduct TDS., company TAN is required, check if TAN number given then show this -->
-				
-				
+
+
 				<div class="form-group">
 					<label class="col-md-3 control-label">TDS Rate(%)</label>
 					<div class="col-md-6">
-						<input class="form-control" id="etds_rate" type="number" step="any"
-							 value=""  onchange="tds_change()"/>
+						<input class="form-control" id="etds_rate" type="number"
+							step="any" value="" onchange="tds_change()" />
 					</div>
 				</div>
-				
+
 				<br> <br>
-				
-				
+
+
 				<div class="form-group ">
 					<label class="col-md-3 control-label">TDS Amount</label>
 					<div class="col-md-6">
-						<input class="form-control" id="etds_amount" type="number" step="any"
-							 value="" />
+						<input class="form-control" id="etds_amount" type="number"
+							step="any" value="" />
 					</div>
 				</div>
-				
-				
 
-				<br> <br> 
+
+
+				<br> <br>
 			</form>
-			<input  type="submit"
-					value="Edit Payment" class="btn btn-blue" onclick="return edit_pay()">
+			<input type="submit" value="Edit Payment" class="btn btn-blue"
+				onclick="return updatePayment()">
 		</div>
 	</div>
 
 
 	<!-- END OF ADVANCE PAYMENT DIALOG -->
-	
-	
-	
-	
+
+
+
+
 
 	<div id="wrapper">
 
@@ -1157,20 +810,21 @@ function loadName()
 						class="icon-bar"></span>
 				</button>
 
-				<a class="navbar-brand" href="index.html" id="xyz" style="color:white;font-size:30px">SIMPLIFY TAX</a>
-				<a class="navbar-brand" id="xyz" class="company_name"
+				<a class="navbar-brand" href="index.html" id="xyz"
+					style="color: white; font-size: 30px">SIMPLIFY TAX</a> <a
+					class="navbar-brand" id="xyz" class="company_name"
 					style="font-size: 30px"></a>
 
 
 			</div>
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav" id="pqr">
-				
-				<li><a href="#" style="color:white"><i class="entypo-plus"></i></a></li>
-				
+
+				<li><a href="#" style="color: white"><i class="entypo-plus"></i></a></li>
+
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" style="color:white"><i class="fa fa-bell"></i> <b
-						class="caret"></b></a>
+					data-toggle="dropdown" style="color: white"><i
+						class="fa fa-bell"></i> <b class="caret"></b></a>
 					<ul class="dropdown-menu alert-dropdown">
 						<li><a href="#">Alert Name <span
 								class="label label-default">Alert Badge</span></a></li>
@@ -1187,8 +841,8 @@ function loadName()
 						<li class="divider"></li>
 						<li><a href="#">View All</a></li>
 					</ul></li>
-					
-			<li class="dropdown"><a class="dropdown-toggle"
+
+				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" style="color: white"><i
 						class="fa fa-fw fa-gear"></i>Settings</a>
 					<ul class="dropdown-menu">
@@ -1224,15 +878,15 @@ function loadName()
 					<li><a href="index.html"><i class="fa fa-fw fa-dashboard"></i>
 							Home</a></li>
 
-					<li ><a href="PurchaseOrders.html"><i
+					<li><a href="PurchaseOrders.html"><i
 							class="fa fa-fw fa-dashboard"></i> Purchase Orders</a></li>
 
-					<li class="active"><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
-							Bills</a></li>
-							
+					<li class="active"><a href="createBill.html"><i
+							class="fa fa-fw fa-dashboard"></i> Bills</a></li>
+
 					<li><a href="createEstimate.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
-					
+
 					<li><a href="createInvoice.html"><i
 							class="fa fa-fw fa-dashboard"></i> Invoice</a></li>
 
@@ -1247,9 +901,9 @@ function loadName()
 
 					<li><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
-				
-					
-					
+
+
+
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -1259,164 +913,347 @@ function loadName()
 		<div id="page-wrapper">
 
 			<div class="container-fluid">
-			<!-- Row beginning  MAIN SIZE outer panel width-->
+				<!-- Row beginning  MAIN SIZE outer panel width-->
 				<div class="row" id="row">
 					<div class="col-lg-12">
 
-<h1 class="page-header"> Purchase Order #001</h1>
-				
-				
-				<div class="row">
-					<div class="col-lg-8">
-					
-					<div id ="container">
-				<div id="left">
-					<h3>Status</h3>
-					<div id="status"></div>
-				</div>
-				
-				<div id="center">
-				<h3>Vendor</h3>
-				<div><a onclick="return a()"><h3>Suraj Papers</h3></a></div>
-				</div>
-				
-				
-				<div id="right">
-				<h3>Amount Due</h3>
-				<div id="dueamt">Rs 200</div>
-				</div>
-			</div>
-				</div>
-				</div>
-			
+						<div id="pono">
+							<h1 class="page-header"></h1>
+						</div>
+
+
+						<div class="row">
+							<div class="col-lg-8">
+
+								<div id="container">
+									<div id="left">
+										<h3>Status</h3>
+										<div id="status"></div>
+									</div>
+
+									<div id="center">
+										<h3>Vendor</h3>
+										<div id="vendr">
+											<a onclick="return a()"></a>
+										</div>
+									</div>
+
+
+									<div id="right">
+										<h3>Amount Due</h3>
+										<div id="dueamt"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
 
 						<div class="panel panel-default">
-									<div class="row">
-										<div class="col-lg-12">
-											
-												
-											
-											<div>
-											<p style="float:right">
-												<button type="button" class="btn btn-info" onclick="editpo()">Edit Purchase Order</button>
-											</p>
-											
-											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-ok" style="color:#33CCCC"></span>&nbsp;&nbsp;Create Purchase Order
-											</h3>
-											
-											<br><br>
+							<div class="row">
+								<div class="col-lg-12">
 
-												<!-- ADD YOUR BUSINESS DETAILS -->
+
+
+									<div>
+										<p style="float: right">
+											<button type="button" class="btn btn-info" onclick="editpo()">Edit
+												Purchase Order</button>
+										</p>
+
+										<h3>
+											&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"
+												style="color: #33CCCC"></span>&nbsp;&nbsp;Create Purchase
+											Order
+										</h3>
+
+										<br>
+										<br>
+
+										<!-- ADD YOUR BUSINESS DETAILS -->
+
+									</div>
+									<!-- end of portion one -->
+
+								</div>
+								<!-- end of row1 -->
+							</div>
+						</div>
+
+
+						<div class="panel panel-default">
+							<div class="row">
+								<div class="col-lg-12">
+
+
+
+									<div>
+										<p style="float: right">
+											<button type="button" class="btn btn-info">Send
+												Purchase Order</button>
+										</p>
+
+										<h3>
+											&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope"
+												style="color: #B0B0B0"></span>&nbsp;Send
+										</h3>
+									</div>
+									<br>
+									<br>
+
+									<!-- ADD YOUR BUSINESS DETAILS -->
+
+
+								</div>
+								<!-- end of row1 -->
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="row">
+								<div class="col-lg-12">
+
+
+
+									<div>
+										<p style="float: right">
+											<b id="show_due"></b>
+										</p>
+
+
+
+										<h3>
+											&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"
+												style="color: gray"></span>&nbsp;&nbsp;Make Advance Payment
+										</h3>
+
+										<h4>
+											&nbsp;&nbsp;<b id="payment_status">Status: Purchase Order
+												is due. </b>
+										</h4>
+									</div>
+
+
+									<hr>
+
+									<div id="payments">
+										<p style="float: right">
+											<button type="button" class="btn btn-info" id="pay_button"
+												onclick="return add_advpay()">Make Payment</button>
+										</p>
+										<h4>&nbsp;&nbsp;Payments made:</h4>
+
+										<br>
+									</div>
+
+									<br>
+
+									<!-- ADD YOUR BUSINESS DETAILS -->
+
+
+
+								</div>
+								<!-- end of row1 -->
+							</div>
+						</div>
+
+
+
+						<div class="panel panel-default">
+							<div class="row">
+								<div class="col-lg-12">
+									<button type="button" class="btn btn-info" style="width: 100%"
+										data-toggle="collapse" data-target="#portionOne">Business
+										Details</button>
+
+									<div id="businessDetail" class="panel-collapse collapse in">
+
+
+										<!-- ADD YOUR BUSINESS DETAILS -->
+
+									</div>
+									<!-- end of portion one -->
+
+								</div>
+								<!-- end of row1 -->
+							</div>
+						</div>
+
+						<br>
+
+
+
+
+
+
+						<div class="panel panel-default">
+							<button type="button" class="btn btn-info" style="width: 100%">Vendor
+								Details</button>
+							<div class="row">
+								<!-- ROW 2 -->
+								<div class="col-lg-12">
+									<!-- How wide table should be apart from outer panel -->
+
+
+									<!-- make another row for customer details -->
+									<div class="panel panel-default" id="inner_panel">
+										<div class="row">
+											<div class="col-lg-12">
+												<div id="form-panel">
+													<form role="form" id="customer_profile">
+
+														<div class="form-group required">
+															<label class="col-md-2 control-label">Vendor</label>
+															<div class="col-md-4">
+																<input list="customer_names" class="form-control"
+																	id="vendor" placeholder="Vendor Name"
+																	onchange="getcustomer_details()">
+
+
+
+
+															</div>
+														</div>
+
+
+
+
+														<br> <br>
+
+														<div class="form-group ">
+
+															<div class="col-md-6">
+																<textarea class="form-control" id="vendor_detail"
+																	rows="5" cols="80" readonly
+																	style="border: none; background-color: white"></textarea>
+															</div>
+														</div>
+
+														<br> <br>
+
+														<div class="form-group required">
+															<label class="col-md-2 control-label">PO Number</label>
+															<div class="col-md-4">
+																<input class="form-control" id="po_number"
+																	maxlength="100" required="required" title=""
+																	type="text" />
+															</div>
+														</div>
+
+														<br> <br>
+
+														<div class="form-group required">
+															<label class="col-md-2 control-label">Date</label>
+															<div class="col-md-4">
+																<div class="input-group date" id="dtpicker1">
+
+																	<input type="text" class="form-control" id="date"
+																		onchange="get_duedate()"> <span
+																		class="input-group-addon"> <span
+																		class="glyphicon glyphicon-calendar"> </span>
+																	</span>
+																</div>
+															</div>
+														</div>
+
+														<br> <br>
+
+
+
+													</form>
+												</div>
+												<!-- form panel -->
+
+
+
+
+
 
 											</div>
-											<!-- end of portion one -->
-
 										</div>
-										<!-- end of row1 -->
+
+										<br> <br>
+
+
+
+										<table class="table borderless datatable" id="table_export">
+											<thead>
+												<tr>
+
+													<th bgcolor="#B0B0B0" style="width: 10%"><div>Sl
+															No</div></th>
+
+
+													<th bgcolor="#B0B0B0" style="width: 30%"><div>Product</div></th>
+
+													<th bgcolor="#B0B0B0" style="width: 10%"><div>Quantity</div></th>
+													<th bgcolor="#B0B0B0" style="width: 25%"><div>Price</div></th>
+
+													<th bgcolor="#B0B0B0" style="width: 25%"><div>Amount</div></th>
+
+												</tr>
+											</thead>
+											<tbody>
+
+
+
+												<tr id="last_row">
+													<td></td>
+													<td></td>
+													<td></td>
+													<td><b>SubTotal</b> <br>
+													<br>
+													<b>Tax Total</b></td>
+
+													<td>
+														<div class="form-group ">
+
+
+															<input type="number" value="0"
+																class="form-control no-border" readonly id="subtotal"
+																maxlength="30" name="subtotal" placeholder="SubTotal"
+																required="required" title="" /> <input
+																type="number" value="0" class="form-control no-border"
+																readonly id="taxtotal" name="taxtotal" maxlength="30"
+																placeholder="TaxTotal" required="required" title="" />
+
+
+														</div>
+
+													</td>
+												</tr>
+
+
+
+
+												<tr id="gtotal">
+													<td></td>
+													<td></td>
+													<td></td>
+													<td><b>Grand Total</b></td>
+													<td>
+														<div class="form-group ">
+
+
+															<input type="number" value="0"
+																class="form-control no-border" readonly id="grandtotal"
+																maxlength="30" name="grandtotal"
+																placeholder="GrandTotal" required="required" title="" />
+
+														</div>
+
+													</td>
+												</tr>
+
+
+
+											</tbody>
+										</table>
+
 									</div>
 								</div>
-								
-								
-								<div class="panel panel-default">
-									<div class="row">
-										<div class="col-lg-12">
-											
-												
-											
-											<div>
-											<p style="float:right">
-												<button type="button" class="btn btn-info">Send Purchase Order</button>
-											</p>
-											
-											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope" style="color:#B0B0B0"></span>&nbsp;Send
-											</h3>
-											</div>
-											<br><br>
+								<!-- /.row -->
 
-												<!-- ADD YOUR BUSINESS DETAILS -->
 
-											
-										</div>
-										<!-- end of row1 -->
-									</div>
-								</div>
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								<div class="panel panel-default">
-									<div class="row">
-										<div class="col-lg-12">
-											
-												
-											
-											<div>
-												<p style="float:right" >
-												<b id="show_due">Amount Due : Rs. 200 </b>
-												</p>
-												
-												
-													
-											<h3>&nbsp;&nbsp;<span class="glyphicon glyphicon-ok" style="color:gray"></span>&nbsp;&nbsp;Make Advance Payment</h3>
-											
-											<h4>&nbsp;&nbsp;<b id="payment_status">Status: Purchase Order is due. </b></h4>
-											</div>
-											
-											
-											<hr>
-											
-											<div id="payments">
-											<p style="float:right">
-												<button type="button" class="btn btn-info" id="pay_button" onclick="return add_advpay()">Make Payment</button>
-											</p>
-											<h4>&nbsp;&nbsp;Payments made:</h4>
-											
-											<br>
-											</div>
-											
-											<br>
-
-												<!-- ADD YOUR BUSINESS DETAILS -->
-
-											
-
-										</div>
-										<!-- end of row1 -->
-									</div>
-								</div>
-								
-								
-
-								<div class="panel panel-default">
-									<div class="row">
-										<div class="col-lg-12">
-											<button type="button" class="btn btn-info"
-												style=" width: 100%" data-toggle="collapse"
-												
-												data-target="#portionOne">Business Details</button>
-												
-											<div id="portionOne" class="panel-collapse collapse in">
-											<br>
-												VISTAR PRINTSOL PRIVATE LIMITED<br>
-											B.D.A Layout, Nagarbhavi, <br>
-											Bangalore.
-											<br><br>
-
-												<!-- ADD YOUR BUSINESS DETAILS -->
-
-											</div>
-											<!-- end of portion one -->
-
-										</div>
-										<!-- end of row1 -->
-									</div>
-								</div>
 
 								<br>
 
@@ -1424,228 +1261,38 @@ function loadName()
 
 
 
-
-								<div class="panel panel-default">
-									<button type="button" class="btn btn-info"
-										style=" width: 100%">Vendor Details</button>
-									<div class="row">
-										<!-- ROW 2 -->
-										<div class="col-lg-12">
-											<!-- How wide table should be apart from outer panel -->
+								<!-- new row for notes -->
 
 
-											<!-- make another row for customer details -->
-											<div class="panel panel-default" id="inner_panel">
-												<div class="row">
-													<div class="col-lg-12">
-														<div id="form-panel">
-															<form role="form" id="customer_profile">
-
-																<div class="form-group required">
-																	<label class="col-md-2 control-label">Vendor</label>
-																	<div class="col-md-4">
-																		<input list="customer_names" class="form-control" id="vendor" placeholder="Vendor Name" onchange="getcustomer_details()">
-
-														
-
-
-																	</div>
-																</div>
-
-
-
-
-																<br> <br>
-
-																<div class="form-group ">
-
-																	<div class="col-md-6">
-																		<textarea class="form-control" id="vendor_detail"
-																			rows="5" cols="80" readonly style="border: none; background-color:white"></textarea>
-																	</div>
-																</div>
-
-																<br> <br>
-
-																<div class="form-group required">
-																	<label class="col-md-2 control-label">PO Number</label>
-																	<div class="col-md-4">
-																		<input class="form-control" id="po_number" 
-																			  maxlength="100" required="required"
-																			title="" type="text" />
-																	</div>
-																</div>
-
-																<br> <br>
-
-																	<div class="form-group required">
-																	<label class="col-md-2 control-label">Date</label>
-																	<div class="col-md-4">
-																		<div class="input-group date" id="dtpicker1">
-
-																			<input type="text" class="form-control" id="date"
-																				onchange="get_duedate()"> <span
-																				class="input-group-addon"> <span
-																				class="glyphicon glyphicon-calendar"> </span>
-																			</span>
-																		</div>
-																	</div>
-																</div>
-
-																<br> <br>
-
-
-
-															</form>
-														</div>
-														<!-- form panel -->
-
-
-
-
-
-
-													</div>
+								<div class="row">
+									<div class="col-lg-12">
+										<form>
+											<div class=form-group>
+												<label class="col-md-1 control-label">Notes</label> <br>
+												<div class="col-md-6">
+													<textarea class="form-control" id="notes" rows="10"
+														cols="10"></textarea>
 												</div>
-
-												<br> <br>
-										
-
-
-											<table class="table borderless datatable" id="table_export">
-												<thead>
-													<tr>
-													
-														<th bgcolor="#B0B0B0" style="width:10%"><div>Sl No</div></th>
-
-
-														<th bgcolor="#B0B0B0" style="width:30%"><div>Product</div></th>
-
-														<th bgcolor="#B0B0B0" style="width:10%"><div>Quantity</div></th>
-														<th bgcolor="#B0B0B0" style="width:25%"><div>Price</div></th>
-
-														<th bgcolor="#B0B0B0" style="width:25%"><div>Amount</div></th>
-														
-													</tr>
-												</thead>
-												<tbody>
-												
-													
-
-													<tr id="last_row"  >
-													<td></td>
-													<td></td><td></td><td><b>SubTotal</b> <br><br><b>Tax Total</b> </td>
-													
-														<td>
-															<div class="form-group ">
-																
-																
-																	<input type="number" value="0"
-																		class="form-control no-border" readonly id="subtotal"
-																		 maxlength="30" name="subtotal"
-																		placeholder="SubTotal" required="required" title=""
-																		 />
-																		 
-																	
-																		 
-																		 <input type="number" value="0"
-																		class="form-control no-border" readonly id="taxtotal"
-																		name="taxtotal" maxlength="30" 
-																		placeholder="TaxTotal" required="required" title=""
-																		 />
-																		
-																
-															</div>
-
-														</td>
-													</tr>
-
-													
-
-
-													<tr id="gtotal">
-													<td></td>
-													<td></td><td></td><td><b>Grand Total</b></td>
-														<td >
-															<div class="form-group ">
-																
-																
-																	<input type="number" value="0"
-																		class="form-control no-border" readonly
-																		id="grandtotal"  maxlength="30"
-																		name="grandtotal" placeholder="GrandTotal"
-																		required="required" title=""
-																		 />
-																
-															</div>
-
-														</td>
-													</tr>
-												
-													
-													
-												</tbody>
-											</table>
-
-
-
-														
-
-										</div>
-
-
+											</div>
+										</form>
 
 									</div>
-									<!-- /.row -->
-									
-									
-									
-									<br>
-									
-									
-					                    
-					                    
-					                    
-					                    <!-- new row for notes -->
-									
-									
-									<div class="row">
-									<div class="col-lg-12">
-									<form>
-									<div class=form-group>
-									<label class="col-md-1 control-label">Notes</label>
-									<br>
-									<div  class="col-md-6">
-															<textarea class="form-control" id="notes" rows="10"
-																cols="10"></textarea>
-																</div>
-								    </div>
-								    </form>
-																
 								</div>
-								</div>
-									<!-- end of notes -->
-					                    
-					                    
-									
-								</div>
-								<!-- closure for Main panel -->
+								<!-- end of notes -->
 
-							
-<br><br>
+
+
 							</div>
-							<!-- one tab listing feature ends-->
-
-							<!-- New Nav bar feature listing(create bill) -->
-
-							
+							<!-- closure for Main panel -->
 
 
-
-
-
+							<br>
+							<br>
 						</div>
-						<!-- nav content -->
+						<!-- one tab listing feature ends-->
+
+						<!-- New Nav bar feature listing(create bill) -->
+
 
 
 
@@ -1653,114 +1300,540 @@ function loadName()
 
 
 					</div>
-					<!--  wrapper -->
+					<!-- nav content -->
+
+
+
 
 
 
 				</div>
-				<!-- /.container-fluid -->
+				<!--  wrapper -->
+
+
 
 			</div>
-			<!-- /#page-wrapper -->
+			<!-- /.container-fluid -->
 
 		</div>
-		<!-- /#wrapper -->
+		<!-- /#page-wrapper -->
+
+	</div>
+	<!-- /#wrapper -->
 </body>
 
 
+<script>
 
 
+function update_due()
+{
+	if(adv_counter.length>0)
+		{
+		  var due = $("#grandtotal").val() - $("#advtotal").val();
+		  $("#balanceamt").val(due.toFixed(2));
+		}
+	
+}
+
+function tds_change()
+{
+	
+
+	//when amount and tds rate changes
+		var amt = $("#adv_amount").val();
+		if ($("#tds_rate").val() != '') {
+			var tdsrate = $("#tds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#tds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#tds_amount").val('');
+		}
+		
+		
+		
+		var amt = $("#eadv_amount").val();
+		if ($("#etds_rate").val() != '') {
+			var tdsrate = $("#etds_rate").val();
+			var tdsamt = (tdsrate / 100) * amt;
+			$("#etds_amount").val(tdsamt);
+		}
+
+		else {
+			$("#etds_amount").val('');
+		}
+
+	}
+
+
+function add_advpay() {
+    
+	//clear all fields
+	$('#payment_date').val('');
+    $("#vendor_name").val('');
+    $("#purpose_title").val('');
+    $("#purpose_desc").val('');
+    $("#adv_amount").val('');
+    $("#tds_rate").val('');
+    $("#tds_amount").val('');
+    $("#mode_payment").val('');
+    $("#payment_acc").val('');
+	
+    $("#advance_payment").dialog({
+        
+        modal: true,
+        autoOpen: false,
+        title: "Advance Payment",
+        width: 900,
+        height: 670
+        });
+         // use same date 
+        
+    	var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; //January is 0!
+		var yyyy = today.getFullYear();
+		if(dd < 10)
+		{
+    		dd='0'+dd
+		} 
+		if(mm < 10)
+		{
+    		mm='0'+mm
+		} 
+		var today = dd+'/'+mm+'/'+yyyy;
+        $("#payment_date").val(today);
+        $("#purpose_title").val("Advance Payment towards Purchase Order " + $("#po_number").val() );
+        $('#advance_payment').dialog('open');
+    }
+
+
+
+
+
+function make_advpay() //new payment
+{
+	
+	$("#advance_payment").dialog('close');
+	
+	var date = $('#payment_date').val();
+    var title=  $("#purpose_title").val();
+    var desc = $("#purpose_desc").val();
+    var amt = $("#adv_amount").val();
+    var tds = $("#tds_rate").val();
+    var tdsamt = $("#tds_amount").val();
+    var mode = $("#mode_payment").val();
+    var acc = $("#payment_acc").val();
+    
+    //if payment amount > balance  - not possible
+    
+    if(Number($("#balanceamt").val()) - Number(amt) < 0 )
+    	{
+    
+    		alert("Amount greater than balance");
+    		return false;
+    	}
+    var payment = {
+			"paymentDate": date,
+			"paymentAmount":amt,
+			"purposeTitle":title,
+			"purposeDescription":desc,
+			"paymentMode":mode,
+			"paymentAccount":acc,
+			"tdsRate":tds,
+			"tdsAmount":tdsamt,
+			"isTdsPaid":false,
+			"id" : null
+	};
+    
+    
+	 var ccid = getCookie("CCID");
+	 var sid = getCookie("SID");
+	 var token = getCookie("TTID");
+	 var paymentId;
+	 
+	$.ajax({
+		   		type : 'POST',
+		   		url  : '/Accounting/rest/po/addPayment?' + $.param({ "payment": JSON.stringify(payment) ,"pno" : poNo , "cid" : ccid,
+					"id" : sid,
+					"token" : token }),
+					
+		    	dataType :'json',
+		    	success: function(response, text , xhr) {
+		    		
+		    		console.log(JSON.parse(xhr.responseText));
+		     		var advpayment = JSON.parse(xhr.responseText);
+		     		adv.push(advpayment);
+		     		paymentId = advpayment.id;
+		     		updatePaymentstab(paymentId, advpayment.paymentAmount , advpayment.paymentMode , advpayment.paymentDate);
+		     
+		    },
+			error: function (a,b,c)
+			{ 
+				alert(a.status+b+c);
+				 console.log(a.status+b+c);
+			}  
+			  });
+	
+	//clear form
+	$('#payment_date').val('');
+    $("#vendor_name").val('');
+    $("#purpose_title").val('');
+    $("#purpose_desc").val('');
+    $("#adv_amount").val('');
+    $("#tds_rate").val('');
+    $("#tds_amount").val('');
+    $("#mode_payment").val('');
+    $("#payment_acc").val('');
+}
+	
+function updatePaymentstab(paymentId , amt ,  mode, date)
+{
+	
+	console.log("adv is");
+	console.log(adv);
+	
+	var d = new Date(date);
+	date = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+	
+	var oldadv = $("#advtotal").val();
+	var oldbal = $("#balanceamt").val();
+	
+	
+	$("#advtotal").val(Number(oldadv) +  Number(amt));
+	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
+	
+	
+	//show the chngs in payments section
+	
+	var divid = "adv" + paymentId;
+	
+	
+	
+	$("#payments").append('<div id="'+  divid + '">' + 
+				'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
+				'&nbsp;&nbsp;<a onclick="edit_payment(\'' + paymentId + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+				'<a onclick="delete_payment(\'' +  paymentId+ '\')">Remove payment</a></div>');
+	
+	//check if balance is 0 , if yes, then remove make payment button
+	
+	$("#dueamt").html('');
+	$("#dueamt").append("Rs " +  $("#balanceamt").val());
+	$("#show_due").html('');
+	$("#show_due").append("<h3>" + "Amount Due : Rs. " + $("#balanceamt").val() );
+	
+	
+	if($("#balanceamt").val() == 0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+	}
+
+
+
+function edit_payment(payment_id)
+{
+	alert("to be editted" + payment_id);
+	
+	var date;
+	var amt;
+	var title;
+	var desc;
+	var mode;
+	var acc;
+	var tdsrate;
+	var tdsamt;
+	
+	adv_counter = payment_id;   //currently to be editted
+	
+	for(var i=0;i < adv.length; i++)
+		{
+		
+		  if(adv[i].id == payment_id)
+			  {
+			   
+			  	date = adv[i].paymentDate;
+		      	amt = adv[i].paymentAmount;
+		     	title = adv[i].purposeTitle;
+		      	desc = adv[i].purposeDescription;
+		      	tdsrate = adv[i].tdsRate;
+		      	tdsamt = adv[i].tdsAmount;
+		      	mode = adv[i].paymentMode;
+		      	acc = adv[i].paymentAccount;
+		      	break;
+			  }
+			  
+		}
+	
+	var d = new Date(date);
+	date = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+	
+	
+	$("#edit_payment").dialog({
+        
+        modal: true,
+        autoOpen: false,
+        title: "Edit Payment",
+        width: 900,
+        height: 670
+        });
+        
+	//populate form
+	
+	if(tdsamt == 0)
+		tdsamt = '';
+	
+	if(tdsrate == 0)
+		tdsrate = '';
+	
+        $('#epayment_date').val(date);
+        $("#epurpose_title").val(title);
+        $("#epurpose_desc").val(desc);
+        $("#eadv_amount").val(amt);
+        $("#etds_rate").val(tdsrate);
+        $("#etds_amount").val(tdsamt);
+        $("#emode_payment").val(mode);
+        $("#epayment_acc").val(acc);
+        
+        $('#edit_payment').dialog('open');
+	
+
+}
+
+function updatePayment() {
+	
+	alert(adv_counter);   //the payment id which just got editted
+	
+	var date = $("#epayment_date").val();
+	var amt = $("#eadv_amount").val();
+	var title  = $("#epurpose_title").val();
+	var acc = $("#epayment_acc").val();
+	var mode = $("#emode_payment").val();
+	var tds = $("#etds_rate").val();
+	var desc = $("#epurpose_desc").val();
+	var tdsamt = $("#etds_amount").val();
+	
+	
+	
+	 var payment = {
+				"paymentDate": date,
+				"paymentAmount":amt,
+				"purposeTitle":title,
+				"purposeDescription":desc,
+				"paymentMode":mode,
+				"paymentAccount":acc,
+				"tdsRate":tds,
+				"tdsAmount":tdsamt,
+				"isTdsPaid":false,
+				"id" : adv_counter
+		};
+	    
+	    
+		 var ccid = getCookie("CCID");
+		 var sid = getCookie("SID");
+		 var token = getCookie("TTID");
+		 
+		 //need to handle existing adv total
+		 var prevAmt;
+	
+	$.ajax({
+   		type : 'POST',
+   		url  : '/Accounting/rest/po/updatePayment?' + $.param({ "payment": JSON.stringify(payment) ,"pno" : poNo , "cid" : ccid,
+			"id" : sid,
+			"token" : token }),
+			
+    	dataType :'json',
+    	success: function(response, text , xhr) {
+    		
+    		
+    		
+     		var advpayment = JSON.parse(xhr.responseText);
+     		
+     		//delete and push to adv
+     		for(var i=0;i < adv.length; i++)
+			{
+		  		if(adv[i].id == adv_counter)
+			  	{
+		  		   
+		  			prevAmt = adv[i].paymentAmount;   //old one
+			  		adv.splice(i,1);
+			  		break;
+			  
+			  	}
+			}
+     	
+     		adv.push(advpayment);
+     		updateAdvpay(adv_counter, prevAmt, advpayment.paymentAmount , advpayment.paymentMode , advpayment.paymentDate); //pass new values to update
+     
+    },
+	error: function (a,b,c)
+	{ 
+		alert(a.status+b+c);
+		 console.log(a.status+b+c);
+	}  
+	  });
+}
+
+
+function updateAdvpay(paymentId, prevAmt, amt , mode , date)
+{
+	
+	$("#edit_payment").dialog('close');
+	
+	var d = new Date(date);
+	date = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+	
+	var oldadv = $("#advtotal").val();
+	var oldbal = $("#balanceamt").val();
+	
+	//update advance Total and balance
+	
+	$("#advtotal").val(Number(oldadv) - Number(prevAmt)  +  Number(amt));
+	$("#balanceamt").val(($("#grandtotal").val() - $("#advtotal").val()).toFixed(2) );
+	
+	//show the chngs in payments section
+	
+	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+	$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+	
+	var divid;
+	
+	
+	 divid = "adv" + paymentId;
+	 $("#" + divid).remove();
+	
+	$("#payments").append('<div id="'+  divid + '">' + 
+				'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
+				'&nbsp;&nbsp;<a onclick="edit_payment(\'' +  paymentId + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+				'<a onclick="delete_payment(\'' +  paymentId + '\')">Remove payment</a></div>');
+	
+	
+	
+}
+
+function delete_payment(paymentId)
+{
+	 var ccid = getCookie("CCID");
+	 var sid = getCookie("SID");
+	 var token = getCookie("TTID");
+	 
+	
+
+$.ajax({
+		type : 'POST',
+		url  : '/Accounting/rest/po/removePayment?' + $.param({ "payment": paymentId ,"pno" : poNo , "cid" : ccid,
+		"id" : sid,
+		"token" : token }),
+		
+	dataType :'text',
+	success: function(response, text , xhr) {
+		
+		console.log(xhr);
+		updateDeletedPay(paymentId);
+ 
+},
+error: function (a,b,c)
+{ 
+	alert(a.status+b+c);
+	 console.log(c);
+}  
+  });
+}
+
+function updateDeletedPay(paymentId)
+{
+	
+	var prevAmt;
+	//find its entry in adv, chng all elements, remove it from adv
+	for(var i=0;i < adv.length; i++)
+			{
+		  		if(adv[i].id == paymentId)
+			  	{
+		  		   
+		  			prevAmt = adv[i].paymentAmount;   //old one
+			  		adv.splice(i,1);
+			  		break;
+			  
+			  	}
+			}
+	
+	//make chngs in elements
+	
+	var oldadv = $("#advtotal").val();
+	var oldbal = $("#balanceamt").val();
+	
+	//update advance Total and balance
+	
+	$("#advtotal").val(Number(oldadv) - Number(prevAmt) );
+	$("#balanceamt").val( Number(oldbal)  +  Number(prevAmt)  );
+	
+	//show the chngs in payments section
+	
+	$("#show_due").text("Amount Due : Rs. " + $("#balanceamt").val() );
+	$("#dueamt").text($("#balanceamt").val());
+	
+	if($("#balanceamt").val()==0.00)
+	{
+		$("#pay_button").hide();
+		$("#status").css( "background-color", "#336600");
+		$("#status").text("PAID");
+		$("#payment_status").text("Status : PO paid in full");
+	}
+	else
+	{
+		$("#pay_button").show();
+		$("#payment_status").text("Status : PO payment is due");
+		$("#status").css( "background-color", "#B00000");
+		$("#status").text("UNPAID");
+		
+	}
+	
+	
+	var divid;
+	
+	
+	 divid = "adv" + paymentId;
+	 $("#" + divid).remove();
+	
+	
+}
+
+
+
+</script>
 
 <script>
-                          /*
-                           $(function(){
-                           $("#add_row").click(function(){
-                           
-                        	   alert(count+1);
-                          
-                           count=count+1;
-                           
-                            box_counter.push(count);
-                            productid_counter[count] = null;
-                            
-                            
-                            
-                           $( '<tr >' + 
-                          
-                              '<td>' + 
-                                  '<div class="form-group required">' + 
-                                  '<div class="col-md-12">' + 
-                                  '<input class="form-control" id="' + count + 'product_name"  name="company_name"   placeholder="Product Name" required="required" title="" type="text" />' + 
-                                  '</div>'+
-                                  '</div>'+
-                              '</td>'  + 
-                              
-                              '<td>'+
-                              	'<div class="form-group required">'+
-                              	'<div class="col-md-12">'+
-                              	'<input type="number" value="1" class="form-control" id="' + count + 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount(' + count + ')"  />' + 
-                              	'</div>'+
-                              	'</div>'+
-                              '</td>' + 
-                              
- 							'<td>' +
- 								'<div class="form-group required">'+
- 								'<div class="col-md-12">'+
- 								'<input type="number" value="0" class="form-control" id="' + count + 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount(' +count +')" />'+
- 								'</div>'+
- 								'</div>'+
- 								'<br><br>'+
- 								'<div class="form-group required">'+ 
- 								'<label class="col-md-3 control-label">Tax Rate</label>'+
- 								'<div class="col-md-9">'+ 
- 									'<input list="browser"  class="form-control" id="' + count + 'tax_rate" placeholder="Tax Rate" onchange="update_tax(' + count   + ')">'+
- 							 		'<datalist id="browser">'+
- 							 		'<option data-customvalue="VAT 5.5" value="VAT 5.5">VAT 5.5</option>'+
- 							 		'<option data-customvalue="VAT 14.5" value="VAT 14.5">VAT 14.5</option>'+
- 							 		'<option data-customvalue="SERVICE 15" value="SERVICE 15">SERVICE 15</option>'+
- 							 		
- 							 		'</datalist>'+
- 							 '</div>'+
- 							 '</div>'+
- 							 '</td>' + 
- 							 
- 							 '<td>' 
-							+ '<div class="form-group required">'
-							+'<div class="col-md-12">'
-							+ '<input class="form-control no-border" id="' +  count  +'amt" value="0"' + 
-												 ' readonly style="background-color:white"' + 
-												' title="" type="text" />'
-							+ '</div>'
-							+ '</div>'
-							+
-
-							'<br><br>'
-							+ '<div class="form-group required">'
-							+
-
-							'<div class="col-md-12">'
-							+ '<input class="form-control no-border" id="' + count + 'tax_amt" value="0"' + 
-												   ' readonly style="background-color:white"' + 
-												' title="" type="text" />'
-							+ '</div>'
-							+ '</div>'
-							+'</td>'
-							+'<td>'
-							+ '<br>'
-							+ '<i class="entypo-trash"'
-							+ ' onClick="delete1(this,'
-							+ count
-							+ ')"></i>' 
-							+ '</td>'
-							+'</tr>').insertBefore('#last_row');
-                            
-                            });
-                            
-                            
-                            
-                            });
-                            
-                            */
                             
                            function update_amount(value_counter) {
                        		
@@ -1999,8 +2072,8 @@ function loadName()
 
                    	function delete1(o, number) {
 
-                   		var index = box_counter.indexOf(number);
-                           box_counter.splice(index, 1);
+                   			var index = box_counter.indexOf(number);
+                            box_counter.splice(index, 1);
                          	var deleted_amt = $('#' + number + 'amt').val();
                          	alert("deleted amt is " + deleted_amt);
                          	var deleted_tax_amt = $('#' + number + 'tax_amt').val();
@@ -2373,4 +2446,3 @@ function editpo()
 
 <!-- Bootstrap Core JavaScript -->
 <script src="jarvis/js/bootstrap.min.js"></script>
-

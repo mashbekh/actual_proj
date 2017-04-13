@@ -6,7 +6,6 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.setup.NoObjectIdSerializer;
 
@@ -22,11 +21,9 @@ import java.util.*;
 public class OutwardEntity {
 	
 	@Reference
-	@JsonIgnore
 	private BusinessPlayers vendor;
 	
 	@Reference
-	@JsonIgnore
 	private Company company;
 	
 	private boolean isPurchaseOrder;
@@ -347,8 +344,6 @@ public class OutwardEntity {
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
-	
-	
-	
+
 
 }
