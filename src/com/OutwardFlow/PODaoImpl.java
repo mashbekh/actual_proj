@@ -234,6 +234,8 @@ public class PODaoImpl {
 			payment.setId(new ObjectId());
 
 			List<POBillPayments> list ;
+			
+			//may be adding payment for first time, initialise list
 
 			if(purchaseOrder.getAdvancePayments() == null)
 			{
@@ -303,6 +305,10 @@ public class PODaoImpl {
 
 			java.math.BigDecimal prevAmt = null;
 			boolean match = false;
+			
+			//all deleted in between
+			if(purchaseOrder.getAdvancePayments() == null)
+				throw new EntityException(513, "payment not found", null, null);
 
 			for(POBillPayments pay : purchaseOrder.getAdvancePayments())
 			{
@@ -396,6 +402,10 @@ public class PODaoImpl {
 
 			boolean match = false;
 			POBillPayments pymnt = null;
+			
+			//all deleted in between
+			if(purchaseOrder.getAdvancePayments() == null)
+				throw new EntityException(513, "payment not found", null, null);
 
 			for(POBillPayments pay : purchaseOrder.getAdvancePayments())
 			{
@@ -504,7 +514,7 @@ public class PODaoImpl {
 			}
 
 
-
+			// front end list cant be null
 			List<POBillDetails> poDetails = po.getPoDetails();
 
 			for(POBillDetails pod : poDetails)
@@ -572,7 +582,7 @@ public class PODaoImpl {
 			purchaseOrder.setPoGrandtotal(po.getPoGrandtotal());
 			purchaseOrder.setPoSubtotal(po.getPoSubtotal());
 			purchaseOrder.setPoTaxtotal(po.getPoTaxtotal());
-			java.math.BigDecimal balance = purchaseOrder.getPoGrandtotal().subtract(purchaseOrder.getPoAdvancetotal()); //grand total is just set
+			java.math.BigDecimal balance = purchaseOrder.getPoGrandtotal().subtract(purchaseOrder.getPoAdvancetotal()); //grand total is just set, read prev advance
 			purchaseOrder.setPoBalance(balance);
 
 			key = ds.merge(purchaseOrder);
