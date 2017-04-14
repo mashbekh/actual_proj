@@ -800,5 +800,179 @@ public class BillDaoImpl {
 		}
 
 
+		//get id from bill, make sure vendor with same number should not exist
+		public OutwardEntity updateBill(OutwardEntity entity , String companyId, String vendorId) throws EntityException
+		{
+
+			Datastore ds = null;
+			Company cmp = null;
+			BusinessPlayers vendor = null;
+			Products prod = null;
+			Tax tax = null;
+			Key<OutwardEntity> key = null;
+			ObjectId oid = null;
+			ObjectId vendorOid = null;
+			ObjectId prodOid = null;
+			ObjectId taxOid = null;
+			OutwardEntity bill = null;
+			boolean vendorChange = false;
+			boolean billNochange  =  false;
+			
+			try
+			{
+				ds = Morphiacxn.getInstance().getMORPHIADB("test");
+				oid  = new ObjectId(companyId);
+				Query<Company> query = ds.createQuery(Company.class).field("id").equal(oid);
+				cmp = query.get();
+				if(cmp == null)
+					throw new EntityException(404, "cmp not found", null, null);
+				
+				System.out.println("cmp");
+
+				//check if bill exists with object id for update , fetch bill, make changes to it
+			
+				Query<OutwardEntity> billQuery = ds.find(OutwardEntity.class).filter("company",cmp).filter("isBill", true).
+						filter("id",entity.getId());
+
+				bill = billQuery.get();
+				if(bill == null)
+					throw new EntityException(512, "bill not found", null, null);  //cant update
+
+
+				System.out.println("bill found");
+				
+				/*check if vendor changed in update, if so then check if new vendor exists
+				 * if vendor hasnt changed bt was deleted - let it be
+				 */
+
+				if(!(vendorId.equals(bill.getVendor().getId().toString())))
+				{
+					vendorChange = true;
+					vendorOid  = new ObjectId(vendorId);
+					Query<BusinessPlayers> bpquery = ds.createQuery(BusinessPlayers.class).field("company").equal(cmp).field("id").equal(vendorOid).field("isDeleted").equal(false);
+					vendor = bpquery.get();
+					if(vendor == null)
+						throw new EntityException(512, "vendor not found", null, null);
+
+
+				}
+				
+				System.out.println("vendor");
+				
+				/*if bill number is editable, do check if there is new /old vendor + new/old bill number combo unique
+				 * if vendor hasnt changed and bill number hasnt chngd -  no prob
+				 * if vendor/bill number has chngd do check
+				 */
+				
+				if(!(entity.getBillNumber().equals(bill.getBillNumber())))
+					billNochange = true;
+				
+				System.out.println("bill no");
+				
+				if(vendorChange == true || billNochange == true)
+				{
+					/*add query later
+					 * if vendor not changed, bill numb has -> chk with bill.vendor and this number
+					 * if vendor has changed, bill numb hasnt then -> chk vendor and entity.billno
+					 * if both chngd , then vendor and entity.billno
+					 */
+				}
+					
+				// front end list cant be null
+				List<POBillDetails> billDetails = entity.getBillDetails();
+
+				for(POBillDetails bdetails : billDetails)
+				{
+
+					//check  tax exists, if not deleted
+					if(bdetails.getTax().getId() != null && bdetails.getTax().isDeleted() == false)
+					{
+
+						taxOid = new ObjectId(bdetails.getTax().getId().toString());
+						Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp).field("id").equal(taxOid).field("isDeleted").equal(false);
+						tax = taxquery.get();
+						if(tax == null)
+							throw new EntityException(513, "tax not found", null, null);  //has been deleted in due course
+					}
+
+					//check  tax exists, if  deleted
+					if(bdetails.getTax().getId() != null && bdetails.getTax().isDeleted() == true)
+					{
+
+						taxOid = new ObjectId(bdetails.getTax().getId().toString());
+						Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp).field("id").equal(taxOid).field("isDeleted").equal(true);
+						tax = taxquery.get();
+						if(tax == null)
+							throw new EntityException(513, "tax not found", null, null);   //tax doesn't exists / may not be deleted
+					}
+
+					if(bdetails.getProduct().isDeleted() == false)
+					{
+
+						prodOid = new ObjectId(bdetails.getProduct().getId().toString());
+						Query<Products> prodquery = ds.createQuery(Products.class).field("company").equal(cmp).field("id").equal(prodOid).field("isDeleted").equal(false);
+						prod = prodquery.get();
+						if(prod == null)
+							throw new EntityException(514, "product not found", null, null);  //has been deleted in due course
+					}
+
+					if(bdetails.getProduct().isDeleted() == true)
+					{
+
+						prodOid = new ObjectId(bdetails.getProduct().getId().toString());
+						Query<Products> prodquery = ds.createQuery(Products.class).field("company").equal(cmp).field("id").equal(prodOid).field("isDeleted").equal(true);
+						prod = prodquery.get();
+						if(prod == null)
+							throw new EntityException(514, "product not found", null, null);  //product doesn't exists / may not be deleted
+					}
+
+
+					bdetails.setId(new ObjectId());
+					bdetails.setTax(tax);
+					bdetails.setProduct(prod);
+
+					tax = null;
+					taxOid = null;
+					prod = null;
+					prodOid = null;
+
+				}
+
+				bill.setBillDetails(billDetails);
+				bill.setCompany(cmp);
+				if(vendorChange ==  true)
+					bill.setVendor(vendor);  //set only if vendor has changed
+				
+				bill.setBillNumber(entity.getBillNumber());
+				bill.setBillDate(entity.getBillDate());
+				bill.setBillDueinterval(entity.getBillDueinterval());
+				bill.setBillDuedate(entity.getBillDuedate());
+				
+				bill.setBillGrandtotal(entity.getBillGrandtotal());
+				bill.setBillSubtotal(entity.getBillSubtotal());
+				bill.setBillTaxtotal(entity.getBillTaxtotal());
+				java.math.BigDecimal balance = bill.getBillGrandtotal().subtract(bill.getBillAdvancetotal()); //grand total is just set, read prev advance
+				bill.setBillBalance(balance);
+
+				key = ds.merge(bill);
+				if(key == null)
+					throw new EntityException(515, "could not update", null, null);
+
+
+
+			}
+			catch(EntityException e)
+			{
+
+				throw e;
+			}
+			catch(Exception e)
+			{
+				
+				throw new EntityException(500, null , e.getMessage(), null);
+			}
+
+			return bill;
+		}
 
 }

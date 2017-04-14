@@ -132,7 +132,7 @@ public class BillServiceImpl {
 	@POST
 	@Path("/removeAdvPayment")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response removePayment(@QueryParam("payment") String paymentId,@QueryParam("billNo") String billNo,@QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token,  @QueryParam("vendorId") String vendorId ) throws JsonMappingException , JsonParseException, IOException, EntityException, Exception, Throwable
+	public Response removePayment(@QueryParam("payment") String paymentId,@QueryParam("billNo") String billNo,@QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token) throws JsonMappingException , JsonParseException, IOException, EntityException, Exception, Throwable
 	{
 
 		BillDaoImpl dao = new BillDaoImpl();
@@ -145,7 +145,7 @@ public class BillServiceImpl {
 	@POST
 	@Path("/removeBillPayment")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response removeBillPayment(@QueryParam("payment") String paymentId,@QueryParam("billNo") String billNo,@QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token,  @QueryParam("vendorId") String vendorId ) throws JsonMappingException , JsonParseException, IOException, EntityException, Exception, Throwable
+	public Response removeBillPayment(@QueryParam("payment") String paymentId,@QueryParam("billNo") String billNo,@QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token ) throws JsonMappingException , JsonParseException, IOException, EntityException, Exception, Throwable
 	{
 
 		BillDaoImpl dao = new BillDaoImpl();
@@ -154,5 +154,23 @@ public class BillServiceImpl {
 				.entity(billPayment).build();
 	}
 	
+	@POST
+	@Path("/updateBill")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateBill(@QueryParam("bill") String bill,@QueryParam("billNo") String billNo,@QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token,  @QueryParam("vendorId") String vendorId ) throws JsonMappingException , JsonParseException, IOException, EntityException, Exception, Throwable
+	{
+		ObjectMapper objectMapper = new ObjectMapper();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		objectMapper.setDateFormat(df);
+		OutwardEntity entity = objectMapper.readValue(bill,OutwardEntity.class);
+		
+		BillDaoImpl dao = new BillDaoImpl();
+		OutwardEntity updatedBill = dao.updateBill(entity, companyId , vendorId);
+		return Response.status(Response.Status.OK)
+				.entity(updatedBill).build();
+	}
+	
 
+	
+	
 }

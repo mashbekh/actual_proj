@@ -1050,7 +1050,7 @@ function fetchBill() {
 
 									<div>
 										<p style="float: right">
-											<button type="button" class="btn btn-info" onclick="editpo()">Edit
+											<button type="button" class="btn btn-info" onclick="editBill()">Edit
 												Bill</button>
 										</p>
 
@@ -2569,6 +2569,14 @@ function updateBillDeleted(paymentId)
                          	 $(o).closest('tr').remove();
                          	
                    	}
+                   	
+                   	
+    function editBill()
+    {
+    	window.location.replace("editBill.html?BillId=" + billNo);
+    	
+    	
+    }
 					          
 					          
 </script>
