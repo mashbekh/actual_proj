@@ -78,106 +78,6 @@
 
 //products can be from many batches for inventory products
 
-var product_list = [
-	
-	{      
-		
-		"product_name": "eraser",
-		"product_desc": "stationary",
-		"tax":                     //backend - search for tax obect from table with this id
-			{
-			 "tax_name":null,
-			 "tax_abbreviation": "VAT",
-			 "tax_desc":null,
-			 "tax_rate": 5.5,
-			 "company": null,  
-			 "tax_id": "CMP123TAX1",
-			 "tax_recoverable":true
-			 
-			},
-		"category":"XYZ",
-		"cp": 40,
-		"head_expenditure": "Purchases",
-			
-		"sp": 45,
-		"head_income": "Sales",
-		
-		"company":
-			{
-			"company_id" :"CMP445"
-			},
-		"discount":0,	
-		"product_id": "PROD66",
-		"id": 66
-		
-		
-},
-
-
-{      
-	
-	"product_name": "pens",
-	"product_desc": "stationary",
-	"tax":                     //backend - search for tax obect from table with this id
-		{
-		 "tax_name":null,
-		 "tax_abbreviation": "VAT",
-		 "tax_desc":null,
-		 "tax_rate": 5.5,
-		 "company": null,  
-		 "tax_id": "CMP123TAX1",
-		 "tax_recoverable":true
-		 
-		},
-	"category":"XYZ",
-	"cp": 75,
-	"head_expenditure": "Purchases",
-		
-	"sp": 75,
-	"head_income": "Sales",
-	
-	"company":
-		{
-		"company_id" :"CMP445"
-		},
-	"discount" :0,
-	"product_id": "PROD90",
-	"id": 90
-	
-	
-}
-	];                                 //list of products from backend
-	
-
-
-var tax_list = [
-	{
-		"tax_id" : "CMP123TAX1",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 5.5
-		
-	},
-	{
-		"tax_id" : "CMP123TAX2",
-		"tax_abbreviation" : "VAT",
-		"tax_rate": 14.5
-		
-		
-	}
-];
-
-$(function () {
-    $('#dtpicker').datetimepicker({
-    	
-    	format:'DD/MM/YYYY'
-    	
-    	
-    })
-
-    
-});
-
-
 
 
 
@@ -242,8 +142,8 @@ input[readonly] {
 function loadName()
 {
 	 $('.dropdown-toggle').dropdown();
-   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-   //get purchase order number and append it to box, also with today's date
+  
+	
    
    var today = new Date();
 	var dd = today.getDate();
@@ -853,6 +753,20 @@ function update_prod_details(counter)
 																		onchange="update_amount(first_count)" />
 																</div>
 															</div> <br> <br>
+															
+																<div class="form-group required">
+																<label class="col-md-4 control-label">Discount</label>
+																<div class="col-md-8">
+
+																	<input type="number" value="0" class="form-control"
+																		id="0discount"  maxlength="30"
+																		placeholder="Discount" required="required" title=""
+																		 onchange="update_amount(first_count)"/>
+																	
+																</div>
+															</div>
+															
+															<br><br>
 
 															<div class="form-group required">
 																<label class="col-md-3 control-label">Tax Rate</label>
@@ -881,6 +795,7 @@ function update_prod_details(counter)
 																</div>
 															</div> <br>
 														<br>
+														<br><br><br>
 															<div class="form-group required">
 
 																<div class="col-md-12">
@@ -1363,6 +1278,19 @@ $('#submit').click(function(){
 											+ '</div>'
 											+ '</div>'
 											+ '<br><br>'
+											
+											+ '<div class="form-group">'
+											+ '<label class="col-md-4 control-label">Discount</label>'
+											+ '<div class="col-md-8">'
+											+ '<input type="number" value="0" class="form-control" id="' + 
+											+ count 
+											+ 'discount" placeholder="Discount"  onchange="update_amount('
+											+ count
+											+ ')"/>' 
+											+ '</div>'
+											+ '</div>'
+											
+											+ '<br><br>'
 											+ '<div class="form-group required">'
 											+ '<label class="col-md-3 control-label">Tax Rate</label>'
 											+ '<div class="col-md-9">'
@@ -1387,7 +1315,7 @@ $('#submit').click(function(){
 											+ '</div>'
 											+
 
-											'<br><br>'
+											'<br><br><br><br><br>'
 											+ '<div class="form-group required">'
 											+
 
@@ -1449,7 +1377,8 @@ $('#submit').click(function(){
 		        // update newly calculated amount (price *quantity)
 
 			var qty = value_counter + 'quantity';
-			var new_amount = ($('#' + qty).val() * $('#' + value_counter + 'price').val());   
+		    var newPrice = (Number($('#' + value_counter + 'price').val()) - Number($("#" +  value_counter + "discount").val())).toFixed(2);
+			var new_amount = ($('#' + qty).val() * newPrice);   
 			$('#' + value_counter + 'amt').val(new_amount.toFixed(2));
 
 		         // update subtotal and grand total
