@@ -19,17 +19,16 @@
 <title>Tax System</title>
 
 
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">      </script>  
 
 <script src="jarvis/js/bootstrap.min.js"></script>
+<!-- Bootstrap Core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/jquery-ui.js" type="text/javascript"></script>
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/themes/blitzer/jquery-ui.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 
-<script
-	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
-	type="text/javascript"></script>
-<link
-	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
-	rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 
 
@@ -127,55 +126,82 @@
 </style>
 
 <script>
-var porder=null;
-function loadName()
-{
-	
-	 $('.dropdown-toggle').dropdown();
-   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-   //fetch all PO for this company , just pass company_id
-   var x = "CMP445";
-   
-   /*
-   $.ajax({
-	   type : 'GET',
-	   url  : '/Accounting/po/purchase/viewall',
-	    dataType :'json',
-	    data:{'company_id' : x},
-	    
-	    success: function(response) {
-	    // alert(response);
-	     console.log( response);
-	     porder = response;
-	     update();
-	     //return true;  //stay in same page
-	    },
-		error: function (xhr) {
-			alert(xhr.responseText);
-		    var jsonResponse = JSON.parse(xhr.responseText);
-		    alert(jsonResponse.message);
-		   
-		  }
-   });
-   */
+var estimate = null;
+var estimateNo;
+
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
 }
 
-/*
+function loadName()
+{
+	 $('.dropdown-toggle').dropdown();
+	 
+	 var ccid = getCookie("CCID");
+	 var sid = getCookie("SID");
+	 var token = getCookie("TTID");
+
+
+	 //get PO list
+	 
+	  $.ajax({
+			type : 'POST',
+			url  : '/Accounting/rest/estimate/getEstimatelist?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+		    dataType : "json",
+
+			success: function(response, text, xhr) {
+		
+				 estimate = JSON.parse(xhr.responseText);
+				update();
+	},
+
+	error: function (xhr, statusText) {
+		
+
+	 console.log(xhr.status);
+	 console.log(xhr.responseText);
+	 var code = xhr.status;
+	}
+
+	});
+	 
+
+}
+
+
+function convert(estimateNo)
+{
+	
+	setCookie("EID",estimateNo,1);
+	window.location.replace("createInvoice.html");
+	//return true;
+}
+
+
 function update()
 {
-   var p= JSON.stringify(porder);
-   var porders = JSON.parse(p);
-   console.log(porders);
-   for(var i=0;i<porders.length;i++)
+   
+   estimateNo = estimate.estimateNumber;
+   //based on PO converted to bill or not - display relevant data 
+   for(var i=0;i<  estimate.length;i++)
 	   {
-	   //alert(porders[i].vendor_id);
-	     var customer = porders[i].customer.customer_id;
-	     var d = new Date(porders[i].order_date);
+	    
+	     var customer =  estimate[i].customer.businessDetails.businessName;
+	     var d = new Date(estimate[i].estimateDate);
 	 	 var order_date = d.getDate() + "/"  + (d.getMonth()+1) + "/" + d.getFullYear();
-	 	 var estimate_number = porders[i].estimate_number;
-	 	 var bill_amt = porders[i].grand_total;
-	 	 var advance = 0;  //update later
-	 	 var balance = porders[i].grand_total;
+	 	 var  estimate_number =  estimate[i].estimateNumber;
+	 	 var  estimate_amt = estimate[i].estimateGrandtotal;
+	 	 var advance = estimate[i].estimateAdvancetotal;
+	 	 var balance = estimate[i].estimateBalance;
 	 	 
 	 	
 	 	 
@@ -184,27 +210,27 @@ function update()
 			   '<td>' + estimate_number + '</td>' +
 			   '<td>' + customer + '</td>' +
 			   '<td>' + order_date+ '</td>' +
-			   '<td>' + bill_amt + '</td>' +
+			   '<td>' + estimate_amt + '</td>' +
 			   '<td>' + advance + '</td>' +
 			   '<td>' + balance + '</td>' +
 			   '<td>' +  
                      '<div class="btn-group">' + 
-                      '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
-                                    'Action <span class="caret"></span>' + 
-                                '</button>' + 
-                               '<ul class="dropdown-menu dropdown-default pull-right" role="menu">' +
+                      '<button type="button" class="dropdown-toggle" data-toggle="dropdown">' + 
+                                    'Action <span class="caret"></span></button>' + 
+                               
+                               '<ul class="dropdown-menu" role="menu">' +
                                 
                                     '<li>' + 
-                                       '<a href="edit_estimate.html?PONo=' + estimate_number + '" >' +    
+                                       '<a href="editEstimate.html?EstimateNo=' + estimate_number + '" >' +    
                                              '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
-                                                'Edit PO' + 
+                                                'Edit Invoice' + 
                                             '</a>' + 
                                     '</li>' + 
                                     '<li class="divider"></li>'  +
                                     '<li>' + 
-                                        '<a href="view_estimate.html?PONo='  + estimate_number  + '" >' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
+                                        '<a href="viewEstimate.html?EstimateId='  + estimate_number  + '" >' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
                                            '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
-                                                'View PO'+
+                                                'View Invoice'+
                                             '</a>' + 
                                     '</li>'  +
                                     '<li class="divider"></li>' + 
@@ -212,16 +238,16 @@ function update()
                                     '<li>'  + 
                                         "<a href='' onClick='return confirm('Are you sure to delete?')'>"   + //FUNCTION
                                             '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
-                                                 'Delete PO' + 
+                                                 'Delete Invoice' + 
                                             '</a>' +
                                     '</li>' + 
                                     
                                     '<li class="divider"></li>' + 
                                     
                                    ' <li>' + 
-                                        '<a href="re-send.html?PONo=' +  estimate_number  + '">' + //FUNCTION
+                                        '<a href="re-send.html?EstimateNo=' +  estimate_number  + '">' + //FUNCTION
                                            ' <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;' + 
-                                               'Re send PO' + 
+                                               'Send Invoice' + 
                                             '</a>' + 
                                     '</li>' + 
                                     '<li class="divider"></li>'  + 
@@ -236,7 +262,7 @@ function update()
                                     '<li class="divider"></li>' + 
                                   
                                     '<li>' + 
-                                        '<a href="" onClick="return add_adv(' + estimate_number + ')">' +   //POP UP
+                                        '<a href="" onClick="return add_adv(' + estimate_number  + ')">' +   //POP UP
                                            '<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'  + 
                                                'Add Advance Payment' + 
                                             '</a>' + 
@@ -245,8 +271,9 @@ function update()
                                     '<li class="divider"></li>' + 
                                    
                                     '<li>' + 
+                                    '<a  onClick = convert("' +  estimate_number + '")>' +  
                                            '<span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;'  + 
-                                               'Convert to Bill' + 
+                                               'Convert to Invoice' + 
                                             '</a>' + 
                                     '</li>' + 
                                     
@@ -259,11 +286,7 @@ function update()
 	   }
    
    var table = $("#table_export").dataTable();
-   $('.dropdown-toggle').dropdown();
 }
-
-
-*/
 </script>
 
 

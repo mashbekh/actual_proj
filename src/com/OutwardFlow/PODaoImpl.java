@@ -47,7 +47,7 @@ public class PODaoImpl {
 
 
 			vendorOid  = new ObjectId(vendorId);
-			Query<BusinessPlayers> bpquery = ds.createQuery(BusinessPlayers.class).field("company").equal(cmp).field("id").equal(vendorOid).field("isDeleted").equal(false);
+			Query<BusinessPlayers> bpquery = ds.createQuery(BusinessPlayers.class).field("company").equal(cmp).field("id").equal(vendorOid).field("isVendor").equal(true).field("isDeleted").equal(false);
 			vendor = bpquery.get();
 			if(vendor == null)
 				throw new EntityException(512, "vendor not found", null, null);
@@ -99,7 +99,7 @@ public class PODaoImpl {
 			po.setVendor(vendor);
 			key = ds.save(po);
 			if(key == null)
-				throw new EntityException(515, "could not find", null, null);
+				throw new EntityException(515, "could not create", null, null);
 
 			po.setId(new ObjectId(key.getId().toString()));
 
@@ -505,7 +505,7 @@ public class PODaoImpl {
 			{
 				vendorChange = true;
 				vendorOid  = new ObjectId(vendorId);
-				Query<BusinessPlayers> bpquery = ds.createQuery(BusinessPlayers.class).field("company").equal(cmp).field("id").equal(vendorOid).field("isDeleted").equal(false);
+				Query<BusinessPlayers> bpquery = ds.createQuery(BusinessPlayers.class).field("company").equal(cmp).field("id").equal(vendorOid).field("isVendor").equal(true).field("isDeleted").equal(false);
 				vendor = bpquery.get();
 				if(vendor == null)
 					throw new EntityException(512, "vendor not found", null, null);
@@ -574,6 +574,7 @@ public class PODaoImpl {
 
 			}
 
+			purchaseOrder.setPoNotes(po.getPoNotes());
 			purchaseOrder.setPoDetails(poDetails);
 			purchaseOrder.setCompany(cmp);
 			if(vendorChange ==  true)

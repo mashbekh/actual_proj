@@ -191,13 +191,13 @@ var porder = null;
 var x=null;
 var newpayment=0 ;
 var adv = [];       //holds all advance payments
-var billPay = [];   //holds all bill payments
+var invoicePay = [];   //holds all bill payments
 var editable_counter;
 var editable_old_counter;
-var bill_counter;
+var invoice_counter;
 
-var billNo;
-var poRef ;
+var invoiceNo; //internal id
+var estimateRef ;
 
 
 function setCookie(key, value, days) {
@@ -254,7 +254,7 @@ function loadName()
     	alert("Invalid");
     else
    {
-	 var myParam = location.search.split('BillId=')[1];
+	 var myParam = location.search.split('InvoiceId=')[1];
 	 
 	 var ccid = getCookie("CCID");
 	 var sid = getCookie("SID");
@@ -264,7 +264,7 @@ function loadName()
 	 
 	$.ajax({
 		   		type : 'POST',
-		   		url  : '/Accounting/rest/bill/getBill?' + $.param({ "billNo" : myParam , "cid" : ccid,
+		   		url  : '/Accounting/rest/invoice/getInvoice?' + $.param({ "invoiceNo" : myParam , "cid" : ccid,
 					"id" : sid,
 					"token" : token }),
 					
@@ -273,9 +273,9 @@ function loadName()
 		     
 		    	
 		  
-		     bill = JSON.parse(xhr.responseText);
-		     console.log(bill);
-		     fetchBill();
+		     invoice = JSON.parse(xhr.responseText);
+		     console.log(invoice);
+		     fetchInvoice();
 		     
 		    },
 			error: function (xhr, statusText)
@@ -298,27 +298,27 @@ function loadName()
  *so display contents as it is whatever type of bill
  * but when displaying payments - check if adv payments from PO exists and handle it with bill payments
  */
-function fetchBill() {
+function fetchInvoice() {
 	
 	
-	x = bill;
-	billNo = x.id;
+	x = invoice;
+	invoiceNo = x.id;
 	
 	
-				count = x.billDetails.length - 1;
+				count = x.invoiceDetails.length - 1;
 				var taxid_array = {};
 				var taxbox_array = {};
 				
 		
-				for (var i = 0; i < x.billDetails.length; i++) 
+				for (var i = 0; i < x.invoiceDetails.length; i++) 
 				{
-					if(x.billDetails[i].tax != null)  //tax associated with product can be null, if tax exists deleted / not doesnt matter
+					if(x.invoiceDetails[i].tax != null)  //tax associated with product can be null, if tax exists deleted / not doesnt matter
 					{
-						var a = (x.billDetails[i].tax.taxAbbreviation + " " +  x.billDetails[i].tax.taxRate).toString();
+						var a = (x.invoiceDetails[i].tax.taxAbbreviation + " " +  x.invoiceDetails[i].tax.taxRate).toString();
 					
 					if(!(a in taxid_array))
 					{
-						taxid_array[a] = x.billDetails[i].taxTotal;
+						taxid_array[a] = x.invoiceDetails[i].taxTotal;
 						taxbox_array[a] = [];
 						var num = Number(Number(i)   + Number(1));
 						taxbox_array[a].push(num);
@@ -327,7 +327,7 @@ function fetchBill() {
 					
 					else
 					{
-						taxid_array[a] += x.billDetails[i].taxTotal;
+						taxid_array[a] += x.invoiceDetails[i].taxTotal;
 						var num = Number(Number(i)   + Number(1));
 						taxbox_array[a].push(num);
 					}
@@ -339,11 +339,17 @@ function fetchBill() {
 					
 				
 					
-					if(x.billDetails[i].product.productDescription != '')
-						productString = x.billDetails[i].product.productName  + " " + x.billDetails[i].product.productDescription ;
+					if(x.invoiceDetails[i].product.productDescription != '')
+						productString = x.invoiceDetails[i].product.productName  + " " + x.invoiceDetails[i].product.productDescription ;
 						
 					else
-						productString = x.billDetails[i].product.productName  + " " ;
+						productString = x.invoiceDetails[i].product.productName  + " " ;
+					
+					
+					if(x.invoiceDetails[i].discount == null)
+						discountString = 0;
+					else
+						discountString = x.invoiceDetails[i].discount;
 							
 
 			$(
@@ -364,7 +370,7 @@ function fetchBill() {
 							'<td>' + '<div class="form-group required">'
 							+ '<div class="col-lg-3">'
 							
-							+ x.billDetails[i].quantity
+							+ x.invoiceDetails[i].quantity
 							
 							+ '</div>'
 							+ '</div>'
@@ -375,8 +381,9 @@ function fetchBill() {
 							+ '<div class="form-group required">'
 							+ '<div class="col-md-8"><i class="fa fa-inr"></i> '
 							
-							+ x.billDetails[i].price
-							
+							+ x.invoiceDetails[i].price
+							+ '<br><br> Discount : '
+							+ discountString
 							+ '</div>'
 							+ '</div>'
 							+ '<br><br>'
@@ -387,7 +394,7 @@ function fetchBill() {
 							+ '<td>'
 							+ '<div class="form-group required">'
 							+ '<div class="col-lg-5"><i class="fa fa-inr"></i> '
-							+ x.billDetails[i].subTotal
+							+ x.invoiceDetails[i].subTotal
 							+ '</div>'
 							+ '</div>'
 							+ '<br><br>'
@@ -398,35 +405,36 @@ function fetchBill() {
 		}
 
 	
-		$("#subtotal").val( x.billSubtotal);
-		$("#taxtotal").val(x.billTaxtotal);
-		$("#grandtotal").val(x.billGrandtotal);
+		$("#subtotal").val( x.invoiceSubtotal);
+		$("#taxtotal").val(x.invoiceTaxtotal);
+		$("#grandtotal").val(x.invoiceGrandtotal);
+	
+		$("#customer").val(x.customer.businessDetails.businessName);
+		$("#customer").prop("readonly", true);
+		$("#vendr").append(x.customer.businessDetails.businessName);
 		
-		$("#vendor").val(x.vendor.businessDetails.businessName);
-		$("#vendor").prop("readonly", true);
-		$("#vendr").append(x.vendor.businessDetails.businessName);
+		$("#invoice_number").val(x.invoiceNumber);
+		$("#invoice_number").prop("readonly", true);
 		
-		$("#bill_no").val(x.billNumber);
-		$("#bill_no").prop("readonly", true);
 		
-		$("#pono").append("<h2>" + "Bill No #" + x.billNumber + "</h2>");
+		$("#pono").append("<h2>" + "Invoice No #" + x.invoiceNumber + "</h2>");
 		
-		//$('textarea#notes').val(x.poNotes);
+		$('textarea#notes').val(x.invoiceNotes);
 		
-		$('textarea#vendor_detail').val(x.vendor.contactDetails.addrLine1 + " " +x.vendor.contactDetails.addrLine2  + " "  + 
-				x.vendor.contactDetails.city + ","  +  x.vendor.contactDetails.state);
+		$('textarea#customer_detail').val(x.customer.contactDetails.addrLine1 + " " +x.customer.contactDetails.addrLine2  + " "  + 
+				x.customer.contactDetails.city + ","  +  x.customer.contactDetails.state);
 		
 		$("#businessDetail").append("<h3>" +x.company.businessDetails.businessName + "</h3>"  + "<h4>" +  x.company.contactDetails.addrLine1 + " " +x.company.contactDetails.addrLine2  + " "  + 
 				x.company.contactDetails.city + ","  +  x.company.contactDetails.state)
 		
-		var d = new Date(x.billDate);
+		var d = new Date(x.invoiceDate);
 		var v = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 		$("#date").val(v);
 		
-	   $("#days").val(x.billDueinterval);
+	   $("#days").val(x.invoiceDueinterval);
 	   $("#days").prop("readonly", true);
 	   
-	   d = new Date(x.billDuedate);
+	   d = new Date(x.invoiceDuedate);
 	   v = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 	   $("#pay_duedate").val(v);
 	   
@@ -455,16 +463,16 @@ function fetchBill() {
 						'</tr>').insertAfter('#last_row');
 			}
 		
-		  if(x.purchaseOrder == true)
+		  if(x.estimate == true)
 		   {
-		   		$("#ref").val(x.poNumber);
+		   		$("#ref").val(x.estimateNumber);
 		   		$("#ref").prop('readonly',true);
-		   		poRef = true;
+		   		estimateRef = true;
 		   		update();
 		   }
 		  else
 			{
-			  poRef = false;
+			  estimateRef = false;
 			  update();
 			}
 	   
@@ -504,17 +512,17 @@ function fetchBill() {
 						'</td></tr>');
 	 
 	// x.billAdvancetotal if 0 then..shows 0
-	 $("#advtotal").val(x.billAdvancetotal);
-	 $("#balanceamt").val(x.billBalance);
+	 $("#advtotal").val(x.invoiceAdvancetotal);
+	 $("#balanceamt").val(x.invoiceBalance);
 	 
 	 var bal = $("#balanceamt").val();
 	 
 	$("#show_due").text("Amount Due : Rs " + bal);
 		
 	if(bal==0.00 || bal==0)
-		$("#payment_status").text("Status : Bill paid in full");
+		$("#payment_status").text("Status : Invoice paid in full");
 	else
-		$("#payment_status").text("Status : Bill payment is due");
+		$("#payment_status").text("Status : Invoice payment is due");
 		
 	$("#dueamt").text(bal);
 	
@@ -533,26 +541,26 @@ function fetchBill() {
 	 
 	
 	 
-	 if(poRef == true)
+	 if(estimateRef == true)
 		 {
 		    // show advance payments and set advance amt
-		    if(x.advancePayments != null)  
+		    if(x.estimatePayments != null)  
 			{
 			
 		
-				for (var j = 0; j < x.advancePayments.length; j++) {
+				for (var j = 0; j < x.estimatePayments.length; j++) {
 					
 			
 					
-					var date = new Date(x.advancePayments[j].paymentDate);
+					var date = new Date(x.estimatePayments[j].paymentDate);
 					var dt = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 					
-					var divid = "adv" + x.advancePayments[j].id;
-					var id =  x.advancePayments[j].id;
+					var divid = "adv" + x.estimatePayments[j].id;
+					var id =  x.estimatePayments[j].id;
 					
 					
 					$("#payments").append('<div id="'+  divid + '">' + 
-					'&nbsp;&nbsp;' + dt +' : An advance payment for Rs.' + x.advancePayments[j].paymentAmount  + ' was made using ' +  x.advancePayments[j].paymentMode + '<br>' + 
+					'&nbsp;&nbsp;' + dt +' : An advance payment for Rs.' + x.estimatePayments[j].paymentAmount  + ' was made using ' +  x.estimatePayments[j].paymentMode + '<br>' + 
 					'&nbsp;&nbsp;<a onclick="edit_Advpayment(\'' +  id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
 					'<a onclick="delete_Advpayment(\'' +  id + '\')">Remove payment</a></div>');
 					
@@ -561,15 +569,16 @@ function fetchBill() {
 					
 					var payment = {
 							"paymentDate": dt,
-							"paymentAmount":	x.advancePayments[j].paymentAmount,
-							"purposeTitle":	x.advancePayments[j].purposeTitle,
-							"purposeDescription":	x.advancePayments[j].purposeDescription	,
-							"paymentMode":	x.advancePayments[j].paymentMode,
-							"paymentAccount":	x.advancePayments[j].paymentAccount,
-							"tdsRate":	x.advancePayments[j].tdsRate,
-							"tdsAmount":	x.advancePayments[j].tdsAmount,
-							"id" :	x.advancePayments[j].id
+							"paymentAmount":	x.estimatePayments[j].paymentAmount,
+							"purposeTitle":	x.estimatePayments[j].purposeTitle,
+							"purposeDescription":	x.estimatePayments[j].purposeDescription	,
+							"paymentMode":	x.estimatePayments[j].paymentMode,
+							"paymentAccount":	x.estimatePayments[j].paymentAccount,
+							"tdsRate":	x.estimatePayments[j].tdsRate,
+							"tdsAmount":	x.estimatePayments[j].tdsAmount,
+							"id" :	x.estimatePayments[j].id
 					};
+					
 					
 					adv.push(payment);
 					
@@ -584,38 +593,38 @@ function fetchBill() {
 	 
 	 // show bil payment add to the advance
 	 
-	 if(x.billPayments != null)
+	 if(x.invoicePayments != null)
 		 {
-			 for (var j = 0; j < x.billPayments.length; j++)
+			 for (var j = 0; j < x.invoicePayments.length; j++)
 			 {
-		 		var date = new Date(x.billPayments[j].paymentDate);
+		 		var date = new Date(x.invoicePayments[j].paymentDate);
 				var dt = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 			
-				var divid = "bill" + x.billPayments[j].id;
-				var id =  x.billPayments[j].id;
+				var divid = "invoice" + x.invoicePayments[j].id;
+				var id =  x.invoicePayments[j].id;
 			
 			
 			$("#payments").append('<div id="'+  divid + '">' + 
-			'&nbsp;&nbsp;' + dt +' : A payment for Rs.' + x.billPayments[j].paymentAmount  + ' was made using ' +  x.billPayments[j].paymentMode + '<br>' + 
-			'&nbsp;&nbsp;<a onclick="edit_Billpayment(\'' +  id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
-			'<a onclick="delete_Billpayment(\'' +  id + '\')">Remove payment</a></div>');
+			'&nbsp;&nbsp;' + dt +' : A payment for Rs.' + x.invoicePayments[j].paymentAmount  + ' was made using ' +  x.invoicePayments[j].paymentMode + '<br>' + 
+			'&nbsp;&nbsp;<a onclick="edit_Invoicepayment(\'' +  id + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+			'<a onclick="delete_Invoicepayment(\'' +  id + '\')">Remove payment</a></div>');
 			
 			
 			
 			
 			var payment = {
 					"paymentDate": dt,
-					"paymentAmount":	x.billPayments[j].paymentAmount,
-					"purposeTitle":	x.billPayments[j].purposeTitle,
-					"purposeDescription":	x.billPayments[j].purposeDescription	,
-					"paymentMode":	x.billPayments[j].paymentMode,
-					"paymentAccount":	x.billPayments[j].paymentAccount,
-					"tdsRate":	x.billPayments[j].tdsRate,
-					"tdsAmount":	x.billPayments[j].tdsAmount,
-					"id" :	x.billPayments[j].id
+					"paymentAmount":	x.invoicePayments[j].paymentAmount,
+					"purposeTitle":	x.invoicePayments[j].purposeTitle,
+					"purposeDescription":	x.invoicePayments[j].purposeDescription	,
+					"paymentMode":	x.invoicePayments[j].paymentMode,
+					"paymentAccount":	x.invoicePayments[j].paymentAccount,
+					"tdsRate":	x.invoicePayments[j].tdsRate,
+					"tdsAmount":	x.invoicePayments[j].tdsAmount,
+					"id" :	x.invoicePayments[j].id
 			};
 			
-			billPay.push(payment);
+			invoicePay.push(payment);
 			
 		 
 		 }
@@ -635,7 +644,7 @@ function fetchBill() {
 	<!-- Bill PAYMENT DIALOG -->
 
 
-	<div id="bill_payment" title="Dialog Form" style="display: none;">
+	<div id="invoice_payment" title="Dialog Form" style="display: none;">
 		<div id="form-panel">
 			<form action="" method="post">
 
@@ -750,7 +759,7 @@ function fetchBill() {
 				<br> <br>
 			</form>
 			<input id="advpay_submit" type="submit" value="Add Payment"
-				class="btn btn-blue" onclick="return make_billpay()">
+				class="btn btn-blue" onclick="return make_invoicepay()">
 		</div>
 	</div>
 
@@ -1026,7 +1035,7 @@ function fetchBill() {
 									</div>
 
 									<div id="center">
-										<h3>Vendor</h3>
+										<h3>Customer</h3>
 										<div id="vendr">
 											<a onclick="return a()"></a>
 										</div>
@@ -1051,12 +1060,12 @@ function fetchBill() {
 									<div>
 										<p style="float: right">
 											<button type="button" class="btn btn-info" onclick="editBill()">Edit
-												Bill</button>
+												Invoice</button>
 										</p>
 
 										<h3>
 											&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"
-												style="color: #33CCCC"></span>&nbsp;&nbsp;Create Bill
+												style="color: #33CCCC"></span>&nbsp;&nbsp;Create Invoice
 										</h3>
 
 										<br>
@@ -1082,7 +1091,7 @@ function fetchBill() {
 									<div>
 										<p style="float: right">
 											<button type="button" class="btn btn-info">Send
-												Bill</button>
+												Invoice</button>
 										</p>
 
 										<h3>
@@ -1116,11 +1125,11 @@ function fetchBill() {
 
 										<h3>
 											&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"
-												style="color: gray"></span>&nbsp;&nbsp;Make Payment
+												style="color: gray"></span>&nbsp;&nbsp;Receive Payment
 										</h3>
 
 										<h4>
-											&nbsp;&nbsp;<b id="payment_status">Status: Bill Payment
+											&nbsp;&nbsp;<b id="payment_status">Status: Invoice Payment
 												is due. </b>
 										</h4>
 									</div>
@@ -1131,9 +1140,9 @@ function fetchBill() {
 									<div id="payments">
 										<p style="float: right">
 											<button type="button" class="btn btn-info" id="pay_button"
-												onclick="return add_Billpay()">Make Payment</button>
+												onclick="return add_Invoicepay()">Receive Payment</button>
 										</p>
-										<h4>&nbsp;&nbsp;Payments made:</h4>
+										<h4>&nbsp;&nbsp;Payments received:</h4>
 
 										<br>
 									</div>
@@ -1179,7 +1188,7 @@ function fetchBill() {
 
 
 						<div class="panel panel-default">
-							<button type="button" class="btn btn-info" style="width: 100%">Vendor
+							<button type="button" class="btn btn-info" style="width: 100%">Customer
 								Details</button>
 							<div class="row">
 								<!-- ROW 2 -->
@@ -1192,13 +1201,13 @@ function fetchBill() {
 										<div class="row">
 											<div class="col-lg-12">
 												<div id="form-panel">
-													<form role="form" id="vendor_profile">
+													<form role="form" id="customer_profile">
 
 														<div class="form-group required">
-															<label class="col-md-2 control-label">Vendor</label>
+															<label class="col-md-2 control-label">Customer</label>
 															<div class="col-md-4">
-																<input  class="form-control"
-																	id="vendor" placeholder="Vendor Name"
+																<input list="customer_names" class="form-control"
+																	id="customer" placeholder="Customer Name"
 																	>
 
 
@@ -1215,7 +1224,7 @@ function fetchBill() {
 														<div class="form-group ">
 
 															<div class="col-md-6">
-																<textarea class="form-control" id="vendor_detail"
+																<textarea class="form-control" id="customer_detail"
 																	rows="5" cols="80" readonly
 																	style="border: none; background-color: white"></textarea>
 															</div>
@@ -1242,10 +1251,10 @@ function fetchBill() {
 														<br> <br>
 
 																<div class="form-group required">
-																	<label class="col-md-2 control-label">Bill
+																	<label class="col-md-2 control-label">Invoice
 																		Number</label>
 																	<div class="col-md-4">
-																		<input class="form-control" id="bill_no" />
+																		<input class="form-control" id="invoice_number" />
 																	</div>
 																</div>
 
@@ -1491,7 +1500,7 @@ function tds_change()
 	}
 
 
-function add_Billpay() {
+function add_Invoicepay() {
     
 	//clear all fields
 	$('#payment_date').val('');
@@ -1504,11 +1513,11 @@ function add_Billpay() {
     $("#mode_payment").val('');
     $("#payment_acc").val('');
 	
-    $("#bill_payment").dialog({
+    $("#invoice_payment").dialog({
          
         modal: true,
         autoOpen: false,
-        title: "Bill Payment",
+        title: "Invoice Payment",
         width: 900,
         height: 670
         });
@@ -1528,18 +1537,18 @@ function add_Billpay() {
 		} 
 		var today = dd+'/'+mm+'/'+yyyy;
         $("#payment_date").val(today);
-        $("#purpose_title").val("Payment towards Bill " + $("#bill_no").val() );
-        $('#bill_payment').dialog('open');
+        $("#purpose_title").val("Payment towards Invoice " + $("#invoice_number").val() );
+        $('#invoice_payment').dialog('open');
     }
 
 
 
 
 
-function make_billpay() //new payment
+function make_invoicepay() //new payment
 {
 	
-	$("#bill_payment").dialog('close');
+	$("#invoice_payment").dialog('close');
 	
 	var date = $('#payment_date').val();
     var title=  $("#purpose_title").val();
@@ -1567,7 +1576,7 @@ function make_billpay() //new payment
 			"paymentAccount":acc,
 			"tdsRate":tds,
 			"tdsAmount":tdsamt,
-			"isTdsPaid":false,
+			"isTdsReceived":false,
 			"id" : null
 	};
     
@@ -1579,7 +1588,7 @@ function make_billpay() //new payment
 	 
 	$.ajax({
 		   		type : 'POST',
-		   		url  : '/Accounting/rest/bill/addBillPayment?' + $.param({ "payment": JSON.stringify(payment) ,"billNo" : billNo , "cid" : ccid,
+		   		url  : '/Accounting/rest/invoice/addInvoicePayment?' + $.param({ "payment": JSON.stringify(payment) ,"invoiceNo" : invoiceNo , "cid" : ccid,
 					"id" : sid,
 					"token" : token }),
 					
@@ -1587,10 +1596,15 @@ function make_billpay() //new payment
 		    	success: function(response, text , xhr) {
 		    		
 		    		console.log(JSON.parse(xhr.responseText));
-		     		var billpayment = JSON.parse(xhr.responseText);
-		     		billPay.push(billpayment);
-		     		paymentId = billpayment.id;
-		     		updatePaymentstab(paymentId, billpayment.paymentAmount , billpayment.paymentMode , billpayment.paymentDate);
+		     		var invoicepayment = JSON.parse(xhr.responseText);
+		     		
+		     		var d =  new Date(invoicepayment.paymentDate);
+		    		var v = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+		    		invoicepayment.paymentDate = v;
+		    		
+		     		invoicePay.push(invoicepayment);
+		     		paymentId = invoicepayment.id;
+		     		updatePaymentstab(paymentId, invoicepayment.paymentAmount , invoicepayment.paymentMode , invoicepayment.paymentDate);
 		     
 		    },
 			error: function (a,b,c)
@@ -1602,7 +1616,7 @@ function make_billpay() //new payment
 	
 	//clear form
 	$('#payment_date').val('');
-    $("#vendor_name").val('');
+   
     $("#purpose_title").val('');
     $("#purpose_desc").val('');
     $("#adv_amount").val('');
@@ -1615,11 +1629,11 @@ function make_billpay() //new payment
 function updatePaymentstab(paymentId , amt ,  mode, date)
 {
 	
-	console.log("bill payment is");
-	console.log(billPay);
+	console.log("invoice payment is");
+	console.log(invoicePay);
 	
-	var d = new Date(date);
-	date = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+	
+	
 	
 	var oldadv = $("#advtotal").val();
 	var oldbal = $("#balanceamt").val();
@@ -1631,14 +1645,14 @@ function updatePaymentstab(paymentId , amt ,  mode, date)
 	
 	//show the chngs in payments section
 	
-	var divid = "bill" + paymentId;
+	var divid = "invoice" + paymentId;
 	
 	
 	
 	$("#payments").append('<div id="'+  divid + '">' + 
 				'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
-				'&nbsp;&nbsp;<a onclick="edit_Billpayment(\'' + paymentId + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
-				'<a onclick="delete_Billpayment(\'' +  paymentId+ '\')">Remove payment</a></div>');
+				'&nbsp;&nbsp;<a onclick="edit_Invoicepayment(\'' + paymentId + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+				'<a onclick="delete_Invoicepayment(\'' +  paymentId+ '\')">Remove payment</a></div>');
 	
 	//check if balance is 0 , if yes, then remove make payment button
 	
@@ -1653,12 +1667,12 @@ function updatePaymentstab(paymentId , amt ,  mode, date)
 		$("#pay_button").hide();
 		$("#status").css( "background-color", "#336600");
 		$("#status").text("PAID");
-		$("#payment_status").text("Status : PO paid in full");
+		$("#payment_status").text("Status : Invoice paid in full");
 	}
 	else
 	{
 		$("#pay_button").show();
-		$("#payment_status").text("Status : PO payment is due");
+		$("#payment_status").text("Status : Invoice payment is due");
 		$("#status").css( "background-color", "#B00000");
 		$("#status").text("UNPAID");
 		
@@ -1682,7 +1696,7 @@ function edit_Advpayment(payment_id)
 	var tdsamt;
 	
 	adv_counter = payment_id;   //currently to be editted
-	bill_counter  = null;  //while update we know that bill payment has to be editted
+	invoice_counter  = null;  //while update we know that bill payment has to be editted
 	
 	for(var i=0;i < adv.length; i++)
 		{
@@ -1709,7 +1723,7 @@ function edit_Advpayment(payment_id)
         
         modal: true,
         autoOpen: false,
-        title: "Edit Advance Payment",
+        title: "Edit Estimate Advance Payment",
         width: 900,
         height: 670
         });
@@ -1738,9 +1752,9 @@ function edit_Advpayment(payment_id)
 
 
 
-function edit_Billpayment(payment_id)
+function edit_Invoicepayment(payment_id)
 {
-	alert("to be editted bill payment id :" + payment_id);
+	alert("to be editted invoice payment id :" + payment_id);
 	
 	var date;
 	var amt;
@@ -1752,22 +1766,22 @@ function edit_Billpayment(payment_id)
 	var tdsamt;
 	
 	adv_counter = null;   //currently to be editted
-	bill_counter  = payment_id;  //while update we know that bill payment has to be editted
+	invoice_counter  = payment_id;  //while update we know that bill payment has to be editted
 	
-	for(var i=0;i < billPay.length; i++)
+	for(var i=0;i < invoicePay.length; i++)
 		{
 		
-		  if(billPay[i].id == payment_id)
+		  if(invoicePay[i].id == payment_id)
 			  {
 			   
-			  	date = billPay[i].paymentDate;
-		      	amt = billPay[i].paymentAmount;
-		     	title = billPay[i].purposeTitle;
-		      	desc = billPay[i].purposeDescription;
-		      	tdsrate = billPay[i].tdsRate;
-		      	tdsamt = billPay[i].tdsAmount;
-		      	mode = billPay[i].paymentMode;
-		      	acc = billPay[i].paymentAccount;
+			  	date = invoicePay[i].paymentDate;
+		      	amt = invoicePay[i].paymentAmount;
+		     	title = invoicePay[i].purposeTitle;
+		      	desc =invoicePay[i].purposeDescription;
+		      	tdsrate = invoicePay[i].tdsRate;
+		      	tdsamt = invoicePay[i].tdsAmount;
+		      	mode = invoicePay[i].paymentMode;
+		      	acc = invoicePay[i].paymentAccount;
 		      	break;
 			  }
 			  
@@ -1779,7 +1793,7 @@ function edit_Billpayment(payment_id)
         
         modal: true,
         autoOpen: false,
-        title: "Edit Bill Payment",
+        title: "Edit Invoice Payment",
         width: 900,
         height: 670
         });
@@ -1810,15 +1824,15 @@ function updatePayment() {
 	
 	   // type of the payment  which just got editted
 	   
-	   if(bill_counter == null)
+	   if(invoice_counter == null)
 		   {
 		   		alert("adv payment edit");
 		   		updateAdvPayment();
 		   }
 	   else
 		   {
-		   		alert("bill payment edit");
-		   		updateBillPayment();
+		   		alert("invoice payment edit");
+		   		updateInvoicePayment();
 		   }
 }
 
@@ -1845,7 +1859,7 @@ function updateAdvPayment()
 				"paymentAccount":acc,
 				"tdsRate":tds,
 				"tdsAmount":tdsamt,
-				"isTdsPaid":false,
+				"isTdsReceived":false,
 				"id" : adv_counter
 		};
 	    
@@ -1861,7 +1875,7 @@ function updateAdvPayment()
 		 
 	$.ajax({
    		type : 'POST',
-   		url  : '/Accounting/rest/bill/updateAdvPayment?' + $.param({ "payment": JSON.stringify(payment) ,"billNo" : billNo , "cid" : ccid,
+   		url  : '/Accounting/rest/invoice/updateAdvPayment?' + $.param({ "payment": JSON.stringify(payment) ,"invoiceNo" : invoiceNo , "cid" : ccid,
 			"id" : sid,
 			"token" : token }),
     	dataType :'json',
@@ -1884,6 +1898,7 @@ function updateAdvPayment()
 			  	}
 			}
      	
+     		advpayment.paymentDate = date; //b4 insertion
      		adv.push(advpayment);
      		updateAdvTab(adv_counter, prevAmt, advpayment.paymentAmount , advpayment.paymentMode , advpayment.paymentDate); //pass new values to update
      		
@@ -1902,8 +1917,6 @@ function updateAdvTab(paymentId, prevAmt, amt , mode , date)
 	
 	$("#edit_payment").dialog('close');
 	
-	var d = new Date(date);
-	date = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 	
 	var oldadv = $("#advtotal").val();
 	var oldbal = $("#balanceamt").val();
@@ -1923,12 +1936,12 @@ function updateAdvTab(paymentId, prevAmt, amt , mode , date)
 		$("#pay_button").hide();
 		$("#status").css( "background-color", "#336600");
 		$("#status").text("PAID");
-		$("#payment_status").text("Status : Bill paid in full");
+		$("#payment_status").text("Status : Invoice paid in full");
 	}
 	else
 	{
 		$("#pay_button").show();
-		$("#payment_status").text("Status : Bill payment is due");
+		$("#payment_status").text("Status : Invoice payment is due");
 		$("#status").css( "background-color", "#B00000");
 		$("#status").text("UNPAID");
 		
@@ -1953,7 +1966,7 @@ function updateAdvTab(paymentId, prevAmt, amt , mode , date)
 
 
 
-function updateBillPayment()
+function updateInvoicePayment()
 {
 	var date = $("#epayment_date").val();
 	var amt = $("#eadv_amount").val();
@@ -1975,8 +1988,8 @@ function updateBillPayment()
 				"paymentAccount":acc,
 				"tdsRate":tds,
 				"tdsAmount":tdsamt,
-				"isTdsPaid":false,
-				"id" : bill_counter
+				"isTdsReceived":false,
+				"id" : invoice_counter
 		};
 	    
 	    
@@ -1989,7 +2002,7 @@ function updateBillPayment()
 	
 	$.ajax({
    		type : 'POST',
-   		url  : '/Accounting/rest/bill/updateBillPayment?' + $.param({ "payment": JSON.stringify(payment) ,"billNo" : billNo , "cid" : ccid,
+   		url  : '/Accounting/rest/invoice/updateInvoicePayment?' + $.param({ "payment": JSON.stringify(payment) ,"invoiceNo" : invoiceNo , "cid" : ccid,
 			"id" : sid,
 			"token" : token }),
 			
@@ -1998,23 +2011,24 @@ function updateBillPayment()
     		
     		
     		
-     		var billpayment = JSON.parse(xhr.responseText);
+     		var invoicepayment = JSON.parse(xhr.responseText);
      		
      		//delete and push to adv
-     		for(var i=0;i < billPay.length; i++)
+     		for(var i=0;i < invoicePay.length; i++)
 			{
-		  		if(billPay[i].id == bill_counter)
+		  		if(invoicePay[i].id == invoice_counter)
 			  	{
 		  		   
-		  			prevAmt = billPay[i].paymentAmount;   //old one
-		  			billPay.splice(i,1);
+		  			prevAmt = invoicePay[i].paymentAmount;   //old one
+		  			invoicePay.splice(i,1);
 			  		break;
 			  
 			  	}
 			}
      	
-     		billPay.push(billpayment);
-     		updateBillTab(bill_counter, prevAmt, billpayment.paymentAmount , billpayment.paymentMode , billpayment.paymentDate); //pass new values to update
+     		invoicepayment.paymentDate = date;
+     		invoicePay.push(invoicepayment);
+     		updateInvoiceTab(invoice_counter, prevAmt, invoicepayment.paymentAmount , invoicepayment.paymentMode , invoicepayment.paymentDate); //pass new values to update
      
     },
 	error: function (a,b)
@@ -2026,13 +2040,12 @@ function updateBillPayment()
 }
 
 
-function updateBillTab(paymentId, prevAmt, amt , mode , date)
+function updateInvoiceTab(paymentId, prevAmt, amt , mode , date)
 {
 	
 	$("#edit_payment").dialog('close');
 	
-	var d = new Date(date);
-	date = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+	
 	
 	var oldadv = $("#advtotal").val();
 	var oldbal = $("#balanceamt").val();
@@ -2067,13 +2080,13 @@ function updateBillTab(paymentId, prevAmt, amt , mode , date)
 	var divid;
 	
 	
-	 divid = "bill" + paymentId;
+	 divid = "invoice" + paymentId;
 	 $("#" + divid).remove();
 	
 	$("#payments").append('<div id="'+  divid + '">' + 
 				'&nbsp;&nbsp;' + date +' : A payment for Rs.' + amt + ' was made using ' + mode + '<br>' + 
-				'&nbsp;&nbsp;<a onclick="edit_Billpayment(\'' +  paymentId + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
-				'<a onclick="delete_Billpayment(\'' +  paymentId + '\')">Remove payment</a></div>');
+				'&nbsp;&nbsp;<a onclick="edit_Invoicepayment(\'' +  paymentId + '\')">Edit payment</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+				'<a onclick="delete_Invoicepayment(\'' +  paymentId + '\')">Remove payment</a></div>');
 	
 	
 	
@@ -2089,7 +2102,7 @@ function delete_Advpayment(paymentId)
 
 $.ajax({
 		type : 'POST',
-		url  : '/Accounting/rest/bill/removeAdvPayment?' + $.param({ "payment": paymentId ,"billNo" : billNo , "cid" : ccid,
+		url  : '/Accounting/rest/invoice/removeAdvPayment?' + $.param({ "payment": paymentId ,"invoiceNo" : invoiceNo , "cid" : ccid,
 		"id" : sid,
 		"token" : token }),
 		
@@ -2145,12 +2158,12 @@ function updateAdvDeleted(paymentId)
 		$("#pay_button").hide();
 		$("#status").css( "background-color", "#336600");
 		$("#status").text("PAID");
-		$("#payment_status").text("Status : Bill paid in full");
+		$("#payment_status").text("Status : Invoice paid in full");
 	}
 	else
 	{
 		$("#pay_button").show();
-		$("#payment_status").text("Status : Bill payment is due");
+		$("#payment_status").text("Status : Invoice payment is due");
 		$("#status").css( "background-color", "#B00000");
 		$("#status").text("UNPAID");
 		
@@ -2171,7 +2184,7 @@ function updateAdvDeleted(paymentId)
 
 
 
-function delete_Billpayment(paymentId)
+function delete_Invoicepayment(paymentId)
 {
 	 var ccid = getCookie("CCID");
 	 var sid = getCookie("SID");
@@ -2181,7 +2194,7 @@ function delete_Billpayment(paymentId)
 
 $.ajax({
 		type : 'POST',
-		url  : '/Accounting/rest/bill/removeBillPayment?' + $.param({ "payment": paymentId ,"billNo" : billNo , "cid" : ccid,
+		url  : '/Accounting/rest/invoice/removeInvoicePayment?' + $.param({ "payment": paymentId ,"invoiceNo" : invoiceNo , "cid" : ccid,
 		"id" : sid,
 		"token" : token }),
 		
@@ -2189,7 +2202,7 @@ $.ajax({
 	success: function(response, text , xhr) {
 		
 		console.log(xhr);
-		updateBillDeleted(paymentId);
+		updateInvoiceDeleted(paymentId);
  
 },
 error: function (a,b,c)
@@ -2200,18 +2213,18 @@ error: function (a,b,c)
   });
 }
 
-function updateBillDeleted(paymentId)
+function updateInvoiceDeleted(paymentId)
 {
 	
 	var prevAmt;
 	//find its entry in adv, chng all elements, remove it from adv
-	for(var i=0;i < billPay.length; i++)
+	for(var i=0;i < invoicePay.length; i++)
 			{
-		  		if(billPay[i].id == paymentId)
+		  		if(invoicePay[i].id == paymentId)
 			  	{
 		  		   
-		  			prevAmt = billPay[i].paymentAmount;   //old one
-		  			billPay.splice(i,1);
+		  			prevAmt = invoicePay[i].paymentAmount;   //old one
+		  			invoicePay.splice(i,1);
 			  		break;
 			  
 			  	}
@@ -2237,12 +2250,12 @@ function updateBillDeleted(paymentId)
 		$("#pay_button").hide();
 		$("#status").css( "background-color", "#336600");
 		$("#status").text("PAID");
-		$("#payment_status").text("Status : Bill paid in full");
+		$("#payment_status").text("Status : Invoice paid in full");
 	}
 	else
 	{
 		$("#pay_button").show();
-		$("#payment_status").text("Status : Bill payment is due");
+		$("#payment_status").text("Status : Invoice payment is due");
 		$("#status").css( "background-color", "#B00000");
 		$("#status").text("UNPAID");
 		
@@ -2252,7 +2265,7 @@ function updateBillDeleted(paymentId)
 	var divid;
 	
 	
-	 divid = "bill" + paymentId;
+	 divid = "invoice" + paymentId;
 	 $("#" + divid).remove();
 	
 	

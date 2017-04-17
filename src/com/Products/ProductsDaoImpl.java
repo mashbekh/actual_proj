@@ -42,15 +42,15 @@ public class ProductsDaoImpl {
 			product = prodquery.get();
 			if(product != null)
 				throw new EntityException(515,"product found",null,null);
-			
-		
+
+
 
 			if(prod.getProductTax().getId() != null)
 			{
-			Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp).field("id").equal(prod.getProductTax().getId()).field("isDeleted").equal(false);
-			tx = taxquery.get();
-			if(tx == null)
-				throw new EntityException(512,"tax not found",null,null);
+				Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp).field("id").equal(prod.getProductTax().getId()).field("isDeleted").equal(false);
+				tx = taxquery.get();
+				if(tx == null)
+					throw new EntityException(512,"tax not found",null,null);
 			}
 
 			prod.setCompany(cmp);
@@ -155,7 +155,7 @@ public class ProductsDaoImpl {
 		return productList;
 
 	}
-	
+
 	public List<Products> getAllProduct(String companyId) throws EntityException
 	{
 		Datastore ds = null;
@@ -206,8 +206,8 @@ public class ProductsDaoImpl {
 		return productList;
 
 	}
-	
-	
+
+
 
 	public Products updateProduct(Products prod, String companyId) throws EntityException
 	{
@@ -233,11 +233,13 @@ public class ProductsDaoImpl {
 			if(product != null)
 				throw new EntityException(515,"product found",null,null);
 
-
-			Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp).field("id").equal(prod.getProductTax().getId()).field("isDeleted").equal(false);
-			tx = taxquery.get();
-			if(tx == null)
-				throw new EntityException(512,"tax not found",null,null);
+			if(prod.getProductTax().getId() != null)
+			{
+				Query<Tax> taxquery = ds.createQuery(Tax.class).field("company").equal(cmp).field("id").equal(prod.getProductTax().getId()).field("isDeleted").equal(false);
+				tx = taxquery.get();
+				if(tx == null)
+					throw new EntityException(512,"tax not found",null,null);
+			}
 
 			prod.setCompany(cmp);
 			prod.setProductTax(tx);
@@ -306,7 +308,7 @@ public class ProductsDaoImpl {
 				throw new EntityException(404,"cmp not found",null,null);
 
 			prodOid = new ObjectId(productId);
-			
+
 			Query<Products> productquery = ds.createQuery(Products.class).field("company").equal(cmp).field("id").equal(prodOid);
 			UpdateOperations<Products> ops = ds.createUpdateOperations(Products.class).set("isDeleted", true);
 			UpdateResults result = ds.update(productquery, ops, false);
@@ -323,7 +325,7 @@ public class ProductsDaoImpl {
 		{
 			if(cmp == null)
 				throw new EntityException(514, "get cmp failed", null, null);
-			
+
 			if(cmp != null  && count == 0)
 				throw new EntityException(513, "update failed", null, null);
 		}
@@ -331,13 +333,13 @@ public class ProductsDaoImpl {
 		{
 			if(oid == null)
 				throw new EntityException(500, "invalid", "invalid" + e.getMessage(), null);
-			
+
 			if(cmp == null)
 				throw new EntityException(500, "get cmp failed", "get" + e.getMessage(), null);
-			
+
 			if(prodOid == null)
 				throw new EntityException(500, "invalid", "invalid" + e.getMessage(), null);
-			
+
 			if(count == 0)
 				throw new EntityException(500, "update failed", "update" + e.getMessage(), null);
 		}

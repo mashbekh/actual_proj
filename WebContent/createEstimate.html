@@ -20,8 +20,8 @@
 
 
 
- <link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
-    <link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<link rel="stylesheet" href="jarvis/css1/bootstrap.min.css">
+<link href="jarvis/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -38,8 +38,8 @@
 	rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="jarvis/js/bootstrap.min.js"></script>
-			<script src="jarvis/js/moment_locale.js"></script>
-			<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
+<script src="jarvis/js/moment_locale.js"></script>
+<script src="jarvis/js/bootstrap_datetimepicker.js"></script>
 
 
 
@@ -76,9 +76,13 @@
 
 <script>
 
-//products can be from many batches for inventory products
+$(function () {
+    $('#dtpicker').datetimepicker({
+    	
+    	format:'DD/MM/YYYY'
+    })
 
-
+});
 
 
 
@@ -87,6 +91,10 @@
 
 
 <style>
+#add {
+	background-color: gray
+}
+
 .panel {
 	width: 75%;
 }
@@ -132,18 +140,37 @@ input[readonly] {
 .ui-dialog-titlebar {
 	border: 0;
 	padding: .5em 1em;
-	background: black;
+	background: gray;
 	overflow: auto;
 	zoom: 1;
 }
 </style>
 
 <script>
+
+var customerList;
+var productList;
+var taxList;
+var prefix;
+var suffix;
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
+var estimateserialNo;
+
 function loadName()
 {
 	 $('.dropdown-toggle').dropdown();
-  
-	
    
    var today = new Date();
 	var dd = today.getDate();
@@ -161,113 +188,351 @@ function loadName()
  
  var first_count=0;
  
- for(var i=0;i<product_list.length;i++)
- {
-
-
-  $('#0productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
+ var ccid = getCookie("CCID");
+ var sid = getCookie("SID");
+ var token = getCookie("TTID");
 
  
+ 
+ 
+ 
+ //get company details
+ 
+ 	$.ajax({
+					type : 'POST',
+					url : '/Accounting/rest/company/get?' + $.param({
+						"cid" : ccid,
+						"id" : sid,
+						"token" : token
+					}),
+					dataType : "json",
+
+					success : function(response, text, xhr) {
+
+						//console.log(JSON.parse(xhr.responseText));
+								var company = JSON.parse(xhr.responseText);
+								$("textarea#notes").val(company.estimateSettings.estimateNotes); //add footer later,col names
+								prefix = company.estimateSettings.estimatePrefix;
+								suffix = company.estimateSettings.estimateSuffix;
+								$("#businessDetail").append("<h2>" + company.businessDetails.businessName   +  "</h2>");
+								$("#businessDetail").append("<h4>" + company.contactDetails.addrLine1 + "  " +  company.contactDetails.addrLine2 + "  " + 
+										company.contactDetails.locality + ", " +  company.contactDetails.state + ", "  +  company.contactDetails.city  + "</h4>");
+					
+					
+				
+				 	 
+			 	 	$.ajax({
+			 						type : 'POST',
+			 						url : '/Accounting/rest/estimate/getEstimateNo?' + $.param({
+			 							"cid" : ccid,
+			 							"id" : sid,
+			 							"token" : token
+			 						}),
+			 						dataType : "text",
+
+			 						success : function(response, text, xhr) {
+
+			 							estimateserialNo = xhr.responseText;
+			 							var digits = estimateserialNo.toString().length;
+			 							var append = '';
+			 							
+			 							if(digits == 1)
+			 								append = "000";
+			 							else if(digits == 2)
+			 								append  = "00";
+			 							else if(digits == 3)
+			 								append = "0";
+			 							
+				 						
+			 						$("#estimate_number").val(prefix + append +  xhr.responseText + suffix);
+			 						
+			 						
+			 						},
+
+			 						error : function(xhr, statusText) {
+
+			 							console.log(xhr.status);
+			 							console.log(xhr.responseText);
+			 							var code = xhr.status;
+
+			 						}
+			 					});
+			 					
+								
+			 
+					},
+
+					error : function(xhr, statusText) {
+
+						console.log(xhr.status);
+						console.log(xhr.responseText);
+						var code = xhr.status;
+
+					}
+				});
+					
+ 
+ 	 
+ 	
+//get customer list
+
+		$.ajax({
+					type : 'POST',
+					url : '/Accounting/rest/customer/getList?' + $.param({
+						"cid" : ccid,
+						"id" : sid,
+						"token" : token
+					}),
+					dataType : "json",
+
+					success : function(response, text, xhr) {
+
+					
+						customerList = JSON.parse(xhr.responseText);
+						console.log(customerList);
+
+						for (var i = 0; i < customerList.length; i++) {
+							
+							$('#customer_names').append("<option customerid='" +  customerList[i].id   + "' value='" + customerList[i].businessDetails.businessName +  "'>"  + "" + "</option>");
+						}
+
+						 
+						 $('customer_names').append("<option value='+ Create Customer' id='add'>+ Create Customer</option>");
+
+					},
+
+					error : function(xhr, statusText) {
+
+						console.log(xhr.status);
+						console.log(xhr.responseText);
+						var code = xhr.status;
+
+					}
+				});
+
+ 
+ //get product list
+ 
+ $.ajax({
+		   		type : 'POST',
+		   		url  : '/Accounting/rest/products/getList?' + $.param({"cid" : ccid ,"id": sid,"token": token}),
+		    	dataType :'json',
+		    	success: function(response, text, xhr)
+		    	{
+		     		//console.log("products"    + JSON.parse(xhr.responseText));
+		     		productList = JSON.parse(xhr.responseText);
+		     		for(var i=0; i < productList.length; i++)
+		     			{
+		     			 $('#0productlist').append("<option prodid='" +  productList[i].id   + "' value='" +productList[i].productName +  "'>" + "" +  productList[i].productDescription + "" + "</option>");
+		     			 
+		     			 }
+		     			 
+		     			 $('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
+		     			
+		     		
+		        },
+				error: function (a,b,c)
+				{ 
+					
+				 	console.log(a.status);
+				}  
+		  });
+   
+  
+ 
+ 
+ 
+ 
+ //get tax list
+ 
+ 
+  $.ajax({
+		type : 'POST',
+		url  : '/Accounting/rest/tax/getTaxlist?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+	    dataType : "json",
+
+		success: function(response, text, xhr) {
+			
+			//console.log("tax"    + JSON.parse(xhr.responseText));
+			taxList = JSON.parse(xhr.responseText);
+			 for(var i=0;i<taxList.length;i++)
+			 {
+			 
+			 	$('#0taxlist').append("<option taxid='" +  taxList[i].id   + "' value='" + taxList[i].taxAbbreviation + " "  +  taxList[i].taxRate + "'>" + "</option>");
+			 	$('#prodtaxlist').append("<option taxid='" +  taxList[i].id   + "' value='" + taxList[i].taxAbbreviation + " "  +  taxList[i].taxRate + "'>" + "</option>");
+			 }
+		     
+			
+},
+
+error: function (xhr, statusText) {
+	
+ 
+   console.log(xhr.status);
+   console.log(xhr.responseText);
+   var code = xhr.status;
+   
+   if(code == 404 || code == 514 || (code == 500 && response.indexOf("get") >=0 )|| (code == 500 && response.indexOf("invalid") >=0))  //cmp not found, invalid id, get failed
+		{
+ 		setCookie('errormsg',"Oops, something went wrong! Try again.",1);
+ 		window.location.replace("login.html");
+		}
+
  }
 
- $('#0productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
-
-
+ });
+   
  
- for(var i=0;i<tax_list.length;i++)
-	 {
-	 	$('#0taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-	 	$('#prodtaxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
-	 
-	 }
  
  //check if TAN No activated, fetch settings and then only show TDS
+ 
+
+
+ 
+
 }
 
 
 
-var add_product_counter;
 
-function update_prod_details(counter)
+function update_customer()
 {
+var vdr = $("#customer").val();
 	
-	var prod = $("#" + counter + "product_name").val();
 	
-	
-	if(prod=='+ Add Product')
+	if(vdr =='+ Create Customer')
 	{
-	add_product_counter = counter;  //to select this newly created product in ths box
 	
-	$("#" + counter + "product_name").val('');
-	$("#" + counter + "tax_rate").val('');
-	$("#" + counter + "prod_desc").val('');
-	$("#" + counter + "quantity").val('');
+		$("#customer").val('');
+		$("#customer_detail").val('');
+		
+		$("#customer_dialog").dialog({
+				modal : true,
+				autoOpen : false,
+				title : "Create Customer",
+				resizable : false,
+				width : 880,
+				height : 760
+			});
+
+			$("#customer_dialog").dialog('open'); //clear all fields
+
+		}
+
+		else if(vdr != ''){
+
+			var customer_id = $('datalist option[value="' + vdr + '"]').attr('customerid');
+			
+			for (var i = 0; i < customerList.length; i++) {
+				
+				if (customerList[i].id == customer_id) {
+					
+					$("#customer_detail").val(customerList[i].contactDetails.addrLine1 + "  " +  customerList[i].contactDetails.addrLine2 + "  " + 
+							customerList[i].contactDetails.locality + ", " +  customerList[i].contactDetails.state + ", "  +  customerList[i].contactDetails.city );
+
+				}
+			}
+
+		}
 	
-	
-	
-	$("#product_dialog").dialog({
-        
-        modal: true,
-        autoOpen: false,
-        title: "Add Product",
-        resizable :false,
-        width: 1000,
-        height: 700
-    });
-	
-	$("#product_dialog").dialog('open');  //clear all fields
-	
-	
+		else if(vdr == '')
+		{
+			$("#customer").val('');
+			$("#customer_detail").val('');
+		
+		}
+	}
+
+
+	// if tax associated with product is deleted - show nothing
+
+	function update_prod_details(counter) {
+
+		var prod = $("#" + counter + "product_name").val();
+
+		if (prod == '+ Add Product') {
+			add_product_counter = counter; //to select this newly created product in ths box
+
+			$("#" + counter + "product_name").val('');
+			$("#" + counter + "tax_rate").val('');
+			$("#" + counter + "prod_desc").val('');
+			$("#" + counter + "quantity").val('');
+
+			$("#product_dialog").dialog({
+
+				modal : true,
+				autoOpen : false,
+				title : "Add Product",
+				resizable : false,
+				width : 1000,
+				height : 700
+			});
+
+			$("#product_dialog").dialog('open'); //clear all fields
+
+		}
+
+		if (prod != '' && prod != '+ Add Product') {
+
+			var prod_id = $('datalist option[value="' + prod + '"]').attr(
+					'prodid');
+			
+			alert(prod_id);
+			
+			for (var i = 0; i < productList.length; i++) {
+				
+				if (productList[i].id == prod_id) {
+					
+					// it has tax which is not deleted 
+					if (productList[i].productTax != null && productList[i].productTax.deleted == false) {
+						
+						var taxval = productList[i].productTax.taxAbbreviation + " "
+								+ productList[i].productTax.taxRate;
+						$("#" + counter + "tax_rate").val(taxval);
+					}
+					
+					else if(productList[i].productTax != null && productList[i].productTax.deleted == true)
+					{
+						$("#" + counter + "tax_rate").val('');
+						//call update tax amount
+						//update_tax(counter);
+					}
+					
+					else if(productList[i].productTax == null)
+					{
+						$("#" + counter + "tax_rate").val('');
+						//update_tax(counter);
+					}
+
+					$("#" + counter + "quantity").val(1);
+					$("#" + counter + "discount").val(0);
+					$("#" + counter + "price").val(productList[i].sellingPrice);
+					$("#" + counter + "prod_desc").val(
+							productList[i].productDescription);
+					update_amount(counter);
+
+				}
+			}
+
+		} else {
+			//no product chosen
+
+			$("#" + counter + "price").val(0);
+
+			update_noproduct(counter);
+
+			$("#" + counter + "tax_rate").val('');
+			$("#" + counter + "tax_rate").prop('readonly',false);
+			$("#" + counter + "prod_desc").val('');
+			$("#" + counter + "quantity").val(1);
+			$("#" + counter + "discount").val('');
+		}
+
 	}
 	
 	
-	if(prod!=''  && prod!='+ Add Product')
-		{
-		
-    		var prod_id = $('datalist option[value="'+ prod +'"]').attr('prodid');
-    		alert(prod_id);
-    		for(var i=0;i<product_list.length;i++)
-    		 {
-    		   if(product_list[i].product_id==prod_id)
-    			   {
-    			   //get cost price
-    			   if(product_list[i].tax !=null)
-    				   {
-    			   			var taxval = product_list[i].tax.tax_abbreviation + " " + product_list[i].tax.tax_rate;
-    			  			 $("#" + counter + "tax_rate").val(taxval);
-    				   }
-    			   
-    			   $("#" + counter + "price").val(product_list[i].sp);
-    			   $("#" + counter + "prod_desc").val(product_list[i].product_desc);
-    			   update_amount(counter);
-    			   
-    		
-    			   }
-    		 }
-    		
-    		
-    		
-		}
-	else
-		{
-		 //no product chosen
-		
-		$("#" + counter + "price").val(0);
-		
-		update_noproduct(counter);
-		
-		$("#" + counter + "tax_rate").val('');
-		$("#" + counter + "prod_desc").val('');
-		$("#" + counter + "quantity").val(1);
-		}
 	
-}
-	
-
-
-
 </script>
-
 <body onload="loadName()">
 
 <!-- create product dialog-->
@@ -561,13 +826,9 @@ function update_prod_details(counter)
 										<div class="col-lg-12">
 
 
-											<div id="portionOne" class="panel-collapse collapse in">
+											<div id="businessDetail" class="panel-collapse collapse in">
 											
-											<br>
-											VISTAR PRINTSOL PRIVATE LIMITED<br>
-											B.D.A Layout, Nagarbhavi, <br>
-											Bangalore.
-												<br><br>
+										
 
 												<!-- ADD YOUR BUSINESS DETAILS -->
 
@@ -612,14 +873,13 @@ function update_prod_details(counter)
 																	<div class="col-md-4">
 																		<input list="customer_names" class="form-control"
 																			id="customer" placeholder=" Chose Customer"
-																			onchange="getcustomer_details()">
+																			onchange="update_customer()">
 
 																		<!-- upon selection, show all customer details in txtarea, right panel needs purchase order number, date
                                   store customer id save this -->
 
 																		<datalist id="customer_names">
-																			<option customerid="145" value="Vaishnavi">Vaishnavi</option>
-																			<option customerid="167" value="Vidhya">Vidhya</option>
+																			
 																			
 																		</datalist>
 
@@ -636,13 +896,26 @@ function update_prod_details(counter)
 
 																	<div class="col-md-6">
 																		<textarea class="form-control" id="customer_detail"
-																			rows="5" cols="80" readonly>#31, 3rd cross Vijayanagar Bangalore</textarea>
+																			rows="5" cols="80" readonly></textarea>
 																	</div>
 																</div>
 
 																
 
+																
 																<br> <br>
+
+																<div class="form-group required">
+																	<label class="col-md-2 control-label">Estimate Number</label>
+																	<div class="col-md-4">
+																		<input class="form-control" id="estimate_number"
+																			maxlength="100" required="required" title=""
+																			type="text" />
+																	</div>
+																</div>
+
+																<br> <br>
+
 
 																
 																<div class="form-group required">
@@ -650,7 +923,7 @@ function update_prod_details(counter)
 																	<div class="col-md-4">
 																		<div class="input-group date" id="dtpicker">
 
-																			<input type="text" class="form-control" id="date" onchange="get_duedate()">
+																			<input type="text" class="form-control" id="date" >
 																			<span class="input-group-addon"> <span
 																				class="glyphicon glyphicon-calendar"> </span>
 																			</span>
@@ -934,143 +1207,15 @@ function update_prod_details(counter)
 
 <script>
 
-function add_product()
-{
-	
-	var name = $("#product_name").val();
-	var tax = $("#prodtax_rate").val();
-	var tid = $('datalist option[value="'+ tax +'"]').attr('taxid');
-	var desc  = $("#product_desc").val();
-	var cp = $("#cp").val();
-	var sp = $("#sp").val();
-	var category  = $("#category").val();
-	var expen  = $("#expenditure").val();  
-	var income  = $("#income").val();
-	var discount = $("#discount").val();
-	if(cp=='')
-		cp=0;
-	
-	//CP IS COMPULSORY
-	
-	if(name=='' || sp=='')   
-		{
-		alert("Fill in all required fields");
-		return true;
-		
-		}
-	
-	var product = {      
-			
-			"product_name":name,
-			"product_desc": desc,
-			"tax":                     //backend - search for tax obect from table with this id
-				{
-				 "tax_name":null,
-				 "tax_abbreviation":null,
-				 "tax_desc":null,
-				 "tax_rate":null,
-				 "company": null,//company object
-				 "tax_id": tid,
-				 "tax_recoverable":true
-				 
-				},
-			"category":category,
-			"cp": cp,
-			"head_expenditure": expen,
-				
-			"sp": sp,
-			"head_income": income,
-			
-			"company":
-				{
-				"company_id" :"CMP445"
-				},
-				
-			"product_id": null,
-			"discount":discount,
-			"id":null
-			
-			
-	};
-	alert(product);
-	console.log(product);
-	
-	//ajax call to add product, then on success -pass object back, add to the dropdown
-	
-	
-	//product from back end
-	var product1 = {      
-			
-			
-			"product_name": name,
-			"product_desc": desc,
-			"tax":                     
-				{
-				 "tax_name": null,
-				 "tax_abbreviation": "VAT",
-				 "tax_desc":null,
-				 "tax_rate": 5.5,
-				 "company": null,   
-				 "tax_id": "CMP123TAX2",
-				 "tax_recoverable":true
-				 
-				},
-				"category":category,
-				"cp": cp,
-				"head_expenditure": expen,
-					
-				"sp": sp,
-				"head_income": income,
-				
-				"company":
-					{
-					"company_id" :"CMP445"
-					},
-					
-				"product_id": "PROD44",
-				"discount":discount,
-				"id": 44
-			
-			
-	};
-	 
-	 
-	 //add this product to all existing box counters and to main product list
-	 
-	 product_list.push(product1);
-	 
-	 for(var i=0;i<box_counter.length;i++)
-		 {
-		 $('#' + box_counter[i] + 'productlist').append("<option prodid='" +  product1.product_id   + "' value='" +product1.product_name +  "'>" + "" +  product1.product_desc + "" + "</option>");
-		 }
-	 
-	 $('#' + add_product_counter + 'productlist').val(product1.product_name);   //select this product in box where it got created
-	 
-	 $("#product_dialog").dialog('close');
-	 
-	 alert("product created");
-	 
-	 $("#product_name").val('');
-		$("#tax_rate").val('');
-		$("#product_desc").val('');
-		$("#category").val('');
-		$("#expenditure").val(''); //let value be ID
-		$("#income").val('');
-		$("#cp").val('');
-		$("#sp").val('');
-		$("#discount").val('');
-	
-	
-	return false;
-}
+
 
 
 $('#submit').click(function(){
 
   var estimate = {};
-  var estimate_details= [];
+  var estimateDetails= [];
   //var customer;
-  estimate.estimate_details = estimate_details;
+  estimate.estimateDetails = estimateDetails;
   
 	
 	for(var i=0;i<box_counter.length;i++)
@@ -1087,53 +1232,57 @@ $('#submit').click(function(){
 	  {
 	    
 		  var productName= $('#' + index + 'product_name').val();
-	  		var prod_id = $('datalist option[value='+ productName +']').attr('prodid');
+	  	  var prod_id = $('#' + index + 'productlist option[value='+ productName +']').attr('prodid');
 	  		
 	  		var desc= $('#' + index + 'prod_desc').val();
 			var quantity = $('#' + index + 'quantity').val();
 			var price = $('#' + index + 'price').val();
 			var amount = $('#' + index + 'amt').val();
 			var tax = $('#' + index + 'tax_rate').val();
-			//alert(tax);
+			var discount = $('#' + index + 'discount').val();
 			
-			var tax_id = $('datalist option[value="'+ tax +'"]').attr('taxid');
-			//alert(tax_id);
+			var tax_id = $('#' +  index + 'taxlist option[value="'+ tax +'"]').attr('taxid');
+		
 			var taxAmount = $('#' + index + 'tax_amt').val();
 		
-			var product = {
-  				"product":
-  					{
-  					"product_name":null,
-  					"product_desc": null,
-  					"tax":null,
-  					"category":null,
-  					"cp": null,
-  					"head_expenditure": null,
-  					"sp": null,
-  					"head_income": null,
-  					"discount" :null ,
-  					
-  					"company":null,
-  					"product_id": prod_id,
-  					"id":null
-						
-  					},
-  					
-  				"desc":desc,
-  				"quantity": quantity,
-  				"cost": price,
-  				"amount": amount,
-  				"tax": {
-  					"tax_id": tax_id,   //tax need  not be same as mentioned with product
-  					"tax_abbreviation":null,
-  					"tax_name":null
-  					},
-  				"tax_amount": taxAmount,
-  				"estimate":null,    //estimate object
-  				"id":null           //estimate detail id
-						  };
+			var details = {
+	  				"product": {
+	  							"productName":null,
+	  							"productDescription": null,
+	  							"productTax":null,
+	  							"productCategory":null,
+	  							"costPrice": null,
+	  							"productHOE": null,
+	  							"sellingPrice": null,
+	  							"productHOI": null,
+	  							"company":null,
+	  							"isDeleted":false,
+	  							"id": prod_id
+							
+	  						   },
+	  				"description":desc,
+	  				"quantity": quantity,
+	  				"price": price,
+	  				"discount" : discount,
+	  				"subTotal": amount,
+	  				"taxTotal": taxAmount,
+	  				"tax": {
+	  					      "taxType": null,
+	  					      "taxName":null,
+	  					      "taxAbbreviation" :null,
+	  					      "taxDescription" :null,
+	  					      "taxRate":null,
+	  					      "isDeleted":false,
+	  					      "company":null,
+	  					      "id" :tax_id
+	  					
+	  					},
+	  			   "id" : null
+				
+				};
+						  
 					  
-			estimate.estimate_details.push(product);
+			estimate.estimateDetails.push(details);
 			
 			
 	 	 
@@ -1142,64 +1291,79 @@ $('#submit').click(function(){
 	
 	}
 	var customer = $("#customer").val();
-	var customer_id = $('datalist option[value='+ customer +']').attr('customerid');
-	estimate.customer = {
-			"customer_id" : customer_id  //json of vendor object
-			
-	};
+	var customer_id = $('#customer_names option[value="'+ customer +'"]').attr('customerid');
+	var date = $("#date").val();
 	
-	estimate.company = {
-			
-			"company_id" : "CMP445"
-			};
+	estimate.customer = null;
+	estimate.company = null;
+	estimate.isEstimate = true;
+	estimate.estimateSerialId = estimateserialNo;
+	estimate.estimateDate = date;
+	estimate.estimateNumber = $("#estimate_number").val();
+	estimate.estimateNotes = $("textarea#notes").val();
 	
-    var date = $("#date").val();
-	estimate.order_date = date;
-	estimate.estimate_number = null;
-	estimate.estimate_id = null;                          //internal auto inc
-	
-	estimate.amount = $("#subtotal").val();
-	estimate.tax_amount = $("#taxtotal").val();
-	estimate.grand_total = $("#grandtotal").val();
-	estimate.adv_payment = null;                        //advance payment received list
-	
-	estimate.note = $("textarea#notes").val();
-	estimate.advance_amount =0;                         //total adv payment received
-	estimate.balance = $("#grandtotal").val();
-	estimate.invoice_status=0;
+	estimate.estimateSubtotal = $("#subtotal").val();
+	estimate.estimateTaxtotal = $("#taxtotal").val();
+	estimate.estimateGrandtotal = $("#grandtotal").val();
+	estimate.estimateAdvancetotal = 0;
+	estimate.estimateBalance = $("#grandtotal").val();
+	estimate.isEstimatedeleted  = false;
 	
 	
+	estimate.isInvoice = false;
+	estimate.invoiceSerialId = 0, 
+	estimate.invoiceNumber = null;
+	estimate.invoiceDate  = null;
+	estimate.invoiceDueinterval = 0;
+	estimate.invoiceDuedate = null;
+	estimate.invoiceSubtotal = null;
+	estimate.invoiceTaxtotal = null;
+	estimate.invoiceGrandtotal = null;
+	estimate.invoiceAdvancetotal = null;
+	estimate.invoiceBalance = null;
+	estimate.invoiceNotes = null,
+	estimate.isInvoicedeleted  = false;
 	
-	console.log(JSON.stringify(estimate));
+	estimate.invoiceDetails = null;
+	estimate.invoicePayments = null;
+	estimate.estimatePayments = null;
+	estimate.id = null;
+	
+	
+	console.log(estimate);
 	var p = JSON.stringify(estimate);
+	console.log(customer_id);
 
 	
 	//ajax call
+	var ccid = getCookie("CCID");
+ var sid = getCookie("SID");
+ var token = getCookie("TTID");
+
+					
 	
-	/*
 	$.ajax({
-		   type : 'GET',
-		   url  : '/Accounting/po/purchase/createpo',
-		    dataType :'text',
-		    data:{'jsondata' : p},
-		    success: function(response) {
-		     alert(response);
-		     //console.log(response);
-		     //pass PO number of the created PO
-		     //redirect to URL to view purchase order and pass response to next page
-		     //store db json in local storage
-		     var po_json = response;
-		     //window.localStorage.setItem("identifier",po_json);
-		     window.location.replace("edit_purchaseOrder.html?PONo=" + po_json); //pass in an encrypted form 
+		   type : 'POST',
+		   url  : '/Accounting/rest/estimate/create?' + $.param({	
+			   	"estimate" :p,
+			   	"cid" : ccid,
+			   	"id" : sid,
+			   	"token" : token, "customerId" : customer_id}),
+		    dataType :'json',
+		    success: function(response, text, xhr) {
+		               
+		    	var estimate = JSON.parse(xhr.responseText);
+		    	window.location.replace("viewEstimate.html?EstimateId=" + estimate.estimateNumber);
+		    	
 		    },
-			error: function (a,b,c)
+			error: function (text, xhr)
 			{ 
-				alert(a.status+b+c);
-				 console.log(a.status+b+c);
+				
+				 console.log(xhr.responseText);
 			}  
 			  });
-	
-	*/
+					
+					
 });
 
 
@@ -1259,7 +1423,7 @@ $('#submit').click(function(){
 											+ '<div class="col-md-12">'
 											+ '<input type="number" value="1" class="form-control" id="'
 											+ count
-											+ 'quantity"  name="company_name" maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount('
+											+ 'quantity"  maxlength="30" name="username" placeholder="Quantity" required="required" title="" onchange="update_amount('
 											+ count
 											+ ')"  />'
 											+ '</div>'
@@ -1272,7 +1436,7 @@ $('#submit').click(function(){
 											+ '<div class="col-md-12">'
 											+ '<input type="number" value="0" class="form-control" id="'
 											+ count
-											+ 'price"  name="company_name" maxlength="30" name="username" placeholder="Price" required="required" title="" onchange="update_amount('
+											+ 'price"   maxlength="30"  placeholder="Price" required="required" title="" onchange="update_amount('
 											+ count
 											+ ')" />'
 											+ '</div>'
@@ -1336,23 +1500,22 @@ $('#submit').click(function(){
 											+'</tr>').insertBefore('#last_row');
 							
 							
-							for(var i=0;i<product_list.length;i++)
+							for(var i=0;i<productList.length;i++)
 							 {
 							
 							 //show only inventory, noninv and service input type products
 							
-						      $('#' + count +'productlist').append("<option prodid='" +  product_list[i].product_id   + "' value='" +product_list[i].product_name +  "'>" + "" +  product_list[i].product_desc + "" + "</option>");
+						      $('#' + count +'productlist').append("<option prodid='" +  productList[i].id   + "' value='" +productList[i].productName +  "'>" + "" +  productList[i].productDescription + "" + "</option>");
 							 
 							 }
 						 
 							$('#' + count + 'productlist').append("<option value='+ Add Product' id='add'>+ Add Product</option>");
 						  
-						     for(var i=0;i<tax_list.length;i++)
+						     for(var i=0;i<taxList.length;i++)
 						    	 {
 						    	 
-						    	 	$('#' + count + 'taxlist').append("<option taxid='" +  tax_list[i].tax_id   + "' value='" + tax_list[i].tax_abbreviation + " "  +  tax_list[i].tax_rate + "'>" + "</option>");
+						    	 	$('#' + count + 'taxlist').append("<option taxid='" +  taxList[i].id   + "' value='" + taxList[i].taxAbbreviation + " "  +  taxList[i].taxRate + "'>" + "</option>");
 						    	 }
-
 
 						});
 
@@ -1404,6 +1567,10 @@ $('#submit').click(function(){
 				tax_addition(tax_input, value_counter, newtaxamt.toFixed(2));                         //call func to handle tax slab div       
 
 		}
+			else    //if product changes, and it has no tax but had tax earlier - handle it to remove earlier chngs
+			{
+			update_tax(value_counter);
+			}
 	}
 
 	
