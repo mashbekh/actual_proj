@@ -233,10 +233,7 @@ function loadName()
 	var ccid = getCookie("CCID");
  	var sid = getCookie("SID");
  	var token = getCookie("TTID");
- 	
- 	
- 	function getCustomer()
-	 {
+ 
 	 	//get customer list
 
 	 			$.ajax({
@@ -262,7 +259,7 @@ function loadName()
 	 							 $('#customer_names').append("<option value='+ Create Customer' id='add'>+ Create Customer</option>");
 	 							 
 
-	  							ajaxComplete();
+	  						
 
 	 						},
 
@@ -278,7 +275,7 @@ function loadName()
 	 					
 	 					});
 
-	}	 
+		 
 
  	 
  	 //get product list - all
@@ -599,16 +596,14 @@ function loadName()
 			
 		}
 
-		//$('#vendor_names option').find('id="58eb988c70587d44e415c913"').attr('selected','selected');
-		//$("#vendor_names option[id='58eb988c70587d44e415c913']").attr( "selected","selected");
+		
 		$("#customer").val(x.customer.businessDetails.businessName);
-		$("#customer").prop("readonly", true);
+		update_customer();
 		$("#vendr").append(x.customer.businessDetails.businessName);
 		
 		//update_customer();
 		
-		$("#customer_detail").val(x.customer.contactDetails.addrLine1 + "  " +  x.customer.contactDetails.addrLine2 + "  " + 
-				x.customer.contactDetails.locality + ", " +  x.customer.contactDetails.state + ", "  +  x.customer.contactDetails.city );
+	
 		
 		$("#businessDetail").append("<h2>" + x.company.businessDetails.businessName   +  "</h2>");
 		$("#businessDetail").append("<h4>" + x.company.contactDetails.addrLine1 + "  " +  x.company.contactDetails.addrLine2 + "  " + 
@@ -666,6 +661,8 @@ function loadName()
 
 	 				var customer_id = $('datalist option[value="' + vdr + '"]').attr('customerid');
 	 				
+	 				console.log("clist");
+	 				console.log(customerList);
 	 				for (var i = 0; i < customerList.length; i++) {
 	 					
 	 					if (customerList[i].id == customer_id) {
@@ -2535,6 +2532,7 @@ $('#submit').click(function(){
 	  
 		var customer = $("#customer").val();
 		var customer_id = $('datalist option[value="'+ customer +'"]').attr('customerid');
+		alert(customer_id);
 		var date = $("#date").val();
 		
 		// estimate details does not exist
@@ -2606,7 +2604,7 @@ $('#submit').click(function(){
 					
 					 console.log(c.responseText);
 				}  
-				  });
+				  });  
 						
 						
 		

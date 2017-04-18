@@ -17,9 +17,6 @@ import com.Models.Company;
 import com.Models.InwardEntity;
 import com.Models.OrderDetails;
 import com.Models.OrderPayments;
-import com.Models.OutwardEntity;
-import com.Models.POBillDetails;
-import com.Models.POBillPayments;
 import com.Models.Products;
 import com.Models.Tax;
 import com.setup.Morphiacxn;
@@ -863,7 +860,7 @@ public class InvoiceDaoImpl {
 					if(cmp == null)
 						throw new EntityException(404, "cmp not found", null, null);
 					
-				
+					
 
 					//check if invoice exists with object id for update , fetch invoice, make changes to it
 				
@@ -960,6 +957,8 @@ public class InvoiceDaoImpl {
 
 					}
 
+					System.out.println("protax");
+					
 					invoice.setInvoiceDetails(invoiceDetails);
 					invoice.setCompany(cmp);
 					if(customerChange ==  true)
@@ -980,8 +979,7 @@ public class InvoiceDaoImpl {
 					if(key == null)
 						throw new EntityException(515, "could not update", null, null);
 
-				System.out.println("helllo");
-
+				
 				}
 				catch(EntityException e)
 				{
@@ -994,7 +992,7 @@ public class InvoiceDaoImpl {
 					throw new EntityException(500, null , e.getMessage(), null);
 				}
 
-				return bill;
+				return invoice;
 			}
 
 
