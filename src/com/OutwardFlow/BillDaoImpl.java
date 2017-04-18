@@ -81,7 +81,7 @@ public class BillDaoImpl {
 
 			//check if bill with same number & vendor exists for company
 
-			poquery = ds.createQuery(OutwardEntity.class).filter("company",cmp).filter("vendor", vendor).field("billNumber").equal(bill.getBillNumber());
+			poquery = ds.createQuery(OutwardEntity.class).filter("company",cmp).filter("vendor", vendor).field("billNumber").equal(bill.getBillNumber()).field("isBill").equal(true);
 			existingBill = poquery.get();
 			if(existingBill != null)
 				throw new EntityException(514, "bill number found", null, null);
@@ -222,7 +222,7 @@ public class BillDaoImpl {
 
 			//check if bill with same number & vendor exists for company
 
-			Query<OutwardEntity> poquery = ds.createQuery(OutwardEntity.class).filter("company",cmp).filter("vendor", vendor).field("billNumber").equal(bill.getBillNumber());
+			Query<OutwardEntity> poquery = ds.createQuery(OutwardEntity.class).filter("company",cmp).filter("vendor", vendor).field("billNumber").equal(bill.getBillNumber()).field("isBill").equal(true);
 			existingBill = poquery.get();
 			if(existingBill != null)
 				throw new EntityException(514, "bill number found", null, null);
@@ -389,6 +389,7 @@ public class BillDaoImpl {
 			//as PO is converted, change only bill balance , PO balance does not get affected
 
 			java.math.BigDecimal balance = bill.getBillBalance().add(prevAmt).subtract(payment.getPaymentAmount());
+			java.math.BigDecimal pobalance = bill.getPoBalance().add(prevAmt).subtract(payment.getPaymentAmount());
 
 
 			//if null then 0 
@@ -415,6 +416,7 @@ public class BillDaoImpl {
 					.set("advancePayments.$.isTdsPaid", payment.isTdsPaid())
 					.set("poAdvancetotal",advanceTotal)
 					.set("billAdvancetotal", billAdvance)
+					.set("poBalance", pobalance)
 					.set("billBalance", balance);
 
 
@@ -603,6 +605,7 @@ public class BillDaoImpl {
 			java.math.BigDecimal poAdvanceTotal = bill.getPoAdvancetotal().subtract(pymnt.getPaymentAmount());
 			java.math.BigDecimal billAdvanceTotal = bill.getBillAdvancetotal().subtract(pymnt.getPaymentAmount());
 			java.math.BigDecimal billBalance = bill.getBillBalance().add(pymnt.getPaymentAmount());
+			java.math.BigDecimal poBalance = bill.getPoBalance().add(pymnt.getPaymentAmount());
 
 
 
@@ -611,6 +614,7 @@ public class BillDaoImpl {
 			UpdateOperations<OutwardEntity> ops =  ds.createUpdateOperations(OutwardEntity.class)
 					.removeAll("advancePayments", pymnt)
 					.set("poAdvancetotal",poAdvanceTotal)
+					.set("poBalance",poBalance)
 					.set("billAdvancetotal", billAdvanceTotal)
 					.set("billBalance", billBalance);
 
@@ -973,6 +977,44 @@ public class BillDaoImpl {
 			}
 
 			return bill;
+		}
+		
+		
+		public List<OutwardEntity> getBillList( String companyId) throws EntityException
+		{
+			Datastore ds = null;
+			Company cmp = null;
+			ObjectId oid = null;
+			List<OutwardEntity> billList = new ArrayList<>();
+
+			try
+			{
+				ds = Morphiacxn.getInstance().getMORPHIADB("test");
+				oid  = new ObjectId(companyId);
+				Query<Company> query = ds.createQuery(Company.class).field("id").equal(oid);
+				cmp = query.get();
+				if(cmp == null)
+					throw new EntityException(404, "cmp not found", null, null);
+
+
+				Query<OutwardEntity> poquery = ds.find(OutwardEntity.class).filter("company",cmp).filter("isBill", true).
+						filter("isBilldeleted", false);
+
+				billList = poquery.asList();
+				if(billList.isEmpty() == true)
+					throw new EntityException(512, "could not retreive", null, null);
+
+			}
+			catch(EntityException e)
+			{
+				throw e;
+			}
+			catch(Exception e)
+			{
+				throw new EntityException(500, null, e.getMessage(), null);
+			}
+
+			return billList;
 		}
 
 }

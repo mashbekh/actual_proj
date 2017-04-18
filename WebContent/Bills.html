@@ -19,17 +19,16 @@
 <title>Tax System</title>
 
 
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">      </script>  
 
 <script src="jarvis/js/bootstrap.min.js"></script>
+<!-- Bootstrap Core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/jquery-ui.js" type="text/javascript"></script>
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.0/themes/blitzer/jquery-ui.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 
-<script
-	src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/jquery-ui.js"
-	type="text/javascript"></script>
-<link
-	href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.1/themes/blitzer/jquery-ui.css"
-	rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="jarvis/css/jquery.flexdatalist.min.css">
 
 
@@ -127,84 +126,107 @@
 </style>
 
 <script>
-var porder=null;
+var bill = null;
+var billList;
+
+
+function setCookie(key, value, days) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+}
+     
+
+function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+}
+
 function loadName()
 {
 	 $('.dropdown-toggle').dropdown();
-   document.getElementById("name").innerHTML =   window.localStorage.getItem("user_name");
-   //fetch all PO for this company , just pass company_id
-   var x = "CMP445";
-   
-   //get all bills for the company
-   
-   /*
-   $.ajax({
-	   type : 'GET',
-	   url  : '/Accounting/po/purchase/viewall',
-	    dataType :'json',
-	    data:{'company_id' : x},
-	    
-	    success: function(response) {
-	    // alert(response);
-	     console.log( response);
-	     porder = response;
-	     update();
-	     //return true;  //stay in same page
-	    },
-		error: function (xhr) {
-			alert(xhr.responseText);
-		    var jsonResponse = JSON.parse(xhr.responseText);
-		    alert(jsonResponse.message);
-		   
-		  }
-   });*/
+	 
+	 var ccid = getCookie("CCID");
+	 var sid = getCookie("SID");
+	 var token = getCookie("TTID");
+
+
+	 //get PO list
+	 
+	  $.ajax({
+			type : 'POST',
+			url  : '/Accounting/rest/bill/getBillList?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+		    dataType : "json",
+
+			success: function(response, text, xhr) {
+		
+				bill = xhr.responseText;
+				update();
+	},
+
+	error: function (xhr, statusText) {
+		
+
+	 console.log(xhr.status);
+	 console.log(xhr.responseText);
+	 var code = xhr.status;
+	}
+
+	});
+	 
+
 }
+
+
+
 
 
 function update()
 {
-   var p= JSON.stringify(porder);
-   var porders = JSON.parse(p);
-   console.log(porders);
-   for(var i=0;i<porders.length;i++)
+   
+   bill = JSON.parse(bill);
+  
+   //based on PO converted to bill or not - display relevant data 
+   for(var i=0;i<bill.length;i++)
 	   {
-	   //alert(porders[i].vendor_id);
-	     var vendor = porders[i].vendor_id;
-	     var d = new Date(porders[i].order_date);
+	    
+	     var vendor = bill[i].vendor.businessDetails.businessName;
+	     var d = new Date(bill[i].billDate);
 	 	 var order_date = d.getDate() + "/"  + (d.getMonth()+1) + "/" + d.getFullYear();
-	 	 var po_number = porders[i].po_number;
-	 	 var bill_amt = porders[i].grand_total;
-	 	 var advance = 0;  //update later
-	 	 var balance = porders[i].grand_total;
-	 	 
+	 	 var bill_id = bill[i].billNumber;
+	 	 var bill_amt = bill[i].billGrandtotal;
+	 	 var advance = bill[i].billAdvancetotal;
+	 	 var balance = bill[i].billBalance;
+	 	 var bill_number  = bill[i].id;
 	 	
 	 	 
 	 	 
 	   $("#table_export").append('<tr>' + 
-			   '<td>' + po_number + '</td>' +
+			   '<td>' + bill_id + '</td>' +
 			   '<td>' + vendor + '</td>' +
 			   '<td>' + order_date+ '</td>' +
 			   '<td>' + bill_amt + '</td>' +
 			   '<td>' + advance + '</td>' +
 			   '<td>' + balance + '</td>' +
 			   '<td>' +  
-                     '<div class="btn-group">' + 
-                      '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
-                                    'Action <span class="caret"></span>' + 
-                                '</button>' + 
-                               '<ul class="dropdown-menu dropdown-default pull-right" role="menu">' +
+			   '<div class="btn-group">' + 
+               '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
+                             'Action <span class="caret"></span>' + 
+                         '</button>' + 
+                               
+                               '<ul class="dropdown-menu" role="menu">' +
                                 
                                     '<li>' + 
-                                       '<a href="edit_purchaseOrder.html?PONo=' + po_number + '" >' +    
+                                    '<a  onClick = edit("' +  bill_number + '")>' +   
                                              '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
-                                                'Edit PO' + 
+                                                'Edit Bill' + 
                                             '</a>' + 
                                     '</li>' + 
                                     '<li class="divider"></li>'  +
                                     '<li>' + 
-                                        '<a href="view_purchaseOrder.html?PONo='  + po_number  + '" >' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
+                                    '<a  onClick = view("' +  bill_number + '")>' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
                                            '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
-                                                'View PO'+
+                                                'View Bill'+
                                             '</a>' + 
                                     '</li>'  +
                                     '<li class="divider"></li>' + 
@@ -212,44 +234,21 @@ function update()
                                     '<li>'  + 
                                         "<a href='' onClick='return confirm('Are you sure to delete?')'>"   + //FUNCTION
                                             '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
-                                                 'Delete PO' + 
+                                                 'Delete Bill' + 
                                             '</a>' +
                                     '</li>' + 
                                     
                                     '<li class="divider"></li>' + 
                                     
                                    ' <li>' + 
-                                        '<a href="re-send.html?PONo=' +  po_number  + '">' + //FUNCTION
+                                        '<a href="re-send.html?PONo=' +   bill_number  + '">' + //FUNCTION
                                            ' <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;' + 
-                                               'Re send PO' + 
+                                               'Send Bill' + 
                                             '</a>' + 
                                     '</li>' + 
-                                    '<li class="divider"></li>'  + 
-                                   
-                                    '<li>'  + 
-                                        '<a href="view_advance?PONo=' +   po_number + '" >'  + 
-                                           '<i class="fa fa-inr"></i>&nbsp;&nbsp;&nbsp;&nbsp;' +       //POP UP
-                                                'View Advance Payments' + 
-                                            '</a>' + 
-                                    '</li>' + 
+                           
                                     
-                                    '<li class="divider"></li>' + 
-                                  
-                                    '<li>' + 
-                                        '<a href="" onClick="return add_adv(' + po_number  + ')">' +   //POP UP
-                                           '<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'  + 
-                                               'Add Advance Payment' + 
-                                            '</a>' + 
-                                    ' </li>' + 
-                                    
-                                    '<li class="divider"></li>' + 
                                    
-                                    '<li>' + 
-                                        '<a href="PO_to_Bill.html?PONo='  +   po_number + '">' + 
-                                           '<span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;'  + 
-                                               'Convert to Bill' + 
-                                            '</a>' + 
-                                    '</li>' + 
                                     
                                 '</ul>'   + 
                             '</div>' + 
@@ -262,7 +261,6 @@ function update()
    var table = $("#table_export").dataTable();
    
 }
-
 
 
 </script>
@@ -430,77 +428,13 @@ function update()
 									<th><div>Options</div></th>
 
 								</tr>
-							<tbody id="tbody1">
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-
-									<td>
-
-										<div class="btn-group">
-											<button type="button"
-												class="btn btn-default btn-sm dropdown-toggle"
-												data-toggle="dropdown">
-												Action <span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu dropdown-default pull-right"
-												role="menu">
-												<li><a
-													href="edit_purchaseOrder.html?PONo=' + po_number + '">
-														<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;
-														Edit Bill
-												</a></li>
-												<li class="divider"></li>
-												<li><a
-													href="view_purchaseOrder.html?PONo='  + po_number  + '">
-														<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;
-														View Bill
-												</a></li>
-												<li class="divider"></li>
-
-												<li><a href=''
-													onClick="return confirm('Are you sure to delete?)"> <span
-														class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;
-														Delete Bill
-												</a></li>
-
-												<li class="divider"></li>
-
-												<li><a href="re-send.html?PONo=' +  po_number  + '">
-														<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;
-														Send Bill
-												</a></li>
-												<li class="divider"></li>
-
-												<li><a href="view_advance?PONo=' +   po_number + '">
-														<i class="fa fa-inr"></i>&nbsp;&nbsp;&nbsp;&nbsp; View
-														Payments
-												</a></li>
-
-												<li class="divider"></li>
-
-												<li><a href=""
-													onClick="return add_adv(' + po_number  + ')"> <span
-														class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp; Add
-														 Payment
-												</a></li>
-
-												
-
-												
-
-											</ul>
-										</div>
-									</td>
-								</tr>
+								</thead>
+							<tbody >
+								
 
 
 							</tbody>
-							</thead>
+							
 
 						</table>
 					</div>
@@ -535,8 +469,56 @@ function createbill(){
 	window.location.replace("createBill.html");
 }
 
+
+function view(billNo)
+{
+	
+	window.location.replace("viewBill.html?BillId=" + billNo);
+	//return true;
+}
+
+
+function edit(billNo)
+{
+	
+	window.location.replace("editBill.html?BillId=" + billNo);
+	//return true;
+}
+
 </script>
 
 
+
+<!-----  DATA TABLE EXPORT CONFIGURATIONS
+if two tables needed in same page for export this code is needed   
+                   
+<script type="text/javascript">
+
+	jQuery(document).ready(function($)
+	{
+		
+
+		$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+	
+	var jqTable = $('table.datatable', $(e.target).attr("href"));
+	    if ( jqTable.length > 0 ) {
+	    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
+	    if ( oTableTools != null && oTableTools.fnResizeRequired() ){
+	        jqTable.dataTable().fnAdjustColumnSizing();
+	        oTableTools.fnResizeButtons();
+	    }
+	}	
+	
+	return false;
+});
+
+
+		var table = $("#table_export").dataTable();
+		
+	});
+		
+</script>
+
+  ---->
 
 </html>

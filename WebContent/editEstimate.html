@@ -2670,7 +2670,7 @@ $('#submit').click(function(){
 		  {
 		    
 			  var productName= $('#' + index + 'product_name').val();
-		  	  var prod_id = $('#' + index + 'productlist option[value='+ productName +']').attr('prodid');
+		  	  var prod_id = $('#' + index + 'productlist option[value="'+ productName +'"]').attr('prodid');
 		  	  	var prodDel = $('#' + index + 'product_name').prop('readonly');
 		  	  	var desc= $('#' + index + 'prod_desc').val();
 				var quantity = $('#' + index + 'quantity').val();
@@ -2745,7 +2745,7 @@ $('#submit').click(function(){
 		estimate.estimateGrandtotal = $("#grandtotal").val();
 		estimate.estimateAdvancetotal = 0; //chng at back end (gtotal - advance)
 		estimate.estimateBalance = $("#grandtotal").val();
-		estimate.estimatedeleted  = false;
+		estimate.isEstimatedeleted  = false;
 		
 		
 		estimate.isInvoice = false;
@@ -2792,7 +2792,7 @@ $('#submit').click(function(){
 			    success: function(response, text, xhr) {
 			               
 			    	var estimate = JSON.parse(xhr.responseText);
-			    	window.location.replace("viewEstimate.html?EstimateId=" + estimate.estimateNumber);
+			    	window.location.replace("viewEstimate.html?EstimateId=" + estimate.id);
 			    	
 			    },
 				error: function (a,b,c)

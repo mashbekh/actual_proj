@@ -17,6 +17,7 @@ import com.Models.Company;
 import com.Models.InwardEntity;
 import com.Models.OrderDetails;
 import com.Models.OrderPayments;
+
 import com.Models.Products;
 import com.Models.Tax;
 import com.setup.Morphiacxn;
@@ -994,6 +995,44 @@ public class InvoiceDaoImpl {
 
 				return invoice;
 			}
+			
+			public List<InwardEntity> getInvoicelist( String companyId) throws EntityException
+			{
+				Datastore ds = null;
+				Company cmp = null;
+				ObjectId oid = null;
+				List<InwardEntity> invoiceList = new ArrayList<>();
+
+				try
+				{
+					ds = Morphiacxn.getInstance().getMORPHIADB("test");
+					oid  = new ObjectId(companyId);
+					Query<Company> query = ds.createQuery(Company.class).field("id").equal(oid);
+					cmp = query.get();
+					if(cmp == null)
+						throw new EntityException(404, "cmp not found", null, null);
+
+
+					Query<InwardEntity> iquery = ds.find(InwardEntity.class).filter("company",cmp).filter("isInvoice", true).
+							filter("isInvoicedeleted", false);
+
+					invoiceList = iquery.asList();
+					if(invoiceList.isEmpty() == true)
+						throw new EntityException(512, "could not retreive", null, null);
+
+				}
+				catch(EntityException e)
+				{
+					throw e;
+				}
+				catch(Exception e)
+				{
+					throw new EntityException(500, null, e.getMessage(), null);
+				}
+
+				return invoiceList;
+			}
+
 
 
 }

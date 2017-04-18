@@ -3,6 +3,7 @@ package com.OutwardFlow;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -171,6 +172,16 @@ public class BillServiceImpl {
 	}
 	
 
-	
+	@POST
+	@Path("/getBillList")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBillList( @QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token) throws JsonMappingException , JsonParseException, IOException, EntityException, Exception, Throwable
+	{
+		BillDaoImpl dao = new BillDaoImpl();
+		List<OutwardEntity> poList = dao.getBillList(companyId);
+		return Response.status(Response.Status.OK)
+				.entity(poList).build();
+
+	}
 	
 }

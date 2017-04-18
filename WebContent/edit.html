@@ -2637,7 +2637,7 @@ $('#submit').click(function(){
 		  else 
 		  { 
 			  	var productName= $('#' + index + 'product_name').val();
-		  	  	var prod_id = $('#' + index + 'productlist option[value='+ productName +']').attr('prodid');
+		  	  	var prod_id = $('#' + index + 'productlist option[value="'+ productName +'"]').attr('prodid');
 		  	  	var prodDel = $('#' + index + 'product_name').prop('readonly');
 		  	  	var desc= $('#' + index + 'prod_desc').val();
 				var quantity = $('#' + index + 'quantity').val();

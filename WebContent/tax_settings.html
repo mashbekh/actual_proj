@@ -325,7 +325,7 @@ function getTaxlist()
 				   					 '</tr>');
 		}
 	
-	
+	 $("#tab").dataTable();
 	}
 </script>
 
@@ -669,15 +669,7 @@ function getTaxlist()
 													</tr>
 												</thead>
 											<tbody>
-											
-											<tr>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
-													</tr>
+										
 											</tbody>
 													
 													  
@@ -966,23 +958,7 @@ if two tables needed in same page for export this code is needed ---->
                    
 <script type="text/javascript">
 
-	jQuery(document).ready(function($)
-	{
-		
 
-		$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-	
-	var jqTable = $('table.datatable', $(e.target).attr("href"));
-	    if ( jqTable.length > 0 ) {
-	    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
-	    if ( oTableTools != null && oTableTools.fnResizeRequired() ){
-	        jqTable.dataTable().fnAdjustColumnSizing();
-	        oTableTools.fnResizeButtons();
-	    }
-	}	
-	
-	return false;
-});
 
 		var datatable = $("#tab").dataTable({
 			"sPaginationType": "bootstrap",

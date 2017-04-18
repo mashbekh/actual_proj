@@ -126,8 +126,8 @@
 </style>
 
 <script>
-var estimate = null;
-var estimateNo;
+var invoice= null;
+var invoiceList;
 
 
 function setCookie(key, value, days) {
@@ -155,12 +155,12 @@ function loadName()
 	 
 	  $.ajax({
 			type : 'POST',
-			url  : '/Accounting/rest/estimate/getEstimatelist?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
+			url  : '/Accounting/rest/invoice/getInvoicelist?' + $.param({"cid" : ccid ,"id": sid,"token": token}) ,
 		    dataType : "json",
 
 			success: function(response, text, xhr) {
 		
-				 estimate = JSON.parse(xhr.responseText);
+				invoice = xhr.responseText;
 				update();
 	},
 
@@ -178,85 +178,77 @@ function loadName()
 }
 
 
-function convert(estimateNo)
-{
-	
-	setCookie("EID",estimateNo,1);
-	window.location.replace("createInvoice.html");
-	//return true;
-}
+
 
 
 function update()
 {
    
-   estimateNo = estimate.estimateNumber;
+	invoice = JSON.parse(invoice);
+  
    //based on PO converted to bill or not - display relevant data 
-   for(var i=0;i<  estimate.length;i++)
+   for(var i=0;i<invoice.length;i++)
 	   {
 	    
-	     var customer =  estimate[i].customer.businessDetails.businessName;
-	     var d = new Date(estimate[i].estimateDate);
+	     var customer = invoice[i].customer.businessDetails.businessName;
+	     var d = new Date(invoice[i].invoiceDate);
 	 	 var order_date = d.getDate() + "/"  + (d.getMonth()+1) + "/" + d.getFullYear();
-	 	 var  estimate_number =  estimate[i].estimateNumber;
-	 	 var  estimate_amt = estimate[i].estimateGrandtotal;
-	 	 var advance = estimate[i].estimateAdvancetotal;
-	 	 var balance = estimate[i].estimateBalance;
-	 	 
+	 	 var invoice_id = invoice[i].invoiceNumber;
+	 	 var invoice_amt = invoice[i].invoiceGrandtotal;
+	 	 var advance = invoice[i].invoiceAdvancetotal;
+	 	 var balance = invoice[i].invoiceBalance;
+	 	 var invoice_number  = invoice[i].id;
 	 	
 	 	 
 	 	 
 	   $("#table_export").append('<tr>' + 
-			   '<td>' + estimate_number + '</td>' +
+			   '<td>' + invoice_id + '</td>' +
 			   '<td>' + customer + '</td>' +
 			   '<td>' + order_date+ '</td>' +
-			   '<td>' + estimate_amt + '</td>' +
+			   '<td>' + invoice_amt + '</td>' +
 			   '<td>' + advance + '</td>' +
 			   '<td>' + balance + '</td>' +
 			   '<td>' +  
-                     '<div class="btn-group">' + 
-                      '<button type="button" class="dropdown-toggle" data-toggle="dropdown">' + 
-                                    'Action <span class="caret"></span></button>' + 
+			   '<div class="btn-group">' + 
+               '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
+                             'Action <span class="caret"></span>' + 
+                         '</button>' + 
                                
                                '<ul class="dropdown-menu" role="menu">' +
                                 
-                               '<li>' + 
-                               '<a  onClick = edit("' +  estimate_number + '")>' +   
-                                        '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
-                                           'Edit estimate' + 
-                                       '</a>' + 
-                               '</li>' + 
-                               '<li class="divider"></li>'  +
-                               '<li>' + 
-                               '<a  onClick = view("' +  estimate_number + '")>' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
-                                      '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
-                                           'View estimate'+
-                                       '</a>' + 
-                               '</li>'  +
-                               '<li class="divider"></li>' + 
-                               
-                               '<li>'  + 
-                                   "<a href='' onClick='return confirm('Are you sure to delete?')'>"   + //FUNCTION
-                                       '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
-                                            'Delete estimate' + 
-                                       '</a>' +
-                               '</li>' + 
-                               
-                               '<li class="divider"></li>' + 
-                               
-                              ' <li>' + 
-                                   '<a href="re-send.html?PONo=' +  estimate_number  + '">' + //FUNCTION
-                                      ' <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;' + 
-                                          'Send estimate' + 
-                                       '</a>' + 
-                               '</li>' + 
-                               '<li class="divider"></li>' + 
-                               '<li>' + 
-                               '<a  onClick = convert("' +  estimate_number + '")>' +  
-                                      '<span class="glyphicon glyphicon-repeat"></span>&nbsp;&nbsp;'  + 
-                                          'Convert to Invoice' + 
-                                       '</a>' + 
-                               '</li>' + 
+                                    '<li>' + 
+                                    '<a  onClick = edit("' +  invoice_number + '")>' +   
+                                             '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
+                                                'Edit invoice' + 
+                                            '</a>' + 
+                                    '</li>' + 
+                                    '<li class="divider"></li>'  +
+                                    '<li>' + 
+                                    '<a  onClick = view("' +  invoice_number + '")>' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
+                                           '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
+                                                'View invoice'+
+                                            '</a>' + 
+                                    '</li>'  +
+                                    '<li class="divider"></li>' + 
+                                    
+                                    '<li>'  + 
+                                        "<a href='' onClick='return confirm('Are you sure to delete?')'>"   + //FUNCTION
+                                            '<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;' +  
+                                                 'Delete invoice' + 
+                                            '</a>' +
+                                    '</li>' + 
+                                    
+                                    '<li class="divider"></li>' + 
+                                    
+                                   ' <li>' + 
+                                        '<a href="re-send.html?PONo=' +   invoice_number  + '">' + //FUNCTION
+                                           ' <span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;' + 
+                                               'Send invoice' + 
+                                            '</a>' + 
+                                    '</li>' + 
+                           
+                                    
+                                   
                                     
                                 '</ul>'   + 
                             '</div>' + 
@@ -267,7 +259,10 @@ function update()
 	   }
    
    var table = $("#table_export").dataTable();
+   
 }
+
+
 </script>
 
 
@@ -362,7 +357,7 @@ function update()
 					<li><a href="createBill.html"><i class="fa fa-fw fa-dashboard"></i>
 							Bills</a></li>
 							
-					<li class="active"><a href="Estimates.html"><i
+					<li><a href="Estimates.html"><i
 							class="fa fa-fw fa-dashboard"></i> Estimate</a></li>
 					
 					<li><a href="invoice.html"><i
@@ -377,8 +372,10 @@ function update()
 					<li><a href="createCustomer.html"><i
 							class="fa fa-fw fa-dashboard"></i> Customers</a></li>
 							
-					<li><a href="createVendor.html"><i
+					<li class="active"><a href="createVendor.html"><i
 							class="fa fa-fw fa-dashboard"></i> Vendors</a></li>
+					
+
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -394,10 +391,10 @@ function update()
 
 
 
-				<h1 class="page-header">Estimates</h1>
+				<h1 class="page-header">Invoice</h1>
 
 				<button type="button" class="btn btn-info" style="float: right"
-					onclick="create()">Create Estimate</button>
+					onclick="create()">Create Invoice</button>
 
 
 				<!--     <div class="row">
@@ -407,7 +404,7 @@ function update()
 				<ul class="nav nav-tabs bordered">
 
 					<li class="active"><a href="#view_taxes" data-toggle="tab"><i
-							class="entypo-menu"></i> Estimates</a></li>
+							class="entypo-menu"></i> Invoices</a></li>
 
 
 
@@ -422,18 +419,20 @@ function update()
 							<thead>
 								<tr>
 
-									<th><div>Estimate No</div></th>
+									<th><div>InvoiceNo</div></th>
 									<th><div>Customer</div></th>
-									<th><div>Order Date</div></th>
-									<th><div>Order Amount</div></th>
+									<th><div>Invoice Date</div></th>
+									<th><div>Invoice Amount</div></th>
 									<th><div>Advance</div></th>
 									<th><div>Balance</div></th>
 									<th><div>Options</div></th>
 
 								</tr>
 								</thead>
-							<tbody id="tbody1">
+							<tbody >
 								
+
+
 							</tbody>
 							
 
@@ -467,31 +466,22 @@ function update()
 function create(){
 	
 	
-	window.location.replace("createEstimate.html");
-}
-
-function convert(estimateNo)
-{
-	
-	setCookie("EID",estimateNo,1);
 	window.location.replace("createInvoice.html");
-	
 }
 
 
-
-function view(estimateNo)
+function view(invoiceNo)
 {
 	
-	window.location.replace("viewEstimate.html?EstimateId=" + estimateNo);
+	window.location.replace("viewInvoice.html?InvoiceId=" + invoiceNo);
 	//return true;
 }
 
 
-function edit(estimateNo)
+function edit(invoiceNo)
 {
 	
-	window.location.replace("editEstimate.html?EstimateNo=" + estimateNo);
+	window.location.replace("editInvoice.html?InvoiceId=" + invoiceNo);
 	//return true;
 }
 

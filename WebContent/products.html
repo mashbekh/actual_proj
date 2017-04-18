@@ -243,6 +243,8 @@ error: function (xhr, statusText) {
 				   					 '</tr>');
 		     			}
 		     		
+		     		 var table = $("#table_export").dataTable();
+		     		
 		        },
 				error: function (a,b,c)
 				{ 
@@ -763,53 +765,7 @@ error: function (xhr, statusText) {
 									
 									
 									<tbody>
-										<tr>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td></td>
 										
-											<td>
-												<!-- ACTIONS -->
-												<div class="btn-group">
-
-													<button type="button"
-														class="btn btn-default btn-sm dropdown-toggle"
-														data-toggle="dropdown">
-														Action <span class="caret"></span>
-													</button>
-													<ul class="dropdown-menu dropdown-default pull-right"
-														role="menu">
-
-														<!-- view -->
-														<li><a href="" onClick="return view_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
-																<i class="entypo-pencil"></i> View Product
-														</a></li>
-														<li class="divider"></li>
-
-
-														<!-- EDITING LINK -->
-														<li><a href="" onClick="return edit_product()"> <!-- OPEN POP UP WITH FILLED VALUES, pass  table product_id -->
-																<i class="entypo-pencil"></i> Edit Product
-														</a></li>
-														<li class="divider"></li>
-
-														<!-- DELETION LINK -->
-														<!-- DELETE FROM DATABASE -->
-														<li><a href=""
-															onClick="return confirm('Are you sure to delete?')">
-																<!--  pass product id along --> <i class="entypo-trash"></i>
-																Delete Product
-														</a></li>
-													</ul>
-												</div>
-
-											</td>
-
-										</tr>
-
 									</tbody>
 								</table>
 							</div>
@@ -999,10 +955,8 @@ var code = xhr.status;
 	
 	}
 
-	jQuery(document).ready(function($)
-	{
-		
 
+/*
 		$('.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
 	
 	var jqTable = $('table.datatable', $(e.target).attr("href"));
@@ -1016,56 +970,57 @@ var code = xhr.status;
 	
 	return false;
 });
+*/
 
 
-		var datatable = $("#table_export").dataTable({
-			"sPaginationType": "bootstrap",
-			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
+var datatable = $("#tab").dataTable({
+	"sPaginationType": "bootstrap",
+	"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
+	
+	"oTableTools": {
+	    
+	   
+	
+		"aButtons": [
 			
-			"oTableTools": {
-			    
-			   
-			
-				"aButtons": [
-					
-					{
-						"sExtends": "xls",
-						
-						
-					},
-					{
-						"sExtends": "pdf",
-						
-					},
-					{
-						"sExtends": "print",
-						"fnSetText"	   : "Press 'esc' to return",
-						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(0, false);
-							datatable.fnSetColumnVis(3, false);
-							
-							this.fnPrint( true, oConfig );
-							
-							window.print();
-							
-							$(window).keyup(function(e) {
-								  if (e.which == 27) {
-									  datatable.fnSetColumnVis(0, true);
-									  datatable.fnSetColumnVis(3, true);
-								  }
-							});
-						},
-						
-					},
-				]
+			{
+				"sExtends": "xls",
+				
+				
 			},
-			
-		});
-		
-		$(".dataTables_wrapper select").select2({
-			minimumResultsForSearch: -1
-		});
-	});
+			{
+				"sExtends": "pdf",
+				
+			},
+			{
+				"sExtends": "print",
+				"fnSetText"	   : "Press 'esc' to return",
+				"fnClick": function (nButton, oConfig) {
+					datatable.fnSetColumnVis(0, false);
+					datatable.fnSetColumnVis(3, false);
+					
+					this.fnPrint( true, oConfig );
+					
+					window.print();
+					
+					$(window).keyup(function(e) {
+						  if (e.which == 27) {
+							  datatable.fnSetColumnVis(0, true);
+							  datatable.fnSetColumnVis(3, true);
+						  }
+					});
+				},
+				
+			},
+		]
+	},
+	
+});
+
+$(".dataTables_wrapper select").select2({
+	minimumResultsForSearch: -1
+});
+
 	
 	//tax rate not compulsion
 	

@@ -1960,7 +1960,7 @@ function newBill()
 		  else 
 		  { 
 			  	var productName= $('#' + index + 'product_name').val();
-		  	  	var prod_id = $('#' + index + 'productlist option[value='+ productName +']').attr('prodid');
+		  	  	var prod_id = $('#' + index + 'productlist option[value="'+ productName +'"]').attr('prodid');
 		  	  	var desc= $('#' + index + 'prod_desc').val();
 				var quantity = $('#' + index + 'quantity').val();
 				var price = $('#' + index + 'price').val();
@@ -2078,6 +2078,7 @@ function newBill()
 			    dataType :'json',
 			    success: function(response, text, xhr) {
 			               
+			    	
 			    	var bill = JSON.parse(xhr.responseText);
 			    	window.location.replace("viewBill.html?BillId=" + bill.id);
 			    				    	
@@ -2119,7 +2120,7 @@ function convert()
 		  else 
 		  { 
 			  	var productName= $('#' + index + 'product_name').val();
-		  	  	var prod_id = $('#' + index + 'productlist option[value='+ productName +']').attr('prodid');
+		  	  	var prod_id = $('#' + index + 'productlist option[value="'+ productName +'"]').attr('prodid');
 		  	  	var prodDel = $('#' + index + 'product_name').prop('readonly');
 		  	  	var desc= $('#' + index + 'prod_desc').val();
 				var quantity = $('#' + index + 'quantity').val();
@@ -2237,9 +2238,9 @@ function convert()
 			    dataType :'json',
 			    success: function(response, text, xhr) {
 			               
-			    	var po = JSON.parse(xhr.responseText);
-			    	//window.location.replace("viewBill.html?POId=" + purchaseOrder.poNumber);
-			    	console.log(po);
+			    	var bill = JSON.parse(xhr.responseText);
+			    	window.location.replace("viewBill.html?BillId=" + bill.id);
+			    	
 			    	
 			    },
 				error: function (a,b,c)

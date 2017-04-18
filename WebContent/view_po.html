@@ -226,6 +226,8 @@ function loadName()
 	 var sid = getCookie("SID");
 	 var token = getCookie("TTID");
 	 
+	 alert(myParam);
+	 
 	$.ajax({
 		   		type : 'POST',
 		   		url  : '/Accounting/rest/po/getPO?' + $.param({ "pno" : myParam , "cid" : ccid,
@@ -2436,7 +2438,7 @@ function delete_newadv(counter)
 
 function editpo()
 {
-	window.location.replace("edit.html?PONo=CMP445PO11");
+	window.location.replace("edit.html?POId=" + poNo);
 	}
 
 </script>

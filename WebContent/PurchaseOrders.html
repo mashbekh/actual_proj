@@ -178,11 +178,31 @@ function loadName()
 }
 
 
+
+
+
 function convert(poNo)
 {
-	alert("hi");
+	
 	setCookie("POID",poNo,1);
 	window.location.replace("createBill.html");
+	
+}
+
+
+
+function view(poNo)
+{
+	
+	window.location.replace("view_po.html?POId=" + poNo);
+	//return true;
+}
+
+
+function edit(poNo)
+{
+	
+	window.location.replace("edit.html?POId=" + poNo);
 	//return true;
 }
 
@@ -215,21 +235,22 @@ function update()
 			   '<td>' + advance + '</td>' +
 			   '<td>' + balance + '</td>' +
 			   '<td>' +  
-                     '<div class="btn-group">' + 
-                      '<button type="button" class="dropdown-toggle" data-toggle="dropdown">' + 
-                                    'Action <span class="caret"></span></button>' + 
+			   '<div class="btn-group">' + 
+               '<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">' + 
+                             'Action <span class="caret"></span>' + 
+                         '</button>' + 
                                
                                '<ul class="dropdown-menu" role="menu">' +
                                 
                                     '<li>' + 
-                                       '<a href="edit.html?POId=' + po_number + '" >' +    
+                                    '<a  onClick = edit("' +  po_number + '")>' +    
                                              '<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;' + 
                                                 'Edit PO' + 
                                             '</a>' + 
                                     '</li>' + 
                                     '<li class="divider"></li>'  +
                                     '<li>' + 
-                                        '<a href="view_po.html?POId='  + po_number  + '" >' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
+                                    '<a  onClick = view("' +  po_number + '")>' +    <!-- OPEN POP UP WITH FILLED VALUES, pass  table tax_id -->
                                            '<span class="glyphicon glyphicon-eye-open"></span>&nbsp;&nbsp;' + 
                                                 'View PO'+
                                             '</a>' + 

@@ -3,6 +3,7 @@ package com.InwardFlow;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -182,4 +183,15 @@ public class InvoiceServiceImpl {
 	}
 	
 
+	@POST
+	@Path("/getInvoicelist")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInvoicelist( @QueryParam("cid") String companyId, @QueryParam("id") String userId, @QueryParam("token") String token) throws JsonMappingException , JsonParseException, IOException, EntityException, Exception, Throwable
+	{
+		InvoiceDaoImpl dao = new InvoiceDaoImpl();
+		List<InwardEntity> invoiceList = dao.getInvoicelist(companyId);
+		return Response.status(Response.Status.OK)
+				.entity(invoiceList).build();
+
+	}
 }
